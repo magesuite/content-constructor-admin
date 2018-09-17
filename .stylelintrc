@@ -1,0 +1,13 @@
+{
+    "plugins": [
+        "stylelint-scss"
+    ],
+    "extends": "stylelint-config-standard",
+    "rules": {
+        "indentation": 4,
+        "scss/at-import-no-partial-leading-underscore": true,
+        "scss/operator-no-unspaced": true,
+        "scss/dollar-variable-no-missing-interpolation": true,
+        "scss/dollar-variable-colon-space-after": "always-single-line"
+    }
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference
+            for="MageSuite\ContentConstructor\Repository\ComponentsConfigurationRepository"
+            type="MageSuite\ContentConstructorAdmin\Repository\ComponentsConfigurationRepository" />
+    <preference
+            for="MageSuite\ContentConstructor\Factory\AdminComponentFactory"
+            type="MageSuite\ContentConstructorAdmin\Service\AdminComponentFactory" />
+    <preference
+            for="MageSuite\ContentConstructor\Components\StaticBlock\DataProvider"
+            type="MageSuite\ContentConstructorAdmin\DataProviders\StaticBlockDataProvider" />
+
+    <preference
+            for="MageSuite\ContentConstructor\Components\Paragraph\WysiwygConfigDataProvider"
+            type="MageSuite\ContentConstructorAdmin\DataProviders\WysiwygConfigDataProvider" />
+
+    <preference
+            for="MageSuite\ContentConstructor\Components\ProductCarousel\CategoryPickerProvider"
+            type="MageSuite\ContentConstructorAdmin\UiComponents\CategoryPickerProvider" />
+
+    <preference
+            for="MageSuite\ContentConstructor\Components\CmsTeaser\CmsTeaserAdminDataProvider"
+            type="MageSuite\ContentConstructorAdmin\DataProviders\CmsTeaserAdminDataProvider" />
+
+    <preference
+            for="MageSuite\ContentConstructor\View\AdminTemplateLocator"
+            type="MageSuite\ContentConstructorAdmin\Template\Locator" />
+
+    <preference for="\Magento\Widget\Block\Adminhtml\Widget\Form"
+                type="\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Widget\Form"/>
+
+
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
+        <plugin name="add_cc_layout_xml_on_product_save"
+                type="MageSuite\ContentConstructorAdmin\Plugin\ProductEdit"
+                sortOrder="1" />
+    </type>
+
+    <type name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\AbstractConstructor">
+        <plugin name="remap_sorting_fields"
+                type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields"
+                sortOrder="1" />
+    </type>
+</config>

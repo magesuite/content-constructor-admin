@@ -1,0 +1,41 @@
+@import '../node_modules/creative-patterns/packages/components/cc-component-picker/src/cc-component-picker';
+@import '../node_modules/creative-patterns/packages/components/cc-category-picker/src/cc-category-picker';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-layout-builder/src/m2c-layout-builder';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-headline-configurator/src/m2c-headline-configurator';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-image-teaser-configurator/src/m2c-image-teaser-configurator';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-paragraph-configurator/src/m2c-paragraph-configurator';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-hero-carousel-configurator/src/m2c-hero-carousel-configurator';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-products-grid-configurator/src/m2c-products-grid-configurator';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-magento-product-grid-teasers-configurator/src/m2c-magento-product-grid-teasers-configurator';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-custom-html-configurator/src/m2c-custom-html-configurator';
+@import '../node_modules/creative-patterns/packages/customizations/m2c-cms-pages-teaser-configurator/src/m2c-cms-pages-teaser-configurator';
+
+.m2c-content-constructor {
+    max-width: 1280px;
+    margin: 0 auto;
+
+    &__modal {
+        min-height: calc(100vh - 200px);
+        display: none;
+        min-width: 800px;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding-bottom: 2.6rem;
+
+        &-subheadline {
+            display: block;
+            color: #9c9c9c;
+            font-size: 1.65rem !important;
+            font-style: normal !important;
+            margin: 0.25rem 0 0 !important;
+
+            + span {
+                display: none !important;
+            }
+        }
+    }
+
+    .m2-warning {
+        color: #eb5202;
+    }
+}

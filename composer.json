@@ -1,0 +1,15 @@
+{
+    "name": "creativestyle/magesuite-content-constructor-admin",
+    "description": "Magento2 Content Constructor package",
+    "homepage": "https://creativestyle.de",
+    "license": "OSL-3.0",
+    "require": {
+        "creativestyle/creative-patterns": "dev-develop"
+    },
+    "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "MageSuite\\ContentConstructorAdmin\\": ""
+        }
+    }
+}

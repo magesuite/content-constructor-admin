@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/etc/variations.xsd">
+    <testCase name="MageSuite\ContentConstructorAdmin\Test\TestCase\CreateLandingPageTest"
+              summary="Create Cms Page" ticketId="MAGETWO-25580">
+        <variation name="CreateLandingPageTestVariation1" summary="Create Landing Page With Headline">
+            <data name="landingPage/data/page/dataset" xsi:type="string">default</data>
+            <data name="landingPage/data/components" xsi:type="array">
+                <item name="0" xsi:type="array">
+                    <item name="type" xsi:type="string">imageTeaser</item>
+                    <item name="dataset" xsi:type="string">default</item>
+                </item>
+                <item name="1" xsi:type="array">
+                    <item name="type" xsi:type="string">heroCarousel</item>
+                    <item name="dataset" xsi:type="string">default</item>
+                </item>
+                <!--<item name="2" xsi:type="array">-->
+                    <!--<item name="type" xsi:type="string">headline</item>-->
+                    <!--<item name="dataset" xsi:type="string">with_no_subtitle</item>-->
+                <!--</item>-->
+            </data>
+            <constraint name="MageSuite\ContentConstructorAdmin\Test\Constraint\AssertCmsPagePreview" />
+            <!--<constraint name="MageSuite\ContentConstructorAdmin\Test\Constraint\AssertCmsPagePreview" />-->
+            <!--<constraint name="MageSuite\ContentConstructorAdmin\Test\Constraint\AssertCmsPageLayoutUpdateXml" />-->
+        </variation>
+    </testCase>
+</config>

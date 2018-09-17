@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/Magento/Mtf/Repository/etc/repository.xsd">
+    <repository class="MageSuite\ContentConstructorAdmin\Test\Repository\Headline">
+        <dataset name="default">
+            <field name="title" xsi:type="string">Default title</field>
+            <field name="subtitle" xsi:type="string">Default subtitle</field>
+        </dataset>
+        <dataset name="with_no_subtitle">
+            <field name="title" xsi:type="string">With no subtitle title</field>
+        </dataset>
+    </repository>
+</config>

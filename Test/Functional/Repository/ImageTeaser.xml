@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/Magento/Mtf/Repository/etc/repository.xsd">
+    <repository class="MageSuite\ContentConstructorAdmin\Test\Repository\ImageTeaser">
+        <dataset name="default">
+            <field name="width" xsi:type="string">Full browser width</field>
+            <field name="banners" xsi:type="array">
+                <item name="0" xsi:type="array">
+                    <item name="image" xsi:type="string">shame_1.jpg</item>
+                    <item name="headline" xsi:type="string">Title</item>
+                    <item name="paragraph" xsi:type="string">Paragraph</item>
+                    <item name="cta_label" xsi:type="string">Label</item>
+                    <item name="cta_target_link" xsi:type="array">
+                        <item name="type" xsi:type="string">catalogProductSimple</item>
+                        <item name="dataset" xsi:type="string">default</item>
+                    </item>
+                    <item name="remove_after" xsi:type="boolean">false</item>
+                </item>
+                <item name="1" xsi:type="array">
+                    <item name="image" xsi:type="string">shame_2.jpg</item>
+                    <item name="headline" xsi:type="string">Second Title</item>
+                    <item name="paragraph" xsi:type="string">Second Paragraph</item>
+                    <item name="cta_label" xsi:type="string">Second Label</item>
+                    <item name="cta_target_link" xsi:type="array">
+                        <item name="type" xsi:type="string">category</item>
+                        <item name="dataset" xsi:type="string">default</item>
+                    </item>
+                    <item name="remove_after" xsi:type="boolean">true</item>
+                </item>
+                <item name="2" xsi:type="array">
+                    <item name="image" xsi:type="string">shame_3.jpg</item>
+                    <item name="headline" xsi:type="string">Third Title</item>
+                    <item name="paragraph" xsi:type="string">Third Paragraph</item>
+                    <item name="cta_label" xsi:type="string">Third Label</item>
+                    <item name="cta_target_link" xsi:type="array">
+                        <item name="type" xsi:type="string">cmsPage</item>
+                        <item name="dataset" xsi:type="string">default</item>
+                    </item>
+                    <item name="remove_after" xsi:type="boolean">false</item>
+                </item>
+            </field>
+        </dataset>
+    </repository>
+</config>

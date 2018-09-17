@@ -1,0 +1,41 @@
+{
+    "extends": "tslint:latest",
+    "rules": {
+        "indent": [true, "spaces", 2],
+        "interface-name": false,
+        "max-line-length": false,
+        "object-literal-sort-keys": false,
+        "only-arrow-functions": false,
+        "no-empty": false,
+        "quotemark": [
+            true,
+            "single",
+            "avoid-escape"
+        ],
+        "typedef": [
+            true,
+            "call-signature",
+            "member-variable-declaration",
+            "parameter",
+            "property-declaration",
+            "member-variable-declaration"
+        ],
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ],
+        "object-literal-shorthand": null,
+        "trailing-comma": [
+            true,
+            {
+                "multiline": "always",
+                "singleline": "never"
+            }
+        ],
+        "arrow-parens": null,
+        "no-this-assignment": null
+    },
+    "rulesDirectory": []
+}

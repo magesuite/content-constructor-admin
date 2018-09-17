@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/etc/fixture.xsd">
+    <fixture name="landingPage"
+             module="MageSuite_ContentConstructorAdmin"
+             type="flat"
+             class="MageSuite\ContentConstructorAdmin\Test\Fixture\LandingPage"
+    >
+        <field name="page" is_required="1"
+               source="MageSuite\ContentConstructorAdmin\Test\Fixture\LandingPage\Page"/>
+        <field name="components" is_required="0"
+               source="MageSuite\ContentConstructorAdmin\Test\Fixture\LandingPage\Components"/>
+    </fixture>
+</config>
