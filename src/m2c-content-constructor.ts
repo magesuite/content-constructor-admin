@@ -7,6 +7,7 @@ import vr from 'VueResource';
 import 'loadingPopup';
 import $t from 'mage/translate';
 import modal from 'Magento_Ui/js/modal/modal';
+import alert from 'Magento_Ui/js/modal/alert';
 import uiRegistry from 'uiRegistry';
 
 import ccComponentPicker from '../node_modules/creative-patterns/packages/components/cc-component-picker/src/cc-component-picker';
@@ -22,6 +23,7 @@ import m2cParagraphConfigurator from '../node_modules/creative-patterns/packages
 import m2cProductCarouselConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-product-carousel-configurator/src/m2c-product-carousel-configurator';
 import m2cProductsGridConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-products-grid-configurator/src/m2c-products-grid-configurator';
 import m2cStaticBlockConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-static-block-configurator/src/m2c-static-block-configurator';
+import m2cProductFinderConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-product-finder-configurator/src/m2c-product-finder-configurator';
 
 import { IComponentInformation, m2cLayoutBuilder } from '../node_modules/creative-patterns/packages/customizations/m2c-layout-builder/src/m2c-layout-builder';
 
@@ -83,6 +85,7 @@ const m2cContentConstructor: vuejs.ComponentOption = {
             v-ref:m2c-layout-builder
             :assets-src="assetsSrc"
             :cc-config="ccConfig"
+            :image-endpoint="imageEndpoint"
             :cc-project-configuration="ccProjectConfiguration"
             :page-type="pageType"
             :add-component="getComponentPicker"
@@ -107,6 +110,7 @@ const m2cContentConstructor: vuejs.ComponentOption = {
         'm2c-magento-product-grid-teasers-configurator': m2cMagentoProductGridTeasersConfigurator,
         'm2c-custom-html-configurator': m2cCustomHtmlConfigurator,
         'm2c-cms-pages-teaser-configurator': m2cCmsPagesTeaserConfigurator,
+        'm2c-product-finder-configurator': m2cProductFinderConfigurator,
     },
     props: {
         configuration: {
@@ -190,17 +194,24 @@ const m2cContentConstructor: vuejs.ComponentOption = {
          * We update provided input with new components information each time leyout
          * builder updates.
          */
-            'cc-layout-builder__update'(): void {
+        'cc-layout-builder__update'(): void {
             this.dumpConfiguration();
         },
         'cc-component-configurator__saved'(data: any): void {
-            this._configuratorSavedCallback(data);
+            if (!data.hasOwnProperty('isError') || (data.hasOwnProperty('isError') && !data.isError)) {
+                this._configuratorSavedCallback(data);
 
-            if ($configuratorModal && $configuratorModal.closeModal) {
-                $configuratorModal.closeModal();
-            }
-            if ($pickerModal && $pickerModal.closeModal) {
-                $pickerModal.closeModal();
+                if ($configuratorModal && $configuratorModal.closeModal) {
+                    $configuratorModal.closeModal();
+                }
+                if ($pickerModal && $pickerModal.closeModal) {
+                    $pickerModal.closeModal();
+                }
+            } else {
+                alert({
+                    title: $t( 'Hey,' ),
+                    content: $.mage.__('Something is wrong with configuration of your component. Please fix all errors before saving.'),
+                });
             }
         },
         'cc-layout-builder__cmsblock-delete-request'(cmsBlockId: string): void {
