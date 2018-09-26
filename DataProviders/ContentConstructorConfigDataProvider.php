@@ -113,7 +113,7 @@ class ContentConstructorConfigDataProvider
     }
 
     protected function getConfigContents($themeDirectory) {
-        $configFilePath = $themeDirectory . '/configs/cc-config.json';
+        $configFilePath = $themeDirectory . '/config/cc-config.json';
 
         if(!file_exists($configFilePath)) {
             return null;
