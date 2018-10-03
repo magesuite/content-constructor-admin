@@ -57,6 +57,6 @@ class CategoryPickerDataProviderTest extends \PHPUnit\Framework\TestCase
     }
 
     public static function loadCategoriesNotIncludedInMenu() {
-        include __DIR__.'/../../../../content-constructor-frontend-extension/Test/Integration/DataProviders/_files/categories_not_included_in_menu.php';
+        include __DIR__.'/../../../../magesuite-content-constructor-frontend/Test/Integration/DataProviders/_files/categories_not_included_in_menu.php';
     }
 }
