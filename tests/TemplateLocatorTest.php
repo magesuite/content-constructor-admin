@@ -4,7 +4,7 @@ class TemplateLocatorTest extends PHPUnit\Framework\TestCase
 {
     public function testItGetsProperLocation()
     {
-        $templateLocator = new \MageSuite\ContentConstructorAdmin\TemplateLocator();
+        $templateLocator = new \MageSuite\ContentConstructorAdmin\Template\Locator();
 
         $baseDirectory = realpath(__DIR__ . '/../');
 
