@@ -6,11 +6,6 @@ class ComponentConfigurationToXmlMapper
 {
     private $componentClass = 'MageSuite\ContentConstructorFrontend\Block\Component';
 
-    private $componentClasses = [
-        'Creativestyle\ContentConstructorFrontendExtension\Block\Component',
-        'MageSuite\ContentConstructorFrontend\Block\Component'
-    ];
-
     /**
      * Maps components configuration to corresponding XML Layout format
      * @param $components
@@ -106,7 +101,7 @@ class ComponentConfigurationToXmlMapper
         $nodesToDelete = [];
 
         foreach ($childrens->block as $block) {
-            if (in_array($block->attributes()->class, $this->componentClasses)) {
+            if ($block->attributes()->class == $this->componentClass) {
                 $nodesToDelete[] = $block;
             }
         }
@@ -165,7 +160,10 @@ class ComponentConfigurationToXmlMapper
     {
         $xml = str_replace('<?xml version="1.0"?>', '', $xml);
         $xml = str_replace('<xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">', '', $xml);
+        $xml = str_replace('<xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>', '', $xml);
         $xml = str_replace('</xml>', '', $xml);
+
+        $xml = trim($xml);
 
         return $xml;
     }

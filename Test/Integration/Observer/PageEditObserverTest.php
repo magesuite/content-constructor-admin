@@ -44,9 +44,9 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
 
         $page = $this->pageRepository->getById($identifier);
 
-        if($expected === null){
-            $this->assertNull($page->getLayoutUpdateXml());
-        }else{
+        if (!$expected) {
+            $this->assertEmpty($page->getLayoutUpdateXml());
+        } else {
             $this->assertContains($expected, $page->getLayoutUpdateXml());
         }
     }
@@ -55,7 +55,7 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
     {
         return [
             ['Page without components', null, 'page-without-components', null],
-            ['Page with empty components', '[]', 'page-with-empty-components', null],
+            ['Page with empty components', '[]', 'page-with-empty-components', ''],
             [
                 'Page with components',
                 '[{"type":"headline","id":"component2f8c","section":"content","data":{"title":"test","subtitle":"test","componentVisibility":{"mobile":true,"desktop":true}}}]',
