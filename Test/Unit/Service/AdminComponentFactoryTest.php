@@ -52,8 +52,7 @@ class AdminComponentFactoryTest extends \PHPUnit\Framework\TestCase
             ['product-grid', \MageSuite\ContentConstructor\Components\ProductGrid\ProductGridAdmin::class],
             ['custom-html', \MageSuite\ContentConstructor\Components\CustomHtml\CustomHtmlAdmin::class],
             ['cms-teaser', \MageSuite\ContentConstructor\Components\CmsTeaser\CmsTeaserAdmin::class],
-            ['product-finder', \MageSuite\ContentConstructor\Components\ProductFinder\ProductFinderAdmin::class],
-            ['daily-deal-teaser', \MageSuite\ContentConstructor\Components\DailyDealTeaser\DailyDealTeaserAdmin::class]
+            ['product-finder', \MageSuite\ContentConstructor\Components\ProductFinder\ProductFinderAdmin::class]
         ];
     }
 }

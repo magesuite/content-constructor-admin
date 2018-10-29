@@ -6,8 +6,8 @@ import vr from 'VueResource';
 
 import 'loadingPopup';
 import $t from 'mage/translate';
-import alert from 'Magento_Ui/js/modal/alert';
 import modal from 'Magento_Ui/js/modal/modal';
+import alert from 'Magento_Ui/js/modal/alert';
 import uiRegistry from 'uiRegistry';
 
 import ccComponentPicker from '../node_modules/creative-patterns/packages/components/cc-component-picker/src/cc-component-picker';
@@ -15,16 +15,15 @@ import m2cButtonConfigurator from '../node_modules/creative-patterns/packages/cu
 import m2cCategoryLinksConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-category-links-configurator/src/m2c-category-links-configurator';
 import m2cCmsPagesTeaserConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-cms-pages-teaser-configurator/src/m2c-cms-pages-teaser-configurator';
 import m2cCustomHtmlConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-custom-html-configurator/src/m2c-custom-html-configurator';
-import m2cDailyDealTeaserConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-daily-deal-teaser-configurator/src/m2c-daily-deal-teaser-configurator';
 import m2cHeadlineConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-headline-configurator/src/m2c-headline-configurator';
 import m2cHeroCarouselConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-hero-carousel-configurator/src/m2c-hero-carousel-configurator';
 import m2cImageTeaserConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-image-teaser-configurator/src/m2c-image-teaser-configurator';
 import m2cMagentoProductGridTeasersConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-magento-product-grid-teasers-configurator/src/m2c-magento-product-grid-teasers-configurator';
 import m2cParagraphConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-paragraph-configurator/src/m2c-paragraph-configurator';
 import m2cProductCarouselConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-product-carousel-configurator/src/m2c-product-carousel-configurator';
-import m2cProductFinderConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-product-finder-configurator/src/m2c-product-finder-configurator';
 import m2cProductsGridConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-products-grid-configurator/src/m2c-products-grid-configurator';
 import m2cStaticBlockConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-static-block-configurator/src/m2c-static-block-configurator';
+import m2cProductFinderConfigurator from '../node_modules/creative-patterns/packages/customizations/m2c-product-finder-configurator/src/m2c-product-finder-configurator';
 
 import { IComponentInformation, m2cLayoutBuilder } from '../node_modules/creative-patterns/packages/customizations/m2c-layout-builder/src/m2c-layout-builder';
 
@@ -112,7 +111,6 @@ const m2cContentConstructor: vuejs.ComponentOption = {
         'm2c-custom-html-configurator': m2cCustomHtmlConfigurator,
         'm2c-cms-pages-teaser-configurator': m2cCmsPagesTeaserConfigurator,
         'm2c-product-finder-configurator': m2cProductFinderConfigurator,
-        'm2c-daily-deal-teaser-configurator': m2cDailyDealTeaserConfigurator,
     },
     props: {
         configuration: {
@@ -211,7 +209,7 @@ const m2cContentConstructor: vuejs.ComponentOption = {
                 }
             } else {
                 alert({
-                    title: $t('Hey,'),
+                    title: $t( 'Hey,' ),
                     content: $.mage.__('Something is wrong with configuration of your component. Please fix all errors before saving.'),
                 });
             }
@@ -238,7 +236,7 @@ const m2cContentConstructor: vuejs.ComponentOption = {
             // Save adding callback for async use.
             this._addComponentInformation = addComponentInformation;
 
-            pickerModalOptions.opened = function(): void {
+            pickerModalOptions.opened = function (): void {
                 if (!component._isPickerLoaded) {
                     // Show ajax loader
                     $('body').trigger('showLoadingPopup');
@@ -320,13 +318,13 @@ const m2cContentConstructor: vuejs.ComponentOption = {
             const component: any = this;
             let cleanupConfiguratorModal = (): undefined => undefined;
 
-            configuratorModalOptions.buttons[1].click = function(): void {
+            configuratorModalOptions.buttons[1].click = function (): void {
                 component.$broadcast('cc-component-configurator__save');
             };
             configuratorModalOptions.title = `${$t('Configure your component')}<span class="m2c-content-constructor__modal-subheadline">${this.transformComponentTypeToText(componentInformation.type)}</span>`;
 
             // Configurator modal opened callback
-            configuratorModalOptions.opened = function(): void {
+            configuratorModalOptions.opened = function (): void {
                 // Show ajax loader
                 $('body').trigger('showLoadingPopup');
 
@@ -345,7 +343,7 @@ const m2cContentConstructor: vuejs.ComponentOption = {
                 });
             };
 
-            configuratorModalOptions.closed = function(): void {
+            configuratorModalOptions.closed = function (): void {
                 // Cleanup configurator component and then remove modal
                 cleanupConfiguratorModal();
                 component.$els.configuratorModal.innerHTML = '';

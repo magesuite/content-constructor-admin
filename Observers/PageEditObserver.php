@@ -39,10 +39,12 @@ class PageEditObserver implements ObserverInterface
         if(isset($data['components']) AND !empty($data['components'])) {
             $components = json_decode($data['components'], true);
 
-            $layoutUpdateXml = $this->configurationToXmlMapper->map($components, $page->getLayoutUpdateXml());
+            if(!empty($components)){
+                $layoutUpdateXml = $this->configurationToXmlMapper->map($components, $page->getLayoutUpdateXml());
 
-            $page->setLayoutUpdateXml($layoutUpdateXml);
-            $page->setContent('');
+                $page->setLayoutUpdateXml($layoutUpdateXml);
+                $page->setContent('');
+            }
         }
 
         $this->clearLayoutCache();

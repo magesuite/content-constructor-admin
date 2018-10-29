@@ -28,8 +28,7 @@ class AdminComponentFactory implements \MageSuite\ContentConstructor\Factory\Adm
         'magento-product-grid-teasers' => \MageSuite\ContentConstructor\Components\MagentoProductGridTeasers\MagentoProductGridTeasersAdmin::class,
         'custom-html' => \MageSuite\ContentConstructor\Components\CustomHtml\CustomHtmlAdmin::class,
         'cms-teaser' => \MageSuite\ContentConstructor\Components\CmsTeaser\CmsTeaserAdmin::class,
-        'product-finder' => \MageSuite\ContentConstructor\Components\ProductFinder\ProductFinderAdmin::class,
-        'daily-deal-teaser' => \MageSuite\ContentConstructor\Components\DailyDealTeaser\DailyDealTeaserAdmin::class,
+        'product-finder' => \MageSuite\ContentConstructor\Components\ProductFinder\ProductFinderAdmin::class
     ];
 
     /**

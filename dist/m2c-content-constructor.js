@@ -1,15 +1,15 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('Vue'), require('VueResource'), require('loadingPopup'), require('mage/translate'), require('Magento_Ui/js/modal/alert'), require('Magento_Ui/js/modal/modal'), require('uiRegistry'), require('Magento_Ui/js/modal/confirm')) :
-	typeof define === 'function' && define.amd ? define('m2cContentConstructor', ['jquery', 'Vue', 'VueResource', 'loadingPopup', 'mage/translate', 'Magento_Ui/js/modal/alert', 'Magento_Ui/js/modal/modal', 'uiRegistry', 'Magento_Ui/js/modal/confirm'], factory) :
-	(global.m2cContentConstructor = factory(global.jQuery,global.Vue,global.vr,null,global.$t,global.alert,global.modal,global.uiRegistry,global.confirm));
-}(this, (function ($,Vue,vr,loadingPopup,$t,alert,modal,uiRegistry,confirm) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('Vue'), require('VueResource'), require('loadingPopup'), require('mage/translate'), require('Magento_Ui/js/modal/modal'), require('Magento_Ui/js/modal/alert'), require('uiRegistry'), require('Magento_Ui/js/modal/confirm')) :
+	typeof define === 'function' && define.amd ? define('m2cContentConstructor', ['jquery', 'Vue', 'VueResource', 'loadingPopup', 'mage/translate', 'Magento_Ui/js/modal/modal', 'Magento_Ui/js/modal/alert', 'uiRegistry', 'Magento_Ui/js/modal/confirm'], factory) :
+	(global.m2cContentConstructor = factory(global.jQuery,global.Vue,global.vr,null,global.$t,global.modal,global.alert,global.uiRegistry,global.confirm));
+}(this, (function ($,Vue,vr,loadingPopup,$t,modal,alert,uiRegistry,confirm) { 'use strict';
 
 $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
 Vue = Vue && Vue.hasOwnProperty('default') ? Vue['default'] : Vue;
 vr = vr && vr.hasOwnProperty('default') ? vr['default'] : vr;
 $t = $t && $t.hasOwnProperty('default') ? $t['default'] : $t;
-alert = alert && alert.hasOwnProperty('default') ? alert['default'] : alert;
 modal = modal && modal.hasOwnProperty('default') ? modal['default'] : modal;
+alert = alert && alert.hasOwnProperty('default') ? alert['default'] : alert;
 uiRegistry = uiRegistry && uiRegistry.hasOwnProperty('default') ? uiRegistry['default'] : uiRegistry;
 confirm = confirm && confirm.hasOwnProperty('default') ? confirm['default'] : confirm;
 
@@ -1032,104 +1032,6 @@ var m2cCustomHtmlConfigurator = {
 };
 
 /**
- * Daily deal teaser configurator component.
- * This component is responsible for displaying daily deal teaser configuration form
- * @type {vuejs.ComponentOption} Vue component object.
- */
-var ccDailyDealTeaserConfigurator = {
-    mixins: [
-        ccComponentConfigurator,
-    ],
-    template: "<form class=\"cc-daily-deal-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n    <div class=\"cs-input cs-input--type-inline\">\n        <label for=\"cfg-ddt-category\" class=\"cs-input__label\">Select Category:</label>\n        <select name=\"cfg-ddt-category-select\" class=\"cs-input__select\" id=\"cfg-ddt-category\" v-model=\"configuration.category_id\" @change=\"onChange\">\n            <option value=\"\">-- Please select category --</option>\n        </select>\n    </div>\n    <div class=\"cs-input cs-input--type-inline\">\n        <label for=\"cfg-ddt-order-by\" class=\"cs-input__label\">Order by:</label>\n        <select name=\"cfg-ddt-order-by\" class=\"cs-input__select\" id=\"cfg-ddt-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n            <option value=\"creation_date-DESC\">Creation date: newest</option>\n            <option value=\"creation_date-ASC\">Creation date: oldest</option>\n            <option value=\"price-DESC\">Price: cheapest</option>\n            <option value=\"price-ASC\">Price: most expensive</option>\n        </select>\n        <select name=\"cfg-ddt-order-type\" class=\"cs-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n            <option value=\"ASC\">ASC</option>\n            <option value=\"DESC\">DESC</option>\n        </select>\n    </div>\n\n    <button type=\"submit\">Save</button>\n</form>",
-    props: {
-        configuration: {
-            type: Object,
-            default: {
-                title: '',
-                subtitle: '',
-            },
-        },
-    },
-};
-
-/**
- * M2C daily deal teaser component for admin panel.
- * This component is responsible for managing daily deal teaser's configuration
- */
-var m2cDailyDealTeaserConfigurator = {
-    mixins: [
-        ccDailyDealTeaserConfigurator,
-    ],
-    template: "<form class=\"m2c-daily-deal-teaser-configurator\" {{ attributes }}>\n\n        <div class=\"m2-input m2-input--type-inline\">\n            <label class=\"m2-input__label\">" + $t('Categories') + ":</label>\n            <input type=\"hidden\" v-model=\"configuration.category_id\" @change=\"onChange\" id=\"cp-daily-deal-teaser\">\n        </div>\n\n        <div class=\"m2-input m2-input--type-inline\">\n            <label class=\"m2-input__label\" for=\"cfg-ddt-skus\">" + $t('SKUs') + ":</label>\n            <input type=\"text\" name=\"cfg-ddt-skus\" class=\"m2-input__input\" id=\"cfg-ddt-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n        </div>\n        <div class=\"m2-input m2-input--type-inline m2-input--type-hint\">\n            <label class=\"m2-input__label\"> </label>\n            <span class=\"m2-input__hint m2-input__hint--under-field\">" + $t('Multiple, comma-separated') + "</span>\n        </div>\n        <div class=\"m2-input m2-input--type-inline m2-input--type-hint\" v-if=\"configuration.skus.length\">\n            <label class=\"m2-input__label\"> </label>\n            <span class=\"m2-input__hint m2-input__hint--under-field m2-input__hint--info-mark\">" + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "</span>\n        </div>\n\n        <div class=\"m2-input m2-input--type-inline\">\n            <label class=\"m2-input__label\" for=\"cfg-ddt-dataprovider\">" + $t('Custom Data Provider') + ":</label>\n            <input type=\"text\" name=\"cfg-ddt-dataprovider\" class=\"m2-input__input\" id=\"cfg-ddt-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n        </div>\n\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-ddt-filter\" class=\"m2-input__label\">" + $t('Filter') + ":</label>\n            <select name=\"cfg-ddt-filter\" class=\"m2-input__select\" id=\"cfg-ddt-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                <option value=\"\">" + $t('No filter') + "</option>\n                <template v-for=\"filter in productCollectionsFilters\">\n                    <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                </template>\n            </select>\n        </div>\n\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-ddt-order-by\" class=\"m2-input__label\">" + $t('Order by') + ":</label>\n            <select name=\"cfg-ddt-order-by\" class=\"m2-input__select\" id=\"cfg-ddt-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                <option value=\"\">" + $t('Not specified') + "</option>\n                <template v-for=\"sorter in productCollectionsSorters\">\n                    <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                </template>\n            </select>\n            <select name=\"cfg-ddt-order-type\" class=\"m2-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                <option value=\"ASC\">" + $t('Ascending') + "</option>\n                <option value=\"DESC\">" + $t('Descending') + "</option>\n            </select>\n        </div>\n    </form>",
-    props: {
-        configuration: {
-            type: Object,
-            default: function () {
-                return {
-                    category_id: '',
-                    filter: '',
-                    order_by: 'creation_date',
-                    order_type: 'DESC',
-                    skus: '',
-                    class_overrides: {
-                        dataProvider: '',
-                    },
-                };
-            },
-        },
-        /* Obtain endpoint for getting categories data for category picker */
-        categoriesDataUrl: {
-            type: String,
-            default: '',
-        },
-        productCollectionsSorters: {
-            type: [String, Array],
-            default: '',
-        },
-        productCollectionsFilters: {
-            type: [String, Array],
-            default: '',
-        },
-    },
-    data: function () {
-        return {
-            categoryPicker: undefined,
-        };
-    },
-    events: {
-        /**
-         * Listen on save event from Content Configurator component.
-         */
-        'cc-component-configurator__save': function () {
-            if (this.configuration.class_overrides.dataProvider === '') {
-                delete this.configuration.class_overrides;
-            }
-            this.onSave();
-        },
-    },
-    ready: function () {
-        var _this = this;
-        this.productCollectionsSorters = this.productCollectionsSorters !== '' ? JSON.parse(this.productCollectionsSorters) : [];
-        this.productCollectionsFilters = this.productCollectionsFilters !== '' ? JSON.parse(this.productCollectionsFilters) : [];
-        if (!this.configuration.class_overrides) {
-            this.configuration.class_overrides = {
-                dataProvider: '',
-            };
-        }
-        // Show loader
-        $('body').trigger('showLoadingPopup');
-        // Get categories JSON with AJAX
-        this.$http.get(this.categoriesDataUrl).then(function (response) {
-            _this.categoryPicker = new CcCategoryPicker($('#cp-daily-deal-teaser'), JSON.parse(response.body), {
-                multiple: false,
-            });
-            // Hide loader
-            $('body').trigger('hideLoadingPopup');
-        });
-    },
-};
-
-/**
  * Headline configurator component.
  * This component is responsible for displaying headlines configuration form
  * @type {vuejs.ComponentOption} Vue component object.
@@ -1152,39 +1054,11 @@ var ccHeadlineConfigurator = {
     },
 };
 
-var headlineDefaults = {
-    title: '',
-    subtitle: '',
-    headingTag: 'h2',
-};
 var m2cHeadlineConfigurator = {
     mixins: [
         ccHeadlineConfigurator,
     ],
-    template: "<div class=\"m2c-headline-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-headline\" class=\"m2-input__label\">" + $t('Headline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.title\" id=\"cfg-headline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-subheadline\" class=\"m2-input__label\">" + $t('Subheadline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.subtitle\" id=\"cfg-subheadline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n\n        <div class=\"m2c-headline-configurator__advanced-trigger\">\n            <span :class=\"isAvdancedSettingsOpen ? 'active' : ''\" role=\"button\" @click=\"toggleAdvancedContent()\">" + $t('Advanced settings') + "</span>\n        </div>\n\n        <div class=\"m2c-headline-configurator__advanced-content\" v-show=\"isAvdancedSettingsOpen\">\n            <div class=\"m2-input m2-input--type-inline\">\n                <label for=\"cfg-heading-tag\" class=\"m2-input__label\">" + $t('Level of Heading tag') + ":</label>\n                <select name=\"cfg-heading-tag\" class=\"m2-input__select\" id=\"cfg-heading-tag\" v-model=\"configuration.headingTag\" @change=\"onChange\">\n                    <option v-for=\"n in 6\" value=\"h{{ n+1 }}\" :selected=\"n+1 === configuration.headingTag\">Heading {{ n+1 }} (h{{ n+1 }})</option>\n                </select>\n            </div>\n        </div>\n    </div>",
-    props: {
-        configuration: {
-            type: Object,
-            default: function () {
-                return headlineDefaults;
-            },
-        },
-    },
-    data: function () {
-        return {
-            isAvdancedSettingsOpen: false,
-        };
-    },
-    methods: {
-        toggleAdvancedContent: function () {
-            this.isAvdancedSettingsOpen = !this.isAvdancedSettingsOpen;
-        },
-    },
-    ready: function () {
-        if (!this.configuration.headingTag) {
-            this.configuration.headingTag = headlineDefaults.headingTag;
-        }
-    },
+    template: "<form class=\"m2c-headline-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-headline\" class=\"m2-input__label\">Headline:</label>\n            <input type=\"text\" v-model=\"configuration.title\" id=\"cfg-headline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-subheadline\" class=\"m2-input__label\">Subheadline:</label>\n            <input type=\"text\" v-model=\"configuration.subtitle\" id=\"cfg-subheadline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n    </form>",
 };
 
 var template = "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n    <cc-component-adder>\n        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only\" @click=\"createNewHeroItem( 0 )\">\n            <svg class=\"action-button__icon action-button__icon--size_300\">\n                <use xlink:href=\"../images/sprites.svg#icon_plus\"></use>\n            </svg>\n        </button>\n    </cc-component-adder>\n    <template v-for=\"item in configuration.items\">\n        <div class=\"cc-hero-carousel-configurator__item\">\n            <div class=\"cc-hero-carousel-configurator__item-actions\">\n                <cc-component-actions>\n                    <template slot=\"cc-component-actions__top\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up\" @click=\"moveHeroItemUp( $index )\" :class=\"[ isFirstComponent( $index ) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isFirstComponent( $index )\">\n                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                <use xlink:href=\"../images/sprites.svg#icon_arrow-up\"></use>\n                            </svg>\n                        </button>\n                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down\" @click=\"moveHeroItemDown( $index )\" :class=\"[ isLastComponent( $index ) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isLastComponent( $index )\">\n                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                <use xlink:href=\"../images/sprites.svg#icon_arrow-down\"></use>\n                            </svg>\n                        </button>\n                    </template>\n                    <template slot=\"cc-component-actions__bottom\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete\" @click=\"deleteHeroItem( $index )\">\n                            <svg class=\"action-button__icon\">\n                                <use xlink:href=\"../images/sprites.svg#icon_trash-can\"></use>\n                            </svg>\n                        </button>\n                    </template>\n                </cc-component-actions>\n            </div>\n            <div class=\"cc-hero-carousel-configurator__item-content\">\n                <div class=\"cc-hero-carousel__item-image\"></div>\n                <div class=\"cc-hero-carousel__item-options\">\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-variant\" class=\"cs-input__label\">Display variant:</label>\n                        <select name=\"cfg-hc-item{{ $index }}-variant\" class=\"cs-input__select\" id=\"cfg-hc-item{{ $index }}-variant\" v-model=\"configuration.displayVariant\">\n                            <option value=\"variant-1\">Text vertically centered on the left</option>\n                            <option value=\"variant-2\">Text vertically centered in the middle</option>\n                            <option value=\"variant-3\">Text on the bottom, left corner</option>\n                            <option value=\"variant-4\">Text on the bottom - centered</option>\n                        </select>\n                    </div>\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-headline\" class=\"cs-input__label\">Headline:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].headline\" id=\"cfg-hc-item{{ $index }}-headline\" class=\"cs-input__input\">\n                    </div>\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cs-input__label\">Paragraph:</label>\n                        <textarea type=\"text\" v-model=\"configuration.items[$index].paragraph\" id=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cs-input__textarea\" placeholder=\"(max 200 characters)\" maxlength=\"200\"></textarea>\n                    </div>\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-ctaLabel\" class=\"cs-input__label\">CTA label:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].ctaLabel\" id=\"cfg-hc-item{{ $index }}-ctaLabel\" class=\"cs-input__input\">\n                    </div>\n                    <div class=\"cs-input cs-input--type-addon\">\n                        <label for=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cs-input__label\">CTA label:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].ctaLabel\" id=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cs-input__input\">\n                    </div>\n                    <div class=\"cs-input cs-input--type-addon\">\n                        <label for=\"cfg-hc-item{{ $index }}-cta-target\" class=\"cs-input__label\">CTA target link:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].ctaTarget\" id=\"cfg-hc-item{{ $index }}-cta-target\" class=\"cs-input__input\">\n                        <span class=\"cs-input__addon\">\n                            <svg class=\"cs-input__addon-icon\">\n                                <use xlink:href=\"../images/sprites.svg#icon_link\"></use>\n                            </svg>\n                        </span>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <cc-component-adder v-if=\"configuration.items.length\">\n            <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only\" @click=\"createNewHeroItem( $index + 1 )\">\n                <svg class=\"action-button__icon action-button__icon--size_300\">\n                    <use xlink:href=\"../images/sprites.svg#icon_plus\"></use>\n                </svg>\n            </button>\n        </cc-component-adder>\n    </template>\n</div>\n";
@@ -3012,397 +2886,6 @@ var m2cProductCarouselConfigurator = {
 };
 
 /**
- * Product Finder preview component.
- * This component is responsible for displaying preview of Product Finder component in Layout Builder (admin panel)
- * @type {vuejs.ComponentOption} Vue component object.
- */
-var ccComponentProductFinderPreview = {
-    template: "<div class=\"cc-component-product-finder-preview\">\n        <div class=\"cc-component-product-finder-preview__scene\" :class=\"[ isConfiguratorPreview ? 'cc-component-product-finder-preview__scene--configurator' : '' ]\" v-if=\"configuration.steps.length\">\n            <h2 class=\"cc-component-product-finder-preview__scene-title\" :data-placeholder=\"'No title' | translate\">{{{ configuration.steps[stepIndex].title }}}</h2>\n\n            <div class=\"cc-component-product-finder-preview__scene-description\" :data-placeholder=\"'No description' | translate\">{{{ configuration.steps[stepIndex].description }}}</div>\n\n            <ul class=\"cc-component-product-finder-preview__scene-options\">\n                <template v-for=\"option in configuration.steps[stepIndex].options\">\n                    <li class=\"cc-component-product-finder-preview__scene-option\">\n                        <figure class=\"cc-component-product-finder-preview__scene-option-figure\">\n                            <svg class=\"cc-component-product-finder-preview__scene-option-placeholder\" v-show=\"!option.image\">\n                                <use xlink:href=\"#icon_image-placeholder\"></use>\n                            </svg>\n                            <img class=\"cc-component-product-finder-preview__scene-option-image\" src=\"{{ option.image | decode }}\" alt=\"\" v-show=\"option.image\" />\n                        </figure>\n                        <span class=\"cc-component-product-finder-preview__scene-option-label\" :data-placeholder=\"'No label' | translate\">{{{ option.label }}}</span>\n                    </li>\n                </template>\n            </ul>\n        </div>\n\n        <div class=\"cc-component-product-finder-preview__scene cc-component-product-finder-preview__scene--faded\" v-if=\"configuration.steps.length > 1 && !isConfiguratorPreview\"></div>\n    </div>",
-    props: {
-        configuration: {
-            type: Object,
-        },
-        /**
-         * Class property support to enable BEM mixes.
-         */
-        class: {
-            type: [String, Object, Array],
-            default: '',
-        },
-        /* Obtain image endpoint to place permanent url for uploaded images */
-        imageEndpoint: {
-            type: String,
-            default: '',
-        },
-        /* Obtain index of step that shall be displayed in preview */
-        stepIndex: {
-            type: Number,
-            default: 0,
-        },
-        /* Tells if preview is used in configurator component or in layout builder */
-        isConfiguratorPreview: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    filters: {
-        /** Decodes delivered image format to Base64, additionally removing escaped double-quotes
-         * @param imageUrl {string} - image url in Magento-like format with escaped double-quotes, f.e. {{media url=\"wysiwyg/image.jpg\"}}
-         * @return {string} - permanent image url that can be viewed in Magento's admin panel OR empty if something went wrong
-         */
-        decode: function (imageUrl) {
-            var decodedImage = window.btoa(imageUrl.replace(/\\\//g, "/"));
-            if (decodedImage && decodedImage.length && this.imageEndpoint.length) {
-                return this.imageEndpoint.replace('{/encoded_image}', decodedImage);
-            }
-            return '';
-        },
-        /** Translates given string
-         * @param txt {string} - original, english string to be translated
-         * @return {string} - translated string
-         */
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-    },
-};
-
-/**
- * Product Finder configurator component.
- * This component is responsible for configuring Product Finder component to be displayed as CC component. It finds products based on couple of customer answers
- * @type {vuejs.ComponentOption} Vue component object.
- */
-var ccProductFinderConfigurator = {
-    mixins: [
-        ccComponentConfigurator,
-    ],
-    components: {
-        'action-button': actionButton,
-        'cc-component-adder': componentAdder,
-        'cc-component-actions': componentActions,
-        'cc-component-placeholder': componentPlaceholder,
-        'cc-product-finder-preview': ccComponentProductFinderPreview,
-    },
-    template: "<div class=\"cc-product-finder-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-product-finder-configurator__section\">\n            <h3 class=\"cc-product-finder-configurator__subtitle\">Default settings:</h3>\n            <div class=\"cc-product-finder-configurator__scenario-options cc-product-finder-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-product-finder-configurator__section-option\">\n                    <label for=\"cfg-pf-layout-m\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">Mobile layout:</label>\n                    <select name=\"cfg-pf-layout-m\" class=\"cc-input__select\" id=\"cfg-pf-layout-m\" v-model=\"configuration.optionsPerRow.mobile\" @change=\"onChange\">\n                        <option value=\"1\">1 option per row</option>\n                        <option value=\"2\">2 options per row</option>\n                        <option value=\"3\">3 options per row</option>\n                    </select>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-product-finder-configurator__section-option\">\n                    <label for=\"cfg-pf-layout-t\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">Tablet layout:</label>\n                    <select name=\"cfg-pf-layout-t\" class=\"cc-input__select\" id=\"cfg-pf-layout-t\" v-model=\"configuration.optionsPerRow.tablet\" @change=\"onChange\">\n                        <option value=\"2\">2 options per row</option>\n                        <option value=\"3\">3 options per row</option>\n                        <option value=\"4\">4 options per row</option>\n                    </select>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-product-finder-configurator__section-option\">\n                    <label for=\"cfg-pf-layout-d\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">Desktop layout:</label>\n                    <select name=\"cfg-pf-layout-d\" class=\"cc-input__select\" id=\"cfg-pf-layout-d\" v-model=\"configuration.optionsPerRow.desktop\" @change=\"onChange\">\n                        <option value=\"3\">3 options per row</option>\n                        <option value=\"4\">4 options per row</option>\n                        <option value=\"5\">5 options per row</option>\n                        <option value=\"6\">6 options per row</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-product-finder-configurator__section\">\n            <cc-component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.steps.length\">\n                <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-component-adder__button | cc-product-finder-configurator__item-action-button\" @click=\"createStep( 0 )\">\n                    <svg class=\"action-button__icon action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </cc-component-adder>\n\n            <template v-for=\"step in configuration.steps\">\n                <div class=\"cc-product-finder-configurator__step\" id=\"m2c-product-finder-step-{{ $index }}\">\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep( $index )\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n\n                    <div class=\"cc-product-finder-configurator__step-content\">\n                        <div class=\"cc-product-finder-configurator__preview\">\n                            \n                        </div>\n\n                        <div class=\"cc-product-finder-configurator__source\">\n                            <div class=\"cc-input\">\n                                <label for=\"cfg-pf-step{{ $index }}-sourcefield\" class=\"cc-input__label\">Step data:</label>\n                                <textarea name=\"cfg-pf-step{{ $index }}-sourcefield\" class=\"cc-input__textarea\" id=\"cfg-pf-step{{ $index }}-sourcefield\" v-model=\"configuration.steps[$index].source\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.steps.length\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep( $index + 1 )\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
-    props: {
-        configuration: {
-            type: Object,
-            default: function () {
-                return {
-                    optionsPerRow: {
-                        mobile: 2,
-                        tablet: 3,
-                        desktop: 5,
-                    },
-                    steps: [
-                        {},
-                    ],
-                };
-            },
-        },
-    }
-};
-
-var IStep = {
-    "id": "",
-    "additional_css_class": "",
-    "title": "",
-    "description": "",
-    "options": [
-        {
-            "label": "",
-            "image": "",
-            "attributes": [
-                {
-                    "code": "",
-                    "values": ["", ""]
-                },
-            ],
-            "category_id": "",
-            "next_step": ""
-        },
-        {
-            "label": "",
-            "image": "",
-            "attributes": [
-                {
-                    "code": "",
-                    "range": ["", ""]
-                },
-            ],
-            "category_id": "",
-            "next_step": ""
-        },
-    ],
-};
-/**
- * Product Finder configurator component.
- * This component is responsible for configuring Product Finder component to be displayed as CC component. It finds products based on couple of customer answers
- * @type {vuejs.ComponentOption} Vue component object.
- */
-var m2cProductFinderConfigurator = {
-    mixins: [
-        ccProductFinderConfigurator,
-    ],
-    template: "<div class=\"m2c-product-finder-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"m2c-product-finder-configurator__section m2c-product-finder-configurator__section--styled\">\n            <h3 class=\"m2c-product-finder-configurator__subtitle\">{{ 'Default settings' | translate }}:</h3>\n            <div class=\"m2c-product-finder-configurator__global-options\">\n                <div class=\"m2-input | m2c-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-m\" class=\"m2-input__label | m2c-product-finder-configurator__section-option-label\">{{ 'Mobile layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-m\" class=\"m2-input__select\" id=\"cfg-pf-layout-m\" v-model=\"configuration.optionsPerRow.mobile\" @change=\"onChange\">\n                        <option value=\"1\">{{ '1 option per row' | translate }}</option>\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"m2-input | m2c-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-t\" class=\"m2-input__label | m2c-product-finder-configurator__section-option-label\">{{ 'Tablet layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-t\" class=\"m2-input__select\" id=\"cfg-pf-layout-t\" v-model=\"configuration.optionsPerRow.tablet\" @change=\"onChange\">\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"m2-input | m2c-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-d\" class=\"m2-input__label | m2c-product-finder-configurator__section-option-label\">{{ 'Desktop layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-d\" class=\"m2-input__select\" id=\"cfg-pf-layout-d\" v-model=\"configuration.optionsPerRow.desktop\" @change=\"onChange\">\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                        <option value=\"5\">{{ '5 options per row' | translate }}</option>\n                        <option value=\"6\">{{ '6 options per row' | translate }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"m2c-product-finder-configurator__section\">\n            <cc-component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.steps.length\">\n                <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-component-adder__button | m2c-product-finder-configurator__item-action-button\" @click=\"createStep(0)\">\n                    <svg class=\"action-button__icon action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </cc-component-adder>\n\n            <template v-for=\"step in configuration.steps\">\n                <div class=\"m2c-product-finder-configurator__step\" id=\"m2c-product-finder-step-{{ $index }}\">\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | m2c-product-finder-configurator__item-action-button\" @click=\"createStep($index)\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n\n                    <div class=\"m2c-product-finder-configurator__step-content\">\n                        <div :class=\"[ componentConfigurationErrors[$index] ? 'm2c-product-finder-configurator__preview m2c-product-finder-configurator__preview--error' : 'm2c-product-finder-configurator__preview' ]\">\n                            <div class=\"m2c-product-finder-configurator__error\" v-if=\"componentConfigurationErrors[$index]\">\n                                {{ componentConfigurationErrors[$index] }}\n                            </div>\n\n                            <template v-if=\"!componentConfigurationErrors[$index]\">\n                                <cc-product-finder-preview :configuration=\"configuration\" :step-index=\"$index\" :is-configurator-preview=\"true\" :image-endpoint=\"imageEndpoint\"></cc-product-finder-preview>\n                            </template>\n\n                            <div class=\"m2c-product-finder-configurator__step-actions\">\n                                <cc-component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | m2c-product-finder-configurator__item-action-button\" @click=\"moveStepUp($index)\" :class=\"[ isFirstStep($index) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isFirstStep($index)\">\n                                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | m2c-product-finder-configurator__item-action-button\" @click=\"moveStepDown( $index )\" :class=\"[ isLastStep($index) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isLastStep($index)\">\n                                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | m2c-product-finder-configurator__item-action-button\" @click=\"deleteStep($index)\">\n                                            <svg class=\"action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </cc-component-actions>\n                            </div>\n                        </div>\n\n                        <div class=\"m2-input | m2c-product-finder-configurator__source\">\n                            <div class=\"buttons-set\">\n                                <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"getImageUploader($index)\">{{ 'Insert Image' | translate }}...</button>\n                            </div>\n                            <textarea class=\"m2-input__textarea | m2c-product-finder-configurator__editor\" id=\"cfg-pf-step{{ $index }}-sourcefield\" @keydown=\"saveCaretPosition($event)\" @click=\"saveCaretPosition($event)\" v-model=\"step | prettify $index\"></textarea>\n                            <input type=\"hidden\" class=\"m2c-product-finder-configurator__imgholder\" data-step-index=\"{{$index}}\" id=\"pf-imgholder-{{$index}}\" />\n                        </div>\n                    </div>\n\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.steps.length\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | m2c-product-finder-configurator__item-action-button\" @click=\"createStep( $index + 1 )\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
-    events: {
-        /**
-         * Listen on save event from Content Configurator component.
-         */
-        'cc-component-configurator__save': function () {
-            this.configuration.isError = false;
-            for (var _i = 0, _a = this.componentConfigurationErrors; _i < _a.length; _i++) {
-                var entry = _a[_i];
-                if (entry.length) {
-                    this.configuration.isError = true;
-                }
-            }
-            this.onSave();
-        },
-    },
-    props: {
-        configuration: {
-            type: Object,
-            default: function () {
-                return {
-                    optionsPerRow: {
-                        mobile: 1,
-                        tablet: 3,
-                        desktop: 6,
-                    },
-                    steps: [JSON.parse(JSON.stringify(IStep))],
-                    isError: false,
-                };
-            },
-        },
-        /* Obtain base-url for the image uploader */
-        uploaderBaseUrl: {
-            type: String,
-            default: '',
-        },
-        /* Obtain image endpoint to place permanent url for uploaded images */
-        imageEndpoint: {
-            type: String,
-            default: '',
-        },
-    },
-    data: function () {
-        return {
-            componentConfigurationErrors: this.prepareComponentErrorsArray(),
-            caretPosition: 1,
-        };
-    },
-    filters: {
-        /**
-          * Two-way filter for step content displaing in textarea and keeping in configuration.
-         */
-        prettify: {
-            /** Displays stringified JSON in textarea if not step is not stringified yet.
-             *  If step is already stringified because it couldn't be saved, just return back what came in.
-             * @param stepContent {string} - content of textarea
-             * @param stepIndex {number} - index of a single step
-             * @return {String} - Stringified JSON of given step
-             */
-            read: function (stepContent, stepIndex) {
-                if (this.componentConfigurationErrors[stepIndex].length) {
-                    return stepContent;
-                }
-                return JSON.stringify(stepContent, null, 2);
-            },
-            /** Tests if step content provided in textarea can be JSON.parsed.
-             *  If yes - saves in component's configuration and removes step error if there was any.
-             *  If not - obtains error message and passes it to setError method. Returns what came in.
-             * @param newStepContent {string} - current content of textarea
-             * @param oldStepContent {string} - content of textarea in state it was before change was made
-             * @param stepIndex {number} - index of a single step
-             * @return {JSON, String} - if string can be parsed to JSON, returns JSON, otherwise String
-             */
-            write: function (newStepContent, oldStepContent, stepIndex) {
-                var result;
-                try {
-                    result = JSON.parse(newStepContent);
-                }
-                catch (err) {
-                    if (err.hasOwnProperty('message')) {
-                        this.setError(stepIndex, err.message);
-                    }
-                    else {
-                        this.setError(stepIndex, JSON.stringify(err));
-                    }
-                }
-                
-                if (result) {
-                    this.clearError(stepIndex);
-                    return result;
-                }
-                return newStepContent;
-            },
-        },
-        /** Translates given string
-         * @param txt {string} - original, english string to be translated
-         * @return {string} - translated string
-         */
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-    },
-    methods: {
-        /** Pushes error message to the componentConfigurationErrors Array on given index
-         * @param stepIndex {number} - index of a single step
-         */
-        setError: function (stepIndex, err) {
-            this.componentConfigurationErrors.$set(stepIndex, err);
-        },
-        /** Clears error message from the given index of componentConfigurationErrors Array
-         * @param stepIndex {number} - index of a single step
-         */
-        clearError: function (stepIndex) {
-            this.componentConfigurationErrors.$set(stepIndex, '');
-        },
-        /** Creates new step on given position
-         * @param stepIndex {number} - index of a new step to be created in
-         */
-        createStep: function (stepIndex) {
-            this.configuration.steps.splice(stepIndex, 0, JSON.parse(JSON.stringify(IStep)));
-            this.componentConfigurationErrors.splice(stepIndex, 0, '');
-        },
-        /** Removes given step after "Delete" button is clicked
-         * @param stepIndex {number} - index of step to remove
-         */
-        deleteStep: function (stepIndex) {
-            var component = this;
-            confirm({
-                content: $.mage.__('Are you sure you want to delete this step?'),
-                actions: {
-                    confirm: function () {
-                        component.configuration.steps.splice(stepIndex, 1);
-                        component.componentConfigurationErrors.splice(stepIndex, 1);
-                    }
-                },
-            });
-        },
-        /** Prepares errors array for every step on each component render.
-         *  It's not saved in configuration so must be called on every open
-         * @return {Array} - array with as many empty entires as steps provided
-         */
-        prepareComponentErrorsArray: function () {
-            var errorsArray = [];
-            for (var _i = 0, _a = this.configuration.steps; _i < _a.length; _i++) {
-                var step = _a[_i];
-                errorsArray.push('');
-            }
-            return errorsArray;
-        },
-        /** Opens Magento's built-in image uploader/chooser modal
-         * @param stepIndex {number} - index of a step for which image is inserted
-         */
-        getImageUploader: function (stepIndex) {
-            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/pf-imgholder-" + stepIndex, 'auto', 'auto', $.mage.__('Insert File...'), {
-                closed: true,
-            });
-        },
-        /* Listener for image uploader
-         * Since Magento does not provide any callback after image has been chosen
-         * we have to watch for target where decoded url is placed
-         */
-        imageUploadListener: function () {
-            var component = this;
-            var isAlreadyCalled = false;
-            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.m2c-product-finder-configurator__imgholder', function (event) {
-                if (!isAlreadyCalled) {
-                    isAlreadyCalled = true;
-                    component.setImageUrl(event);
-                    setTimeout(function () {
-                        isAlreadyCalled = false;
-                    }, 100);
-                }
-            });
-        },
-        /** Action after image was uploaded
-         * URL is encoded.
-         * - strips it and decode Base64 to get {{ media url="..."}} format which will go to the step.image and will be used to display image on front end.
-         * - escapes all double-quotes inside this new url format
-         * - puts newly created string into proper place (where cursor was last time)
-         * - trigger change event so that vue knows step content has changed
-         * @param event {Event} - event passed from upload action
-         */
-        setImageUrl: function (event) {
-            var input = event.target;
-            var encodedImage = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
-            var imageUrl = window.atob(encodedImage);
-            var stepEl = input.previousElementSibling;
-            var stepText = stepEl.value;
-            var finalImageUrl = imageUrl.replace(/\"/g, '\\"');
-            stepEl.value = stepText.substr(0, this.caretPosition) + finalImageUrl + stepText.substr(this.caretPosition);
-            $(stepEl).trigger('change');
-        },
-        /** Saves caret position in step's textarea on every click and keydown
-         * @param event {Event} - click/keyup event
-         */
-        saveCaretPosition: function (event) {
-            var el = event.target;
-            this.caretPosition = el.selectionStart || 0;
-        },
-        /**
-         * Moves step under given index up by swaping it with previous element.
-         * @param {number} stepIndex step's index in array.
-         */
-        moveStepUp: function (stepIndex) {
-            var _this = this;
-            if (stepIndex > 0) {
-                var $thisItem_1 = $("#m2c-product-finder-step-" + stepIndex);
-                var $prevItem_1 = $("#m2c-product-finder-step-" + (stepIndex - 1));
-                $thisItem_1.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
-                $prevItem_1.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
-                setTimeout(function () {
-                    _this.configuration.steps.splice(stepIndex - 1, 0, _this.configuration.steps.splice(stepIndex, 1)[0]);
-                    $thisItem_1.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
-                    $prevItem_1.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
-                }, 400);
-            }
-        },
-        /**
-         * Moves step under given index down by swaping it with next element.
-         * @param {number} stepIndex step's index in array.
-         */
-        moveStepDown: function (stepIndex) {
-            var _this = this;
-            if (stepIndex < this.configuration.steps.length - 1) {
-                var $thisItem_2 = $("#m2c-product-finder-step-" + stepIndex);
-                var $nextItem_1 = $("#m2c-product-finder-step-" + (stepIndex + 1));
-                $thisItem_2.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
-                $nextItem_1.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px )");
-                setTimeout(function () {
-                    _this.configuration.steps.splice(stepIndex + 1, 0, _this.configuration.steps.splice(stepIndex, 1)[0]);
-                    $thisItem_2.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
-                    $nextItem_1.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
-                }, 400);
-            }
-        },
-        /**
-         * Tells if step with given index is the first step.
-         * @param  {number}  stepIndex Index of the step.
-         * @return {boolean} If step is first in array.
-         */
-        isFirstStep: function (stepIndex) {
-            return stepIndex === 0;
-        },
-        /**
-         * Tells if step with given index is the last step.
-         * @param  {number}  stepIndex Index of the step.
-         * @return {boolean} If step is last in array.
-         */
-        isLastStep: function (stepIndex) {
-            return stepIndex === this.configuration.steps.length - 1;
-        },
-    },
-    ready: function () {
-        this.imageUploadListener();
-    },
-};
-
-/**
  * Product grid configurator component.
  * This component is responsible for displaying products grid  configuration form
  * @type {vuejs.ComponentOption} Vue component object.
@@ -3836,6 +3319,396 @@ var m2cStaticBlockConfigurator = {
                 this.onSave();
             }
         },
+    },
+};
+
+/**
+ * Product Finder preview component.
+ * This component is responsible for displaying preview of Product Finder component in Layout Builder (admin panel)
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var ccComponentProductFinderPreview = {
+    template: "<div class=\"cc-component-product-finder-preview\">\n        <div class=\"cc-component-product-finder-preview__scene\" :class=\"[ isConfiguratorPreview ? 'cc-component-product-finder-preview__scene--configurator' : '' ]\" v-if=\"configuration.steps.length\">\n            <h2 class=\"cc-component-product-finder-preview__scene-title\" :data-placeholder=\"'No title' | translate\">{{{ configuration.steps[stepIndex].title }}}</h2>\n\n            <div class=\"cc-component-product-finder-preview__scene-description\" :data-placeholder=\"'No description' | translate\">{{{ configuration.steps[stepIndex].description }}}</div>\n\n            <ul class=\"cc-component-product-finder-preview__scene-options\">\n                <template v-for=\"option in configuration.steps[stepIndex].options\">\n                    <li class=\"cc-component-product-finder-preview__scene-option\">\n                        <figure class=\"cc-component-product-finder-preview__scene-option-figure\">\n                            <svg class=\"cc-component-product-finder-preview__scene-option-placeholder\" v-show=\"!option.image\">\n                                <use xlink:href=\"#icon_image-placeholder\"></use>\n                            </svg>\n                            <img class=\"cc-component-product-finder-preview__scene-option-image\" src=\"{{ option.image | decode }}\" alt=\"\" v-show=\"option.image\" />\n                        </figure>\n                        <span class=\"cc-component-product-finder-preview__scene-option-label\" :data-placeholder=\"'No label' | translate\">{{{ option.label }}}</span>\n                    </li>\n                </template>\n            </ul>\n        </div>\n\n        <div class=\"cc-component-product-finder-preview__scene cc-component-product-finder-preview__scene--faded\" v-if=\"configuration.steps.length > 1 && !isConfiguratorPreview\"></div>\n    </div>",
+    props: {
+        configuration: {
+            type: Object,
+        },
+        /**
+         * Class property support to enable BEM mixes.
+         */
+        class: {
+            type: [String, Object, Array],
+            default: '',
+        },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
+        },
+        /* Obtain index of step that shall be displayed in preview */
+        stepIndex: {
+            type: Number,
+            default: 0,
+        },
+        /* Tells if preview is used in configurator component or in layout builder */
+        isConfiguratorPreview: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    filters: {
+        /** Decodes delivered image format to Base64, additionally removing escaped double-quotes
+         * @param imageUrl {string} - image url in Magento-like format with escaped double-quotes, f.e. {{media url=\"wysiwyg/image.jpg\"}}
+         * @return {string} - permanent image url that can be viewed in Magento's admin panel OR empty if something went wrong
+         */
+        decode: function (imageUrl) {
+            var decodedImage = window.btoa(imageUrl.replace(/\\\//g, "/"));
+            if (decodedImage && decodedImage.length && this.imageEndpoint.length) {
+                return this.imageEndpoint.replace('{/encoded_image}', decodedImage);
+            }
+            return '';
+        },
+        /** Translates given string
+         * @param txt {string} - original, english string to be translated
+         * @return {string} - translated string
+         */
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+    },
+};
+
+/**
+ * Product Finder configurator component.
+ * This component is responsible for configuring Product Finder component to be displayed as CC component. It finds products based on couple of customer answers
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var ccProductFinderConfigurator = {
+    mixins: [
+        ccComponentConfigurator,
+    ],
+    components: {
+        'action-button': actionButton,
+        'cc-component-adder': componentAdder,
+        'cc-component-actions': componentActions,
+        'cc-component-placeholder': componentPlaceholder,
+        'cc-product-finder-preview': ccComponentProductFinderPreview,
+    },
+    template: "<div class=\"cc-product-finder-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-product-finder-configurator__section\">\n            <h3 class=\"cc-product-finder-configurator__subtitle\">Default settings:</h3>\n            <div class=\"cc-product-finder-configurator__scenario-options cc-product-finder-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-product-finder-configurator__section-option\">\n                    <label for=\"cfg-pf-layout-m\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">Mobile layout:</label>\n                    <select name=\"cfg-pf-layout-m\" class=\"cc-input__select\" id=\"cfg-pf-layout-m\" v-model=\"configuration.optionsPerRow.mobile\" @change=\"onChange\">\n                        <option value=\"1\">1 option per row</option>\n                        <option value=\"2\">2 options per row</option>\n                        <option value=\"3\">3 options per row</option>\n                    </select>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-product-finder-configurator__section-option\">\n                    <label for=\"cfg-pf-layout-t\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">Tablet layout:</label>\n                    <select name=\"cfg-pf-layout-t\" class=\"cc-input__select\" id=\"cfg-pf-layout-t\" v-model=\"configuration.optionsPerRow.tablet\" @change=\"onChange\">\n                        <option value=\"2\">2 options per row</option>\n                        <option value=\"3\">3 options per row</option>\n                        <option value=\"4\">4 options per row</option>\n                    </select>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-product-finder-configurator__section-option\">\n                    <label for=\"cfg-pf-layout-d\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">Desktop layout:</label>\n                    <select name=\"cfg-pf-layout-d\" class=\"cc-input__select\" id=\"cfg-pf-layout-d\" v-model=\"configuration.optionsPerRow.desktop\" @change=\"onChange\">\n                        <option value=\"3\">3 options per row</option>\n                        <option value=\"4\">4 options per row</option>\n                        <option value=\"5\">5 options per row</option>\n                        <option value=\"6\">6 options per row</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-product-finder-configurator__section\">\n            <cc-component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.steps.length\">\n                <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-component-adder__button | cc-product-finder-configurator__item-action-button\" @click=\"createStep( 0 )\">\n                    <svg class=\"action-button__icon action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </cc-component-adder>\n\n            <template v-for=\"step in configuration.steps\">\n                <div class=\"cc-product-finder-configurator__step\" id=\"m2c-product-finder-step-{{ $index }}\">\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep( $index )\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n\n                    <div class=\"cc-product-finder-configurator__step-content\">\n                        <div class=\"cc-product-finder-configurator__preview\">\n                            \n                        </div>\n\n                        <div class=\"cc-product-finder-configurator__source\">\n                            <div class=\"cc-input\">\n                                <label for=\"cfg-pf-step{{ $index }}-sourcefield\" class=\"cc-input__label\">Step data:</label>\n                                <textarea name=\"cfg-pf-step{{ $index }}-sourcefield\" class=\"cc-input__textarea\" id=\"cfg-pf-step{{ $index }}-sourcefield\" v-model=\"configuration.steps[$index].source\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.steps.length\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep( $index + 1 )\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
+    props: {
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    optionsPerRow: {
+                        mobile: 2,
+                        tablet: 3,
+                        desktop: 5,
+                    },
+                    steps: [
+                        {},
+                    ],
+                };
+            },
+        },
+    }
+};
+
+var IStep = {
+    "id": "",
+    "title": "",
+    "description": "",
+    "options": [
+        {
+            "label": "",
+            "image": "",
+            "attributes": [
+                {
+                    "code": "",
+                    "values": ["", ""]
+                },
+            ],
+            "category_id": "",
+            "next_step": ""
+        },
+        {
+            "label": "",
+            "image": "",
+            "attributes": [
+                {
+                    "code": "",
+                    "range": ["", ""]
+                },
+            ],
+            "category_id": "",
+            "next_step": ""
+        },
+    ],
+};
+/**
+ * Product Finder configurator component.
+ * This component is responsible for configuring Product Finder component to be displayed as CC component. It finds products based on couple of customer answers
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var m2cProductFinderConfigurator = {
+    mixins: [
+        ccProductFinderConfigurator,
+    ],
+    template: "<div class=\"m2c-product-finder-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"m2c-product-finder-configurator__section m2c-product-finder-configurator__section--styled\">\n            <h3 class=\"m2c-product-finder-configurator__subtitle\">{{ 'Default settings' | translate }}:</h3>\n            <div class=\"m2c-product-finder-configurator__global-options\">\n                <div class=\"m2-input | m2c-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-m\" class=\"m2-input__label | m2c-product-finder-configurator__section-option-label\">{{ 'Mobile layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-m\" class=\"m2-input__select\" id=\"cfg-pf-layout-m\" v-model=\"configuration.optionsPerRow.mobile\" @change=\"onChange\">\n                        <option value=\"1\">{{ '1 option per row' | translate }}</option>\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"m2-input | m2c-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-t\" class=\"m2-input__label | m2c-product-finder-configurator__section-option-label\">{{ 'Tablet layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-t\" class=\"m2-input__select\" id=\"cfg-pf-layout-t\" v-model=\"configuration.optionsPerRow.tablet\" @change=\"onChange\">\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"m2-input | m2c-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-d\" class=\"m2-input__label | m2c-product-finder-configurator__section-option-label\">{{ 'Desktop layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-d\" class=\"m2-input__select\" id=\"cfg-pf-layout-d\" v-model=\"configuration.optionsPerRow.desktop\" @change=\"onChange\">\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                        <option value=\"5\">{{ '5 options per row' | translate }}</option>\n                        <option value=\"6\">{{ '6 options per row' | translate }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"m2c-product-finder-configurator__section\">\n            <cc-component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.steps.length\">\n                <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | cc-component-adder__button | m2c-product-finder-configurator__item-action-button\" @click=\"createStep(0)\">\n                    <svg class=\"action-button__icon action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </cc-component-adder>\n\n            <template v-for=\"step in configuration.steps\">\n                <div class=\"m2c-product-finder-configurator__step\" id=\"m2c-product-finder-step-{{ $index }}\">\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | m2c-product-finder-configurator__item-action-button\" @click=\"createStep($index)\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n\n                    <div class=\"m2c-product-finder-configurator__step-content\">\n                        <div :class=\"[ componentConfigurationErrors[$index] ? 'm2c-product-finder-configurator__preview m2c-product-finder-configurator__preview--error' : 'm2c-product-finder-configurator__preview' ]\">\n                            <div class=\"m2c-product-finder-configurator__error\" v-if=\"componentConfigurationErrors[$index]\">\n                                {{ componentConfigurationErrors[$index] }}\n                            </div>\n\n                            <template v-if=\"!componentConfigurationErrors[$index]\">\n                                <cc-product-finder-preview :configuration=\"configuration\" :step-index=\"$index\" :is-configurator-preview=\"true\" :image-endpoint=\"imageEndpoint\"></cc-product-finder-preview>\n                            </template>\n\n                            <div class=\"m2c-product-finder-configurator__step-actions\">\n                                <cc-component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | m2c-product-finder-configurator__item-action-button\" @click=\"moveStepUp($index)\" :class=\"[ isFirstStep($index) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isFirstStep($index)\">\n                                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | m2c-product-finder-configurator__item-action-button\" @click=\"moveStepDown( $index )\" :class=\"[ isLastStep($index) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isLastStep($index)\">\n                                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | m2c-product-finder-configurator__item-action-button\" @click=\"deleteStep($index)\">\n                                            <svg class=\"action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </cc-component-actions>\n                            </div>\n                        </div>\n\n                        <div class=\"m2-input | m2c-product-finder-configurator__source\">\n                            <div class=\"buttons-set\">\n                                <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"getImageUploader($index)\">{{ 'Insert Image' | translate }}...</button>\n                            </div>\n                            <textarea class=\"m2-input__textarea | m2c-product-finder-configurator__editor\" id=\"cfg-pf-step{{ $index }}-sourcefield\" @keydown=\"saveCaretPosition($event)\" @click=\"saveCaretPosition($event)\" v-model=\"step | prettify $index\"></textarea>\n                            <input type=\"hidden\" class=\"m2c-product-finder-configurator__imgholder\" data-step-index=\"{{$index}}\" id=\"pf-imgholder-{{$index}}\" />\n                        </div>\n                    </div>\n\n                    <cc-component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.steps.length\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only | m2c-product-finder-configurator__item-action-button\" @click=\"createStep( $index + 1 )\">\n                            <svg class=\"action-button__icon action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </cc-component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         */
+        'cc-component-configurator__save': function () {
+            this.configuration.isError = false;
+            for (var _i = 0, _a = this.componentConfigurationErrors; _i < _a.length; _i++) {
+                var entry = _a[_i];
+                if (entry.length) {
+                    this.configuration.isError = true;
+                }
+            }
+            this.onSave();
+        },
+    },
+    props: {
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    optionsPerRow: {
+                        mobile: 1,
+                        tablet: 3,
+                        desktop: 6,
+                    },
+                    steps: [JSON.parse(JSON.stringify(IStep))],
+                    isError: false,
+                };
+            },
+        },
+        /* Obtain base-url for the image uploader */
+        uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
+        },
+    },
+    data: function () {
+        return {
+            componentConfigurationErrors: this.prepareComponentErrorsArray(),
+            caretPosition: 1,
+        };
+    },
+    filters: {
+        /**
+          * Two-way filter for step content displaing in textarea and keeping in configuration.
+         */
+        prettify: {
+            /** Displays stringified JSON in textarea if not step is not stringified yet.
+             *  If step is already stringified because it couldn't be saved, just return back what came in.
+             * @param stepContent {string} - content of textarea
+             * @param stepIndex {number} - index of a single step
+             * @return {String} - Stringified JSON of given step
+             */
+            read: function (stepContent, stepIndex) {
+                if (this.componentConfigurationErrors[stepIndex].length) {
+                    return stepContent;
+                }
+                return JSON.stringify(stepContent, null, 2);
+            },
+            /** Tests if step content provided in textarea can be JSON.parsed.
+             *  If yes - saves in component's configuration and removes step error if there was any.
+             *  If not - obtains error message and passes it to setError method. Returns what came in.
+             * @param newStepContent {string} - current content of textarea
+             * @param oldStepContent {string} - content of textarea in state it was before change was made
+             * @param stepIndex {number} - index of a single step
+             * @return {JSON, String} - if string can be parsed to JSON, returns JSON, otherwise String
+             */
+            write: function (newStepContent, oldStepContent, stepIndex) {
+                var result;
+                try {
+                    result = JSON.parse(newStepContent);
+                }
+                catch (err) {
+                    if (err.hasOwnProperty('message')) {
+                        this.setError(stepIndex, err.message);
+                    }
+                    else {
+                        this.setError(stepIndex, JSON.stringify(err));
+                    }
+                }
+                
+                if (result) {
+                    this.clearError(stepIndex);
+                    return result;
+                }
+                return newStepContent;
+            },
+        },
+        /** Translates given string
+         * @param txt {string} - original, english string to be translated
+         * @return {string} - translated string
+         */
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+    },
+    methods: {
+        /** Pushes error message to the componentConfigurationErrors Array on given index
+         * @param stepIndex {number} - index of a single step
+         */
+        setError: function (stepIndex, err) {
+            this.componentConfigurationErrors.$set(stepIndex, err);
+        },
+        /** Clears error message from the given index of componentConfigurationErrors Array
+         * @param stepIndex {number} - index of a single step
+         */
+        clearError: function (stepIndex) {
+            this.componentConfigurationErrors.$set(stepIndex, '');
+        },
+        /** Creates new step on given position
+         * @param stepIndex {number} - index of a new step to be created in
+         */
+        createStep: function (stepIndex) {
+            this.configuration.steps.splice(stepIndex, 0, JSON.parse(JSON.stringify(IStep)));
+            this.componentConfigurationErrors.splice(stepIndex, 0, '');
+        },
+        /** Removes given step after "Delete" button is clicked
+         * @param stepIndex {number} - index of step to remove
+         */
+        deleteStep: function (stepIndex) {
+            var component = this;
+            confirm({
+                content: $.mage.__('Are you sure you want to delete this step?'),
+                actions: {
+                    confirm: function () {
+                        component.configuration.steps.splice(stepIndex, 1);
+                        component.componentConfigurationErrors.splice(stepIndex, 1);
+                    }
+                },
+            });
+        },
+        /** Prepares errors array for every step on each component render.
+         *  It's not saved in configuration so must be called on every open
+         * @return {Array} - array with as many empty entires as steps provided
+         */
+        prepareComponentErrorsArray: function () {
+            var errorsArray = [];
+            for (var _i = 0, _a = this.configuration.steps; _i < _a.length; _i++) {
+                var step = _a[_i];
+                errorsArray.push('');
+            }
+            return errorsArray;
+        },
+        /** Opens Magento's built-in image uploader/chooser modal
+         * @param stepIndex {number} - index of a step for which image is inserted
+         */
+        getImageUploader: function (stepIndex) {
+            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/pf-imgholder-" + stepIndex, 'auto', 'auto', $.mage.__('Insert File...'), {
+                closed: true,
+            });
+        },
+        /* Listener for image uploader
+         * Since Magento does not provide any callback after image has been chosen
+         * we have to watch for target where decoded url is placed
+         */
+        imageUploadListener: function () {
+            var component = this;
+            var isAlreadyCalled = false;
+            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
+            $(document).on('change', '.m2c-product-finder-configurator__imgholder', function (event) {
+                if (!isAlreadyCalled) {
+                    isAlreadyCalled = true;
+                    component.setImageUrl(event);
+                    setTimeout(function () {
+                        isAlreadyCalled = false;
+                    }, 100);
+                }
+            });
+        },
+        /** Action after image was uploaded
+         * URL is encoded.
+         * - strips it and decode Base64 to get {{ media url="..."}} format which will go to the step.image and will be used to display image on front end.
+         * - escapes all double-quotes inside this new url format
+         * - puts newly created string into proper place (where cursor was last time)
+         * - trigger change event so that vue knows step content has changed
+         * @param event {Event} - event passed from upload action
+         */
+        setImageUrl: function (event) {
+            var input = event.target;
+            var encodedImage = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
+            var imageUrl = window.atob(encodedImage);
+            var stepEl = input.previousElementSibling;
+            var stepText = stepEl.value;
+            var finalImageUrl = imageUrl.replace(/\"/g, '\\"');
+            stepEl.value = stepText.substr(0, this.caretPosition) + finalImageUrl + stepText.substr(this.caretPosition);
+            $(stepEl).trigger('change');
+        },
+        /** Saves caret position in step's textarea on every click and keydown
+         * @param event {Event} - click/keyup event
+         */
+        saveCaretPosition: function (event) {
+            var el = event.target;
+            this.caretPosition = el.selectionStart || 0;
+        },
+        /**
+         * Moves step under given index up by swaping it with previous element.
+         * @param {number} stepIndex step's index in array.
+         */
+        moveStepUp: function (stepIndex) {
+            var _this = this;
+            if (stepIndex > 0) {
+                var $thisItem_1 = $("#m2c-product-finder-step-" + stepIndex);
+                var $prevItem_1 = $("#m2c-product-finder-step-" + (stepIndex - 1));
+                $thisItem_1.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
+                $prevItem_1.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
+                setTimeout(function () {
+                    _this.configuration.steps.splice(stepIndex - 1, 0, _this.configuration.steps.splice(stepIndex, 1)[0]);
+                    $thisItem_1.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
+                    $prevItem_1.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
+                }, 400);
+            }
+        },
+        /**
+         * Moves step under given index down by swaping it with next element.
+         * @param {number} stepIndex step's index in array.
+         */
+        moveStepDown: function (stepIndex) {
+            var _this = this;
+            if (stepIndex < this.configuration.steps.length - 1) {
+                var $thisItem_2 = $("#m2c-product-finder-step-" + stepIndex);
+                var $nextItem_1 = $("#m2c-product-finder-step-" + (stepIndex + 1));
+                $thisItem_2.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
+                $nextItem_1.addClass('m2c-product-finder-configurator__step--animating').css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px )");
+                setTimeout(function () {
+                    _this.configuration.steps.splice(stepIndex + 1, 0, _this.configuration.steps.splice(stepIndex, 1)[0]);
+                    $thisItem_2.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
+                    $nextItem_1.removeClass('m2c-product-finder-configurator__step--animating').css('transform', '');
+                }, 400);
+            }
+        },
+        /**
+         * Tells if step with given index is the first step.
+         * @param  {number}  stepIndex Index of the step.
+         * @return {boolean} If step is first in array.
+         */
+        isFirstStep: function (stepIndex) {
+            return stepIndex === 0;
+        },
+        /**
+         * Tells if step with given index is the last step.
+         * @param  {number}  stepIndex Index of the step.
+         * @return {boolean} If step is last in array.
+         */
+        isLastStep: function (stepIndex) {
+            return stepIndex === this.configuration.steps.length - 1;
+        },
+    },
+    ready: function () {
+        this.imageUploadListener();
     },
 };
 
@@ -4310,27 +4183,6 @@ var ccComponentCustomHtmlPreview = {
 };
 
 /**
- * Daily deal teaser preview component.
- * This component is responsible for displaying preview of daily deal teaser component in Layout Builder (admin panel)
- * @type {vuejs.ComponentOption} Vue component object.
- */
-var ccComponentDailyDealTeaserPreview = {
-    template: "<div class=\"cc-component-daily-deal-teaser-preview\">\n        <div class=\"cc-component-daily-deal-teaser-preview__container\">\n            <div class=\"cc-component-daily-deal-teaser-preview__main\">\n                <div class=\"cc-component-daily-deal-teaser-preview__photo-mockup\">\n                    <svg class=\"cc-component-daily-deal-teaser-preview__cart-icon\">\n                        <use xlink:href=\"#cart\" href=\"#cart\"/>\n                    </svg>\n                </div>\n                <div class=\"cc-component-daily-deal-teaser-preview__product-info\">\n                    <div class=\"cc-component-daily-deal-teaser-preview__product-info-container\">\n                        <p class=\"cc-component-daily-deal-teaser-preview__product-data\" v-if=\"configuration.category_id\">category ID: {{{ configuration.category_id }}}</p>\n                        <p class=\"cc-component-daily-deal-teaser-preview__product-data\" v-if=\"configuration.skus\">SKU: {{{ configuration.skus }}}</p>\n                    </div>\n                    <div class=\"cc-component-daily-deal-teaser-preview__product-info-container\">                    \n                        <div class=\"cc-component-daily-deal-teaser-preview__countdown-mockup\">\n                            <div class=\"cc-component-daily-deal-teaser-preview__clock\">\n                                <svg class=\"cc-component-daily-deal-teaser-preview__clock-icon\">\n                                    <use xlink:href=\"#clock\" href=\"#clock\"/>\n                                </svg>\n                            </div>\n                            <div>\n                                <span class=\"cc-component-daily-deal-teaser-preview__countdown-digits\">12</span> :\n                                <span class=\"cc-component-daily-deal-teaser-preview__countdown-digits\">34</span> :\n                                <span class=\"cc-component-daily-deal-teaser-preview__countdown-digits\">56</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"cc-component-daily-deal-teaser-preview__buttons-mockup\">\n                <div class=\"cc-component-daily-deal-teaser-preview__button-mockup-1st\"></div>\n                <div class=\"cc-component-daily-deal-teaser-preview__button-mockup-2nd\"></div>\n                <div class=\"cc-component-daily-deal-teaser-preview__button-mockup-3rd\"></div>\n            </div>\n        </div>\n    </div>",
-    props: {
-        configuration: {
-            type: Object,
-        },
-        /**
-         * Class property support to enable BEM mixes.
-         */
-        class: {
-            type: [String, Object, Array],
-            default: '',
-        }
-    },
-};
-
-/**
  * CC components display switcher.
  * This component is responsible for collecting input about display of given component on the FE side
  * it determines whether component should be shown on mobile, desktop, both or shouldn't be shown at all
@@ -4374,7 +4226,6 @@ var layoutBuilder = {
         'cc-component-magento-product-grid-teasers-preview': ccComponentMagentoProductGridTeasersPreview,
         'cc-component-custom-html-preview': ccComponentCustomHtmlPreview,
         'cc-component-product-finder-preview': ccComponentProductFinderPreview,
-        'cc-component-daily-deal-teaser-preview': ccComponentDailyDealTeaserPreview,
     },
     props: {
         /**
@@ -4895,7 +4746,6 @@ var m2cContentConstructor = {
         'm2c-custom-html-configurator': m2cCustomHtmlConfigurator,
         'm2c-cms-pages-teaser-configurator': m2cCmsPagesTeaserConfigurator,
         'm2c-product-finder-configurator': m2cProductFinderConfigurator,
-        'm2c-daily-deal-teaser-configurator': m2cDailyDealTeaserConfigurator,
     },
     props: {
         configuration: {

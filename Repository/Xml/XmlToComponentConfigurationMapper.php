@@ -4,6 +4,11 @@ namespace MageSuite\ContentConstructorAdmin\Repository\Xml;
 
 class XmlToComponentConfigurationMapper
 {
+    private $componentClasses = [
+        'Creativestyle\ContentConstructorFrontendExtension\Block\Component',
+        'MageSuite\ContentConstructorFrontend\Block\Component'
+    ];
+
     /**
      * Maps XML Layout definition to corresponding components configuration
      * @param $xml
@@ -108,7 +113,7 @@ class XmlToComponentConfigurationMapper
      */
     private function isComponentBlock($block)
     {
-        return $block->attributes()->class == 'MageSuite\ContentConstructorFrontend\Block\Component';
+        return in_array($block->attributes()->class, $this->componentClasses);
     }
 
     /**
