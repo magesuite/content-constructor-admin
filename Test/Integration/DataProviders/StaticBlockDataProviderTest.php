@@ -29,6 +29,7 @@ class StaticBlockDataProviderTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoDbIsolation enabled
+     * @magentoDataFixture removeAllStaticBlocks
      * @magentoDataFixture Magento/Cms/_files/block.php
      * @magentoDataFixture loadSecondBlockFixture
      */
@@ -46,4 +47,7 @@ class StaticBlockDataProviderTest extends \PHPUnit\Framework\TestCase
         require __DIR__.'/_files/block.php';
     }
 
+    public static function removeAllStaticBlocks() {
+        require __DIR__.'/_files/remove_all_blocks.php';
+    }
 }
