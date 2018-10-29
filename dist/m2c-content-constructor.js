@@ -1058,7 +1058,34 @@ var m2cHeadlineConfigurator = {
     mixins: [
         ccHeadlineConfigurator,
     ],
-    template: "<form class=\"m2c-headline-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-headline\" class=\"m2-input__label\">Headline:</label>\n            <input type=\"text\" v-model=\"configuration.title\" id=\"cfg-headline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-subheadline\" class=\"m2-input__label\">Subheadline:</label>\n            <input type=\"text\" v-model=\"configuration.subtitle\" id=\"cfg-subheadline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n    </form>",
+    template: "<div class=\"m2c-headline-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-headline\" class=\"m2-input__label\">" + $t('Headline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.title\" id=\"cfg-headline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"m2-input m2-input--type-inline\">\n            <label for=\"cfg-subheadline\" class=\"m2-input__label\">" + $t('Subheadline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.subtitle\" id=\"cfg-subheadline\" class=\"m2-input__input\" @change=\"onChange\">\n        </div>\n\n        <div class=\"m2c-headline-configurator__advanced-trigger\">\n            <span :class=\"isAvdancedSettingsOpen ? 'active' : ''\" role=\"button\" @click=\"toggleAdvancedContent()\">" + $t('Advanced settings') + "</span>\n        </div>\n\n        <div class=\"m2c-headline-configurator__advanced-content\" v-show=\"isAvdancedSettingsOpen\">\n            <div class=\"m2-input m2-input--type-inline\">\n                <label for=\"cfg-heading-tag\" class=\"m2-input__label\">" + $t('Level of Heading tag') + ":</label>\n                <select name=\"cfg-heading-tag\" class=\"m2-input__select\" id=\"cfg-heading-tag\" v-model=\"configuration.headingTag\" @change=\"onChange\">\n                    <option v-for=\"n in 6\" value=\"h{{ n+1 }}\" :selected=\"n+1 === configuration.headingTag\">Heading {{ n+1 }} (h{{ n+1 }})</option>\n                </select>\n            </div>\n        </div>\n    </div>",
+    props: {
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    title: '',
+                    subtitle: '',
+                    headingTag: 'h2',
+                };
+            },
+        },
+    },
+    data: function () {
+        return {
+            isAvdancedSettingsOpen: false,
+        };
+    },
+    methods: {
+        toggleAdvancedContent: function () {
+            this.isAvdancedSettingsOpen = !this.isAvdancedSettingsOpen;
+        },
+    },
+    ready: function () {
+        if (!this.configuration.headingTag) {
+            this.configuration.headingTag = 'h2';
+        }
+    },
 };
 
 var template = "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n    <cc-component-adder>\n        <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only\" @click=\"createNewHeroItem( 0 )\">\n            <svg class=\"action-button__icon action-button__icon--size_300\">\n                <use xlink:href=\"../images/sprites.svg#icon_plus\"></use>\n            </svg>\n        </button>\n    </cc-component-adder>\n    <template v-for=\"item in configuration.items\">\n        <div class=\"cc-hero-carousel-configurator__item\">\n            <div class=\"cc-hero-carousel-configurator__item-actions\">\n                <cc-component-actions>\n                    <template slot=\"cc-component-actions__top\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up\" @click=\"moveHeroItemUp( $index )\" :class=\"[ isFirstComponent( $index ) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isFirstComponent( $index )\">\n                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                <use xlink:href=\"../images/sprites.svg#icon_arrow-up\"></use>\n                            </svg>\n                        </button>\n                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down\" @click=\"moveHeroItemDown( $index )\" :class=\"[ isLastComponent( $index ) ? 'action-button--look_disabled' : '' ]\" :disabled=\"isLastComponent( $index )\">\n                            <svg class=\"action-button__icon action-button__icon--size_100\">\n                                <use xlink:href=\"../images/sprites.svg#icon_arrow-down\"></use>\n                            </svg>\n                        </button>\n                    </template>\n                    <template slot=\"cc-component-actions__bottom\">\n                        <button is=\"action-button\" class=\"action-button action-button--look_default action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete\" @click=\"deleteHeroItem( $index )\">\n                            <svg class=\"action-button__icon\">\n                                <use xlink:href=\"../images/sprites.svg#icon_trash-can\"></use>\n                            </svg>\n                        </button>\n                    </template>\n                </cc-component-actions>\n            </div>\n            <div class=\"cc-hero-carousel-configurator__item-content\">\n                <div class=\"cc-hero-carousel__item-image\"></div>\n                <div class=\"cc-hero-carousel__item-options\">\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-variant\" class=\"cs-input__label\">Display variant:</label>\n                        <select name=\"cfg-hc-item{{ $index }}-variant\" class=\"cs-input__select\" id=\"cfg-hc-item{{ $index }}-variant\" v-model=\"configuration.displayVariant\">\n                            <option value=\"variant-1\">Text vertically centered on the left</option>\n                            <option value=\"variant-2\">Text vertically centered in the middle</option>\n                            <option value=\"variant-3\">Text on the bottom, left corner</option>\n                            <option value=\"variant-4\">Text on the bottom - centered</option>\n                        </select>\n                    </div>\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-headline\" class=\"cs-input__label\">Headline:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].headline\" id=\"cfg-hc-item{{ $index }}-headline\" class=\"cs-input__input\">\n                    </div>\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cs-input__label\">Paragraph:</label>\n                        <textarea type=\"text\" v-model=\"configuration.items[$index].paragraph\" id=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cs-input__textarea\" placeholder=\"(max 200 characters)\" maxlength=\"200\"></textarea>\n                    </div>\n                    <div class=\"cs-input\">\n                        <label for=\"cfg-hc-item{{ $index }}-ctaLabel\" class=\"cs-input__label\">CTA label:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].ctaLabel\" id=\"cfg-hc-item{{ $index }}-ctaLabel\" class=\"cs-input__input\">\n                    </div>\n                    <div class=\"cs-input cs-input--type-addon\">\n                        <label for=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cs-input__label\">CTA label:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].ctaLabel\" id=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cs-input__input\">\n                    </div>\n                    <div class=\"cs-input cs-input--type-addon\">\n                        <label for=\"cfg-hc-item{{ $index }}-cta-target\" class=\"cs-input__label\">CTA target link:</label>\n                        <input type=\"text\" v-model=\"configuration.items[$index].ctaTarget\" id=\"cfg-hc-item{{ $index }}-cta-target\" class=\"cs-input__input\">\n                        <span class=\"cs-input__addon\">\n                            <svg class=\"cs-input__addon-icon\">\n                                <use xlink:href=\"../images/sprites.svg#icon_link\"></use>\n                            </svg>\n                        </span>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <cc-component-adder v-if=\"configuration.items.length\">\n            <button is=\"action-button\" class=\"action-button action-button--look_important action-button--type_icon-only\" @click=\"createNewHeroItem( $index + 1 )\">\n                <svg class=\"action-button__icon action-button__icon--size_300\">\n                    <use xlink:href=\"../images/sprites.svg#icon_plus\"></use>\n                </svg>\n            </button>\n        </cc-component-adder>\n    </template>\n</div>\n";
@@ -3416,6 +3443,7 @@ var ccProductFinderConfigurator = {
 
 var IStep = {
     "id": "",
+    "additional_css_class": "",
     "title": "",
     "description": "",
     "options": [
@@ -4183,6 +4211,27 @@ var ccComponentCustomHtmlPreview = {
 };
 
 /**
+ * Daily deal teaser preview component.
+ * This component is responsible for displaying preview of daily deal teaser component in Layout Builder (admin panel)
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var ccComponentDailyDealTeaserPreview = {
+    template: "<div class=\"cc-component-daily-deal-teaser-preview\">\n        <div class=\"cc-component-daily-deal-teaser-preview__container\">\n            <div class=\"cc-component-daily-deal-teaser-preview__main\">\n                <div class=\"cc-component-daily-deal-teaser-preview__photo-mockup\">\n                    <svg class=\"cc-component-daily-deal-teaser-preview__cart-icon\">\n                        <use xlink:href=\"#cart\" href=\"#cart\"/>\n                    </svg>\n                </div>\n                <div class=\"cc-component-daily-deal-teaser-preview__product-info\">\n                    <div class=\"cc-component-daily-deal-teaser-preview__product-info-container\">\n                        <p class=\"cc-component-daily-deal-teaser-preview__product-data\" v-if=\"configuration.category_id\">category ID: {{{ configuration.category_id }}}</p>\n                        <p class=\"cc-component-daily-deal-teaser-preview__product-data\" v-if=\"configuration.skus\">SKU: {{{ configuration.skus }}}</p>\n                    </div>\n                    <div class=\"cc-component-daily-deal-teaser-preview__product-info-container\">                    \n                        <div class=\"cc-component-daily-deal-teaser-preview__countdown-mockup\">\n                            <div class=\"cc-component-daily-deal-teaser-preview__clock\">\n                                <svg class=\"cc-component-daily-deal-teaser-preview__clock-icon\">\n                                    <use xlink:href=\"#clock\" href=\"#clock\"/>\n                                </svg>\n                            </div>\n                            <div>\n                                <span class=\"cc-component-daily-deal-teaser-preview__countdown-digits\">12</span> :\n                                <span class=\"cc-component-daily-deal-teaser-preview__countdown-digits\">34</span> :\n                                <span class=\"cc-component-daily-deal-teaser-preview__countdown-digits\">56</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"cc-component-daily-deal-teaser-preview__buttons-mockup\">\n                <div class=\"cc-component-daily-deal-teaser-preview__button-mockup-1st\"></div>\n                <div class=\"cc-component-daily-deal-teaser-preview__button-mockup-2nd\"></div>\n                <div class=\"cc-component-daily-deal-teaser-preview__button-mockup-3rd\"></div>\n            </div>\n        </div>\n    </div>",
+    props: {
+        configuration: {
+            type: Object,
+        },
+        /**
+         * Class property support to enable BEM mixes.
+         */
+        class: {
+            type: [String, Object, Array],
+            default: '',
+        }
+    },
+};
+
+/**
  * CC components display switcher.
  * This component is responsible for collecting input about display of given component on the FE side
  * it determines whether component should be shown on mobile, desktop, both or shouldn't be shown at all
@@ -4226,6 +4275,7 @@ var layoutBuilder = {
         'cc-component-magento-product-grid-teasers-preview': ccComponentMagentoProductGridTeasersPreview,
         'cc-component-custom-html-preview': ccComponentCustomHtmlPreview,
         'cc-component-product-finder-preview': ccComponentProductFinderPreview,
+        'cc-component-daily-deal-teaser-preview': ccComponentDailyDealTeaserPreview,
     },
     props: {
         /**
