@@ -34,13 +34,14 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
      */
     public function testItReturnsCorrectData($title, $components, $identifier, $expected)
     {
+        $this->getRequest()->setMethod(\Magento\Framework\App\Request\Http::METHOD_POST);
         $this->getRequest()->setPostValue([
             'title' => $title,
             'components' => $components,
             'identifier' => $identifier
         ]);
 
-        $this->dispatch('backend/cms/page/save');
+        $this->dispatch('backend/cms/page/save/');
 
         $page = $this->pageRepository->getById($identifier);
 

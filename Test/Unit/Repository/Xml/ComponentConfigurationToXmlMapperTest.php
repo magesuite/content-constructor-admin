@@ -86,8 +86,8 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
 
         $class = 'MageSuite\ContentConstructorFrontend\Block\Component';
 
-        $this->assertEquals($class, $this->getBlockByNumber($this->firstComponentPosition, 'sidebar')->getAttribute('class'));
-        $this->assertEquals($class, $this->getBlockByNumber($this->secondComponentPosition, 'content')->getAttribute('class'));
+        $this->assertEquals($class, $this->getBlockByNumber($this->firstComponentPosition, 'sidebar')['class']);
+        $this->assertEquals($class, $this->getBlockByNumber($this->secondComponentPosition, 'content')['class']);
     }
 
     /**
@@ -98,9 +98,9 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         $this->prepareTestData($withExistingXml);
 
         $this->assertEquals('first_random_generated_value',
-            $this->getBlockByNumber($this->firstComponentPosition, 'sidebar')->getAttribute('name'));
+            $this->getBlockByNumber($this->firstComponentPosition, 'sidebar')['name']);
         $this->assertEquals('second_random_generated_value',
-            $this->getBlockByNumber($this->secondComponentPosition, 'content')->getAttribute('name'));
+            $this->getBlockByNumber($this->secondComponentPosition, 'content')['name']);
     }
 
     /**
@@ -152,13 +152,13 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @return \DOMElement
-     * @throws \Zend_Dom_Exception
+     * @throws \Exception
      */
     private function getBlockByNumber($number, $containerName = 'content')
     {
         $xpath = sprintf('//referenceContainer[@name="%s"]//block[%s]', $containerName, $number);
 
-        return $this->dom->queryXpath($xpath)->current();
+        return $this->dom->xpath($xpath)[0];
     }
 
     private function prepareTestData($withExistingXml)
@@ -175,7 +175,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->xml = '<?xml version="1.0"?><xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' . $this->xml . '</xml>';
 
-        $this->dom = new \Zend_Dom_Query($this->xml);
+        $this->dom = new \SimpleXMLElement($this->xml);
     }
 
     /**
@@ -198,12 +198,12 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
 
     private function getValueByXpath($xpath)
     {
-        $current = $this->dom->queryXpath($xpath)->current();
+        $current = $this->dom->xpath($xpath)[0];
 
-        if ($current == null) {
+        if ((string)$current == null) {
             return '';
         }
 
-        return $current->textContent;
+        return (string)$current;
     }
 }
