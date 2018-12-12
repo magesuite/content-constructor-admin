@@ -9,7 +9,7 @@ class Locator implements \MageSuite\ContentConstructor\View\AdminTemplateLocator
     }
 
     public function locate($path) {
-        $path = self::getBasePath() . '/../creative-patterns/packages/' . $path;
+        $path = self::getBasePath() . '/view/adminhtml/templates/components/' . $path;
 
         return $path;
     }

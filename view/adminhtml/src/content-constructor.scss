@@ -1,0 +1,54 @@
+// Utilities & Helpers
+@import './utils/input/input';
+@import './utils/action-button/action-button';
+@import './utils/category-picker/category-picker';
+@import './utils/component-actions/component-actions';
+@import './utils/component-adder/component-adder';
+@import './utils/component-display-controller/component-display-controller';
+@import './utils/component-placeholder/component-placeholder';
+
+// Core essentials
+@import './components/_layout-builder/layout-builder';
+@import './components/_component-picker/component-picker';
+
+// Configurators
+@import './components/button/configurator/button';
+@import './components/category-links/configurator/category-links';
+@import './components/cms-pages-teaser/configurator/cms-pages-teaser';
+@import './components/custom-html/configurator/custom-html';
+@import './components/daily-deal-teaser/configurator/daily-deal-teaser';
+@import './components/headline/configurator/headline';
+@import './components/hero-carousel/configurator/hero-carousel';
+@import './components/image-teaser/configurator/image-teaser';
+@import './components/magento-product-grid-teasers/configurator/magento-product-grid-teasers';
+@import './components/paragraph/configurator/paragraph';
+@import './components/product-carousel/configurator/product-carousel';
+@import './components/product-finder/configurator/product-finder';
+@import './components/products-grid/configurator/products-grid';
+@import './components/static-block/configurator/static-block';
+
+.content-constructor {
+    max-width: 1280px;
+    margin: 0 auto;
+
+    &__modal {
+        min-height: calc(100vh - 200px);
+        display: none;
+        min-width: 800px;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding-bottom: 2.6rem;
+
+        &-subheadline {
+            display: block;
+            color: #9c9c9c;
+            font-size: 1.65rem !important;
+            font-style: normal !important;
+            margin: 0.25rem 0 0 !important;
+
+            + span {
+                display: none !important;
+            }
+        }
+    }
+}

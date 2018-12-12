@@ -1,0 +1,24 @@
+/**
+ * Component actions component.
+ * This component is responsible for displaying and handling user interactions of
+ * side utility navigation for each component that supports:
+ * - Moving component up,
+ * - Moving component down,
+ * - Opening component settings,
+ * - Deleting component.
+ */
+.cc-component-actions {
+    $root: &;
+
+    padding: 0.5rem;
+    background: #fff;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.25);
+
+    &__buttons {
+        display: flex;
+    }
+
+    &__button {
+        margin: 0.5rem;
+    }
+}

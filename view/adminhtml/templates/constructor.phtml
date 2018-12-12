@@ -1,23 +1,23 @@
 <?php /** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\AbstractConstructor */ ?>
-<m2c-content-constructor
-        configurator-endpoint="<?= $block->getConfiguratorEndpointUrl() ?>"
-        configuration='<?= str_replace("'", "&#39;", $block->resolveConfigurationMedia($block->getExistingComponentsConfiguration())) ?>'
-        configuration-dump="input[name=components]"
-        assets-src="<?= $block->getAsset('/') ?>/"
-        uploader-url="<?= $block->getUploaderUrl() ?>"
-        rest-token-endpoint="<?= $block->getRestTokenEndpoint() ?>"
-        image-endpoint="<?= $block->getImageEndpoint() ?>"
-        category-data-provider-endpoint="<?= $block->getCategoryDataProviderEndpoint() ?>"
-        page-type="<?= $block->getPageType() ?>"
-        cc-configuration='<?= str_replace("'", "&#39;", $block->getContentConstructorConfig()) ?>'
-        cc-project-configuration='<?= str_replace("'", "&#39;", $block->getProjectConfig()) ?>'
-        cc-creativeshop-configuration='<?= str_replace("'", "&#39;", $block->getCreativeshopConfig()) ?>'
-        products-per-page='<?= $block->getProductsPerPage() ?>'
-        admin-prefix="<?= $block->getAdminPrefix() ?>"
-        sorters='<?= str_replace("'", "&#39;", $block->getSorters()) ?>'
-        filters='<?= str_replace("'", "&#39;", $block->getFilters()) ?>'
+<content-constructor
+    configurator-endpoint="<?= $block->getConfiguratorEndpointUrl() ?>"
+    configuration='<?= str_replace("'", "&#39;", $block->resolveConfigurationMedia($block->getExistingComponentsConfiguration())) ?>'
+    configuration-dump="input[name=components]"
+    assets-src="<?= $block->getAsset('/') ?>/"
+    uploader-url="<?= $block->getUploaderUrl() ?>"
+    rest-token-endpoint="<?= $block->getRestTokenEndpoint() ?>"
+    image-endpoint="<?= $block->getImageEndpoint() ?>"
+    category-data-provider-endpoint="<?= $block->getCategoryDataProviderEndpoint() ?>"
+    page-type="<?= $block->getPageType() ?>"
+    cc-configuration='<?= str_replace("'", "&#39;", $block->getContentConstructorConfig()) ?>'
+    cc-project-configuration='<?= str_replace("'", "&#39;", $block->getProjectConfig()) ?>'
+    cc-creativeshop-configuration='<?= str_replace("'", "&#39;", $block->getCreativeshopConfig()) ?>'
+    products-per-page='<?= $block->getProductsPerPage() ?>'
+    admin-prefix="<?= $block->getAdminPrefix() ?>"
+    sorters='<?= str_replace("'", "&#39;", $block->getSorters()) ?>'
+    filters='<?= str_replace("'", "&#39;", $block->getFilters()) ?>'
 >
-</m2c-content-constructor>
+</content-constructor>
 
 
 <script>
@@ -33,7 +33,7 @@
             div.style.overflow = 'hidden';
             script.parentNode.insertBefore(div, script);
         };
-        xhr.open('get', '<?=$block->getAsset('/images/sprites.svg');?>', true);
+        xhr.open('get', '<?=$block->getViewFileUrl('MageSuite_ContentConstructorAdmin::images/sprites.svg');?>', true);
         xhr.send();
     })(document)
     // Initialize content constructor using AMD.
@@ -41,17 +41,17 @@
         'jquery',
         'Vue',
         'VueResource',
-        'm2cContentConstructor',
+        'contentConstructor',
         'Magento_Ui/js/modal/modal',
-        'm2cTinyMceWysiwygSetup',
+        'ccTinyMceWysiwygSetup',
         'mage/adminhtml/wysiwyg/tiny_mce/setup',
         'mage/adminhtml/wysiwyg/widget',
         'loadingPopup'
-    ], function ($, Vue, VueResource, m2cContentConstructor, modal) {
+    ], function ($, Vue, VueResource, contentConstructor, modal) {
         new Vue({
             el: 'body',
             components: {
-                'm2c-content-constructor': m2cContentConstructor
+                'content-constructor': contentConstructor
             }
         });
     });

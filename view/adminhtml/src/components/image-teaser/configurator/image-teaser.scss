@@ -1,0 +1,313 @@
+// cc-image-teaser-configurator
+// Configurator for image teaser component
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+
+.cc-image-teaser-configurator {
+    $root: &;
+
+    &__teaser {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+        overflow: hidden;
+    }
+
+    &__teaser-item {
+        width: calc(100% / 3);
+        min-width: 250px;
+        margin: 0 0 10px;
+        padding: 10px;
+        background-color: #fff;
+        transition: background-color 0.25s linear;
+
+        &:hover {
+            background-color: #f5f5f5;
+
+            #{$root}__delete-button {
+                z-index: 3;
+                opacity: 1;
+            }
+        }
+    }
+
+    &__teaser-item-title {
+        margin: 0 0 0.39rem;
+        padding-right: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    &__section {
+        margin: 20px 0 0;
+        padding: 20px 0 0;
+        border-top: 1px solid #e5e5e5;
+
+        &--type-actions {
+            margin-top: 0;
+            display: flex;
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        &:first-child {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+    }
+
+    &__toolbar {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        margin: 10px 0;
+        height: 3rem;
+        line-height: 3rem;
+        text-align: right;
+    }
+
+    &__image-holder-outer {
+        position: relative;
+        margin: 0 0 1rem;
+        padding: 10px;
+        background: #fff;
+        border: 1px dashed #e5e5e5;
+
+        &:before {
+            content: '';
+            display: block;
+            padding-top: 56.25%;
+        }
+    }
+
+    &__image-holder-inner {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        bottom: 10px;
+        right: 10px;
+        background: #f5f5f5;
+    }
+
+    &__scenario-options {
+        display: flex;
+        margin: 0 -15px;
+        flex-wrap: wrap;
+    }
+
+    &__option {
+        cursor: pointer;
+        position: relative;
+        border-color: #d4d4d4;
+        fill: #d4d4d4;
+        color: #adadad;
+        transition: border-color 0.3s, opacity 0.3s, color 0.3s;
+        margin: 0 15px;
+
+        &:hover {
+            border-color: #0072ff;
+        }
+
+        &--selected {
+            border-color: #0072ff;
+            color: #0072ff;
+        }
+
+        &--disabled {
+            cursor: not-allowed;
+
+            &:hover {
+                border-color: #d4d4d4;
+            }
+
+            #{$root}__option-wrapper {
+                &:after {
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+
+    &__option-wrapper {
+        position: relative;
+        padding: 22px 28px;
+        border-color: inherit;
+        border-style: dashed;
+        border-width: 1px;
+
+        &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    }
+
+    &__option-icon {
+        width: 10vw;
+        height: 5.8vw;
+
+        @media (max-width: 62.5em) { // 1000px
+            width: 100px;
+            height: 58px;
+        }
+
+        @media(min-width: 105.625em) { // 1690px
+            width: 169px;
+            height: 98px;
+        }
+    }
+
+    &__option-name {
+        padding: 20px 0;
+        margin: 0;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    &__modal {
+        display: none;
+    }
+
+    &__widget-chooser-trigger {
+        cursor: pointer;
+        transition: background 0.2s linear;
+
+        &:hover {
+            background: darken(#e3e3e3, 5%);
+        }
+    }
+
+    &__toolbar {
+        
+    }
+
+    &__item {
+        position: relative;
+        margin: 3rem 0 0;
+        padding: 1.5rem;
+        background: #fff;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0 rgba( 0, 0, 0, .12 );
+        transition: box-shadow 0.15s ease-in-out;
+
+        &--animating {
+            pointer-events: none;
+            transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+        }
+
+        &:hover {
+            box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.22);
+
+            .cc-component-adder {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        &-action-button {
+            font-size: 1.45rem !important;
+        }
+
+        &-content {
+            display: flex;
+            align-items: stretch;
+        }
+
+        &-form-element {
+            &:first-child {
+                margin-top: -0.5rem;
+            }
+
+            + #{$root}__item-form-element:not(.cc-input--type-checkbox):not(.cc-input--type-radio) {
+                margin-top: 1rem;
+            }
+        }
+
+        &-col-left,
+        &-col-right {
+            width: calc(50% - 1rem);
+        }
+
+        &-col-left {
+            border: 1px dashed #cac3b3;
+        }
+
+        &-col-right {
+            margin-left: 2rem;
+        }
+
+        &-actions {
+            position: absolute;
+            opacity: 0;
+            transform: translate3d(0, -25%, 0);
+            z-index: 5;
+            backface-visibility: hidden;
+            will-change: unset, transform;
+            transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+        }
+
+        &-image {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            flex-shrink: 0;
+        }
+
+        &-image-placeholder {
+            width: 8rem;
+            height: 6.6rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate3d(-50%, -50%, 0);
+            fill: #d4d4d4;
+        }
+    }
+
+    &__item-image-wrapper {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+
+        &:before {
+            position: absolute;
+            top: -1rem;
+            left: -1rem;
+            width: calc(100% + 2rem);
+            height: calc(100% + 2rem);
+            content: '';
+            background: rgba(#0072ff, 0.9);
+            z-index: 3;
+            opacity: 0;
+            transform: scale(0.85);
+            transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1), opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
+        }
+
+        &:hover {
+            &:before {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            #{$root}__item-actions {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+    }
+
+    &__select {
+        width: 100%;
+    }
+}

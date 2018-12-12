@@ -13,9 +13,9 @@ define([
     'mage/adminhtml/browser'
 ], function(jQuery, _, tinyMCE, html5Schema) {
 
-    m2cTinyMceWysiwygSetup = Class.create();
+    ccTinyMceWysiwygSetup = Class.create();
 
-    m2cTinyMceWysiwygSetup.prototype = {
+    ccTinyMceWysiwygSetup.prototype = {
         mediaBrowserOpener: null,
         mediaBrowserTargetElementId: null,
 

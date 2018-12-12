@@ -1,0 +1,37 @@
+// CC Headline Configurator
+// Creative constructor headline component configurator.
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+.cc-headline-configurator {
+    &__advanced-trigger {
+        position: relative;
+        margin: 0 0 2rem;
+        padding: 2rem 0 0;
+        max-width: 800px;
+
+        span {
+            position: relative;
+            padding: 0 1.5rem 0 25%;
+            cursor: pointer;
+
+            &:after {
+                border-color: #41362f transparent transparent transparent;
+                border-style: solid;
+                border-width: 0.5rem 0.4rem 0 0.4rem;
+                content: '';
+                height: 0;
+                margin-top: -0.2rem;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transition: all 0.2s linear;
+                width: 0;
+            }
+
+            &.active:after {
+                transform: rotate(180deg);
+            }
+        }
+    }
+}

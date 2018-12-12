@@ -9,9 +9,9 @@ export default {
         /**
          * Lint all TypeScript files.
          */
-        'src/**/*.ts',
+        'view/adminhtml/src/**/*.ts',
     ],
-    dest: 'src',
+    dest: 'view/adminhtml/web/src',
     tslint: {
         formatter: 'verbose',
         fix: true,

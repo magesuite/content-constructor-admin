@@ -1,0 +1,162 @@
+// cc-product-finder-configurator
+// This component is responsible for configuring Product Finder component to be displayed as CC component. It finds products based on couple of customer answers
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+
+.cc-product-finder-configurator {
+    $root: &;
+
+    &__section {
+        &--styled {
+            margin: 0.5em 0 0;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 2px;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+        }
+    }
+
+    &__global {
+        &-options {
+            display: flex;
+        }
+
+        &-option {
+            margin-top: 0 !important;
+            padding-left: 15px;
+            width: 20%;
+
+            &:first-child {
+                padding-left: 0;
+            }
+        } 
+    }
+
+    &__step {
+        position: relative;
+        margin: 3rem 0 0;
+        padding: 1.5rem;
+        background: #fff;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+        transition: box-shadow 0.15s ease-in-out;
+
+        &--animating {
+            pointer-events: none;
+            transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+        }
+
+        &:hover {
+            box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.22);
+
+            .cc-component-adder {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        &-content {
+            display: flex;
+            align-items: stretch;
+            width: 100%;
+        }
+
+        &-action-button {
+            font-size: 1.45rem !important;
+        }
+
+        &-actions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+            transform: translate3d(-50%, -75%, 0);
+            z-index: 5;
+            backface-visibility: hidden;
+            will-change: unset, transform;
+            transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+        }
+
+        &-label {
+            margin-bottom: 1.2em;
+        }
+    }
+
+    &__preview {
+        position: relative;
+        width: 50%;
+        margin: 0 0.65rem 0 0;
+
+        &:before {
+            position: absolute;
+            top: -1rem;
+            left: -1rem;
+            width: calc(100% + 2rem);
+            height: calc(100% + 2rem);
+            content: '';
+            background: rgba(#0072ff, 0.9);
+            z-index: 3;
+            opacity: 0;
+            transform: scale(0.85);
+            transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1), opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
+        }
+        
+        &:hover {
+            &:before {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            #{$root}__step-actions {
+                opacity: 1;
+                transform: translate3d(-50%, -50%, 0);
+            }
+        }
+
+        &--error {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #ff0000;
+            background: #ffebeb;
+        }
+    }
+
+    &__source {
+        height: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 50%;
+        box-sizing: border-box;
+        padding-left: 0.65rem;
+    }
+
+    &__editor {
+        flex-grow: 10;
+        margin-top: 0.8rem;
+        font-family: monospace;
+        font-size: 1.15em;
+    }
+
+    &__error {
+        position: relative;
+        padding: 0 0 0 2.5rem;
+
+        &:before {
+            position: absolute;
+            top: 0.2rem;
+            left: 0;
+            content: '!';
+            width: 1.6rem;
+            height: 1.6rem;
+            border-radius: 0.8rem;
+            background: #ff0000;
+            color: #fff;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: bold;
+        }
+    }
+}

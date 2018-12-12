@@ -1,0 +1,122 @@
+// cc-component-daily-deal-teaser-preview
+// This component is responsible for displaying preview of daily deal teaser component on M2C dasboard
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+
+.cc-daily-deal-teaser-preview {
+    $root: &;
+
+    $colorLightGray: #f5f5f5;
+    $colorDashline: #e4e1d9;
+    $colorDarkGray: #c9c9c9;
+    $colorOrange: #f58b5c;
+
+    $borderRadius: 0.3rem;
+
+    padding: 1.3rem;
+    box-sizing: border-box;
+    background: $colorLightGray;
+    border: 1px dashed $colorDashline;
+    min-height: 22rem;
+    color: $colorDarkGray;
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        padding: 1.2rem;
+    }
+
+    &__main {
+        display: flex;
+        min-width: 20rem;
+    }
+
+    &__product-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &__photo-mockup {
+        background: white;
+        height: 20rem;
+        width: 20rem;
+        margin-right: 2rem;
+    }
+
+    &__product-data {
+        font-size: 1.9rem;
+        font-weight: 700;
+        margin-left: 1rem;
+        text-align: left;
+    }
+
+    &__clock {
+        background: $colorOrange;
+        width: 3.6rem;
+        height: 3.3rem;
+        margin: 0.3rem 1.3rem;
+        border-radius: $borderRadius;
+    }
+
+    &__countdown-mockup {
+        display: flex;
+    }
+
+    &__countdown-digits {
+        background: $colorDarkGray;
+        margin: 0.3rem;
+        border-radius: $borderRadius;
+        display: inline-block;
+    }
+
+    &__cart-icon {
+        width: 100%;
+        transform: translate(0, -10%);
+        fill: $colorOrange;
+        padding: 25%;
+    }
+    
+    &__clock-icon {
+        width: 100%;
+        fill: white;
+        padding: 10%;
+        height: 100%;
+    }
+
+    &__countdown-digits {
+        color: white;
+        font-weight: 700;
+        padding: 0.7rem 1rem;
+    }
+
+    &__buttons-mockup {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    &__button-mockup-1st {
+        height: 1rem;
+        width: 16rem;
+        background-color: $colorDarkGray;
+        border-radius: $borderRadius;
+        margin-bottom: 0.5rem;
+    }
+
+    &__button-mockup-2nd {
+        height: 1rem;
+        width: 11rem;
+        background-color: $colorDarkGray;
+        border-radius: $borderRadius;
+        margin-bottom: 1.8rem;
+    }
+
+    &__button-mockup-3rd {
+        height: 2rem;
+        width: 5.5rem;
+        background-color: $colorOrange;
+        border-radius: $borderRadius;
+    }
+}

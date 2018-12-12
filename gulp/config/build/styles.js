@@ -8,7 +8,8 @@ import flexbugs from 'postcss-flexbugs-fixes';
  */
 export default {
     watch: [
-        'src/**/*.{scss,sass,css}',
+        'view/adminhtml/src/*.{scss,sass,css}',
+        'view/adminhtml/src/vendors/**/*.{scss,sass,css}',
     ],
     /**
      * Generates configuration for styles building based on package directory path.
@@ -16,8 +17,11 @@ export default {
      * @returns {object} Styles building task configuration.
      */
 
-    src: path.join( 'src', '**/*.{css,scss,sass}' ),
-    dest: 'dist',
+    src: [
+        'view/adminhtml/src/*.{css,scss,sass}',
+        'view/adminhtml/src/vendors/**/*.{css,scss,sass}',
+    ],
+    dest: 'view/adminhtml/web/css',
     postcss: [
         flexbugs(),
         autoprefixer(

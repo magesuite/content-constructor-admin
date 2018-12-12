@@ -8,10 +8,10 @@ const settings = {
         /**
          * Lint everything inside components and layouts directories.
          */
-        'src/**/*.{css,scss,sass}',
-        '!src/vendors/**/*.{css,scss,sass}',
+        'view/adminhtml/src/**/*.{css,scss,sass}',
+        '!view/adminhtml/src/vendors/**/*.{css,scss,sass}',
     ],
-    dest: 'src',
+    dest: 'view/adminhtml/web/src',
 };
 
 export default settings;

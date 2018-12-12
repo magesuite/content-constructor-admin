@@ -1,0 +1,27 @@
+// cc-component-button-preview
+// This component is responsible for previews of the button component in M2C&#x27;s layout builder
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+.cc-button-preview {
+    margin: 2.4rem 0;
+    text-align: center;
+
+    &__button {
+        max-width: 60%;
+        margin: 0.5rem auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.15 !important;
+        text-align: center;
+        padding: 1rem 2rem;
+        border: none;
+        background: #adadad;
+        color: #fff;
+        font-size: 1.45rem;
+        border-radius: 2px;
+        font-weight: 400;
+        min-width: 25rem;
+    }
+}

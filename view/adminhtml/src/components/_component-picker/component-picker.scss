@@ -1,0 +1,100 @@
+// cc-component-picker
+// Lists all types of components available in CC in the grid/list mode
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+.cc-component-picker {
+    $root: &;
+
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -1rem;
+        padding: 0;
+        list-style: none;
+
+        &:before,
+        &:after {
+            content: '';
+            display: table;
+        }
+        &:after {
+            clear: both;
+        }
+    }
+
+    &__list-item {
+        width: calc((100% / 3) - 2rem);
+        min-width: 250px;
+        margin: 1rem;
+        padding: 0;
+    }
+
+    &__component-link {
+        display: block;
+        height: 100%;
+        padding: 10px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+        transition: box-shadow 0.15s ease-in-out, color 0.15s linear;
+
+        &:hover {
+            text-decoration: none;
+            color: #007bdb;
+            box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.18);
+
+            #{$root}__component-figure {
+                border-color: #007bdb;
+            }
+        }
+    }
+
+    &__component-figure {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin: 0 0 1.15rem;
+        padding: 7% 0;
+        border: 1px dashed #cac3b4;
+        transition: border-color 0.25s linear;
+
+        &:hover {
+            text-decoration: none;
+            border-color: #007bdb;
+            color: #007bdb;
+        }
+    }
+
+    &__component-icon {
+        width: auto;
+        height: auto;
+        max-width: 80%;
+        max-height: 130px;
+    }
+
+    &__component-name {
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #303030;
+        font-size: 1.43rem;
+        font-weight: 600;
+    }
+
+    &__component-description {
+        display: block;
+        margin: 1rem 0;
+        color: #303030;
+        line-height: 1.55;
+    }
+
+    @media screen and (max-width: 990px) {
+        &__list-item {
+            width: calc((100% / 2) - 20px);
+        }
+    }
+    @media screen and (min-width: 1400px) {
+        &__list-item {
+            width: calc((100% / 4) - 20px);
+        }
+    }
+}

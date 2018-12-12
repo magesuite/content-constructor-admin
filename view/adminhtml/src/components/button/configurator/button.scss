@@ -1,0 +1,15 @@
+// cc-button-configurator
+// This component is responsible for creating button component via admin panel
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+.cc-button-configurator {
+    &__widget-chooser-trigger {
+        cursor: pointer;
+        transition: background 0.2s linear;
+
+        &:hover {
+            background: darken(#e3e3e3, 5%);
+        }
+    }
+}

@@ -22,7 +22,7 @@ gulp.task( 'build', ( done ) => {
         [
             'build:styles',
             'build:scripts',
-            'copy:assets',
+            'copy:templates',
             'build:sprites:svg',
         ],
         done
