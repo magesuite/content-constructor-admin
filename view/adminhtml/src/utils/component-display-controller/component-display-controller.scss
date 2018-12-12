@@ -1,0 +1,34 @@
+.cc-component-display-controller {
+    $root: &;
+
+    margin: 0.5rem;
+    padding: 1rem 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e4e1d9;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.15s, background-color 0.15s;
+
+    &:hover {
+        border-color: #007bdb;
+        background-color: #e4f7fe;
+    }
+
+    &__icon {
+        width: 2.4rem;
+        height: 1.6rem;
+        margin-right: 1.6rem;
+    }
+
+    &__control {
+        margin-right: 2.4rem;
+        line-height: 1.7rem;
+        white-space: nowrap;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}

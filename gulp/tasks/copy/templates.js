@@ -2,7 +2,7 @@
 import browserSync from 'browser-sync';
 
 import environment from '../../environment';
-import settings from '../../config/copy/assets';
+import settings from '../../config/copy/templates';
 
 let firstRun = true;
 
@@ -27,7 +27,7 @@ module.exports = function() {
                 settings.watch,
             ],
             [
-                'copy:assets',
+                'copy:templates',
                 browserSync.reload,
             ]
         );

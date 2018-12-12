@@ -18,8 +18,8 @@ export default {
      * Paths to watch for this task.
      */
     watch: [
-        'src/**/*.ts',
-        'src/**/*.{html,tpl}',
+        'view/adminhtml/src/**/*.ts',
+        'view/adminhtml/src/**/*.{phtml,html,tpl}',
     ],
 
     /**
@@ -27,7 +27,7 @@ export default {
      * @see https://github.com/rollup/rollup/wiki/JavaScript-API#bundlegenerate-options-
      */
     rollup: {
-        entry: path.join( 'src', 'm2c-content-constructor.ts' ),
+        entry: path.join( 'view/adminhtml/src', 'content-constructor.ts' ),
         cache: cache,
         plugins: [
             /**
@@ -39,7 +39,7 @@ export default {
             globals(),
             html( {
                 // Required to be specified
-                include: '**/*.{html,tpl}',
+                include: '**/*.{phtml,html,tpl}',
                 // htmlMinifierOptions: {
                 //     collapseWhitespace: true,
                 //     conservativeCollapse: true,
@@ -58,11 +58,11 @@ export default {
         /**
          * JavaScript bundle destination directory.
          */
-        dest: path.join( 'dist', 'm2c-content-constructor.js' ),
+        dest: path.join( 'view/adminhtml/web/js', 'content-constructor.js' ),
         format: 'umd',
-        moduleName: 'm2cContentConstructor',
+        moduleName: 'contentConstructor',
         amd: {
-            id: 'm2cContentConstructor',
+            id: 'contentConstructor',
         },
         globals: {
             'jQuery': 'jQuery',

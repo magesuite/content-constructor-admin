@@ -1,14 +1,12 @@
-import path from 'path';
-
 /**
  * Returns configuration for SVG sprites.
  */
 export default {
     watch: [
-        'src/sprites/svg/*.svg',
+        'view/adminhtml/src/images/sprites/*.svg',
     ],
-    src: path.join( 'src', 'sprites/svg/*.svg' ),
-    dest: path.join( 'dist', 'images/' ),
+    src: 'view/adminhtml/src/images/sprites/*.svg',
+    dest: 'view/adminhtml/web/images/',
     /**
      * Gulp-svg-sprite configuration.
      * @see https://github.com/jkphl/gulp-svg-sprite#api

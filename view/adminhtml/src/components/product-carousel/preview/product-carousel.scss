@@ -1,0 +1,57 @@
+// cc-component-product-carousel-preview
+// This component is responsible for displaying preview of product carousel on M2C dasboard
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+.cc-product-carousel-preview {
+    position: relative;
+
+    &__arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2.5rem;
+        height: 4.85rem;
+        z-index: 2;
+
+        &--left {
+            left: -1.4rem;
+        }
+
+        &--right {
+            right: -1.4rem;
+        }
+    }
+
+    &__list {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        &-item {
+            width: calc(25% - 1.15rem);
+            padding: 1.15rem 1.15rem 2.3rem;
+            box-sizing: border-box;
+            background: #f7f7f7;
+            border: 1px dashed #e4e1d9;
+        }
+    }
+
+    &__product-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding: 0 0 calc(100% * 324 / 263);
+    }
+
+    &__product {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}

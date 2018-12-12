@@ -1,0 +1,237 @@
+// cc-hero-carousel-configurator
+// Configurator form for Hero Carousel component
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+
+.cc-hero-carousel-configurator {
+    $root: &;
+
+    padding-bottom: 1rem;
+
+    &__modal {
+        display: none;
+    }
+
+    &__section {
+        margin: 0 0 3rem;
+    }
+
+    &__scenario-options {
+        padding: 1.5rem 1.5rem 1.25rem;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+
+        &-list {
+            margin: 0 -0.75rem;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+
+    &__option-wrapper {
+        position: relative;
+        padding: 1.5rem 3rem;
+        border-color: inherit;
+        border-style: dashed;
+        border-width: 1px;
+
+        &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    }
+
+    &__option {
+        cursor: pointer;
+        position: relative;
+        border-color: #d4d4d4;
+        fill: #d4d4d4;
+        color: #adadad;
+        transition: border-color 0.3s, opacity 0.3s, color 0.3s;
+        margin: 0 0.75rem;
+
+        &:hover {
+            border-color: #0072ff;
+        }
+
+        &--selected {
+            border-color: #0072ff;
+            color: #0072ff;
+        }
+    }
+
+    &__option-icon {
+        width: 10vw;
+        height: 5.8vw;
+
+        @media (max-width: 62.5em) { // 1000px
+            width: 100px;
+            height: 58px;
+        }
+
+        @media(min-width: 105.625em) { // 1690px
+            width: 169px;
+            height: 98px;
+        }
+    }
+
+    &__option-name {
+        padding: 0.6rem 0 0;
+        margin: 0;
+        font-weight: 600;
+        line-height: 1.35;
+
+        #{$root}__option--selected & {
+            color: #333;
+        }
+    }
+
+    &__title {
+        margin-bottom: 3rem;
+    }
+
+    /*.cc-component-adder--static + #{$root}__item {
+        margin-top: 6rem;
+    }*/
+
+    &__widget-chooser-trigger {
+        cursor: pointer;
+        transition: background 0.2s linear;
+
+        &:hover {
+            background: darken(#e3e3e3, 5%);
+        }
+    }
+
+    &__item {
+        position: relative;
+        margin: 3rem 0 0;
+        padding: 1.5rem;
+        background: #fff;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+        transition: box-shadow 0.15s ease-in-out;
+
+        &--animating {
+            pointer-events: none;
+            transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+        }
+
+        &:hover {
+            box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.22);
+
+            .cc-component-adder {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        &-action-button {
+            font-size: 1.45rem;
+        }
+
+        &-content {
+            display: flex;
+            align-items: stretch;
+        }
+
+        &-form-element {
+            &:first-child {
+                margin-top: -0.5rem;
+            }
+
+            + #{$root}__item-form-element:not(.cc-input--type-checkbox):not(.cc-input--type-radio) {
+                margin-top: 1rem;
+            }
+        }
+
+        &-col-left,
+        &-col-right {
+            width: calc(50% - 1rem);
+        }
+
+        &-col-left {
+            border: 1px dashed #cac3b3;
+        }
+
+        &-col-right {
+            margin-left: 2rem;
+        }
+
+        &-actions {
+            position: absolute;
+            opacity: 0;
+            transform: translate3d(0, -25%, 0);
+            z-index: 5;
+            backface-visibility: hidden;
+            will-change: unset, transform;
+            transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+        }
+
+        &-image {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            flex-shrink: 0;
+        }
+
+        &-image-placeholder {
+            width: 8rem;
+            height: 6.6rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate3d(-50%, -50%, 0);
+            fill: #d4d4d4;
+        }
+    }
+
+    &__item-image-wrapper {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+
+        &:before {
+            position: absolute;
+            top: -1rem;
+            left: -1rem;
+            width: calc(100% + 2rem);
+            height: calc(100% + 2rem);
+            content: '';
+            background: rgba(#0072ff, 0.9);
+            z-index: 3;
+            opacity: 0;
+            transform: scale(0.85);
+            transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1), opacity .3s cubic-bezier(0, 0.77, 0.23, 1);
+        }
+
+        &:hover {
+            &:before {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            #{$root}__item-actions {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+    }
+
+    &__select {
+        width: 100%;
+    }
+}

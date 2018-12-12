@@ -1,0 +1,131 @@
+// cc-cms-pages-teaser-configurator
+// Configurator for CMS Pages Teaser component.
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+
+.cc-cms-pages-teaser-configurator {
+    $root: &;
+
+    &__section {
+        margin: 0 0 3rem;
+
+        &-option {
+            flex-wrap: wrap;
+            margin: 0 0 1rem !important;
+            width: 40%;
+            flex-basis: 40%;
+            box-sizing: border-box;
+
+            &:nth-child(odd) {
+                padding-right: 1rem;
+            }
+
+            &:nth-child(even) {
+                padding-left: 1rem;
+            }
+
+            &-label {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 0 0.5rem !important;
+                text-align: left !important;
+                line-height: 1.35 !important;
+            }
+
+            .cc-input__input {
+                max-width: 25em;
+            }
+        }
+    }
+
+    &__scenario-options {
+        padding: 1.5rem 1.5rem 1.25rem;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+
+        &-list {
+            margin: 0 -0.75rem;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        &--inputs {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+    }
+
+
+    &__option {
+        cursor: pointer;
+        position: relative;
+        border-color: #d4d4d4;
+        fill: #d4d4d4;
+        color: #adadad;
+        transition: border-color 0.3s, opacity 0.3s, color 0.3s;
+        margin: 0 0.75rem;
+        
+        &:hover {
+            border-color: #0072ff;
+        }
+
+        &--selected {
+            border-color: #0072ff;
+            color: #0072ff;
+        }
+
+        &-wrapper {
+            position: relative;
+            padding: 1.5rem 3rem;
+            border-color: inherit;
+            border-style: dashed;
+            border-width: 1px;
+
+            &:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background: #f9f9f9;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+        }
+
+        &-icon {
+            width: 10vw;
+            height: 5.8vw;
+
+            @media (max-width: 62.5em) { // 1000px
+                width: 100px;
+                height: 58px;
+            }
+
+            @media(min-width: 105.625em) { // 1690px
+                width: 169px;
+                height: 98px;
+            }
+        }
+
+        &-name {
+            padding: 0.6rem 0 0;
+            margin: 0;
+            font-weight: 600;
+            line-height: 1.35;
+
+            #{$root}__option--selected & {
+                color: #333;
+            }
+        }
+    }
+
+    &__select {
+        width: 100%;
+    }
+}

@@ -1,0 +1,178 @@
+// layout-builder
+// It bootstraps layout for Creative Constructor backend
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+
+// Import all previews
+@import '../brand-carousel/preview/brand-carousel';
+@import '../button/preview/button';
+@import '../category-links/preview/category-links';
+@import '../cms-pages-teaser/preview/cms-pages-teaser';
+@import '../custom-html/preview/custom-html';
+@import '../daily-deal-teaser/preview/daily-deal-teaser';
+@import '../headline/preview/headline';
+@import '../hero-carousel/preview/hero-carousel';
+@import '../image-teaser/preview/image-teaser';
+@import '../magento-product-grid-teasers/preview/magento-product-grid-teasers';
+@import '../paragraph/preview/paragraph';
+@import '../product-carousel/preview/product-carousel';
+@import '../product-finder/preview/product-finder';
+@import '../products-grid/preview/products-grid';
+@import '../separator/preview/separator';
+@import '../static-block/preview/static-block';
+
+.cc-layout-builder {
+    $root: &;
+
+    &__filters {
+        margin-bottom: 30px;
+    }
+
+    &__filter {
+        border-bottom: 1px solid #efefef;
+
+        &:first-child {
+            margin-top: -20px;
+            border-top: 1px solid #ccc;
+        }
+
+        &-content {
+            padding: 15px 0;
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-icon {
+            width: 24px;
+            height: 16px;
+        }
+
+        &-title {
+            padding-left: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            line-height: 1.5rem;
+            color: #999;
+        }
+
+        &-control {
+            margin-left: 27px;
+        }
+    }
+
+    &__component {
+        position: relative;
+        width: 100%;
+        margin: 0 0 3rem;
+        padding: 1.3rem;
+        background-color: #fff;
+        box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.12);
+        box-sizing: border-box;
+        text-align: center;
+        transition: all 0.15s ease-in-out;
+        backface-visibility: hidden;
+
+        &--special {
+            padding: 0.8rem;
+            border: 0.5rem solid #f99e6e;
+        }
+
+        &--animating {
+            pointer-events: none;
+            transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+        }
+
+        &--duplicate {
+            transition: all 0.15s ease-in-out, transform 0.75s cubic-bezier(0,0.7,0.32,1), opacity 0.75s cubic-bezier(0,0.7,0.32,1);
+        }
+
+        &--show-up {
+            opacity: 0;
+            transform: scale(0.2);
+        }
+
+        &--invisible {
+            box-shadow: 0 0 30px 2px rgba(150, 150, 150, 0.12);
+            background-color: #fdfdfd;
+
+            .cc-component-placeholder__component {
+                opacity: 0.25;
+            }
+        }
+
+        &--filtered-out {
+            min-height: 0 !important;
+            height: 0;
+            opacity: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &:not(#{$root}__component--static) {
+            min-height: 12rem;
+
+            &:before {
+                position: absolute;
+                top: 0.5rem;
+                left: 0.5rem;
+                width: calc(100% - 1rem);
+                height: calc(100% - 1rem);
+                content: '';
+                background: rgba(#0072ff, 0.9);
+                z-index: 3;
+                opacity: 0;
+                transform: scale(0.85);
+                transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1), opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
+            }
+        }
+
+        &:hover {
+            box-shadow: 0 0 12px 4px rgba(0, 0, 0, 0.18);
+
+            &:before {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            #{$root}__component-actions {
+                opacity: 1;
+                transform: translate3d(-50%, -50%, 0);
+            }
+
+            .cc-component-adder {
+                z-index: 7;
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        &--filter:hover {
+            box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.12);
+        }
+    }
+
+    &__component-actions {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        opacity: 0;
+        transform: translate3d(-50%, -75%, 0);
+        z-index: 5;
+        backface-visibility: hidden;
+        transition: all 0.25s ease-in-out;
+    }
+
+    &__component-wrapper {
+        margin: 0;
+        transition: opacity 0.2s linear;
+    }
+}

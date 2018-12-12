@@ -1,0 +1,63 @@
+// cc-component-category-links-preview
+// This component is responsible for displaying category links in CC dashboard
+//
+// See http://warpspire.com/kss/ for documentation guidelines.
+// Version 0.0.1
+.cc-category-links-preview {
+    $root: &;
+
+    &__headline {
+        margin: 1rem 0;
+        color: #333 !important;
+        font-size: 2.8rem !important;
+        text-transform: uppercase;
+        line-height: 1 !important;
+    }
+
+    &__content {
+        position: relative;
+        margin-top: 2.5rem;
+    }
+
+    &__subcats {
+        width: calc(100% - 20rem);
+        margin: -1rem 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    &__subcat {
+        margin: 1rem 1.4rem 0 0;
+
+        &-label {
+            display: inline-block;
+            padding: 0.45rem 2rem;
+            border: 1px dashed #e4e1d9;
+            border-radius: 2px;
+            background-color: #f7f7f7;
+            color: #adadad;
+            font-size: 1.45rem;
+            font-weight: 300;
+        }
+    }
+
+    &__all-button {
+        position: absolute;
+        top: 1rem;
+        right: 0;
+
+        &-text {
+            display: block;
+            padding: 0.45rem 3rem;
+            border-radius: 2px;
+            border: 1px solid #ababab;
+            background-color: #ababab;
+            color: #fff;
+            font-size: 1.45rem;
+            font-weight: 300;
+        }
+    }
+}
