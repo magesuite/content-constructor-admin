@@ -34,11 +34,11 @@ class ConfiguratorTest extends \PHPUnit\Framework\TestCase
         return [
             [
                 \MageSuite\ContentConstructor\Components\Headline\HeadlineAdmin::class,
-                '<m2c-headline-configurator'
+                '<headline-configurator'
             ],
             [
                 \MageSuite\ContentConstructor\Components\Picker\PickerAdmin::class,
-                '<cc-component-picker'
+                '<component-picker'
             ]
         ];
     }

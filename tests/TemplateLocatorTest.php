@@ -10,7 +10,7 @@ class TemplateLocatorTest extends PHPUnit\Framework\TestCase
 
         $result = $templateLocator->locate('components/headline/src/headline.twig');
 
-        $expectedResult = $baseDirectory . '/../creative-patterns/packages/components/headline/src/headline.twig';
+        $expectedResult = $baseDirectory . '/view/adminhtml/templates/components/components/headline/src/headline.twig';
 
         $this->assertEquals($expectedResult, $result);
     }
