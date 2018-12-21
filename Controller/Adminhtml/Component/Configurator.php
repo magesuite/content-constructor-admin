@@ -6,7 +6,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\ResponseInterface;
 
-class Configurator extends Action
+class Configurator extends \Magento\Backend\App\Action
 {
     /**
      * @var Context

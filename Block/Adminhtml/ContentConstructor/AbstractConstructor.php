@@ -95,21 +95,21 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
 
     public function getConfiguratorEndpointUrl()
     {
-        return $this->getAdminUrl('content-constructor/component/configurator/type/{/component_type}');
+        return $this->getUrl('contentconstructor/component/configurator') . 'type/{/component_type}';
     }
 
     public function getRestTokenEndpoint()
     {
-        return $this->getAdminUrl('content-constructor/token/generator');
+        return $this->getUrl('contentconstructor/token/generator');
     }
 
     public function getImageEndpoint()
     {
-        return $this->getAdminUrl('content-constructor/image/show/image/{/encoded_image}');
+        return $this->getUrl('contentconstructor/image/show') . 'image/{/encoded_image}';
     }
 
     public function getCategoryDataProviderEndpoint() {
-        return $this->getAdminUrl('content-constructor/category/provider');
+        return $this->getUrl('contentconstructor/category/provider');
     }
 
     public function getAsset($assetLocation)
@@ -142,13 +142,6 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
             'catalog/frontend/grid_per_page',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
-    }
-
-    protected function getAdminUrl($suffix)
-    {
-        $adminPrefix = $this->getAdminPrefix();
-
-        return '/' . $adminPrefix . '/' . $suffix;
     }
 
     public function resolveConfigurationMedia($configuration) {
