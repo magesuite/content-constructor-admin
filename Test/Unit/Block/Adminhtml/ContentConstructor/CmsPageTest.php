@@ -44,7 +44,7 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsCorrectConfiguratorUrl()
     {
         $this->assertEquals(
-            '/backend/content-constructor/component/configurator/type/{/component_type}',
+            'http://localhost/index.php/contentconstructor/component/configurator/type/{/component_type}',
             $this->block->getConfiguratorEndpointUrl()
         );
     }
@@ -52,7 +52,7 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsCorrectRestTokenEndpointUrl()
     {
         $this->assertEquals(
-            '/backend/content-constructor/token/generator',
+            'http://localhost/index.php/contentconstructor/token/generator/',
             $this->block->getRestTokenEndpoint()
         );
     }
@@ -60,14 +60,14 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsCorrectImageEndpointUrl()
     {
         $this->assertEquals(
-            '/backend/content-constructor/image/show/image/{/encoded_image}',
+            'http://localhost/index.php/contentconstructor/image/show/image/{/encoded_image}',
             $this->block->getImageEndpoint()
         );
     }
 
     public function testItReturnsCorrectCategoryDataProviderEntpointUrl() {
         $this->assertEquals(
-            '/backend/content-constructor/category/provider',
+            'http://localhost/index.php/contentconstructor/category/provider/',
             $this->block->getCategoryDataProviderEndpoint()
         );
     }
