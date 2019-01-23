@@ -53,16 +53,6 @@ class ContentConstructorConfigDataProviderTest extends \PHPUnit\Framework\TestCa
         $this->assertEquals('{}', $this->configDataProvider->getConfig());
     }
 
-    public function testItReturnsEmptyJsonObjectWhenThereIsNoProjectConfig()
-    {
-        $this->customizationPathStub->method('getThemeFilesPath')->willReturnOnConsecutiveCalls(
-            __DIR__ . '/../assets/theme-nonexisting',
-            __DIR__ . '/../assets/theme-creativeshop'
-        );
-
-        $this->assertEquals('{}', $this->configDataProvider->getProjectConfig());
-    }
-
     public function testItReturnsConfigFromParentTheme()
     {
         $this->customizationPathStub->method('getThemeFilesPath')->willReturnOnConsecutiveCalls(
@@ -81,25 +71,5 @@ class ContentConstructorConfigDataProviderTest extends \PHPUnit\Framework\TestCa
         );
 
         $this->assertEquals('{"test-data":"test-data"}', $this->configDataProvider->getConfig());
-    }
-    
-    public function testItReturnsConfigFromCreativeshopTheme()
-    {
-        $this->customizationPathStub->method('getThemeFilesPath')->willReturnOnConsecutiveCalls(
-            __DIR__ . '/../assets/theme-project',
-            __DIR__ . '/../assets/theme-creativeshop'
-        );
-
-        $this->assertEquals('{"test-data":"theme-creativeshop"}', $this->configDataProvider->getCreativeshopConfig());
-    }
-
-    public function testItReturnsConfigFromProjectTheme()
-    {
-        $this->customizationPathStub->method('getThemeFilesPath')->willReturnOnConsecutiveCalls(
-            __DIR__ . '/../assets/theme-project',
-            __DIR__ . '/../assets/theme-creativeshop'
-        );
-
-        $this->assertEquals('{"test-data":"theme-project"}', $this->configDataProvider->getProjectConfig());
     }
 }

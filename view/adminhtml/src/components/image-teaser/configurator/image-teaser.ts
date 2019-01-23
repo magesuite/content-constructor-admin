@@ -192,7 +192,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                                 <div class="cc-input | cc-image-teaser-configurator__item-form-element">
                                     <label for="cfg-it-item{{ $index }}-variant" class="cc-input__label">${$t( 'Display variant' )}:</label>
                                     <select name="cfg-it-item{{ $index }}-variant" class="cc-input__select" id="cfg-it-item{{ $index }}-variant" v-model="configuration.items[$index].displayVariant">
-                                        <template v-for="(idx, scenario) in ccConfig.imageTeasersContentPositions">
+                                        <template v-for="(idx, scenario) in imageTeasersContentPositions">
                                             <option value="{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
                                         </template>
                                     </select>
@@ -475,6 +475,11 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             default(): any {
                 return {};
             },
+        },
+    },
+    computed: {
+        imageTeasersContentPositions: function(): object {
+            return Object.values(this.ccConfig.imageTeasersContentPositions);
         },
     },
     events: {
