@@ -162,11 +162,7 @@ const contentConstructor: vuejs.ComponentOption = {
             type: String,
             default: '30',
         },
-        ccCreativeshopConfiguration: {
-            type: String,
-            default: '',
-        },
-        ccProjectConfiguration: {
+        ccProjectConfig: {
             type: String,
             default: '',
         },
@@ -229,9 +225,8 @@ const contentConstructor: vuejs.ComponentOption = {
     },
     methods: {
         getCCconfig(): JSON {
-            const ccConfigDefaults: JSON = this.ccCreativeshopConfiguration ? JSON.parse(this.ccCreativeshopConfiguration) : {};
-            const ccConfigCustom: JSON = this.ccProjectConfiguration ? JSON.parse(this.ccProjectConfiguration) : {};
-            return $.extend(true, {}, ccConfigDefaults, ccConfigCustom);
+            const ccConfig: any = this.ccProjectConfig ? JSON.parse(this.ccProjectConfig) : {};
+            return !$.isEmptyObject(ccConfig) ? ccConfig.vars.MageSuite_ContentConstructor : ccConfig;
         },
 
         /**

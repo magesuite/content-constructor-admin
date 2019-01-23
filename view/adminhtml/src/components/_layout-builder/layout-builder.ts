@@ -268,6 +268,11 @@ const layoutBuilder: vuejs.ComponentOption = {
             filters: {},
         };
     },
+    computed: {
+        ccSections: function(): object {
+            return Object.values(this.ccConfig.sections[this.pageType]);
+        },
+    },
     ready(): void {
         this.components = this.componentsConfiguration ? JSON.parse(this.componentsConfiguration) : [];
         this.filters = (typeof(Storage) !== void(0) && window.localStorage.getItem('ccFilters')) ? JSON.parse(window.localStorage.getItem('ccFilters')) : this.ccConfig.filters;
@@ -461,30 +466,29 @@ const layoutBuilder: vuejs.ComponentOption = {
          * In this example this methods sets TOP for all components that are above special component dedicated for category page, GRID for special component and BOTTOM for all components under.
          */
         setComponentsPlacementInfo(): any {
-            const sections: any = this.ccConfig.sections[this.pageType];
-
-            if (sections.length > 1) {
+            if (this.ccSections.length > 1) {
                 let sectionIndex: number = 0;
+                const specialComponents: Array<any> = Object.values(this.ccConfig.special_components);
 
                 for (let i: number = 0; i < this.components.length; i++) {
-                    if (this.ccConfig.specialComponents.indexOf(this.components[i].type) !== -1) {
+                    if (specialComponents.indexOf(this.components[i].type) !== -1) {
                         sectionIndex++;
-                        this.components[i].section = sections[sectionIndex];
+                        this.components[i].section = this.ccSections[sectionIndex];
                         sectionIndex++;
                     } else {
-                        this.components[i].section = sections[sectionIndex];
+                        this.components[i].section = this.ccSections[sectionIndex];
                     }
                 }
             }
         },
         /**
          * Sorts components by their sections. 
-         * Order is defined by ccConfig.sections[ this.pageType ]
+         * Order is defined by this.ccSections
          */
         sortComponentsBySections(): void {
-            if (this.components.length && this.ccConfig.sections[this.pageType].length > 1) {
+            if (this.components.length && this.ccSections.length > 1) {
                 this.components.sort((a: any, b: any): any => {
-                    return this.ccConfig.sections[this.pageType].indexOf(a.section) - this.ccConfig.sections[this.pageType].indexOf(b.section);
+                    return this.ccSections.indexOf(a.section) - this.ccSections.indexOf(b.section);
                 });
             }
         },
@@ -539,7 +543,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         getIsSpecialComponent(componentType: string): boolean {
-            return this.ccConfig.specialComponents.indexOf(componentType) !== -1;
+            return Object.values(this.ccConfig.special_components).indexOf(componentType) !== -1;
         },
 
         /**

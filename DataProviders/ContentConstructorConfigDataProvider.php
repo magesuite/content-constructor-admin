@@ -5,7 +5,6 @@ namespace MageSuite\ContentConstructorAdmin\DataProviders;
 class ContentConstructorConfigDataProvider
 {
     const XML_PATH_THEME_ID = 'design/theme/theme_id';
-    const CREATIVESHOP_THEME_NAME = 'theme-creativeshop';
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -31,39 +30,6 @@ class ContentConstructorConfigDataProvider
         $this->scopeConfig = $scopeConfig;
         $this->themeProvider = $themeProvider;
         $this->customization = $customization;
-    }
-
-    public function getCreativeshopConfig() {
-        $themesDirectories = $this->getAllThemesDirectories();
-
-        foreach($themesDirectories as $themeDirectory) {
-            if($this->isThemeCreativeshop($themeDirectory)) {
-                $configContents = $this->getConfigContents($themeDirectory);
-
-                if($configContents == null) {
-                    return '{}';
-                }
-
-                return $configContents;
-            }
-        }
-
-    }
-
-    public function getProjectConfig() {
-        $themesDirectories = $this->getAllThemesDirectories();
-
-        foreach($themesDirectories as $themeDirectory) {
-            if(!$this->isThemeCreativeshop($themeDirectory)) {
-                $configContents = $this->getConfigContents($themeDirectory);
-
-                if($configContents == null) {
-                    return '{}';
-                }
-
-                return $configContents;
-            }
-        }
     }
 
     public function getConfig() {
@@ -113,17 +79,12 @@ class ContentConstructorConfigDataProvider
     }
 
     protected function getConfigContents($themeDirectory) {
-        $configFilePath = $themeDirectory . '/config/cc-config.json';
+        $configFilePath = $themeDirectory . '/etc/view.json';
 
         if(!file_exists($configFilePath)) {
             return null;
         }
 
         return file_get_contents($configFilePath);
-    }
-
-    protected function isThemeCreativeshop($themeDirectory)
-    {
-        return strpos($themeDirectory, self::CREATIVESHOP_THEME_NAME) != false;
     }
 }
