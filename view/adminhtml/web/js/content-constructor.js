@@ -850,7 +850,12 @@ var layoutBuilder = {
     },
     computed: {
         ccSections: function () {
-            return Object.values(this.ccConfig.sections[this.pageType]);
+            var data = this.ccConfig.sections[this.pageType];
+            return Object.keys(data).map(function (key) { return data[key]; });
+        },
+        specialComponents: function () {
+            var data = this.ccConfig.special_components;
+            return Object.keys(data).map(function (key) { return data[key]; });
         },
     },
     ready: function () {
@@ -1032,9 +1037,8 @@ var layoutBuilder = {
         setComponentsPlacementInfo: function () {
             if (this.ccSections.length > 1) {
                 var sectionIndex = 0;
-                var specialComponents = Object.values(this.ccConfig.special_components);
                 for (var i = 0; i < this.components.length; i++) {
-                    if (specialComponents.indexOf(this.components[i].type) !== -1) {
+                    if (this.specialComponents.indexOf(this.components[i].type) !== -1) {
                         sectionIndex++;
                         this.components[i].section = this.ccSections[sectionIndex];
                         sectionIndex++;
@@ -1104,7 +1108,7 @@ var layoutBuilder = {
          * @return {boolean}
          */
         getIsSpecialComponent: function (componentType) {
-            return Object.values(this.ccConfig.special_components).indexOf(componentType) !== -1;
+            return this.specialComponents.indexOf(componentType) !== -1;
         },
         /**
          * Checks if component can be edited.
@@ -1163,13 +1167,13 @@ var layoutBuilder = {
             if (componentData.hasOwnProperty('componentVisibility') && this.filters) {
                 var visibleMobile = (componentData.componentVisibility.mobile !== '' && componentData.componentVisibility.mobile !== false);
                 var visibleDesktop = (componentData.componentVisibility.desktop !== '' && componentData.componentVisibility.desktop !== false);
-                if (this.filters.componentVisibility.options.mobile.value && visibleMobile) {
+                if (this.filters.component_visibility.options.mobile.value && visibleMobile) {
                     return true;
                 }
-                if (this.filters.componentVisibility.options.desktop.value && visibleDesktop) {
+                if (this.filters.component_visibility.options.desktop.value && visibleDesktop) {
                     return true;
                 }
-                if (this.filters.componentVisibility.options.none.value && !visibleMobile && !visibleDesktop) {
+                if (this.filters.component_visibility.options.none.value && !visibleMobile && !visibleDesktop) {
                     return true;
                 }
                 return false;
@@ -1955,7 +1959,8 @@ var cmsPagesTeaserConfigurator = {
     },
     computed: {
         imageTeasersContentPositions: function () {
-            return Object.values(this.ccConfig.imageTeasersContentPositions);
+            var data = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(function (key) { return data[key]; });
         },
     },
     events: {
@@ -2240,7 +2245,8 @@ var heroCarouselConfigurator = {
     },
     computed: {
         imageTeasersContentPositions: function () {
-            return Object.values(this.ccConfig.imageTeasersContentPositions);
+            var data = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(function (key) { return data[key]; });
         },
     },
     data: function () {
@@ -2748,7 +2754,8 @@ var imageTeaserConfigurator = {
     },
     computed: {
         imageTeasersContentPositions: function () {
-            return Object.values(this.ccConfig.imageTeasersContentPositions);
+            var data = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(function (key) { return data[key]; });
         },
     },
     events: {
@@ -3179,7 +3186,8 @@ var magentoProductGridTeasersConfigurator = {
     },
     computed: {
         imageTeasersContentPositions: function () {
-            return Object.values(this.ccConfig.imageTeasersContentPositions);
+            var data = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(function (key) { return data[key]; });
         },
     },
     data: function () {
@@ -4180,6 +4188,13 @@ var productsGridConfigurator = {
                 return {};
             },
         },
+        /* Obtain content of etc/view.json of the current theme */
+        viewXml: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
         productCollectionsSorters: {
             type: [String, Array],
             default: '',
@@ -4191,7 +4206,8 @@ var productsGridConfigurator = {
     },
     computed: {
         imageTeasersContentPositions: function () {
-            return Object.values(this.ccConfig.imageTeasersContentPositions);
+            var data = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(function (key) { return data[key]; });
         },
     },
     data: function () {
@@ -4407,15 +4423,16 @@ var productsGridConfigurator = {
          * @return {number} the highest possible columns per row value
          */
         getMaxPossibleColumns: function () {
-            return Math.max.apply(Math, Object.values(this.ccConfig.columns['one-column']));
+            var maxColumns = this.ccConfig.columns['one-column'];
+            return Math.max.apply(Math, Object.keys(maxColumns).map(function (key) { return maxColumns[key]; }));
         },
         /**
          * Calculate how many products should be returned by BE,
          * then saves result to component's configuration
          */
         setProductsLimit: function () {
-            var heroWidth = parseInt(this.ccConfig.productsGrid.heroSize.x, 10);
-            var heroHeight = parseInt(this.ccConfig.productsGrid.heroSize.y, 10);
+            var heroWidth = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.x, 10);
+            var heroHeight = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.y, 10);
             var maxRowsSet = Math.max(this.configuration.rows_mobile, this.configuration.rows_tablet, this.configuration.rows_desktop);
             var isHeroEnabled = this.configuration.hero.position !== '';
             var heroSize = isHeroEnabled ? heroWidth * heroHeight : 0;
@@ -4624,6 +4641,7 @@ var contentConstructor = {
     data: function () {
         return {
             ccConfig: this.getCCconfig(),
+            viewXml: JSON.parse(this.ccProjectConfig),
             initialComponentConfiguration: undefined,
             restToken: undefined,
         };

@@ -311,6 +311,13 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 return {};
             },
         },
+        /* Obtain content of etc/view.json of the current theme */
+        viewXml: {
+            type: Object,
+            default(): any {
+                return {};
+            },
+        },
         productCollectionsSorters: {
             type: [String, Array],
             default: '',
@@ -322,7 +329,8 @@ const productsGridConfigurator: vuejs.ComponentOption = {
     },
     computed: {
         imageTeasersContentPositions: function(): object {
-            return Object.values(this.ccConfig.imageTeasersContentPositions);
+            const data: object = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(key => (<any>data)[key]);
         },
     },
     data(): Object {
@@ -552,7 +560,8 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * @return {number} the highest possible columns per row value
          */
         getMaxPossibleColumns(): number {
-            return Math.max.apply(Math, Object.values(this.ccConfig.columns['one-column']));
+            const maxColumns: object = this.ccConfig.columns['one-column'];
+            return Math.max.apply(Math, Object.keys(maxColumns).map(key => (<any>maxColumns)[key]));
         },
 
         /**
@@ -560,8 +569,8 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * then saves result to component's configuration
          */
         setProductsLimit(): void {
-            const heroWidth: number = parseInt(this.ccConfig.productsGrid.heroSize.x, 10);
-            const heroHeight: number = parseInt(this.ccConfig.productsGrid.heroSize.y, 10);
+            const heroWidth: number = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.x, 10);
+            const heroHeight: number = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.y, 10);
             const maxRowsSet: number = Math.max(this.configuration.rows_mobile, this.configuration.rows_tablet, this.configuration.rows_desktop);
             const isHeroEnabled: boolean = this.configuration.hero.position !== '';
             let heroSize: number = isHeroEnabled ? heroWidth * heroHeight : 0;

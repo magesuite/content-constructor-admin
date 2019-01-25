@@ -178,6 +178,7 @@ const contentConstructor: vuejs.ComponentOption = {
     data(): object {
         return {
             ccConfig: this.getCCconfig(),
+            viewXml: JSON.parse(this.ccProjectConfig),
             initialComponentConfiguration: undefined,
             restToken: undefined,
         };

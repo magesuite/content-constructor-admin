@@ -1600,12 +1600,6 @@ cosmiconfig@^3.1.0:
     parse-json "^3.0.0"
     require-from-string "^2.0.1"
 
-"creative-patterns@git+ssh://git@gitlab.creativestyle.pl:frontend/creative-patterns.git#v2.29.5":
-  version "2.29.5"
-  resolved "git+ssh://git@gitlab.creativestyle.pl:frontend/creative-patterns.git#147c99d251704a7b7e9eb847e655d2bb588debad"
-  dependencies:
-    include-media "^1.4.9"
-
 cross-spawn@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-3.0.1.tgz#1256037ecb9f0c5f79e3d6ef135e30770184b982"
@@ -3405,11 +3399,6 @@ in-publish@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/in-publish/-/in-publish-2.0.0.tgz#e20ff5e3a2afc2690320b6dc552682a9c7fadf51"
   integrity sha1-4g/146KvwmkDILbcVSaCqcf631E=
-
-include-media@^1.4.9:
-  version "1.4.9"
-  resolved "https://registry.yarnpkg.com/include-media/-/include-media-1.4.9.tgz#d0020b7be3eb2d54868a20943595ce380e0bc43b"
-  integrity sha1-0AILe+PrLVSGiiCUNZXOOA4LxDs=
 
 indent-string@^2.1.0:
   version "2.1.0"
