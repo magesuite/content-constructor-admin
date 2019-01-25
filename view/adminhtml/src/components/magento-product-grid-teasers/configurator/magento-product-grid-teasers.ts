@@ -247,7 +247,8 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
     },
     computed: {
         imageTeasersContentPositions: function(): object {
-            return Object.values(this.ccConfig.imageTeasersContentPositions);
+            const data: object = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(key => (<any>data)[key]);
         },
     },
     data(): any {

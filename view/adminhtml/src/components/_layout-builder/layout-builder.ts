@@ -270,7 +270,12 @@ const layoutBuilder: vuejs.ComponentOption = {
     },
     computed: {
         ccSections: function(): object {
-            return Object.values(this.ccConfig.sections[this.pageType]);
+            const data: object = this.ccConfig.sections[this.pageType];
+            return Object.keys(data).map(key => (<any>data)[key]);
+        },
+        specialComponents: function(): object {
+            const data: object = this.ccConfig.special_components;
+            return Object.keys(data).map(key => (<any>data)[key]);
         },
     },
     ready(): void {
@@ -468,10 +473,9 @@ const layoutBuilder: vuejs.ComponentOption = {
         setComponentsPlacementInfo(): any {
             if (this.ccSections.length > 1) {
                 let sectionIndex: number = 0;
-                const specialComponents: Array<any> = Object.values(this.ccConfig.special_components);
 
                 for (let i: number = 0; i < this.components.length; i++) {
-                    if (specialComponents.indexOf(this.components[i].type) !== -1) {
+                    if (this.specialComponents.indexOf(this.components[i].type) !== -1) {
                         sectionIndex++;
                         this.components[i].section = this.ccSections[sectionIndex];
                         sectionIndex++;
@@ -543,7 +547,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         getIsSpecialComponent(componentType: string): boolean {
-            return Object.values(this.ccConfig.special_components).indexOf(componentType) !== -1;
+            return this.specialComponents.indexOf(componentType) !== -1;
         },
 
         /**
@@ -610,15 +614,15 @@ const layoutBuilder: vuejs.ComponentOption = {
                 let visibleMobile: boolean = (componentData.componentVisibility.mobile !== '' && componentData.componentVisibility.mobile !== false);
                 let visibleDesktop: boolean = (componentData.componentVisibility.desktop !== '' && componentData.componentVisibility.desktop !== false);
 
-                if (this.filters.componentVisibility.options.mobile.value && visibleMobile) {
+                if (this.filters.component_visibility.options.mobile.value && visibleMobile) {
                     return true;
                 }
 
-                if (this.filters.componentVisibility.options.desktop.value && visibleDesktop) {
+                if (this.filters.component_visibility.options.desktop.value && visibleDesktop) {
                     return true;
                 }
 
-                if (this.filters.componentVisibility.options.none.value && !visibleMobile && !visibleDesktop) {
+                if (this.filters.component_visibility.options.none.value && !visibleMobile && !visibleDesktop) {
                     return true;
                 }
 
