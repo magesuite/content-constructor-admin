@@ -2,11 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\Controller\Adminhtml\Component;
 
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\ResponseInterface;
-
-class Configurator extends Action
+class Configurator extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var \Magento\Framework\View\Layout
@@ -14,7 +10,7 @@ class Configurator extends Action
     protected $layout;
     
     /**
-     * @var Context
+     * @var \Magento\Backend\App\Action\Context
      */
     protected $context;
 
@@ -33,12 +29,18 @@ class Configurator extends Action
      */
     protected $pageFactory;
 
+    /**
+     * @var \MageSuite\ContentConstructorAdmin\Model\ComponentsPool
+     */
+    protected $componentsPool;
+
     public function __construct(
-        Context $context,
+        \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         \MageSuite\ContentConstructor\ComponentManager $componentManager,
-        \Magento\Framework\View\Layout $layout
+        \Magento\Framework\View\Layout $layout,
+        \MageSuite\ContentConstructorAdmin\Model\ComponentsPool $componentsPool
     )
     {
         parent::__construct($context);
@@ -48,6 +50,7 @@ class Configurator extends Action
         $this->componentManager = $componentManager;
         $this->pageFactory = $pageFactory;
         $this->layout = $layout;
+        $this->componentsPool = $componentsPool;
     }
 
     /**
@@ -62,31 +65,15 @@ class Configurator extends Action
 
         $type = $this->getRequest()->getParam('type');
 
-//        if($type == 'button') {
-//            $contents = $this->layout
-//                ->createBlock(\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Button::class)
-//                ->toHtml();
-//        }
-//        else if($type == 'headline') {
-//            $contents = $this->layout
-//                ->createBlock(\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Headline::class)
-//                ->toHtml();
-//        }
-//        else if($type == 'product-carousel') {
-//            $contents = $this->layout
-//                ->createBlock(\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductCarousel::class)
-//                ->toHtml();
-//        }
-//        else if($type == 'paragraph') {
-//            $contents = $this->layout
-//                ->createBlock(\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Paragraph::class)
-//                ->toHtml();
-//        }
-//        else {
-            $contents = $this->componentManager
-                ->initializeComponent($type)
-                ->renderConfigurator();
-//        }
+        $componentClassName = $this->componentsPool->getComponentClass($type);
+
+        $contents = '';
+
+        if($componentClassName) {
+            $contents = $this->layout
+                ->createBlock($componentClassName)
+                ->toHtml();
+        }
 
         return $resultRaw->setContents($contents);
     }

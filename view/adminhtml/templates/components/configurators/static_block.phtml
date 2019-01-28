@@ -3,20 +3,18 @@
 $blocks = $block->getBlocks();
 ?>
 <template id="cc-static-block-template">
-    <form class="cc-static-block-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
+    <form class="cc-static-block-configurator" @submit.prevent="onSave">
         <div class="cc-input cc-input--type-inline">
             <label for="cfg-static-block" class="cc-input__label">Static Block:</label>
             <select name="select" class="cc-input__select" id="cfg-static-block" v-model="configuration.identifier"  v-el:cms-blocks-select @change="onChange">
-                <option value="">-- Select CMS Block --</option>
+                <option value="">-- <?=__('Select CMS Block')?> --</option>
                 <?php foreach($blocks as $block): ?>
-                <option value="<?=$block['identifier']?>"
-                        <?php // {{ block.identifier == configuration.identifier ? 'selected="selected"' : '' }} ?>
-                ><?=$block['title']?></option>
+                    <option value="<?=$block['identifier']?>"><?=$block['title']?></option>
                 <?php endforeach; ?>
             </select>
         </div>
         <div class="cc-input cc-input--type-inline">
-            <label for="cfg-resetstyles" class="cc-input__label">Reset default styles of CMS Static Block</label>
+            <label for="cfg-resetstyles" class="cc-input__label"><?=__('Reset default styles of CMS Static Block')?></label>
             <div class="admin__actions-switch" data-role="switcher">
                 <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-resetstyles" name="reset_default_styles_of_cms" v-model="configuration.resetstyles" @change="onChange">
                 <label class="admin__actions-switch-label" for="cfg-resetstyles">
@@ -27,5 +25,5 @@ $blocks = $block->getBlocks();
     </form>
 </template>
 
-<static-block-configurator class="cc-static-block-configurator {{ classes }}" :configuration="initialComponentConfiguration"></static-block-configurator>
+<static-block-configurator class="cc-static-block-configurator" :configuration="initialComponentConfiguration"></static-block-configurator>
 
