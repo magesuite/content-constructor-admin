@@ -32,19 +32,10 @@ class Configurator extends \Magento\Framework\View\Element\Template
 
         $type = $this->getRequest()->getParam('type');
 
-        if($type == 'button') {
-            $contents = $this->getLayout()->createBlock(\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Button::class)
-                ->toHtml();
-        }
-        else if($type == 'headline') {
-            $contents = $this->getLayout()->createBlock(\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Headline::class)
-                ->toHtml();
-        }
-        else {
-            $contents = $this->componentManager
-                ->initializeComponent($type)
-                ->renderConfigurator();
-        }
+        $contents = $this->componentManager
+            ->initializeComponent($type)
+            ->renderConfigurator();
+    
 
         return $contents;
     }
