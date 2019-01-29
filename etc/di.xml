@@ -48,4 +48,93 @@
                 type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields"
                 sortOrder="1" />
     </type>
+
+    <type name="MageSuite\ContentConstructorAdmin\Model\ComponentsPool">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="components" xsi:type="array">
+                    <item name="button" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Button</item>
+                        <item name="name" xsi:type="string">Button</item>
+                        <item name="description" xsi:type="string">You can place a button on your CMS page. Define the button text and the target link with this component.</item>
+                    </item>
+                    <item name="headline" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Headline</item>
+                        <item name="name" xsi:type="string">Headline</item>
+                        <item name="description" xsi:type="string">You can add headlines and subheadlines to your CMS page.</item>
+                    </item>
+                    <item name="product-carousel" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductCarousel</item>
+                        <item name="name" xsi:type="string">Product carousel</item>
+                        <item name="description" xsi:type="string">This carousel will display products from a specific category on your CMS page.</item>
+                    </item>
+                    <item name="paragraph" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Paragraph</item>
+                        <item name="name" xsi:type="string">Paragraph</item>
+                        <item name="description" xsi:type="string">Choose this component if you want to include a text block to you CMS page.</item>
+                    </item>
+                    <item name="static-cms-block" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\StaticBlock</item>
+                        <item name="name" xsi:type="string">Static block</item>
+                        <item name="description" xsi:type="string">Choose this component to include an existing static block to your CMS page.</item>
+                    </item>
+                    <item name="hero-carousel" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\HeroCarousel</item>
+                        <item name="name" xsi:type="string">Hero carousel</item>
+                        <item name="description" xsi:type="string">This component allows you to add several Hero images in a Slider. You can define Headlines, Subheadlines, Text and Buttons on each image.</item>
+                    </item>
+                    <item name="image-teaser" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ImageTeaser</item>
+                        <item name="name" xsi:type="string">Image teaser</item>
+                        <item name="description" xsi:type="string">This component allows you to add 1-6 image teasers with or without text in a row.</item>
+                    </item>
+                    <item name="separator" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Separator</item>
+                        <item name="name" xsi:type="string">Separator</item>
+                        <item name="description" xsi:type="string">This horizontal line is used to visualize separation of two components.</item>
+                    </item>
+                    <item name="category-links" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\CategoryLinks</item>
+                        <item name="name" xsi:type="string">Category links</item>
+                        <item name="description" xsi:type="string">Include category links with this component.</item>
+                    </item>
+                    <item name="brand-carousel" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\BrandCarousel</item>
+                        <item name="name" xsi:type="string">Brand carousel</item>
+                        <item name="description" xsi:type="string">Highlight some brands and show them in a carousel by using this component.</item>
+                    </item>
+                    <item name="product-grid" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductGrid</item>
+                        <item name="name" xsi:type="string">Products grid</item>
+                        <item name="description" xsi:type="string">This component will display products grid from a specific category.</item>
+                    </item>
+                    <item name="cms-teaser" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\CmsPagesTeaser</item>
+                        <item name="name" xsi:type="string">CMS Pages Teaser</item>
+                        <item name="description" xsi:type="string">This component lists CMS pages by tag.</item>
+                    </item>
+                    <item name="product-finder" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductFinder</item>
+                        <item name="name" xsi:type="string">Product finder</item>
+                        <item name="description" xsi:type="string">Product Finder.</item>
+                    </item>
+                    <item name="custom-html" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\CustomHtml</item>
+                        <item name="name" xsi:type="string">Custom HTML</item>
+                        <item name="description" xsi:type="string">This component displays any custom HTML without formatting.</item>
+                    </item>
+                    <item name="daily-deal-teaser" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\DailyDealTeaser</item>
+                        <item name="name" xsi:type="string">Daily Deal Teaser</item>
+                        <item name="description" xsi:type="string">Daily Deal Teaser.</item>
+                    </item>
+                    <item name="picker" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Picker</item>
+                        <item name="name" xsi:type="string"/>
+                        <item name="description" xsi:type="string"/>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>
