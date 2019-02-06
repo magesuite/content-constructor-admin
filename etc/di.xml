@@ -133,6 +133,11 @@
                         <item name="name" xsi:type="string"/>
                         <item name="description" xsi:type="string"/>
                     </item>
+                    <item name="magento-product-grid-teasers" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductGridTeasers</item>
+                        <item name="name" xsi:type="string"/>
+                        <item name="description" xsi:type="string"/>
+                    </item>
                 </item>
             </argument>
         </arguments>
