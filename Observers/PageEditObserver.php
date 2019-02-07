@@ -9,22 +9,29 @@ use Magento\Framework\Event\ObserverInterface;
 class PageEditObserver implements ObserverInterface
 {
     /**
+     * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper
+     */
+    protected $xmlToComponentConfigurationMapper;
+
+    /**
      * @var \Magento\Framework\App\Cache\TypeListInterface
      */
-    private $cacheTypeList;
+    protected $cacheTypeList;
 
     /**
      * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper
      */
-    private $configurationToXmlMapper;
+    protected $configurationToXmlMapper;
 
     public function __construct(
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
-        \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $configurationToXmlMapper
+        \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $configurationToXmlMapper,
+        \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfigurationMapper
     )
     {
         $this->cacheTypeList = $cacheTypeList;
         $this->configurationToXmlMapper = $configurationToXmlMapper;
+        $this->xmlToComponentConfigurationMapper = $xmlToComponentConfigurationMapper;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
@@ -36,10 +43,11 @@ class PageEditObserver implements ObserverInterface
 
         $data = $request->getPostValue();
 
-        if(isset($data['components']) AND !empty($data['components'])) {
+        if(isset($data['components']) and !empty($data['components'])) {
             $components = json_decode($data['components'], true);
+            $existingComponents = $this->xmlToComponentConfigurationMapper->map($page->getLayoutUpdateXml());
 
-            if(!empty($components)){
+            if(!empty($components) or !empty($existingComponents)){
                 $layoutUpdateXml = $this->configurationToXmlMapper->map($components, $page->getLayoutUpdateXml());
 
                 $page->setLayoutUpdateXml($layoutUpdateXml);
