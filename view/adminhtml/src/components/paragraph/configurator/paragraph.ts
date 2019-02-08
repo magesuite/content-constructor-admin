@@ -14,7 +14,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         componentConfigurator,
     ],
     template: `<form class="cc-paragraph-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
-        
+
         <div class="cc-paragraph-configurator__error" v-text="tempConfiguration.errorMessage" v-show="tempConfiguration.errorMessage">
         </div>
 
@@ -102,6 +102,11 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         },
         /* Obtain base-url for the image uploader */
         uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain admin prefix */
+        adminPrefix: {
             type: String,
             default: '',
         },
@@ -246,15 +251,15 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                 try {
                     responseData = JSON.parse(response.data);
 
-                    this.tempConfiguration.errorMessage = responseData.message 
-                        ? responseData.message 
+                    this.tempConfiguration.errorMessage = responseData.message
+                        ? responseData.message
                         : $t('An unknown error occured. Please try again later.');
 
                     // Scroll modal to top to make message visible
                     const $configuratorModal: any = $('.content-constructor__modal--configurator').closest('.modal-content');
 
                     if($configuratorModal.length) {
-                        $configuratorModal.animate({ 
+                        $configuratorModal.animate({
                             scrollTop: 0,
                         }, 150);
                     }
@@ -297,40 +302,35 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         openMagentoVariablesModal(): void {
             MagentovariablePlugin.loadChooser(`${window.location.origin}/${this.adminPrefix}/admin/system_variable/wysiwygPlugin/`, 'textarea-cfg-paragraph');
         },
+        /**
+         * Initializes TinyMCE WYSIWYG with given configuration (this.wysiwygConfig).
+         * Custom Event.observe(... event added to toggle editor on/off
+         * You can change editor settings if needed by extending 'editorConfig'.
+         * To extend config please see how it's done by Magento here: vendor/magento/module-catalog/Block/Adminhtml/Helper/Form/Wysiwyg.php (starting from #105)
+         */
         initWysiwyg(): void {
             const _this: any = this;
-
-            window.tinyMCE_GZ = window.tinyMCE_GZ || {};
-            window.tinyMCE_GZ.loaded = true;
+            let editor: any;
+            const editorConfig: JSON = JSON.parse(this.wysiwygConfig);
 
             require([
-                'mage/translate',
-                'mage/adminhtml/events',
-                'ccTinyMceWysiwygSetup',
-                'mage/adminhtml/wysiwyg/widget',
+                'mage/adminhtml/wysiwyg/tiny_mce/setup'
             ], function(): void {
-                // Setup (this global variable is already set in constructor.phtml)
-                csWysiwygEditor = new ccTinyMceWysiwygSetup('textarea-cfg-paragraph', _this.wysiwygCfg);
+                editor = new tinyMceWysiwygSetup(
+                    'textarea-cfg-paragraph',
+                    editorConfig
+                );
 
-                // Initialization
-                csWysiwygEditor.setup('exact');
-                _this.isEditorVisible = true;
-
-                // Set listener for enable/disable editor button
                 Event.observe('toggle-wysiwyg', 'click', function(): void {
-                    csWysiwygEditor.toggle();
+                    editor.toggle();
                     _this.isEditorVisible = !_this.isEditorVisible;
-                }.bind(csWysiwygEditor));
+                }.bind(editor));
 
-                // Set handlers for editor
-                const editorFormValidationHandler = csWysiwygEditor.onFormValidation.bind(csWysiwygEditor);
-                varienGlobalEvents.attachEventHandler('formSubmit', editorFormValidationHandler);
-                varienGlobalEvents.clearEventHandlers('open_browser_callback');
-
-                // Add callback for editor's IMAGE button to open file uploader while clicked
-                varienGlobalEvents.attachEventHandler('open_browser_callback', csWysiwygEditor.openFileBrowser);
+                editor.turnOn();
+                _this.isEditorVisible = true;
             });
         },
+
         /*
          * Set the proper option after variant click
          */
