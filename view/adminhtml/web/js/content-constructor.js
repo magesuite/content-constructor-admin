@@ -3467,7 +3467,7 @@ var paragraphConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    template: "<form class=\"cc-paragraph-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        \n        <div class=\"cc-paragraph-configurator__error\" v-text=\"tempConfiguration.errorMessage\" v-show=\"tempConfiguration.errorMessage\">\n        </div>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <h3 class=\"cc-paragraph-configurator__subtitle\">" + $t('Paragraph width') + "</h3>\n            <div class=\"cc-paragraph-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-paragraph-configurator__option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-paragraph-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-paragraph-configurator__option-wrapper\">\n                        <svg class=\"cc-paragraph-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-paragraph-configurator__option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-id\" class=\"cc-input__label\">" + $t('Identifier') + ":</label>\n                <input type=\"text\" name=\"cfg-id\" v-model=\"tempConfiguration.identifier\" id=\"input-cfg-id\" class=\"cc-input__input cc-input__input--limited-width\" @blur=\"stripSpaces( tempConfiguration.identifier )\" maxlength=\"30\">\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-title\" class=\"cc-input__label\">" + $t('Title') + ":</label>\n                <input type=\"text\" name=\"cfg-title\" v-model=\"tempConfiguration.title\" id=\"input-cfg-title\" class=\"cc-input__input cc-input__input--limited-width\" maxlength=\"100\">\n            </div>\n            <div class=\"cc-input\" v-if=\"isColumnsConfigAvailable()\">\n                <label for=\"input-cfg-columns\" class=\"cc-input__label\">" + $t('Number of columns') + ":</label>\n                <select name=\"input-cfg-columns\" class=\"cc-input__select | cc-paragraph-configurator__select\" id=\"input-cfg-columns\" v-model=\"configuration.columns\">\n                    <option value=\"none\">" + $t('Don\'t split content - display full width') + "</option>\n                    <option value=\"2\">" + $t('Split content into 2 columns') + "</option>\n                    <option value=\"3\">" + $t('Split content into 3 columns') + "</option>\n                    <option value=\"4\">" + $t('Split content into 4 columns') + "</option>\n                </select>\n                <div class=\"admin__field-note cc-input__note\">\n                    <span>" + $t('Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.') + "</span>\n                </div>\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"textarea-cfg-paragraph\" class=\"cc-input__label cc-input__label--look-top-align\">" + $t('HTML') + ":</label>\n\n                <div class=\"buttons-set | cc-paragraph-configurator__wysiwyg-buttons\">\n                    <button type=\"button\" class=\"scalable action-show-hide\" id=\"toggle-wysiwyg\">" + $t('Show / Hide Editor') + "</button>\n                    <button type=\"button\" class=\"scalable action-add-widget plugin\" @click=\"openWidgetModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Widget') + "...</button>\n                    <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"openMediaModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Image') + "...</button>\n                    <button type=\"button\" class=\"scalable add-variable plugin\" @click=\"openMagentoVariablesModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Variable') + "...</button>\n                </div>\n\n                <textarea name=\"cfg-paragraph\" v-model=\"tempConfiguration.content\" id=\"textarea-cfg-paragraph\" class=\"cc-input__textarea | cc-paragraph-configurator__textarea\"></textarea>\n            </div>\n        </section>\n    </form>",
+    template: "<form class=\"cc-paragraph-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n\n        <div class=\"cc-paragraph-configurator__error\" v-text=\"tempConfiguration.errorMessage\" v-show=\"tempConfiguration.errorMessage\">\n        </div>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <h3 class=\"cc-paragraph-configurator__subtitle\">" + $t('Paragraph width') + "</h3>\n            <div class=\"cc-paragraph-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-paragraph-configurator__option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-paragraph-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-paragraph-configurator__option-wrapper\">\n                        <svg class=\"cc-paragraph-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-paragraph-configurator__option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-id\" class=\"cc-input__label\">" + $t('Identifier') + ":</label>\n                <input type=\"text\" name=\"cfg-id\" v-model=\"tempConfiguration.identifier\" id=\"input-cfg-id\" class=\"cc-input__input cc-input__input--limited-width\" @blur=\"stripSpaces( tempConfiguration.identifier )\" maxlength=\"30\">\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-title\" class=\"cc-input__label\">" + $t('Title') + ":</label>\n                <input type=\"text\" name=\"cfg-title\" v-model=\"tempConfiguration.title\" id=\"input-cfg-title\" class=\"cc-input__input cc-input__input--limited-width\" maxlength=\"100\">\n            </div>\n            <div class=\"cc-input\" v-if=\"isColumnsConfigAvailable()\">\n                <label for=\"input-cfg-columns\" class=\"cc-input__label\">" + $t('Number of columns') + ":</label>\n                <select name=\"input-cfg-columns\" class=\"cc-input__select | cc-paragraph-configurator__select\" id=\"input-cfg-columns\" v-model=\"configuration.columns\">\n                    <option value=\"none\">" + $t('Don\'t split content - display full width') + "</option>\n                    <option value=\"2\">" + $t('Split content into 2 columns') + "</option>\n                    <option value=\"3\">" + $t('Split content into 3 columns') + "</option>\n                    <option value=\"4\">" + $t('Split content into 4 columns') + "</option>\n                </select>\n                <div class=\"admin__field-note cc-input__note\">\n                    <span>" + $t('Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.') + "</span>\n                </div>\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"textarea-cfg-paragraph\" class=\"cc-input__label cc-input__label--look-top-align\">" + $t('HTML') + ":</label>\n\n                <div class=\"buttons-set | cc-paragraph-configurator__wysiwyg-buttons\">\n                    <button type=\"button\" class=\"scalable action-show-hide\" id=\"toggle-wysiwyg\">" + $t('Show / Hide Editor') + "</button>\n                    <button type=\"button\" class=\"scalable action-add-widget plugin\" @click=\"openWidgetModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Widget') + "...</button>\n                    <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"openMediaModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Image') + "...</button>\n                    <button type=\"button\" class=\"scalable add-variable plugin\" @click=\"openMagentoVariablesModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Variable') + "...</button>\n                </div>\n\n                <textarea name=\"cfg-paragraph\" v-model=\"tempConfiguration.content\" id=\"textarea-cfg-paragraph\" class=\"cc-input__textarea | cc-paragraph-configurator__textarea\"></textarea>\n            </div>\n        </section>\n    </form>",
     props: {
         /*
          * Single's component configuration
@@ -3495,6 +3495,11 @@ var paragraphConfigurator = {
         },
         /* Obtain base-url for the image uploader */
         uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain admin prefix */
+        adminPrefix: {
             type: String,
             default: '',
         },
@@ -3670,32 +3675,26 @@ var paragraphConfigurator = {
         openMagentoVariablesModal: function () {
             MagentovariablePlugin.loadChooser(window.location.origin + "/" + this.adminPrefix + "/admin/system_variable/wysiwygPlugin/", 'textarea-cfg-paragraph');
         },
+        /**
+         * Initializes TinyMCE WYSIWYG with given configuration (this.wysiwygConfig).
+         * Custom Event.observe(... event added to toggle editor on/off
+         * You can change editor settings if needed by extending 'editorConfig'.
+         * To extend config please see how it's done by Magento here: vendor/magento/module-catalog/Block/Adminhtml/Helper/Form/Wysiwyg.php (starting from #105)
+         */
         initWysiwyg: function () {
             var _this = this;
-            window.tinyMCE_GZ = window.tinyMCE_GZ || {};
-            window.tinyMCE_GZ.loaded = true;
+            var editor;
+            var editorConfig = JSON.parse(this.wysiwygConfig);
             require([
-                'mage/translate',
-                'mage/adminhtml/events',
-                'ccTinyMceWysiwygSetup',
-                'mage/adminhtml/wysiwyg/widget',
+                'mage/adminhtml/wysiwyg/tiny_mce/setup'
             ], function () {
-                // Setup (this global variable is already set in constructor.phtml)
-                csWysiwygEditor = new ccTinyMceWysiwygSetup('textarea-cfg-paragraph', _this.wysiwygCfg);
-                // Initialization
-                csWysiwygEditor.setup('exact');
-                _this.isEditorVisible = true;
-                // Set listener for enable/disable editor button
+                editor = new tinyMceWysiwygSetup('textarea-cfg-paragraph', editorConfig);
                 Event.observe('toggle-wysiwyg', 'click', function () {
-                    csWysiwygEditor.toggle();
+                    editor.toggle();
                     _this.isEditorVisible = !_this.isEditorVisible;
-                }.bind(csWysiwygEditor));
-                // Set handlers for editor
-                var editorFormValidationHandler = csWysiwygEditor.onFormValidation.bind(csWysiwygEditor);
-                varienGlobalEvents.attachEventHandler('formSubmit', editorFormValidationHandler);
-                varienGlobalEvents.clearEventHandlers('open_browser_callback');
-                // Add callback for editor's IMAGE button to open file uploader while clicked
-                varienGlobalEvents.attachEventHandler('open_browser_callback', csWysiwygEditor.openFileBrowser);
+                }.bind(editor));
+                editor.turnOn();
+                _this.isEditorVisible = true;
             });
         },
         /*
