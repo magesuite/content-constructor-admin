@@ -3679,7 +3679,7 @@ var paragraphConfigurator = {
          * Initializes TinyMCE WYSIWYG with given configuration (this.wysiwygConfig).
          * Custom Event.observe(... event added to toggle editor on/off
          * You can change editor settings if needed by extending 'editorConfig'.
-         * To extend config please see how it's done by Magento here: vendor/magento/module-catalog/Block/Adminhtml/Helper/Form/Wysiwyg.php (starting from #105)
+         * To extend config please see how it's done by Magento here: vendor/magento/framework/Data/Form/Element/Editor.php
          */
         initWysiwyg: function () {
             var _this = this;
@@ -3688,12 +3688,12 @@ var paragraphConfigurator = {
             require([
                 'mage/adminhtml/wysiwyg/tiny_mce/setup'
             ], function () {
-                editor = new tinyMceWysiwygSetup('textarea-cfg-paragraph', editorConfig);
+                editor = new wysiwygSetup('textarea-cfg-paragraph', editorConfig);
+                editor.setup('exact');
                 Event.observe('toggle-wysiwyg', 'click', function () {
                     editor.toggle();
                     _this.isEditorVisible = !_this.isEditorVisible;
                 }.bind(editor));
-                editor.turnOn();
                 _this.isEditorVisible = true;
             });
         },
