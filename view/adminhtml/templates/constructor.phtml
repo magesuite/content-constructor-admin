@@ -9,9 +9,7 @@
     image-endpoint="<?= $block->getImageEndpoint() ?>"
     category-data-provider-endpoint="<?= $block->getCategoryDataProviderEndpoint() ?>"
     page-type="<?= $block->getPageType() ?>"
-    cc-configuration='<?= str_replace("'", "&#39;", $block->getContentConstructorConfig()) ?>'
-    cc-project-configuration='<?= str_replace("'", "&#39;", $block->getProjectConfig()) ?>'
-    cc-creativeshop-configuration='<?= str_replace("'", "&#39;", $block->getCreativeshopConfig()) ?>'
+    cc-project-config='<?= str_replace("'", "&#39;", $block->getContentConstructorConfig()) ?>'
     products-per-page='<?= $block->getProductsPerPage() ?>'
     admin-prefix="<?= $block->getAdminPrefix() ?>"
     sorters='<?= str_replace("'", "&#39;", $block->getSorters()) ?>'

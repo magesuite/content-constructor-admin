@@ -50,7 +50,7 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
                 <div class="cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option">
                     <label for="cfg-cmspt-text-variant" class="cc-input__label | cc-cms-pages-teaser-configurator__section-option-label">${$t( 'Display variant' )}:</label>
                     <select name="cfg-cmspt-text-variant" class="cc-input__select" id="cfg-cmspt-text-variant" v-model="configuration.textDisplayVariant" @change="onChange">
-                        <template v-for="(idx, scenario) in ccConfig.imageTeasersContentPositions">
+                        <template v-for="(idx, scenario) in imageTeasersContentPositions">
                             <option value="{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
                         </template>
                     </select>
@@ -143,6 +143,12 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             default(): any {
                 return {};
             },
+        },
+    },
+    computed: {
+        imageTeasersContentPositions: function(): object {
+            const data: object = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(key => (<any>data)[key]);
         },
     },
     events: {

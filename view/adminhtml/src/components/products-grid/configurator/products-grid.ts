@@ -194,7 +194,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                         <div class="cc-input | cc-image-teaser-configurator__item-form-element">
                             <label for="cfg-pg-hero_content-position-variant" class="cc-input__label">${$t( 'Display variant' )}:</label>
                             <select name="cfg-pg-hero_content-position-variant" class="cc-input__select" id="cfg-pg-hero_content-position-variant" v-model="configuration.hero.displayVariant">
-                                <template v-for="(idx, scenario) in ccConfig.imageTeasersContentPositions">
+                                <template v-for="(idx, scenario) in imageTeasersContentPositions">
                                     <option value="{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
                                 </template>
                             </select>
@@ -311,6 +311,13 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 return {};
             },
         },
+        /* Obtain content of etc/view.json of the current theme */
+        viewXml: {
+            type: Object,
+            default(): any {
+                return {};
+            },
+        },
         productCollectionsSorters: {
             type: [String, Array],
             default: '',
@@ -318,6 +325,12 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         productCollectionsFilters: {
             type: [String, Array],
             default: '',
+        },
+    },
+    computed: {
+        imageTeasersContentPositions: function(): object {
+            const data: object = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(key => (<any>data)[key]);
         },
     },
     data(): Object {
@@ -542,15 +555,13 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         },
 
         /**
-         * This method is searching through cc-config.json configuration
+         * This method is searching through ccConfig configuration
          * to find the highest value for columns across whole project
          * @return {number} the highest possible columns per row value
          */
         getMaxPossibleColumns(): number {
-            const columnsObj: any = this.ccConfig.columnsConfig.full;
-            const columns: Array<any> = Object.keys(columnsObj).map(k => columnsObj[k]);
-
-            return columns.reduce((max: number, current: number) => current > max ? current : max, 0);
+            const maxColumns: object = this.ccConfig.columns['one-column'];
+            return Math.max.apply(Math, Object.keys(maxColumns).map(key => (<any>maxColumns)[key]));
         },
 
         /**
@@ -558,8 +569,8 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * then saves result to component's configuration
          */
         setProductsLimit(): void {
-            const heroWidth: number = parseInt(this.ccConfig.productsGrid.heroSize.x, 10);
-            const heroHeight: number = parseInt(this.ccConfig.productsGrid.heroSize.y, 10);
+            const heroWidth: number = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.x, 10);
+            const heroHeight: number = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.y, 10);
             const maxRowsSet: number = Math.max(this.configuration.rows_mobile, this.configuration.rows_tablet, this.configuration.rows_desktop);
             const isHeroEnabled: boolean = this.configuration.hero.position !== '';
             let heroSize: number = isHeroEnabled ? heroWidth * heroHeight : 0;

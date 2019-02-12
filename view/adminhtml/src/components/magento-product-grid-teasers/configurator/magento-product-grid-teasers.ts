@@ -137,7 +137,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
                                 <label for="cfg-mpg-teaser{{ $index }}-variant" class="cc-input__label">${$t( 'Display variant' )}:</label>
                                 <select name="cfg-mpg-teaser{{ $index }}-variant" class="cc-input__select | cc-magento-product-grid-teasers-configurator__select" id="cfg-mpg-teaser{{ $index }}-variant" v-model="configuration.teasers[$index].displayVariant">
-                                    <template v-for="(idx, scenario) in ccConfig.imageTeasersContentPositions">
+                                    <template v-for="(idx, scenario) in imageTeasersContentPositions">
                                         <option value="variant-{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
                                     </template>
                                 </select>
@@ -245,6 +245,12 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
             default: 'admin',
         },
     },
+    computed: {
+        imageTeasersContentPositions: function(): object {
+            const data: object = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(key => (<any>data)[key]);
+        },
+    },
     data(): any {
         return {
             imageUploadedText: $t('Change'),
@@ -294,11 +300,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * @return {number} number of rows in FE grid
          */
         getCurrentFErowsCount(): number {
-            if (this.ccConfig.columnsConfig.filterScenario === 'sidebar') {
-                return Math.ceil(this.getVirtualBricksLength() / this.ccConfig.columnsConfig.withSidebar.desktop);
-            }
-
-            return Math.ceil(this.getVirtualBricksLength() / this.ccConfig.columnsConfig.full.desktop);
+            return Math.ceil(this.getVirtualBricksLength() / this.ccConfig.columns[this.ccConfig.columns.default_layout].desktop);
         },
 
         /**

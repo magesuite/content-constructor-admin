@@ -2,35 +2,45 @@
 
 namespace MageSuite\ContentConstructorAdmin\Controller\Adminhtml\Component;
 
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\ResponseInterface;
-
-class Configurator extends \Magento\Backend\App\Action
+class Configurator extends \Magento\Framework\App\Action\Action
 {
     /**
-     * @var Context
+     * @var \Magento\Framework\View\Layout
      */
-    private $context;
+    protected $layout;
+    
+    /**
+     * @var \Magento\Backend\App\Action\Context
+     */
+    protected $context;
+
     /**
      * @var \Magento\Framework\Controller\Result\RawFactory
      */
-    private $resultRawFactory;
+    protected $resultRawFactory;
 
     /**
      * @var \MageSuite\ContentConstructor\ComponentManager
      */
-    private $componentManager;
+    protected $componentManager;
+
     /**
      * @var \Magento\Framework\View\Result\PageFactory
      */
-    private $pageFactory;
+    protected $pageFactory;
+
+    /**
+     * @var \MageSuite\ContentConstructorAdmin\Model\ComponentsPool
+     */
+    protected $componentsPool;
 
     public function __construct(
-        Context $context,
+        \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
-        \MageSuite\ContentConstructor\ComponentManager $componentManager
+        \MageSuite\ContentConstructor\ComponentManager $componentManager,
+        \Magento\Framework\View\Layout $layout,
+        \MageSuite\ContentConstructorAdmin\Model\ComponentsPool $componentsPool
     )
     {
         parent::__construct($context);
@@ -39,6 +49,8 @@ class Configurator extends \Magento\Backend\App\Action
         $this->resultRawFactory = $resultRawFactory;
         $this->componentManager = $componentManager;
         $this->pageFactory = $pageFactory;
+        $this->layout = $layout;
+        $this->componentsPool = $componentsPool;
     }
 
     /**
@@ -53,9 +65,15 @@ class Configurator extends \Magento\Backend\App\Action
 
         $type = $this->getRequest()->getParam('type');
 
-        $contents = $this->componentManager
-            ->initializeComponent($type)
-            ->renderConfigurator();
+        $componentClassName = $this->componentsPool->getComponentClass($type);
+
+        $contents = '';
+
+        if($componentClassName) {
+            $contents = $this->layout
+                ->createBlock($componentClassName)
+                ->toHtml();
+        }
 
         return $resultRaw->setContents($contents);
     }

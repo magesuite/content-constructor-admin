@@ -268,6 +268,16 @@ const layoutBuilder: vuejs.ComponentOption = {
             filters: {},
         };
     },
+    computed: {
+        ccSections: function(): object {
+            const data: object = this.ccConfig.sections[this.pageType];
+            return Object.keys(data).map(key => (<any>data)[key]);
+        },
+        specialComponents: function(): object {
+            const data: object = this.ccConfig.special_components;
+            return Object.keys(data).map(key => (<any>data)[key]);
+        },
+    },
     ready(): void {
         this.components = this.componentsConfiguration ? JSON.parse(this.componentsConfiguration) : [];
         this.filters = (typeof(Storage) !== void(0) && window.localStorage.getItem('ccFilters')) ? JSON.parse(window.localStorage.getItem('ccFilters')) : this.ccConfig.filters;
@@ -461,30 +471,28 @@ const layoutBuilder: vuejs.ComponentOption = {
          * In this example this methods sets TOP for all components that are above special component dedicated for category page, GRID for special component and BOTTOM for all components under.
          */
         setComponentsPlacementInfo(): any {
-            const sections: any = this.ccConfig.sections[this.pageType];
-
-            if (sections.length > 1) {
+            if (this.ccSections.length > 1) {
                 let sectionIndex: number = 0;
 
                 for (let i: number = 0; i < this.components.length; i++) {
-                    if (this.ccConfig.specialComponents.indexOf(this.components[i].type) !== -1) {
+                    if (this.specialComponents.indexOf(this.components[i].type) !== -1) {
                         sectionIndex++;
-                        this.components[i].section = sections[sectionIndex];
+                        this.components[i].section = this.ccSections[sectionIndex];
                         sectionIndex++;
                     } else {
-                        this.components[i].section = sections[sectionIndex];
+                        this.components[i].section = this.ccSections[sectionIndex];
                     }
                 }
             }
         },
         /**
          * Sorts components by their sections. 
-         * Order is defined by ccConfig.sections[ this.pageType ]
+         * Order is defined by this.ccSections
          */
         sortComponentsBySections(): void {
-            if (this.components.length && this.ccConfig.sections[this.pageType].length > 1) {
+            if (this.components.length && this.ccSections.length > 1) {
                 this.components.sort((a: any, b: any): any => {
-                    return this.ccConfig.sections[this.pageType].indexOf(a.section) - this.ccConfig.sections[this.pageType].indexOf(b.section);
+                    return this.ccSections.indexOf(a.section) - this.ccSections.indexOf(b.section);
                 });
             }
         },
@@ -539,7 +547,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         getIsSpecialComponent(componentType: string): boolean {
-            return this.ccConfig.specialComponents.indexOf(componentType) !== -1;
+            return this.specialComponents.indexOf(componentType) !== -1;
         },
 
         /**
@@ -606,15 +614,15 @@ const layoutBuilder: vuejs.ComponentOption = {
                 let visibleMobile: boolean = (componentData.componentVisibility.mobile !== '' && componentData.componentVisibility.mobile !== false);
                 let visibleDesktop: boolean = (componentData.componentVisibility.desktop !== '' && componentData.componentVisibility.desktop !== false);
 
-                if (this.filters.componentVisibility.options.mobile.value && visibleMobile) {
+                if (this.filters.component_visibility.options.mobile.value && visibleMobile) {
                     return true;
                 }
 
-                if (this.filters.componentVisibility.options.desktop.value && visibleDesktop) {
+                if (this.filters.component_visibility.options.desktop.value && visibleDesktop) {
                     return true;
                 }
 
-                if (this.filters.componentVisibility.options.none.value && !visibleMobile && !visibleDesktop) {
+                if (this.filters.component_visibility.options.none.value && !visibleMobile && !visibleDesktop) {
                     return true;
                 }
 

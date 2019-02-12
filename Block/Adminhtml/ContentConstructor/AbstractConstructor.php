@@ -128,14 +128,6 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
         return $config;
     }
 
-    public function getCreativeshopConfig() {
-        return $this->contentConstructorConfigDataProvider->getCreativeshopConfig();
-    }
-
-    public function getProjectConfig() {
-        return $this->contentConstructorConfigDataProvider->getProjectConfig();
-    }
-
     public function getProductsPerPage()
     {
         return $this->scopeConfig->getValue(
