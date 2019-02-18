@@ -46,7 +46,7 @@ interface IComponentInformation {
 const layoutBuilder: vuejs.ComponentOption = {
     template: `<div class="cc-layout-builder | {{ class }}">
         <div class="cc-layout-builder__filters" v-if="filters">
-            <template v-for="(filterKey, filter) in filters">
+            <template v-for="filter in filters">
                 <div class="cc-layout-builder__filter">
                     <div class="cc-layout-builder__filter-content">
                         <svg class="cc-layout-builder__filter-icon">
@@ -55,9 +55,9 @@ const layoutBuilder: vuejs.ComponentOption = {
                         <span class="cc-layout-builder__filter-title">
                             {{ getTranslatedText( filter.title ) }}:
                         </span>
-                        <template v-for="(optionKey, option) in filter.options">
+                        <template v-for="option in filter.options">
                             <div class="cc-layout-builder__filter-control">
-                                <label :class="[ option.value ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]">
+                                <label :class="['cc-input__checkbox-label', {'cc-input__checkbox-label--checked': option.value === true}]">
                                     <input type="checkbox" v-model="option.value" class="cc-input__checkbox" @change="saveFiltersState()">
                                     {{ getTranslatedText( option.label ) }}
                                 </label>
@@ -87,7 +87,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         </div>
 
         <template v-for="component in components">
-            <div v-bind:class="{ 'cc-layout-builder__component': true, 'cc-layout-builder__component--special': getIsSpecialComponent( component.type ), 'cc-layout-builder__component--invisible': getIsComponentHiddenFE( component.data ), 'cc-layout-builder__component--filtered-out': !getIsComponentVisibleDashboard( component.data ) }" id="{{ component.id }}">
+            <div v-bind:class="['cc-layout-builder__component', {'cc-layout-builder__component--special': getIsSpecialComponent(component.type), 'cc-layout-builder__component--invisible': getIsComponentHiddenFE(component.data), 'cc-layout-builder__component--filtered-out': !getIsComponentVisibleDashboard(component.data)}]" id="{{ component.id }}">
                 <component-adder class="cc-component-adder cc-component-adder--first">
                     <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( $index )">
                         <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
@@ -280,7 +280,7 @@ const layoutBuilder: vuejs.ComponentOption = {
     },
     ready(): void {
         this.components = this.componentsConfiguration ? JSON.parse(this.componentsConfiguration) : [];
-        this.filters = (typeof(Storage) !== void(0) && window.localStorage.getItem('ccFilters')) ? JSON.parse(window.localStorage.getItem('ccFilters')) : this.ccConfig.filters;
+        this.filters = this.getFilters();
         this.sortComponentsBySections();
         this.setupInitialDisplayProps();
         this.updateLayout();
@@ -292,6 +292,27 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         getComponentInformation(): IComponentInformation[] {
             return JSON.parse(JSON.stringify(this.components));
+        },
+        /**
+         * Returns layout bulder's filters. Value if taken from etc/view.xml of theme
+         * @return {object} Filters object.
+         */
+        getFilters(): object {
+            let filters: object;
+
+            if (typeof(Storage) !== void(0) && window.localStorage.getItem('ccFilters')) {
+                filters = JSON.parse(window.localStorage.getItem('ccFilters'));
+
+                // If user has saved old version of filters we have to remove them from his localStorage
+                if (filters.hasOwnProperty('componentVisibility')) {
+                    window.localStorage.removeItem('ccFilters');
+                    filters = this.ccConfig.filters;
+                }
+            } else {
+                filters = this.ccConfig.filters;
+            }
+
+            return filters;
         },
         /**
          * Uses localStorage to save current filters state within layout builder.
