@@ -142,4 +142,28 @@
             </argument>
         </arguments>
     </type>
+
+    <virtualType name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\CmsPage" type="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
+        <arguments>
+            <argument name="configurationProvider" xsi:type="object">MageSuite\ContentConstructorAdmin\Model\ConfigurationProvider\CmsPage</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Product" type="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
+        <arguments>
+            <argument name="configurationProvider" xsi:type="object">MageSuite\ContentConstructorAdmin\Model\ConfigurationProvider\Product</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Category" type="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
+        <arguments>
+            <argument name="configurationProvider" xsi:type="object">MageSuite\ContentConstructorAdmin\Model\ConfigurationProvider\Category</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Brand" type="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
+        <arguments>
+            <argument name="configurationProvider" xsi:type="object">MageSuite\ContentConstructorAdmin\Model\ConfigurationProvider\Brand</argument>
+        </arguments>
+    </virtualType>
 </config>

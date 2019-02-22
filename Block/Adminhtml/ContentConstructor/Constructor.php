@@ -2,7 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor;
 
-abstract class AbstractConstructor extends \Magento\Framework\View\Element\Template
+class Constructor extends \Magento\Framework\View\Element\Template
 {
     /**
      * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper
@@ -56,6 +56,11 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
     protected $filtersPool;
 
     /**
+     * @var ConfigurationProvider
+     */
+    protected $configurationProvider;
+
+    /**
      * Constructor constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration
@@ -75,6 +80,7 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
         \MageSuite\ContentConstructorAdmin\Helper\ConfigurationMediaResolver $configurationMediaResolver,
         \MageSuite\ContentConstructorFrontend\Model\Sort\Pool $sortersPool,
         \MageSuite\ContentConstructorFrontend\Model\Filter\Pool $filtersPool,
+        \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -89,8 +95,9 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
         $this->configurationMediaResolver = $configurationMediaResolver;
         $this->sortersPool = $sortersPool;
         $this->filtersPool = $filtersPool;
+        $this->configurationProvider = $configurationProvider;
 
-        $this->setTemplate('constructor.phtml');
+        $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
     }
 
     public function getConfiguratorEndpointUrl()
@@ -189,7 +196,11 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
         return json_encode($result);
     }
 
-    public abstract function getExistingComponentsConfiguration();
+    public function getExistingComponentsConfiguration() {
+        return $this->configurationProvider->getExistingComponentsConfiguration();
+    }
 
-    public abstract function getPageType();
+    public function getPageType() {
+        return $this->configurationProvider->getPageType();
+    }
 }
