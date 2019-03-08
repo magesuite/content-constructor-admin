@@ -54,12 +54,5 @@ class PageEditObserver implements ObserverInterface
                 $page->setContent('');
             }
         }
-
-        $this->clearLayoutCache();
-    }
-
-    private function clearLayoutCache()
-    {
-        $this->cacheTypeList->cleanType('layout');
     }
 }
