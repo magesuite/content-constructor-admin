@@ -14,7 +14,7 @@ class RemapSortingFields
     ];
 
     public function afterGetExistingComponentsConfiguration(
-        \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\AbstractConstructor $subject,
+        \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor $subject,
         $result
     )
     {

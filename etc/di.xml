@@ -43,7 +43,7 @@
                 sortOrder="1" />
     </type>
 
-    <type name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\AbstractConstructor">
+    <type name="\MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
         <plugin name="remap_sorting_fields"
                 type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields"
                 sortOrder="1" />

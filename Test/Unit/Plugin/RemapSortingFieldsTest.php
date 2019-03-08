@@ -18,13 +18,9 @@ class RemapSortingFieldsTest extends \PHPUnit\Framework\TestCase
     {
         $componentsJson = file_get_contents(__DIR__ . '/../assets/components.json');
 
-        $subjectDummy = $this->getMockForAbstractClass(
-            \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\AbstractConstructor::class,
-            []
-            ,
-            '',
-            false
-        );
+        $subjectDummy = $this->getMockBuilder(\MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $result = $this->remapper->afterGetExistingComponentsConfiguration($subjectDummy, $componentsJson);
 
