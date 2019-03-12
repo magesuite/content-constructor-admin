@@ -5,48 +5,28 @@
  * See COPYING.txt for license details.
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference
-            for="MageSuite\ContentConstructor\Repository\ComponentsConfigurationRepository"
-            type="MageSuite\ContentConstructorAdmin\Repository\ComponentsConfigurationRepository" />
-    <preference
-            for="MageSuite\ContentConstructor\Factory\AdminComponentFactory"
-            type="MageSuite\ContentConstructorAdmin\Service\AdminComponentFactory" />
-    <preference
-            for="MageSuite\ContentConstructor\Components\StaticBlock\DataProvider"
-            type="MageSuite\ContentConstructorAdmin\DataProviders\StaticBlockDataProvider" />
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="MageSuite\ContentConstructor\Repository\ComponentsConfigurationRepository" type="MageSuite\ContentConstructorAdmin\Repository\ComponentsConfigurationRepository" />
+    <preference for="MageSuite\ContentConstructor\Factory\AdminComponentFactory" type="MageSuite\ContentConstructorAdmin\Service\AdminComponentFactory" />
+    <preference for="MageSuite\ContentConstructor\Components\StaticBlock\DataProvider" type="MageSuite\ContentConstructorAdmin\DataProviders\StaticBlockDataProvider" />
 
-    <preference
-            for="MageSuite\ContentConstructor\Components\Paragraph\WysiwygConfigDataProvider"
-            type="MageSuite\ContentConstructorAdmin\DataProviders\WysiwygConfigDataProvider" />
+    <preference for="MageSuite\ContentConstructor\Components\Paragraph\WysiwygConfigDataProvider" type="MageSuite\ContentConstructorAdmin\DataProviders\WysiwygConfigDataProvider" />
 
-    <preference
-            for="MageSuite\ContentConstructor\Components\ProductCarousel\CategoryPickerProvider"
-            type="MageSuite\ContentConstructorAdmin\UiComponents\CategoryPickerProvider" />
+    <preference for="MageSuite\ContentConstructor\Components\ProductCarousel\CategoryPickerProvider" type="MageSuite\ContentConstructorAdmin\UiComponents\CategoryPickerProvider" />
 
-    <preference
-            for="MageSuite\ContentConstructor\Components\CmsTeaser\CmsTeaserAdminDataProvider"
-            type="MageSuite\ContentConstructorAdmin\DataProviders\CmsTeaserAdminDataProvider" />
+    <preference for="MageSuite\ContentConstructor\Components\CmsTeaser\CmsTeaserAdminDataProvider" type="MageSuite\ContentConstructorAdmin\DataProviders\CmsTeaserAdminDataProvider" />
 
-    <preference
-            for="MageSuite\ContentConstructor\View\AdminTemplateLocator"
-            type="MageSuite\ContentConstructorAdmin\Template\Locator" />
+    <preference for="MageSuite\ContentConstructor\View\AdminTemplateLocator" type="MageSuite\ContentConstructorAdmin\Template\Locator" />
 
-    <preference for="\Magento\Widget\Block\Adminhtml\Widget\Form"
-                type="\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Widget\Form"/>
+    <preference for="\Magento\Widget\Block\Adminhtml\Widget\Form" type="\MageSuite\ContentConstructorAdmin\Block\Adminhtml\Widget\Form"/>
 
 
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
-        <plugin name="add_cc_layout_xml_on_product_save"
-                type="MageSuite\ContentConstructorAdmin\Plugin\ProductEdit"
-                sortOrder="1" />
+        <plugin name="add_cc_layout_xml_on_product_save" type="MageSuite\ContentConstructorAdmin\Plugin\ProductEdit" sortOrder="1" />
     </type>
 
     <type name="\MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
-        <plugin name="remap_sorting_fields"
-                type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields"
-                sortOrder="1" />
+        <plugin name="remap_sorting_fields" type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields" sortOrder="1" />
     </type>
 
     <type name="MageSuite\ContentConstructorAdmin\Model\ComponentsPool">
@@ -65,7 +45,7 @@
                     </item>
                     <item name="product-carousel" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductCarousel</item>
-                        <item name="name" xsi:type="string">Product carousel</item>
+                        <item name="name" xsi:type="string">Product Carousel</item>
                         <item name="description" xsi:type="string">This carousel will display products from a specific category on your CMS page.</item>
                     </item>
                     <item name="paragraph" xsi:type="array">
@@ -75,18 +55,18 @@
                     </item>
                     <item name="static-cms-block" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\StaticBlock</item>
-                        <item name="name" xsi:type="string">Static block</item>
+                        <item name="name" xsi:type="string">Static Block</item>
                         <item name="description" xsi:type="string">Choose this component to include an existing static block to your CMS page.</item>
                     </item>
                     <item name="hero-carousel" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\HeroCarousel</item>
-                        <item name="name" xsi:type="string">Hero carousel</item>
+                        <item name="name" xsi:type="string">Hero Carousel</item>
                         <item name="description" xsi:type="string">This component allows you to add several Hero images in a Slider. You can define Headlines, Subheadlines, Text and Buttons on each image.</item>
                     </item>
                     <item name="image-teaser" xsi:type="array">
-                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ImageTeaser</item>
-                        <item name="name" xsi:type="string">Image teaser</item>
-                        <item name="description" xsi:type="string">This component allows you to add 1-6 image teasers with or without text in a row.</item>
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ImageTeaserLegacy</item>
+                        <item name="name" xsi:type="string">Image Teaser Legacy</item>
+                        <item name="description" xsi:type="string">This component allows you to add 1-6 image teasers with or without text in a row. This component is deprecated and will be removed in the future.</item>
                     </item>
                     <item name="separator" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Separator</item>
@@ -95,12 +75,12 @@
                     </item>
                     <item name="category-links" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\CategoryLinks</item>
-                        <item name="name" xsi:type="string">Category links</item>
+                        <item name="name" xsi:type="string">Category Links</item>
                         <item name="description" xsi:type="string">Include category links with this component.</item>
                     </item>
                     <item name="brand-carousel" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\BrandCarousel</item>
-                        <item name="name" xsi:type="string">Brand carousel</item>
+                        <item name="name" xsi:type="string">Brand Carousel</item>
                         <item name="description" xsi:type="string">Highlight some brands and show them in a carousel by using this component.</item>
                     </item>
                     <item name="product-grid" xsi:type="array">
@@ -115,8 +95,8 @@
                     </item>
                     <item name="product-finder" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductFinder</item>
-                        <item name="name" xsi:type="string">Product finder</item>
-                        <item name="description" xsi:type="string">Product Finder.</item>
+                        <item name="name" xsi:type="string">Product Finder</item>
+                        <item name="description" xsi:type="string">Allows for creation of click-through wizard leading the user to filtered category pages.</item>
                     </item>
                     <item name="custom-html" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\CustomHtml</item>
@@ -137,6 +117,11 @@
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductGridTeasers</item>
                         <item name="name" xsi:type="string"/>
                         <item name="description" xsi:type="string"/>
+                    </item>
+                    <item name="image-teaser-2" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ImageTeaser</item>
+                        <item name="name" xsi:type="string">Image Teaser</item>
+                        <item name="description" xsi:type="string">This component allows you to add 1-6 image teasers with or without text in a row that will scale proportionally.</item>
                     </item>
                 </item>
             </argument>

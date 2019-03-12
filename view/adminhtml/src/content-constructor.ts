@@ -14,7 +14,10 @@ import uiRegistry from 'uiRegistry';
 
 // CC essentials
 import componentPicker from './components/_component-picker/component-picker';
-import { IComponentInformation, layoutBuilder } from './components/_layout-builder/layout-builder';
+import {
+    IComponentInformation,
+    layoutBuilder,
+} from './components/_layout-builder/layout-builder';
 
 // CC components
 import buttonConfigurator from './components/button/configurator/button';
@@ -25,6 +28,7 @@ import dailyDealTeaserConfigurator from './components/daily-deal-teaser/configur
 import headlineConfigurator from './components/headline/configurator/headline';
 import heroCarouselConfigurator from './components/hero-carousel/configurator/hero-carousel';
 import imageTeaserConfigurator from './components/image-teaser/configurator/image-teaser';
+import imageTeaserLegacyConfigurator from './components/image-teaser/configurator/image-teaser-legacy';
 import magentoProductGridTeasersConfigurator from './components/magento-product-grid-teasers/configurator/magento-product-grid-teasers';
 import paragraphConfigurator from './components/paragraph/configurator/paragraph';
 import productCarouselConfigurator from './components/product-carousel/configurator/product-carousel';
@@ -113,13 +117,13 @@ const contentConstructor: vuejs.ComponentOption = {
         'headline-configurator': headlineConfigurator,
         'hero-carousel-configurator': heroCarouselConfigurator,
         'image-teaser-configurator': imageTeaserConfigurator,
+        'image-teaser-legacy-configurator': imageTeaserLegacyConfigurator,
         'magento-product-grid-teasers-configurator': magentoProductGridTeasersConfigurator,
         'paragraph-configurator': paragraphConfigurator,
         'product-carousel-configurator': productCarouselConfigurator,
         'product-finder-configurator': productFinderConfigurator,
         'products-grid-configurator': productsGridConfigurator,
         'static-block-configurator': staticBlockConfigurator,
-        
     },
     props: {
         configuration: {
@@ -191,9 +195,11 @@ const contentConstructor: vuejs.ComponentOption = {
         this.setRestToken();
 
         // Initialize M2 loader for m2c modals
-        $('body').loadingPopup({
-            timeout: false,
-        }).trigger('hideLoadingPopup');
+        $('body')
+            .loadingPopup({
+                timeout: false,
+            })
+            .trigger('hideLoadingPopup');
     },
     events: {
         /**
@@ -204,7 +210,10 @@ const contentConstructor: vuejs.ComponentOption = {
             this.dumpConfiguration();
         },
         'component-configurator__saved'(data: any): void {
-            if (!data.hasOwnProperty('isError') || (data.hasOwnProperty('isError') && !data.isError)) {
+            if (
+                !data.hasOwnProperty('isError') ||
+                (data.hasOwnProperty('isError') && !data.isError)
+            ) {
                 this._configuratorSavedCallback(data);
 
                 if ($configuratorModal && $configuratorModal.closeModal) {
@@ -216,7 +225,9 @@ const contentConstructor: vuejs.ComponentOption = {
             } else {
                 alert({
                     title: $t('Hey,'),
-                    content: $.mage.__('Something is wrong with configuration of your component. Please fix all errors before saving.'),
+                    content: $.mage.__(
+                        'Something is wrong with configuration of your component. Please fix all errors before saving.'
+                    ),
                 });
             }
         },
@@ -226,8 +237,12 @@ const contentConstructor: vuejs.ComponentOption = {
     },
     methods: {
         getCCconfig(): JSON {
-            const ccConfig: any = this.ccProjectConfig ? JSON.parse(this.ccProjectConfig) : {};
-            return !$.isEmptyObject(ccConfig) ? ccConfig.vars.MageSuite_ContentConstructor : ccConfig;
+            const ccConfig: any = this.ccProjectConfig
+                ? JSON.parse(this.ccProjectConfig)
+                : {};
+            return !$.isEmptyObject(ccConfig)
+                ? ccConfig.vars.MageSuite_ContentConstructor
+                : ccConfig;
         },
 
         /**
@@ -235,7 +250,11 @@ const contentConstructor: vuejs.ComponentOption = {
          * This method should open magento modal with component picker.
          * @param  {IComponentInformation} addComponentInformation Callback that let's us add component asynchronously.
          */
-        getComponentPicker(addComponentInformation: (componentInfo: IComponentInformation) => void): void {
+        getComponentPicker(
+            addComponentInformation: (
+                componentInfo: IComponentInformation
+            ) => void
+        ): void {
             const component: any = this;
 
             // Save adding callback for async use.
@@ -247,20 +266,28 @@ const contentConstructor: vuejs.ComponentOption = {
                     $('body').trigger('showLoadingPopup');
 
                     // Get picker via AJAX
-                    component.$http.get(`${component.configuratorEndpoint}picker`).then((response: any): void => {
-                        component.$els.pickerModal.innerHTML = response.body;
-                        component.$compile(component.$els.pickerModal);
-                        component._isPickerLoaded = true;
-                        // Hide loader
-                        $('body').trigger('hideLoadingPopup');
-                    });
+                    component.$http
+                        .get(`${component.configuratorEndpoint}picker`)
+                        .then(
+                            (response: any): void => {
+                                component.$els.pickerModal.innerHTML =
+                                    response.body;
+                                component.$compile(component.$els.pickerModal);
+                                component._isPickerLoaded = true;
+                                // Hide loader
+                                $('body').trigger('hideLoadingPopup');
+                            }
+                        );
                 }
             };
             // Create or Show picker modal depending if exists
             if ($pickerModal) {
                 $pickerModal.openModal();
             } else {
-                $pickerModal = modal(pickerModalOptions, $(this.$els.pickerModal));
+                $pickerModal = modal(
+                    pickerModalOptions,
+                    $(this.$els.pickerModal)
+                );
             }
         },
 
@@ -270,8 +297,16 @@ const contentConstructor: vuejs.ComponentOption = {
          * @param {componentType} String - type of component chosen
          */
         getComponentConfigurator(componentType: string): void {
-            const newComponentId: string = 'component' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-            const section: string = this.ccConfig.sections.defaults[this.pageType] ? this.ccConfig.sections.defaults[this.pageType] : this.ccConfig.sections[this.pageType][0];
+            const newComponentId: string =
+                'component' +
+                Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            const section: string = this.ccConfig.sections.defaults[
+                this.pageType
+            ]
+                ? this.ccConfig.sections.defaults[this.pageType]
+                : this.ccConfig.sections[this.pageType][0];
 
             this._configuratorSavedCallback = (componentData: any): void => {
                 this._addComponentInformation({
@@ -282,7 +317,10 @@ const contentConstructor: vuejs.ComponentOption = {
                 });
             };
 
-            if (componentType === 'brand-carousel' || componentType === 'separator') {
+            if (
+                componentType === 'brand-carousel' ||
+                componentType === 'separator'
+            ) {
                 this.$emit('component-configurator__saved', {
                     componentVisibility: {
                         mobile: true,
@@ -305,7 +343,9 @@ const contentConstructor: vuejs.ComponentOption = {
          */
         editComponent(
             prevComponentData: IComponentInformation,
-            setComponentInformation: (componentInfo: IComponentInformation) => void,
+            setComponentInformation: (
+                componentInfo: IComponentInformation
+            ) => void
         ): void {
             this._configuratorSavedCallback = (componentData: any): void => {
                 setComponentInformation({
@@ -319,14 +359,20 @@ const contentConstructor: vuejs.ComponentOption = {
             this.initConfiguratorModal(prevComponentData);
         },
 
-        initConfiguratorModal(componentInformation: IComponentInformation): void {
+        initConfiguratorModal(
+            componentInformation: IComponentInformation
+        ): void {
             const component: any = this;
             let cleanupConfiguratorModal = (): undefined => undefined;
 
             configuratorModalOptions.buttons[1].click = function(): void {
                 component.$broadcast('component-configurator__save');
             };
-            configuratorModalOptions.title = `${$t('Configure your component')}<span class="m2c-content-constructor__modal-subheadline">${this.transformComponentTypeToText(componentInformation.type)}</span>`;
+            configuratorModalOptions.title = `${$t(
+                'Configure your component'
+            )}<span class="m2c-content-constructor__modal-subheadline">${this.transformComponentTypeToText(
+                componentInformation.type
+            )}</span>`;
 
             // Configurator modal opened callback
             configuratorModalOptions.opened = function(): void {
@@ -334,47 +380,67 @@ const contentConstructor: vuejs.ComponentOption = {
                 $('body').trigger('showLoadingPopup');
 
                 // Get twig component
-                component.$http.get(component.configuratorEndpoint + componentInformation.type).then((response: any): void => {
-                    component.$els.configuratorModal.innerHTML = response.body;
+                component.$http
+                    .get(
+                        component.configuratorEndpoint +
+                            componentInformation.type
+                    )
+                    .then(
+                        (response: any): void => {
+                            component.$els.configuratorModal.innerHTML =
+                                response.body;
 
-                    // Set current component configuration data
-                    component.initialComponentConfiguration = componentInformation.data;
+                            // Set current component configuration data
+                            component.initialComponentConfiguration =
+                                componentInformation.data;
 
-                    // compile fetched component
-                    cleanupConfiguratorModal = component.$compile(component.$els.configuratorModal);
+                            // compile fetched component
+                            cleanupConfiguratorModal = component.$compile(
+                                component.$els.configuratorModal
+                            );
 
-                    // Hide loader
-                    $('body').trigger('hideLoadingPopup');
-                });
+                            // Hide loader
+                            $('body').trigger('hideLoadingPopup');
+                        }
+                    );
             };
 
             configuratorModalOptions.closed = function(): void {
                 // Cleanup configurator component and then remove modal
                 cleanupConfiguratorModal();
                 component.$els.configuratorModal.innerHTML = '';
-                $configuratorModal.modal[0].parentNode.removeChild($configuratorModal.modal[0]);
+                $configuratorModal.modal[0].parentNode.removeChild(
+                    $configuratorModal.modal[0]
+                );
                 component.initialComponentConfiguration = undefined;
             };
             // Create & Show $configuratorModal
-            $configuratorModal = modal(configuratorModalOptions, $(this.$els.configuratorModal));
+            $configuratorModal = modal(
+                configuratorModalOptions,
+                $(this.$els.configuratorModal)
+            );
         },
 
         dumpConfiguration(): void {
-            uiRegistry.get(this.pageType).source.set(
-                'data.components',
-                JSON.stringify(
-                    this.$refs.layoutBuilder.getComponentInformation(),
-                ),
-            );
+            uiRegistry
+                .get(this.pageType)
+                .source.set(
+                    'data.components',
+                    JSON.stringify(
+                        this.$refs.layoutBuilder.getComponentInformation()
+                    )
+                );
         },
 
         setRestToken(): void {
             const component: any = this;
 
             // send request for token
-            this.$http.get(this.restTokenEndpoint).then((response: any): void => {
-                component.restToken = `Bearer ${response.body}`;
-            });
+            this.$http.get(this.restTokenEndpoint).then(
+                (response: any): void => {
+                    component.restToken = `Bearer ${response.body}`;
+                }
+            );
         },
 
         deleteStaticBlock(cmsBlockId: string): void {
@@ -388,11 +454,15 @@ const contentConstructor: vuejs.ComponentOption = {
                 },
                 method: 'delete',
                 url: `${window.location.origin}/rest/V1/cmsBlock/${cmsBlockId}`,
-            }).then((response: any): void => {
-                if (response.body !== 'true') {
-                    console.warn(`Something went wrong, CMS block wasn\'t removed, please check if block with ID: ${cmsBlockId} exists in database`);
+            }).then(
+                (response: any): void => {
+                    if (response.body !== 'true') {
+                        console.warn(
+                            `Something went wrong, CMS block wasn\'t removed, please check if block with ID: ${cmsBlockId} exists in database`
+                        );
+                    }
                 }
-            });
+            );
         },
 
         transformComponentTypeToText(componentType: string): string {

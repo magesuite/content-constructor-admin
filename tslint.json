@@ -7,18 +7,13 @@
         "object-literal-sort-keys": false,
         "only-arrow-functions": false,
         "no-empty": false,
-        "quotemark": [
-            true,
-            "single",
-            "avoid-escape"
-        ],
+        "quotemark": [true, "single", "avoid-escape"],
         "typedef": [
             true,
             "call-signature",
             "member-variable-declaration",
             "parameter",
-            "property-declaration",
-            "member-variable-declaration"
+            "property-declaration"
         ],
         "variable-name": [
             true,

@@ -446,12 +446,94 @@ var heroCarouselPreview = {
 };
 
 /**
+ * Teaser preview component.
+ * This component is responsible for displaying preview of single Teaser component in Layout Builder (admin panel)
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var teaserPreview = {
+    template: "<div class=\"cc-teaser-preview cc-teaser-preview--content-{{ parentConfiguration.scenario.contentPlacement.id ? parentConfiguration.scenario.contentPlacement.id : 'over' }}{{configuration.image.raw ? '' : ' cc-teaser-preview--no-image'}}\">\n        <div class=\"cc-teaser-preview__slide cc-teaser-preview__slide--scheme-{{configuration.optimizers.color_scheme}}\" v-el:scale-relation>\n            <div class=\"cc-teaser-preview__aspect-ratio\" v-if=\"configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'\" :style=\"{paddingTop: aspectRatio}\"></div>\n            <div class=\"cc-teaser-preview__slide-wrapper\">\n                <div class=\"cc-teaser-preview__aspect-ratio\" v-if=\"configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id === 'under'\" :style=\"{paddingTop: aspectRatio}\"></div>\n                <figure class=\"cc-teaser-preview__figure\">\n                    <img\n                        :src=\"configuration.image.raw\"\n                        class=\"cc-teaser-preview__image\"\n                        :class=\"{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}\"\n                        v-if=\"configuration.image.raw\"\n                    >\n                    <svg class=\"cc-teaser-preview__image-placeholder\" v-if=\"!configuration.image.raw\">\n                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                    </svg>\n                </figure>\n\n                <div class=\"cc-teaser-preview__overlay\" v-if=\"configuration.optimizers.scenarios.overlay.enabled\" :style=\"{opacity: configuration.optimizers.scenarios.overlay.intensity / 100}\"></div>\n                <div\n                    v-if=\"configuration.optimizers.scenarios.gradient.enabled\"\n                    class=\"cc-teaser-preview__gradient cc-teaser-preview__gradient--direction-x-{{configuration.optimizers.scenarios.gradient.direction.x}} cc-teaser-preview__gradient--direction-y-{{configuration.optimizers.scenarios.gradient.direction.y}}\"\n                    :style=\"{opacity: configuration.optimizers.scenarios.gradient.intensity / 100}\"\n                ></div>\n\n                <div\n                    class=\"cc-teaser-preview__content-wrapper cc-teaser-preview__content-wrapper--content-align-x-{{configuration.content_align.x}} cc-teaser-preview__content-wrapper--content-align-y-{{configuration.content_align.y}}\"\n                >\n                    <div\n                        class=\"cc-teaser-preview__content\"\n                        :class=\"{'cc-teaser-preview__content--container': configuration.optimizers.scenarios.container.enabled}\"\n                    >\n                        <div\n                            v-if=\"configuration.optimizers.scenarios.container.enabled\"\n                            class=\"cc-teaser-preview__optimizer-container\"\n                            :style=\"{opacity: configuration.optimizers.scenarios.container.intensity / 100}\"\n                        ></div>\n\n                        <div\n                            class=\"cc-teaser-preview__text-content cc-teaser-preview__text-content--text-shadow-{{ configuration.optimizers.scenarios.text_shadow.enabled ? configuration.optimizers.scenarios.text_shadow.intensity : ''}}\"\n                            :class=\"{'cc-teaser-preview__text-content--text-shadow': configuration.optimizers.scenarios.text_shadow.enabled}\"\n                            :style=\"{fontSize: fontSize + 'px'}\"\n                        >\n                            <h2 v-if=\"configuration.slogan\" class=\"cc-teaser-preview__slogan\" @change=\"recalculateFontSize()\">{{{configuration.slogan}}}</h2>\n                            <p v-if=\"configuration.description\" class=\"cc-teaser-preview__description\" @change=\"recalculateFontSize()\">{{{configuration.description}}}</p>\n                        </div>\n\n                        <div v-if=\"configuration.cta.label && configuration.cta.href\" class=\"cc-teaser-preview__cta\">\n                            <span role=\"button\" class=\"cc-teaser-preview__cta-button\" title=\"{{configuration.cta.href}}\">\n                                <span class=\"cc-teaser-preview__cta-button-span\">{{configuration.cta.label}}</span>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>",
+    props: {
+        /**
+         * Parent component configuration
+         */
+        parentConfiguration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        configuration: {
+            type: Object,
+        },
+    },
+    computed: {
+        aspectRatio: function () {
+            if (this.configuration.image.aspect_ratio.length) {
+                var rawArr = this.configuration.image.aspect_ratio.split(':');
+                return (rawArr[1] / rawArr[0]) * 100 + "%";
+            }
+            return '0';
+        },
+    },
+    data: function () {
+        return {
+            scaleRatio: 0.002,
+            initialFontSize: 14,
+            isScaleScheduled: false,
+            fontSize: this.recalculateFontSize(),
+        };
+    },
+    filters: {
+        /**
+         * Translates given string
+         * @param txt {string} - original, english string to be translated
+         * @return {string} - translated string
+         */
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+    },
+    methods: {
+        recalculateFontSize: function () {
+            try {
+                return (this.initialFontSize *
+                    this.$els.scaleRelation.offsetWidth *
+                    this.scaleRatio);
+            }
+            catch (error) { }
+        },
+        setEvents: function () {
+            var _this = this;
+            window.addEventListener('resize', function () {
+                if (_this.isScaleScheduled) {
+                    return;
+                }
+                _this.isScaleScheduled = true;
+                window.requestAnimationFrame(function () {
+                    _this.isScaleScheduled = false;
+                    var fontSize = _this.recalculateFontSize();
+                    if (fontSize) {
+                        _this.fontSize = fontSize;
+                    }
+                });
+            });
+        },
+    },
+    ready: function () {
+        this.setEvents();
+    },
+};
+
+/**
  * Image teaser preview component.
  * This component is responsible for displaying preview of image teaser component in Layout Builder (admin panel)
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var imageTeaserPreview = {
-    template: "<div data-role=\"spinner\" class=\"cc-component-placeholder__loading\" v-show=\"isLoading\">\n        <div class=\"spinner\">\n            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>\n        </div>\n    </div>\n    <div class=\"cc-image-teaser-preview\" v-show=\"!isLoading\">\n        <div class=\"cc-image-teaser-preview__wrapper\">\n            <ul class=\"cc-image-teaser-preview__scene cc-image-teaser-preview__scene--{{ configuration.currentScenario.desktopLayout.id }}-in-row\" v-el:scene>\n                <template v-for=\"item in configuration.items\">\n                    <li class=\"cc-image-teaser-preview__item\">\n                        <img v-if=\"configuration.items[$index].image\" :src=\"configuration.items[$index].image\" class=\"cc-image-teaser-preview__item-image\">\n                        <div class=\"cc-image-teaser-preview__image-placeholder-wrapper\" v-show=\"!configuration.items[$index].image\">\n                            <svg class=\"cc-image-teaser-preview__image-placeholder\">\n                                <use xlink:href=\"#icon_image-placeholder\"></use>\n                            </svg>\n                        </div>\n                        <div class=\"cc-image-teaser-preview__item-content\">\n                            <h2 class=\"cc-image-teaser-preview__headline\" v-if=\"configuration.items[$index].headline\">{{ configuration.items[$index].headline }}</h2>\n                            <h3 class=\"cc-image-teaser-preview__subheadline\" v-if=\"configuration.items[$index].subheadline\">{{ configuration.items[$index].subheadline }}</h3>\n                            <p class=\"cc-image-teaser-preview__paragraph\" v-if=\"configuration.items[$index].paragraph\">{{ configuration.items[$index].paragraph }}</p>\n                            <template v-if=\"configuration.items[$index].href\">\n                                <button type=\"button\" class=\"cc-image-teaser-preview__button\" v-if=\"configuration.items[$index].ctaLabel\">{{ configuration.items[$index].ctaLabel }}</button>\n                            </template>\n                        </div>\n                    </li>\n                </template>\n            </ul>\n        </div>\n    </div>",
+    components: {
+        'teaser-preview': teaserPreview,
+    },
+    template: "<div data-role=\"spinner\" class=\"cc-component-placeholder__loading\" v-show=\"isLoading\">\n        <div class=\"spinner\">\n            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>\n        </div>\n    </div>\n    <div class=\"cc-image-teaser-preview\" v-show=\"!isLoading\">\n        <div class=\"cc-image-teaser-preview__wrapper\">\n            <ul class=\"cc-image-teaser-preview__scene cc-image-teaser-preview__scene--{{ configuration.scenario.desktopLayout.id }}-in-row\" v-el:scene>\n                <template v-for=\"item in configuration.items\">\n                    <li class=\"cc-image-teaser-preview__item\">\n                        <teaser-preview :configuration=\"configuration.items[$index]\" :parent-configuration=\"configuration\"></teaser-preview>\n                    </li>\n                </template>\n            </ul>\n        </div>\n    </div>",
     props: {
         configuration: {
             type: Object,
@@ -466,7 +548,7 @@ var imageTeaserPreview = {
         isLoading: {
             type: Boolean,
             default: true,
-        }
+        },
     },
     ready: function () {
         this.setImagesLoadListener();
@@ -482,7 +564,8 @@ var imageTeaserPreview = {
             var $images = $(this.$els.scene).find('img');
             var imagesCount = $images.length;
             if (imagesCount) {
-                $images.load(function () {
+                $images
+                    .load(function () {
                     imagesCount--;
                     if (!imagesCount) {
                         _this.isLoading = false;
@@ -490,22 +573,94 @@ var imageTeaserPreview = {
                             $(this).addClass('cc-image-teaser-preview__item-image--border');
                         });
                     }
-                }).filter(function () {
+                })
+                    .filter(function () {
                     return this.complete;
-                }).load();
+                })
+                    .load();
             }
             else {
                 _this.isLoading = false;
             }
         },
         hideEmptySlideContents: function () {
-            $(this.$els.scene).find('.cc-image-teaser-preview__item-content').each(function () {
+            $(this.$els.scene)
+                .find('.cc-image-teaser-preview__item-content')
+                .each(function () {
                 if (!$(this).children().length) {
                     $(this).hide();
                 }
             });
         },
-    }
+    },
+};
+
+/**
+ * Image teaser preview component.
+ * This component is responsible for displaying preview of image teaser component in Layout Builder (admin panel)
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var imageTeaserLegacyPreview = {
+    template: "<div data-role=\"spinner\" class=\"cc-component-placeholder__loading\" v-show=\"isLoading\">\n        <div class=\"spinner\">\n            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>\n        </div>\n    </div>\n    <div class=\"cc-image-teaser-legacy-preview\" v-show=\"!isLoading\">\n        <div class=\"cc-image-teaser-legacy-preview__wrapper\">\n            <ul class=\"cc-image-teaser-legacy-preview__scene cc-image-teaser-legacy-preview__scene--{{ configuration.currentScenario.desktopLayout.id }}-in-row\" v-el:scene>\n                <template v-for=\"item in configuration.items\">\n                    <li class=\"cc-image-teaser-legacy-preview__item\">\n                        <img v-if=\"configuration.items[$index].image\" :src=\"configuration.items[$index].image\" class=\"cc-image-teaser-legacy-preview__item-image\">\n                        <div class=\"cc-image-teaser-legacy-preview__image-placeholder-wrapper\" v-show=\"!configuration.items[$index].image\">\n                            <svg class=\"cc-image-teaser-legacy-preview__image-placeholder\">\n                                <use xlink:href=\"#icon_image-placeholder\"></use>\n                            </svg>\n                        </div>\n                        <div class=\"cc-image-teaser-legacy-preview__item-content\">\n                            <h2 class=\"cc-image-teaser-legacy-preview__headline\" v-if=\"configuration.items[$index].headline\">{{ configuration.items[$index].headline }}</h2>\n                            <h3 class=\"cc-image-teaser-legacy-preview__subheadline\" v-if=\"configuration.items[$index].subheadline\">{{ configuration.items[$index].subheadline }}</h3>\n                            <p class=\"cc-image-teaser-legacy-preview__paragraph\" v-if=\"configuration.items[$index].paragraph\">{{ configuration.items[$index].paragraph }}</p>\n                            <template v-if=\"configuration.items[$index].href\">\n                                <button type=\"button\" class=\"cc-image-teaser-legacy-preview__button\" v-if=\"configuration.items[$index].ctaLabel\">{{ configuration.items[$index].ctaLabel }}</button>\n                            </template>\n                        </div>\n                    </li>\n                </template>\n            </ul>\n        </div>\n    </div>",
+    props: {
+        configuration: {
+            type: Object,
+        },
+        /**
+         * Class property support to enable BEM mixes.
+         */
+        class: {
+            type: [String, Object, Array],
+            default: '',
+        },
+        isLoading: {
+            type: Boolean,
+            default: true,
+        },
+    },
+    ready: function () {
+        this.setImagesLoadListener();
+        this.hideEmptySlideContents();
+    },
+    methods: {
+        /**
+         * Checks for status of images if they're loaded.
+         * After they're all loaded spinner is hidden and content displayed.
+         */
+        setImagesLoadListener: function () {
+            var _this = this;
+            var $images = $(this.$els.scene).find('img');
+            var imagesCount = $images.length;
+            if (imagesCount) {
+                $images
+                    .load(function () {
+                    imagesCount--;
+                    if (!imagesCount) {
+                        _this.isLoading = false;
+                        $images.each(function () {
+                            $(this).addClass('cc-image-teaser-legacy-preview__item-image--border');
+                        });
+                    }
+                })
+                    .filter(function () {
+                    return this.complete;
+                })
+                    .load();
+            }
+            else {
+                _this.isLoading = false;
+            }
+        },
+        hideEmptySlideContents: function () {
+            $(this.$els.scene)
+                .find('.cc-image-teaser-legacy-preview__item-content')
+                .each(function () {
+                if (!$(this).children().length) {
+                    $(this).hide();
+                }
+            });
+        },
+    },
 };
 
 /**
@@ -762,7 +917,7 @@ var staticBlockPreview = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var layoutBuilder = {
-    template: "<div class=\"cc-layout-builder | {{ class }}\">\n        <div class=\"cc-layout-builder__filters\" v-if=\"filters\">\n            <template v-for=\"(filterKey, filter) in filters\">\n                <div class=\"cc-layout-builder__filter\">\n                    <div class=\"cc-layout-builder__filter-content\">\n                        <svg class=\"cc-layout-builder__filter-icon\">\n                            <use xlink:href=\"{{ filter.icon }}\"></use>\n                        </svg>\n                        <span class=\"cc-layout-builder__filter-title\">\n                            {{ getTranslatedText( filter.title ) }}:\n                        </span>\n                        <template v-for=\"(optionKey, option) in filter.options\">\n                            <div class=\"cc-layout-builder__filter-control\">\n                                <label :class=\"[ option.value ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]\">\n                                    <input type=\"checkbox\" v-model=\"option.value\" class=\"cc-input__checkbox\" @change=\"saveFiltersState()\">\n                                    {{ getTranslatedText( option.label ) }}\n                                </label>\n                            </div>\n                        </template>\n                    </div>\n                </div>\n            </template>\n        </div>\n\n        <div class=\"cc-layout-builder__component cc-layout-builder__component--static\">\n            <div class=\"cc-layout-builder__component-wrapper\">\n                <div class=\"cc-component-placeholder__component cc-component-placeholder__component--decorated cc-component-placeholder__component--header\">\n                    <svg class=\"cc-component-placeholder__component-icon\">\n                        <use xlink:href=\"#icon_component-cc-header\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( 0 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use xlink:href=\"#icon_plus\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n        </div>\n\n        <template v-for=\"component in components\">\n            <div v-bind:class=\"{ 'cc-layout-builder__component': true, 'cc-layout-builder__component--special': getIsSpecialComponent( component.type ), 'cc-layout-builder__component--invisible': getIsComponentHiddenFE( component.data ), 'cc-layout-builder__component--filtered-out': !getIsComponentVisibleDashboard( component.data ) }\" id=\"{{ component.id }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <div class=\"cc-layout-builder__component-actions\">\n                    <component-actions>\n                        <template slot=\"cc-component-actions__buttons\">\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up\" @click=\"moveComponentUp( $index )\" :class=\"[ isFirstComponent( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstComponent( $index )\">\n                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                    <use xlink:href=\"#icon_arrow-up\"></use>\n                                </svg>\n                            </button>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down\" @click=\"moveComponentDown( $index )\" :class=\"[ isLastComponent( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastComponent( $index )\">\n                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                    <use xlink:href=\"#icon_arrow-down\"></use>\n                                </svg>\n                            </button>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--settings\" :class=\"[ isPossibleToEdit( component.type ) ? '' : 'cc-action-button--look_disabled' ]\" :disabled=\"!isPossibleToEdit( component.type )\" @click=\"editComponentSettings( $index )\" title=\"{{ getTranslatedText('Edit component') }}\">\n                                <svg class=\"cc-action-button__icon\">\n                                    <use xlink:href=\"#icon_edit\"></use>\n                                </svg>\n                            </button>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--duplicate\" :class=\"[ isPossibleToDuplicate( component.type ) ? '' : 'cc-action-button--look_disabled' ]\" :disabled=\"!isPossibleToDuplicate( component.type )\" @click=\"duplicateComponent( $index )\" title=\"{{ getTranslatedText('Duplicate component') }}\">\n                                <svg class=\"cc-action-button__icon\">\n                                    <use xlink:href=\"#icon_duplicate\"></use>\n                                </svg>\n                            </button>\n                            <div class=\"cc-component-display-controller\" v-if=\"isPossibleToControlDisplay( component.type )\">\n                                <svg class=\"cc-component-display-controller__icon\">\n                                    <use xlink:href=\"#icon_eye\"></use>\n                                </svg>\n                                <div class=\"cc-component-display-controller__control\">\n                                    <label :class=\"[ component.data.componentVisibility.mobile ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]\">\n                                        <input type=\"checkbox\" v-model=\"component.data.componentVisibility.mobile\" class=\"cc-input__checkbox\" @change=\"updateLayout()\">\n                                        {{ getTranslatedText('Mobile') }}\n                                    </label>\n                                </div>\n                                <div class=\"cc-component-display-controller__control\">\n                                    <label :class=\"[ component.data.componentVisibility.desktop ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]\">\n                                        <input type=\"checkbox\" v-model=\"component.data.componentVisibility.desktop\" class=\"cc-input__checkbox\" @change=\"updateLayout()\">\n                                        {{ getTranslatedText('Desktop') }}\n                                    </label>\n                                </div>\n                            </div>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete\" :class=\"[ isPossibleToDelete( component.type ) ? '' : 'cc-action-button--look_disabled' ]\" :disabled=\"!isPossibleToDelete( component.type )\" @click=\"deleteComponent( $index )\">\n                                <svg class=\"cc-action-button__icon\">\n                                    <use xlink:href=\"#icon_trash-can\"></use>\n                                </svg>\n                            </button>\n                        </template>\n                    </component-actions>\n                </div>\n                <div class=\"cc-layout-builder__component-wrapper\">\n                    <component-placeholder>\n                        <h3 class=\"cc-component-placeholder__headline\" v-text=\"transformComponentTypeToText( component.type )\"></h3>\n                        <div class=\"cc-component-placeholder__component\">\n                            \n                            <component :is=\"component.type + '-preview'\" :configuration=\"component.data\" :index=\"$index\" :assets-src=\"assetsSrc\" :image-endpoint=\"imageEndpoint\"></component>\n\n                        </div>\n                    </component-placeholder>\n                </div>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-layout-builder__component cc-layout-builder__component--static\">\n            <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( components.length + 1 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use xlink:href=\"#icon_plus\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <div class=\"cc-layout-builder__component-wrapper\">\n                <div class=\"cc-component-placeholder__component cc-component-placeholder__component--decorated cc-component-placeholder__component--footer\">\n                    <svg class=\"cc-component-placeholder__component-icon\">\n                        <use xlink:href=\"#icon_component-cc-footer\"></use>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>",
+    template: "<div class=\"cc-layout-builder | {{ class }}\">\n        <div class=\"cc-layout-builder__filters\" v-if=\"filters\">\n            <template v-for=\"(filterKey, filter) in filters\">\n                <div class=\"cc-layout-builder__filter\">\n                    <div class=\"cc-layout-builder__filter-content\">\n                        <svg class=\"cc-layout-builder__filter-icon\">\n                            <use xlink:href=\"{{ filter.icon }}\"></use>\n                        </svg>\n                        <span class=\"cc-layout-builder__filter-title\">\n                            {{ getTranslatedText( filter.title ) }}:\n                        </span>\n                        <template v-for=\"(optionKey, option) in filter.options\">\n                            <div class=\"cc-layout-builder__filter-control\">\n                                <label :class=\"[ option.value ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]\">\n                                    <input type=\"checkbox\" v-model=\"option.value\" class=\"cc-input__checkbox\" @change=\"saveFiltersState()\">\n                                    {{ getTranslatedText( option.label ) }}\n                                </label>\n                            </div>\n                        </template>\n                    </div>\n                </div>\n            </template>\n        </div>\n\n        <div class=\"cc-layout-builder__component cc-layout-builder__component--static\">\n            <div class=\"cc-layout-builder__component-wrapper\">\n                <div class=\"cc-component-placeholder__component cc-component-placeholder__component--decorated cc-component-placeholder__component--header\">\n                    <svg class=\"cc-component-placeholder__component-icon\">\n                        <use xlink:href=\"#icon_component-cc-header\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( 0 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use xlink:href=\"#icon_plus\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n        </div>\n\n        <template v-for=\"component in components\">\n            <div v-bind:class=\"{ 'cc-layout-builder__component': true, 'cc-layout-builder__component--special': getIsSpecialComponent( component.type ), 'cc-layout-builder__component--invisible': getIsComponentHiddenFE( component.data ), 'cc-layout-builder__component--filtered-out': !getIsComponentVisibleDashboard( component.data ) }\" id=\"{{ component.id }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <div class=\"cc-layout-builder__component-actions\">\n                    <component-actions>\n                        <template slot=\"cc-component-actions__buttons\">\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up\" @click=\"moveComponentUp( $index )\" :class=\"[ isFirstComponent( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstComponent( $index )\">\n                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                    <use xlink:href=\"#icon_arrow-up\"></use>\n                                </svg>\n                            </button>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down\" @click=\"moveComponentDown( $index )\" :class=\"[ isLastComponent( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastComponent( $index )\">\n                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                    <use xlink:href=\"#icon_arrow-down\"></use>\n                                </svg>\n                            </button>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--settings\" :class=\"[ isPossibleToEdit( component.type ) ? '' : 'cc-action-button--look_disabled' ]\" :disabled=\"!isPossibleToEdit( component.type )\" @click=\"editComponentSettings( $index )\" title=\"{{ getTranslatedText('Edit component') }}\">\n                                <svg class=\"cc-action-button__icon\">\n                                    <use xlink:href=\"#icon_edit\"></use>\n                                </svg>\n                            </button>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--duplicate\" :class=\"[ isPossibleToDuplicate( component.type ) ? '' : 'cc-action-button--look_disabled' ]\" :disabled=\"!isPossibleToDuplicate( component.type )\" @click=\"duplicateComponent( $index )\" title=\"{{ getTranslatedText('Duplicate component') }}\">\n                                <svg class=\"cc-action-button__icon\">\n                                    <use xlink:href=\"#icon_duplicate\"></use>\n                                </svg>\n                            </button>\n                            <div class=\"cc-component-display-controller\" v-if=\"isPossibleToControlDisplay( component.type )\">\n                                <svg class=\"cc-component-display-controller__icon\">\n                                    <use xlink:href=\"#icon_eye\"></use>\n                                </svg>\n                                <div class=\"cc-component-display-controller__control\">\n                                    <label :class=\"[ component.data.componentVisibility.mobile ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]\">\n                                        <input type=\"checkbox\" v-model=\"component.data.componentVisibility.mobile\" class=\"cc-input__checkbox\" @change=\"updateLayout()\">\n                                        {{ getTranslatedText('Mobile') }}\n                                    </label>\n                                </div>\n                                <div class=\"cc-component-display-controller__control\">\n                                    <label :class=\"[ component.data.componentVisibility.desktop ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]\">\n                                        <input type=\"checkbox\" v-model=\"component.data.componentVisibility.desktop\" class=\"cc-input__checkbox\" @change=\"updateLayout()\">\n                                        {{ getTranslatedText('Desktop') }}\n                                    </label>\n                                </div>\n                            </div>\n                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete\" :class=\"[ isPossibleToDelete( component.type ) ? '' : 'cc-action-button--look_disabled' ]\" :disabled=\"!isPossibleToDelete( component.type )\" @click=\"deleteComponent( $index )\">\n                                <svg class=\"cc-action-button__icon\">\n                                    <use xlink:href=\"#icon_trash-can\"></use>\n                                </svg>\n                            </button>\n                        </template>\n                    </component-actions>\n                </div>\n                <div class=\"cc-layout-builder__component-wrapper\">\n                    <component-placeholder>\n                        <h3 class=\"cc-component-placeholder__headline\" v-text=\"transformComponentTypeToText( component.type )\"></h3>\n                        <div class=\"cc-component-placeholder__component\">\n                            <component :is=\"component.type + '-preview'\" :configuration=\"component.data\" :index=\"$index\" :assets-src=\"assetsSrc\" :image-endpoint=\"imageEndpoint\"></component>\n                        </div>\n                    </component-placeholder>\n                </div>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-layout-builder__component cc-layout-builder__component--static\">\n            <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button\" @click=\"createNewComponent( components.length + 1 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use xlink:href=\"#icon_plus\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <div class=\"cc-layout-builder__component-wrapper\">\n                <div class=\"cc-component-placeholder__component cc-component-placeholder__component--decorated cc-component-placeholder__component--footer\">\n                    <svg class=\"cc-component-placeholder__component-icon\">\n                        <use xlink:href=\"#icon_component-cc-footer\"></use>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>",
     /**
      * Get dependencies
      */
@@ -780,7 +935,8 @@ var layoutBuilder = {
         'daily-deal-teaser-preview': dailyDealTeaserPreview,
         'headline-preview': headlinePreview,
         'hero-carousel-preview': heroCarouselPreview,
-        'image-teaser-preview': imageTeaserPreview,
+        'image-teaser-preview': imageTeaserLegacyPreview,
+        'image-teaser-2-preview': imageTeaserPreview,
         'magento-product-grid-teasers-preview': magentoProductGridTeasersPreview,
         'paragraph-preview': paragraphPreview,
         'product-carousel-preview': productCarouselPreview,
@@ -826,7 +982,9 @@ var layoutBuilder = {
          */
         editComponent: {
             type: Function,
-            default: function (componentInfo) { return componentInfo; },
+            default: function (componentInfo) {
+                return componentInfo;
+            },
         },
         /**
          * Callback invoked when edit component button is clicked.
@@ -859,8 +1017,14 @@ var layoutBuilder = {
         },
     },
     ready: function () {
-        this.components = this.componentsConfiguration ? JSON.parse(this.componentsConfiguration) : [];
-        this.filters = (typeof (Storage) !== void (0) && window.localStorage.getItem('ccFilters')) ? JSON.parse(window.localStorage.getItem('ccFilters')) : this.ccConfig.filters;
+        this.components = this.componentsConfiguration
+            ? JSON.parse(this.componentsConfiguration)
+            : [];
+        this.filters =
+            typeof Storage !== void 0 &&
+                window.localStorage.getItem('ccFilters')
+                ? JSON.parse(window.localStorage.getItem('ccFilters'))
+                : this.ccConfig.filters;
         this.sortComponentsBySections();
         this.setupInitialDisplayProps();
         this.updateLayout();
@@ -877,7 +1041,7 @@ var layoutBuilder = {
          * Uses localStorage to save current filters state within layout builder.
          */
         saveFiltersState: function () {
-            if (typeof (Storage) !== void (0) && this.filters) {
+            if (typeof Storage !== void 0 && this.filters) {
                 window.localStorage.setItem('ccFilters', JSON.stringify(this.filters));
             }
         },
@@ -895,7 +1059,8 @@ var layoutBuilder = {
          */
         addComponentInformation: function (index, componentInfo) {
             if (componentInfo) {
-                if (!componentInfo.data.hasOwnProperty('componentVisibility') && !this.getIsSpecialComponent(componentInfo.type)) {
+                if (!componentInfo.data.hasOwnProperty('componentVisibility') &&
+                    !this.getIsSpecialComponent(componentInfo.type)) {
                     componentInfo.data.componentVisibility = {
                         mobile: true,
                         desktop: true,
@@ -971,15 +1136,23 @@ var layoutBuilder = {
                 var previousComponent_1 = this.components[index - 1];
                 var $thisComponent_1 = $("#" + this.components[index].id);
                 var $prevComponent_1 = $("#" + this.components[index - 1].id);
-                $thisComponent_1.addClass('cc-layout-builder__component--animating').css('transform', "translateY(" + -Math.abs($prevComponent_1.outerHeight(true)) + "px)");
-                $prevComponent_1.addClass('cc-layout-builder__component--animating').css('transform', "translateY(" + $thisComponent_1.outerHeight(true) + "px)");
+                $thisComponent_1
+                    .addClass('cc-layout-builder__component--animating')
+                    .css('transform', "translateY(" + -Math.abs($prevComponent_1.outerHeight(true)) + "px)");
+                $prevComponent_1
+                    .addClass('cc-layout-builder__component--animating')
+                    .css('transform', "translateY(" + $thisComponent_1.outerHeight(true) + "px)");
                 setTimeout(function () {
                     _this.components.$set(index - 1, _this.components[index]);
                     _this.components.$set(index, previousComponent_1);
                     _this.setComponentsPlacementInfo();
                     _this.updateLayout();
-                    $thisComponent_1.removeClass('cc-layout-builder__component--animating').css('transform', '');
-                    $prevComponent_1.removeClass('cc-layout-builder__component--animating').css('transform', '');
+                    $thisComponent_1
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
+                    $prevComponent_1
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -993,15 +1166,23 @@ var layoutBuilder = {
                 var previousComponent_2 = this.components[index + 1];
                 var $thisComponent_2 = $("#" + this.components[index].id);
                 var $nextComponent_1 = $("#" + this.components[index + 1].id);
-                $thisComponent_2.addClass('cc-layout-builder__component--animating').css('transform', "translateY(" + $nextComponent_1.outerHeight(true) + "px)");
-                $nextComponent_1.addClass('cc-layout-builder__component--animating').css('transform', "translateY(" + -Math.abs($thisComponent_2.outerHeight(true)) + "px)");
+                $thisComponent_2
+                    .addClass('cc-layout-builder__component--animating')
+                    .css('transform', "translateY(" + $nextComponent_1.outerHeight(true) + "px)");
+                $nextComponent_1
+                    .addClass('cc-layout-builder__component--animating')
+                    .css('transform', "translateY(" + -Math.abs($thisComponent_2.outerHeight(true)) + "px)");
                 setTimeout(function () {
                     _this.components.$set(index + 1, _this.components[index]);
                     _this.components.$set(index, previousComponent_2);
                     _this.setComponentsPlacementInfo();
                     _this.updateLayout();
-                    $thisComponent_2.removeClass('cc-layout-builder__component--animating').css('transform', '');
-                    $nextComponent_1.removeClass('cc-layout-builder__component--animating').css('transform', '');
+                    $thisComponent_2
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
+                    $nextComponent_1
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -1021,7 +1202,9 @@ var layoutBuilder = {
                 setTimeout(function () {
                     $duplicate.removeClass('cc-layout-builder__component--show-up');
                     $('html, body').animate({
-                        scrollTop: $origin.offset().top + $origin.outerHeight(true) - 150,
+                        scrollTop: $origin.offset().top +
+                            $origin.outerHeight(true) -
+                            150,
                     }, 350, 'swing');
                 }, 10);
                 setTimeout(function () {
@@ -1057,7 +1240,8 @@ var layoutBuilder = {
             var _this = this;
             if (this.components.length && this.ccSections.length > 1) {
                 this.components.sort(function (a, b) {
-                    return _this.ccSections.indexOf(a.section) - _this.ccSections.indexOf(b.section);
+                    return (_this.ccSections.indexOf(a.section) -
+                        _this.ccSections.indexOf(b.section));
                 });
             }
         },
@@ -1069,14 +1253,15 @@ var layoutBuilder = {
         setupInitialDisplayProps: function () {
             for (var i = 0; i < this.components.length; i++) {
                 var c = this.components[i];
-                if (!c.data.hasOwnProperty('componentVisibility') && !this.getIsSpecialComponent(c.type)) {
+                if (!c.data.hasOwnProperty('componentVisibility') &&
+                    !this.getIsSpecialComponent(c.type)) {
                     var componentInfo = $.extend(true, {}, c, {
                         data: {
                             componentVisibility: {
                                 mobile: true,
                                 desktop: true,
-                            }
-                        }
+                            },
+                        },
                     });
                     this.setComponentInformation(i, componentInfo);
                 }
@@ -1117,7 +1302,8 @@ var layoutBuilder = {
          * @return {boolean}
          */
         isPossibleToEdit: function (componentType) {
-            return componentType !== 'brand-carousel' && componentType !== 'separator';
+            return (componentType !== 'brand-carousel' &&
+                componentType !== 'separator');
         },
         /**
          * Checks if it's possible to delete component.
@@ -1135,7 +1321,8 @@ var layoutBuilder = {
          * @return {boolean}
          */
         isPossibleToDuplicate: function (componentType) {
-            return !this.getIsSpecialComponent(componentType) && componentType !== 'paragraph';
+            return (!this.getIsSpecialComponent(componentType) &&
+                componentType !== 'paragraph');
         },
         /**
          * FE mobile/desktop visibility cannot be controlled for Built-in components into magento core functionality
@@ -1143,7 +1330,8 @@ var layoutBuilder = {
          * @return {boolean}
          */
         isPossibleToControlDisplay: function (componentType) {
-            return !this.getIsSpecialComponent(componentType) && componentType !== 'custom-html';
+            return (!this.getIsSpecialComponent(componentType) &&
+                componentType !== 'custom-html');
         },
         /**
          * Tells to builder if component is set to be hidden on both: mobile & desktop
@@ -1153,7 +1341,10 @@ var layoutBuilder = {
          */
         getIsComponentHiddenFE: function (componentData) {
             if (componentData.hasOwnProperty('componentVisibility')) {
-                return (!componentData.componentVisibility.mobile || componentData.componentVisibility.mobile === '') && (!componentData.componentVisibility.desktop || componentData.componentVisibility.desktop === '');
+                return ((!componentData.componentVisibility.mobile ||
+                    componentData.componentVisibility.mobile === '') &&
+                    (!componentData.componentVisibility.desktop ||
+                        componentData.componentVisibility.desktop === ''));
             }
             return false;
         },
@@ -1164,16 +1355,23 @@ var layoutBuilder = {
          * @return {boolean}
          */
         getIsComponentVisibleDashboard: function (componentData) {
-            if (componentData.hasOwnProperty('componentVisibility') && this.filters) {
-                var visibleMobile = (componentData.componentVisibility.mobile !== '' && componentData.componentVisibility.mobile !== false);
-                var visibleDesktop = (componentData.componentVisibility.desktop !== '' && componentData.componentVisibility.desktop !== false);
-                if (this.filters.component_visibility.options.mobile.value && visibleMobile) {
+            if (componentData.hasOwnProperty('componentVisibility') &&
+                this.filters) {
+                var visibleMobile = componentData.componentVisibility.mobile !== '' &&
+                    componentData.componentVisibility.mobile !== false;
+                var visibleDesktop = componentData.componentVisibility.desktop !== '' &&
+                    componentData.componentVisibility.desktop !== false;
+                if (this.filters.component_visibility.options.mobile.value &&
+                    visibleMobile) {
                     return true;
                 }
-                if (this.filters.component_visibility.options.desktop.value && visibleDesktop) {
+                if (this.filters.component_visibility.options.desktop.value &&
+                    visibleDesktop) {
                     return true;
                 }
-                if (this.filters.component_visibility.options.none.value && !visibleMobile && !visibleDesktop) {
+                if (this.filters.component_visibility.options.none.value &&
+                    !visibleMobile &&
+                    !visibleDesktop) {
                     return true;
                 }
                 return false;
@@ -2511,6 +2709,774 @@ var heroCarouselConfigurator = {
     },
 };
 
+var teaserPrototype = {
+    image: {
+        raw: '',
+        decoded: '',
+        aspect_ratio: '',
+    },
+    slogan: '',
+    description: '',
+    cta: {
+        label: 'More',
+        href: '',
+    },
+    content_align: {
+        x: 1,
+        y: 1,
+    },
+    optimizers: {
+        color_scheme: 'dark',
+        mirror_image: false,
+        scenarios: {
+            none: {
+                enabled: true,
+                intensity: 'disabled',
+                direction: 'disabled',
+                configurator: {
+                    icon: '#contrast_none',
+                    label: 'None',
+                },
+            },
+            overlay: {
+                enabled: false,
+                intensity: 50,
+                direction: 'disabled',
+                configurator: {
+                    icon: '#contrast_overlay',
+                    label: 'Overlay',
+                },
+            },
+            gradient: {
+                enabled: false,
+                intensity: 50,
+                direction: {
+                    x: 1,
+                    y: 1,
+                },
+                configurator: {
+                    icon: '#contrast_gradient',
+                    label: 'Gradient shadow',
+                },
+            },
+            container: {
+                enabled: false,
+                intensity: 50,
+                direction: 'disabled',
+                configurator: {
+                    icon: '#contrast_container',
+                    label: 'Container',
+                },
+            },
+            text_shadow: {
+                enabled: false,
+                intensity: 50,
+                direction: 'disabled',
+                configurator: {
+                    icon: '#contrast_text-shadow',
+                    label: 'Text shadow',
+                },
+            },
+        },
+    },
+};
+/**
+ * Teaser configurator component.
+ * This component handles logic for configuring teasers within CC components.
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var teaserConfigurator = {
+    mixins: [componentConfigurator],
+    components: {
+        'action-button': actionButton,
+        'component-actions': componentActions,
+        'teaser-preview': teaserPreview,
+    },
+    template: "<div class=\"cc-teaser-configurator\">\n        <section class=\"cc-teaser-configurator__section\">\n            <div class=\"cc-teaser-configurator__content\" id=\"cc-teaser-{{teaserIndex}}\">\n                <div class=\"cc-teaser-configurator__col cc-teaser-configurator__col--preview\" :class=\"{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}\">\n                    <div class=\"cc-teaser-configurator__image-wrapper\">\n\n                        <teaser-preview :configuration=\"configuration\" :parent-configuration=\"parentConfiguration\"></teaser-preview>\n\n                        <input type=\"hidden\" class=\"cc-teaser-configurator__image-url\" id=\"teaser-img-{{teaserIndex}}\">\n\n                        <div class=\"cc-teaser-configurator__actions\">\n                            <component-actions>\n                                <template slot=\"cc-component-actions__buttons\">\n                                    <button\n                                        class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-teaser-configurator__action-button\"\n                                        :class=\"{'cc-action-button--look_disabled': isFirstImageTeaser(teaserIndex)}\"\n                                        @click=\"moveImageTeaserUp(teaserIndex)\"\n                                        :disabled=\"isFirstImageTeaser(teaserIndex)\"\n                                    >\n                                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                            <use xlink:href=\"#icon_arrow-up\"></use>\n                                        </svg>\n                                    </button>\n                                    <button\n                                        class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-teaser-configurator__action-button\"\n                                        :class=\"{'cc-action-button--look_disabled': isLastImageTeaser(teaserIndex)}\"\n                                        :disabled=\"isLastImageTeaser(teaserIndex)\"\n                                        @click=\"moveImageTeaserDown(teaserIndex)\"\n                                    >\n                                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                            <use xlink:href=\"#icon_arrow-down\"></use>\n                                        </svg>\n                                    </button>\n                                    <button\n                                        class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button\"\n                                        @click=\"getImageUploader(teaserIndex)\"\n                                    >\n                                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                            <use xlink:href=\"#icon_upload-image\"></use>\n                                        </svg>\n                                        {{imageActionText | translate}}\n                                    </button>\n                                    <button\n                                        class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button\"\n                                        @click=\"deleteTeaserItem(teaserIndex)\"\n                                    >\n                                        <svg class=\"cc-action-button__icon\">\n                                            <use xlink:href=\"#icon_trash-can\"></use>\n                                        </svg>\n                                    </button>\n                                </template>\n                            </component-actions>\n                        </div>\n\n                    </div>\n                </div>\n                <div class=\"cc-teaser-configurator__col cc-teaser-configurator__col--configurator\">\n                    <ul class=\"cc-teaser-configurator__tabs\">\n                        <li\n                            v-for=\"(index, tab) in ccConfig.teaser.tabs\"\n                            v-if=\"tab && tab.label && tab.content\"\n                            class=\"cc-teaser-configurator__tab\"\n                            :class=\"{'cc-teaser-configurator__tab--current': currentTab == index}\"\n                            @click=\"switchTab(index)\"\n                        >\n                            <span class=\"cc-teaser-configurator__tab-label\">{{tab.label}}</span>\n                        </li>\n                    </ul>\n\n                    <div\n                        v-for=\"(index, tab) in ccConfig.teaser.tabs\"\n                        v-if=\"tab && tab.label && tab.content\"\n                        class=\"cc-teaser-configurator__tab-content\"\n                        :class=\"{'cc-teaser-configurator__tab-content--current': currentTab == index}\"\n                    >\n                        <template v-if=\"tab.content && tab.content === '#content'\">\n                            <div\n                                class=\"cc-teaser-configurator__tab-section\"\n                                :class=\"{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}\"\n                            >\n                                <label class=\"cc-input__label\">{{'Content align' | translate }}:</label>\n                                <div class=\"cc-teaser-configurator__position-grid\">\n                                    <template v-for=\"y in 3\">\n                                        <template v-for=\"x in 3\">\n                                            <span\n                                                class=\"cc-teaser-configurator__position-grid-item\"\n                                                :class=\"{'cc-teaser-configurator__position-grid-item--active': isCurrentContentAlign(x+1, y+1)}\"\n                                                @click=\"setContentAlign(x+1, y+1)\"\n                                            ></span>\n                                        </template>\n                                    </template>\n                                </div>\n                            </div>\n\n                            <div class=\"cc-teaser-configurator__tab-section\">\n                                <div class=\"cc-input cc-input--group\">\n                                    <div class=\"cc-input cc-teaser-configurator__form-element\">\n                                        <label for=\"cfg-teaser-{{teaserIndex}}-slogan\" class=\"cc-input__label\">{{'Slogan' | translate}}:</label>\n                                        <textarea v-model=\"configuration.slogan | prettify\" id=\"cfg-teaser-{{teaserIndex}}-slogan\" class=\"cc-input__textarea\"></textarea>\n                                    </div>\n                                    <div class=\"cc-input cc-teaser-configurator__form-element\">\n                                        <label for=\"cfg-teaser-{{teaserIndex}}-description\" class=\"cc-input__label\">{{'Description' | translate}}:</label>\n                                        <textarea v-model=\"configuration.description | prettify\" id=\"cfg-teaser-{{teaserIndex}}-description\" class=\"cc-input__textarea\"></textarea>\n                                    </div>\n                                </div>\n                            </div>\n\n                            <div class=\"cc-teaser-configurator__tab-section\">\n                                <div class=\"cc-input cc-input--group\">\n                                    <div class=\"cc-input cc-teaser-configurator__form-element\">\n                                        <label for=\"cfg-teaser-{{teaserIndex}}-cta-label\" class=\"cc-input__label\">{{'CTA label' | translate}}:</label>\n                                        <input type=\"text\" v-model=\"configuration.cta.label\" id=\"cfg-teaser-{{teaserIndex}}-cta-label\" class=\"cc-input__input\">\n                                    </div>\n                                    <div class=\"cc-input cc-input--type-addon cc-teaser-configurator__form-element\">\n                                        <label for=\"cfg-teaser-{{teaserIndex}}-cta-href\" class=\"cc-input__label\">{{'CTA target link' | translate}}:</label>\n                                        <input type=\"text\" class=\"cc-input__input cc-teaser-configurator__cta-target-link\" v-model=\"configuration.cta.href\" id=\"cfg-teaser-{{teaserIndex}}-cta-href\">\n                                        <span class=\"cc-input__addon cc-teaser-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal(teaserIndex)\">\n                                            <svg class=\"cc-input__addon-icon\">\n                                                <use xlink:href=\"#icon_link\"></use>\n                                            </svg>\n                                        </span>\n                                    </div>\n                                </div>\n                            </div>\n                        </template>\n\n                        <template v-if=\"tab.content && tab.content === '#style'\">\n                            <div class=\"cc-teaser-configurator__tab-section\">\n                                <label class=\"cc-input__label\">{{'Contrast Optimizer' | translate}}</label>\n                                <ul class=\"cc-teaser-configurator__optimizers\">\n                                    <li\n                                        v-for=\"(index, optimizer) in configuration.optimizers.scenarios\"\n                                        class=\"cc-teaser-configurator__optimizer\"\n                                        :class=\"{'cc-teaser-configurator__optimizer--current': optimizer.enabled}\"\n                                        @click=\"setOptimizer(optimizer)\"\n                                    >\n                                        <div class=\"cc-teaser-configurator__optimizer-icon-wrapper\">\n                                            <svg class=\"cc-teaser-configurator__optimizer-icon\">\n                                                <use xlink:href=\"{{optimizer.configurator.icon}}\"></use>\n                                            </svg>\n                                        </div>\n                                        <label class=\"cc-teaser-configurator__optimizer-label\">\n                                            {{optimizer.configurator.label | translate}}\n                                        </label>\n                                    </li>\n                                </ul>\n\n                                <div\n                                    v-for=\"(key, optimizer) in configuration.optimizers.scenarios\"\n                                    class=\"cc-teaser-configurator__optimizer-tools\"\n                                    :class=\"{'cc-teaser-configurator__optimizer-tools--current': optimizer.enabled}\"\n                                >\n                                    <div\n                                        class=\"cc-teaser-configurator__optimizer-tool\"\n                                        :class=\"{'block-disabled': optimizer.intensity === 'disabled'}\"\n                                    >\n                                        <label class=\"cc-input__label cc-teaser-configurator__optimizer-tool-label\">{{'Intensity' | translate}}</label>\n                                        <div class=\"cc-input cc-input--range\">\n                                            <input\n                                                class=\"cc-input__range cc-input__range--step-{{ getOptimizerIntensityStep(key) }} cc-teaser-configurator__optimizer-range\"\n                                                type=\"range\"\n                                                min=\"0\"\n                                                max=\"100\"\n                                                step=\"{{ getOptimizerIntensityStep(key) }}\"\n                                                v-model=\"optimizer.intensity\"\n                                                disabled=\"{{optimizer.intensity === 'disabled'}}\"\n                                            >\n                                        </div>\n                                        <span class=\"cc-teaser-configurator__optimizer-range-value\">\n                                            {{optimizer.intensity === 'disabled' ? 50 : optimizer.intensity}}\n                                        </span>\n                                    </div>\n\n                                    <div\n                                        class=\"cc-teaser-configurator__optimizer-tool\"\n                                        :class=\"{'block-disabled': optimizer.direction === 'disabled'}\"\n                                    >\n                                        <label class=\"cc-input__label cc-teaser-configurator__optimizer-tool-label\">{{'Direction' | translate}}</label>\n                                        <div class=\"cc-teaser-configurator__position-grid cc-teaser-configurator__position-grid--small\">\n                                            <template v-for=\"y in 3\">\n                                                <template v-for=\"x in 3\">\n                                                    <span\n                                                        class=\"cc-teaser-configurator__position-grid-item\"\n                                                        :class=\"{\n                                                            'cc-teaser-configurator__position-grid-item--active': isCurrentOptimizerDirection(key, x+1, y+1),\n                                                            'cc-teaser-configurator__position-grid-item--disabled': x+1 == 2 && y+1 == 2\n                                                        }\"\n                                                        @click=\"setOptimizerDirection(key, x+1, y+1)\"\n                                                    ></span>\n                                                </template>\n                                            </template>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n\n                            <div class=\"cc-teaser-configurator__tab-section\">\n                                <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                                    <div class=\"cc-input cc-teaser-configurator__form-element\">\n                                        <label for=\"cfg-teaser-{{teaserIndex}}-color-scheme\" class=\"cc-input__label\">{{'Text style' | translate}}:</label>\n                                        <select\n                                            name=\"cfg-teaser-{{teaserIndex}}-color-scheme\"\n                                            class=\"cc-input__select\"\n                                            id=\"cfg-teaser-{{teaserIndex}}-color-scheme\"\n                                            v-model=\"configuration.optimizers.color_scheme\"\n                                        >\n                                            <option v-for=\"scheme in ccConfig.teaser.color_schemes\" value=\"{{scheme}}\">{{scheme | capitalize | translate}}</option>\n                                        </select>\n                                    </div>\n\n                                    <div class=\"cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher\">\n                                        <div class=\"admin__actions-switch\" data-role=\"switcher\" :class=\"{'block-disabled': !configuration.image.raw}\">\n                                            <label for=\"cfg-teaser-{{teaserIndex}}-mirror-image\" class=\"cc-input__label\">{{'Mirror image' | translate}}: </label>\n                                            <input\n                                                type=\"checkbox\"\n                                                class=\"admin__actions-switch-checkbox\"\n                                                id=\"cfg-teaser-{{teaserIndex}}-mirror-image\"\n                                                v-model=\"configuration.optimizers.mirror_image\"\n                                                :disabled=\"!configuration.image.raw\"\n                                            >\n                                            <label for=\"cfg-teaser-{{teaserIndex}}-mirror-image\" class=\"admin__actions-switch-label\"></label>\n                                            <span class=\"admin__actions-switch-text\">\n                                                {{ mirrorImageTextOutput | translate }}\n                                            </span>\n                                        </div>\n\n                                    </div>\n                                </div>\n                            </div>\n                        </template>\n\n                        <template v-if=\"tab.content && tab.content !== '#content' && tab.content !== '#style'\">\n                            <div class=\"cc-teaser-configurator__tab-section\">\n                                <template v-for=\"(fieldIndex, field) in tab.content.fields\">\n                                    <div\n                                        v-if=\"field.type === 'select'\"\n                                        class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\"\n                                    >\n                                        <div class=\"cc-input cc-teaser-configurator__form-element\">\n                                            <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                                                {{field.label | translate}}:\n                                            </label>\n                                            <select class=\"cc-input__select\">\n                                                <option v-for=\"(value, label) in field.options\" :value=\"value\">{{ label }}</option>\n                                            </select>\n                                        </div>\n                                    </div v-if=\"field.type === 'select'\">\n\n                                    <div\n                                        v-if=\"field.type === 'input'\"\n                                        class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\"\n                                    >\n                                        <div class=\"cc-input cc-teaser-configurator__form-element\">\n                                            <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                                                {{field.label | translate}}:\n                                            </label>\n                                            <input type=\"text\" class=\"cc-input__input\" :value=\"field.value\">\n                                        </div>\n                                    </div v-if=\"field.type === 'input'\">\n\n                                    <div\n                                        v-if=\"field.type === 'textarea'\"\n                                        class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\"\n                                    >\n                                        <div class=\"cc-input cc-teaser-configurator__form-element\">\n                                            <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                                                {{field.label | translate}}:\n                                                </label>\n                                            <textarea type=\"text\" class=\"cc-input__textarea\">{{ field.value }}</textarea>\n                                        </div>\n                                    </div v-if=\"field.type === 'textarea'\">\n                                </template>\n                            </div>\n                        </template>\n                    </div>\n                </div>\n            </div>\n        </section>\n    </div>",
+    props: {
+        /**
+         * Parent component configuration
+         */
+        parentConfiguration: {
+            type: Object,
+            default: function () {
+                return {
+                    items: [],
+                    scenario: {
+                        contentPlacement: {
+                            id: 'over',
+                        },
+                    },
+                };
+            },
+        },
+        callerComponentType: {
+            type: String,
+            default: '',
+        },
+        class: {
+            type: String,
+            default: '',
+        },
+        teaserIndex: {
+            type: Number,
+            default: 0,
+        },
+        /* Obtain base-url for the image uploader */
+        uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
+        },
+        /* Obtain admin url */
+        adminPrefix: {
+            type: String,
+            default: 'admin',
+        },
+        /* Obtain content-constructor's config file */
+        ccConfig: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+    },
+    computed: {
+        configuration: function () {
+            return this.parentConfiguration.items[this.teaserIndex];
+        },
+        imageActionText: function () {
+            return this.configuration.image.raw ? 'Change' : 'Upload';
+        },
+        mirrorImageTextOutput: function () {
+            return this.configuration.optimizers.mirror_image ? 'Yes' : 'No';
+        },
+    },
+    data: function () {
+        return {
+            currentTab: 0,
+        };
+    },
+    filters: {
+        /**
+         * Translates given string
+         * @param txt {string} - original, english string to be translated
+         * @return {string} - translated string
+         */
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+        /**
+         * Capitalizes given string
+         * @param txt {string} - original string to be capitalized
+         * @return {string} - capitalized string
+         */
+        capitalize: function (txt) {
+            return "" + txt.charAt(0).toUpperCase() + txt.slice(1);
+        },
+        randomizeElementId: function (id) {
+            return "cfg-teaser-" + id + "-" + (Math.floor(Math.random() * (1000 - 99999)) + 1000);
+        },
+        prettify: {
+            /**
+             * @param txt {string} - original v-model value
+             * @return {String} - HTML ready
+             */
+            read: function (txt) {
+                return txt.replace(/<br\s*[\/]?>/gi, '\n');
+            },
+            /**
+             * @param txt {string} - current content of v-model
+             * @return {String} - stripped html
+             */
+            write: function (txt) {
+                return txt.replace(/\n/g, '<br>');
+            },
+        },
+    },
+    methods: {
+        switchTab: function (index) {
+            this.currentTab = index;
+        },
+        setContentAlign: function (x, y) {
+            this.configuration.content_align.x = x;
+            this.configuration.content_align.y = y;
+        },
+        isCurrentContentAlign: function (x, y) {
+            return (this.configuration.content_align.x === x &&
+                this.configuration.content_align.y === y);
+        },
+        setOptimizerDirection: function (index, x, y) {
+            this.configuration.optimizers.scenarios[index].direction.x = x;
+            this.configuration.optimizers.scenarios[index].direction.y = y;
+        },
+        isCurrentOptimizerDirection: function (index, x, y) {
+            return (this.configuration.optimizers.scenarios[index].direction.x ===
+                x &&
+                this.configuration.optimizers.scenarios[index].direction.y === y);
+        },
+        setOptimizer: function (optimizer) {
+            for (var opt in this.configuration.optimizers.scenarios) {
+                this.configuration.optimizers.scenarios[opt].enabled = false;
+            }
+            optimizer.enabled = true;
+        },
+        getOptimizerIntensityStep: function (key) {
+            if (this.ccConfig.teaser.optimizers_intensity_steps[key]) {
+                return this.ccConfig.teaser.optimizers_intensity_steps[key];
+            }
+            return 10;
+        },
+        /* Opens M2's built-in image manager modal.
+         * Manages all images: image upload from hdd, select image that was already uploaded to server.
+         * @param index {number} - index of image of image teaser.
+         */
+        getImageUploader: function (index) {
+            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/teaser-img-" + index + "/", 'auto', 'auto', $.mage.__('Insert File...'), {
+                closed: true,
+            });
+        },
+        onRawImageUrlChange: function (event) {
+            var _this = this;
+            this.configuration.image.raw = event.target.value;
+            var encodedImage = this.configuration.image.raw.match('___directive/([a-zA-Z0-9]*)')[1];
+            this.configuration.image.decoded = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
+            var img = new Image();
+            img.onload = function () {
+                // this.configuration.image.raw = img.getAttribute('src');
+                _this.configuration.image.aspect_ratio = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
+                setTimeout(function () {
+                    _this.checkImageSizes();
+                    _this.onChange();
+                }, 400);
+            };
+            img.src = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
+        },
+        /**
+         * Moves image teaser item under given index up by swaping it with previous element.
+         * @param {number} index Image teaser's index in array.
+         */
+        moveImageTeaserUp: function (index) {
+            var _this = this;
+            if (index > 0) {
+                var $thisItem_1 = $("#cc-image-teaser-item-" + index);
+                var $prevItem_1 = $("#cc-image-teaser-item-" + (index - 1));
+                $thisItem_1
+                    .addClass('cc-teaser-configurator--animating')
+                    .css('transform', "translateY(" + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
+                $prevItem_1
+                    .addClass('cc-teaser-configurator--animating')
+                    .css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px )");
+                setTimeout(function () {
+                    _this.parentConfiguration.items.splice(index - 1, 0, _this.parentConfiguration.items.splice(index, 1)[0]);
+                    $thisItem_1
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    $prevItem_1
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    _this.onChange();
+                }, 400);
+            }
+        },
+        /**
+         * Moves image teaser item under given index down by swaping it with next element.
+         * @param {number} index Image teaser's index in array.
+         */
+        moveImageTeaserDown: function (index) {
+            var _this = this;
+            if (index < this.parentConfiguration.items.length - 1) {
+                var $thisItem_2 = $("#cc-image-teaser-item-" + index);
+                var $nextItem_1 = $("#cc-image-teaser-item-" + (index + 1));
+                $thisItem_2
+                    .addClass('cc-teaser-configurator--animating')
+                    .css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
+                $nextItem_1
+                    .addClass('cc-teaser-configurator--animating')
+                    .css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
+                setTimeout(function () {
+                    _this.parentConfiguration.items.splice(index + 1, 0, _this.parentConfiguration.items.splice(index, 1)[0]);
+                    $thisItem_2
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    $nextItem_1
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    _this.onChange();
+                }, 400);
+            }
+        },
+        /**
+         * Tells if item with given index is the first image teaser.
+         * @param  {number}  index Index of the image teaser.
+         * @return {boolean}       If image teaser is first in array.
+         */
+        isFirstImageTeaser: function (index) {
+            return index === 0;
+        },
+        /**
+         * Tells if image teaser with given index is the last image teaser.
+         * @param  {number}  index Index of the image teaser.
+         * @return {boolean}       If image teaser is last in array.
+         */
+        isLastImageTeaser: function (index) {
+            return index === this.parentConfiguration.items.length - 1;
+        },
+        /* Opens modal with M2 built-in widget chooser
+         * @param index {number} - index of teaser item to know where to place output of widget chooser
+         */
+        openCtaTargetModal: function (index) {
+            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/cfg-teaser-" + index + "-cta-href/");
+            this.wWidgetListener(index);
+        },
+        /*
+         * Check if widget chooser is loaded. If not, wait for it, if yes:
+         * Override default onClick for "Insert Widget" button in widget's modal window
+         * to clear input's value before inserting new one
+         * @param {number} index Hero item's index in array.
+         */
+        wWidgetListener: function (itemIndex) {
+            var _this = this;
+            if (typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== '') {
+                var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
+                button.onclick = null;
+                button.addEventListener('click', function () {
+                    _this.configuration.cta.href = '';
+                    wWidget.insertWidget();
+                });
+            }
+            else {
+                window.setTimeout(function () {
+                    _this.wWidgetListener(itemIndex);
+                }, 300);
+            }
+        },
+        /* Removes teaser item after Delete button is clicked
+         * @param index {number} - index of teaser item to remove
+         */
+        deleteTeaserItem: function (index) {
+            var component = this;
+            confirm({
+                content: $.mage.__('Are you sure you want to delete this item?'),
+                actions: {
+                    confirm: function () {
+                        component.parentConfiguration.items.splice(index, 1);
+                    },
+                },
+            });
+        },
+        /* Checks if images are all the same size
+         * If not - displays error by firing up this.displayImageSizeMismatchError()
+         * @param images {array} - array of all uploaded images
+         */
+        checkImageSizes: function () {
+            var itemsToCheck = JSON.parse(JSON.stringify(this.parentConfiguration.items)).filter(function (item) {
+                return Boolean(item.image.aspect_ratio); // Filter out items without aspect ratio set yet.
+            });
+            for (var i = 0; i < itemsToCheck.length; i++) {
+                if (itemsToCheck[i].aspect_ratio !==
+                    itemsToCheck[0].aspect_ratio) {
+                    alert({
+                        title: $.mage.__('Warning'),
+                        content: $.mage.__('Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'),
+                    });
+                    return false;
+                }
+            }
+            return true;
+        },
+        /* Returns greatest common divisor for 2 numbers
+         * @param a {number}
+         * @param b {number}
+         * @return {number} - greatest common divisor
+         */
+        getGreatestCommonDivisor: function (a, b) {
+            if (!b) {
+                return a;
+            }
+            return this.getGreatestCommonDivisor(b, a % b);
+        },
+        /* Returns Aspect ratio for 2 numbers based on GDC algoritm (greatest common divisor)
+         * @param a {number}
+         * @param b {number}
+         * @return {number} - greatest common divisor
+         */
+        getAspectRatio: function (a, b) {
+            var c = this.getGreatestCommonDivisor(a, b);
+            return a / c + ":" + b / c;
+        },
+        handleJqEvents: function () {
+            $("#teaser-img-" + this.teaserIndex).on('change', this.onRawImageUrlChange);
+        },
+    },
+    ready: function () {
+        this.handleJqEvents();
+    },
+};
+
+/**
+ * Image teaser configurator component.
+ * This component is responsible for displaying image teaser's configuration form
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var imageTeaserConfigurator = {
+    mixins: [componentConfigurator],
+    components: {
+        'action-button': actionButton,
+        'component-adder': componentAdder,
+        'component-actions': componentActions,
+        'teaser-configurator': teaserConfigurator,
+    },
+    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Teaser Width</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.teaserWidth.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.teaserWidth\"\n                    @click=\"!option.disabled && toggleOption('teaserWidth', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Desktop Layout</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.desktopLayout.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.desktopLayout\"\n                    @click=\"!option.disabled && toggleOption('desktopLayout', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Mobile Layout</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.mobileLayout.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.mobileLayout\"\n                    @click=\"!option.disabled && toggleOption('mobileLayout', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Text Positioning</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.contentPlacement.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.contentPlacement\"\n                    @click=\"!option.disabled && toggleOption('contentPlacement', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-image-teaser-configurator__section\">\n            <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( 0 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <template v-for=\"item in configuration.items\">\n                <div class=\"cc-image-teaser-configurator__item\" id=\"cc-image-teaser-item-{{ $index }}\">\n                    <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( $index )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n\n                    <teaser-configurator :class=\"cc-teaser-configurator--image-teaser\" :teaser-index=\"$index\" :configuration=\"items[$index]\" :parent-configuration=\"configuration\" :uploader-base-url=\"uploaderBaseUrl\" :image-endpoint=\"imageEndpoint\" :admin-prefix=\"adminPrefix\" :cc-config=\"ccConfig\" :caller-component-type=\"image-teaser\"></teaser-configurator>\n\n                    <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.items.length\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( $index + 1 )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
+    data: function () {
+        return {
+            scenarioOptions: {
+                // Teaser width scenario elements.
+                teaserWidth: {
+                    container: {
+                        name: 'Content width',
+                        iconId: 'tw_content-width',
+                        disabled: false,
+                    },
+                    window: {
+                        name: 'Browser width',
+                        iconId: 'tw_window-width',
+                        disabled: false,
+                    },
+                    'container-slider': {
+                        name: 'Content width Slider',
+                        iconId: 'tw_content-slider',
+                        disabled: false,
+                    },
+                    'window-slider': {
+                        name: 'Browser width Slider',
+                        iconId: 'tw_window-slider',
+                        disabled: false,
+                    },
+                },
+                // Desktop layout scenario elements.
+                desktopLayout: {
+                    '1': {
+                        name: '1 in row',
+                        iconId: 'dl_1',
+                        disabled: false,
+                        teasersNum: 1,
+                    },
+                    '2': {
+                        name: '2 in row',
+                        iconId: 'dl_2',
+                        disabled: false,
+                        teasersNum: 2,
+                    },
+                    '3': {
+                        name: '3 in row',
+                        iconId: 'dl_3',
+                        disabled: false,
+                        teasersNum: 3,
+                    },
+                    '4': {
+                        name: '4 in row',
+                        iconId: 'dl_4',
+                        disabled: false,
+                        teasersNum: 4,
+                    },
+                },
+                // Text positioning scenario elements.
+                contentPlacement: {
+                    over: {
+                        name: 'Text over image',
+                        iconId: 'tl_over',
+                        disabled: false,
+                        contentPlacement: true,
+                    },
+                    under: {
+                        name: 'Text below image',
+                        iconId: 'tl_under',
+                        disabled: false,
+                        contentPlacement: false,
+                    },
+                },
+                // Mobile layout scenario elements.
+                mobileLayout: {
+                    // 'mobile-large': {
+                    //     name: 'Large teaser',
+                    //     iconId: 'ml_col',
+                    //     disabled: false,
+                    // },
+                    'mobile-in-columns': {
+                        name: 'Teasers in column',
+                        iconId: 'ml_col',
+                        disabled: false,
+                    },
+                    'mobile-slider': {
+                        name: 'Slider',
+                        iconId: 'ml_slider',
+                        disabled: false,
+                    },
+                    'mobile-in-row': {
+                        name: 'Teasers in row',
+                        iconId: 'ml_2-2',
+                        disabled: false,
+                    },
+                },
+            },
+            availableScenarios: [
+                ['container', '1', 'over', ['mobile-in-columns']],
+                [
+                    'container',
+                    '2',
+                    'over',
+                    ['mobile-in-columns', 'mobile-in-row', 'mobile-slider'],
+                ],
+                ['container', '2', 'under', ['mobile-in-columns']],
+                [
+                    'container',
+                    '3',
+                    'over',
+                    ['mobile-in-columns', 'mobile-slider'],
+                ],
+                ['container', '3', 'under', ['mobile-in-columns']],
+                ['container', '4', 'over', ['mobile-slider']],
+                ['container', '4', 'under', ['mobile-in-columns']],
+                ['window', '1', 'over', ['mobile-in-columns']],
+                [
+                    'window',
+                    '2',
+                    'over',
+                    ['mobile-in-columns', 'mobile-in-row', 'mobile-slider'],
+                ],
+                ['window', '2', 'under', ['mobile-in-columns']],
+                ['window', '3', 'over', ['mobile-in-columns', 'mobile-slider']],
+                ['window', '3', 'under', ['mobile-in-columns']],
+                ['window', '4', 'over', ['mobile-slider']],
+                ['window', '4', 'under', ['mobile-in-columns']],
+                ['window-slider', '2', 'over', ['mobile-slider']],
+                ['window-slider', '2', 'under', ['mobile-slider']],
+                ['window-slider', '3', 'over', ['mobile-slider']],
+                ['window-slider', '3', 'under', ['mobile-slider']],
+                ['window-slider', '4', 'over', ['mobile-slider']],
+                ['window-slider', '4', 'under', ['mobile-slider']],
+                ['container-slider', '1', 'over', ['mobile-slider']],
+                ['container-slider', '2', 'over', ['mobile-slider']],
+                ['container-slider', '2', 'under', ['mobile-slider']],
+                ['container-slider', '3', 'over', ['mobile-slider']],
+                ['container-slider', '3', 'under', ['mobile-slider']],
+                ['container-slider', '4', 'over', ['mobile-slider']],
+                ['container-slider', '4', 'under', ['mobile-slider']],
+            ],
+        };
+    },
+    props: {
+        /**
+         * Image teaser configuration
+         */
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    customCssClass: '',
+                    items: [JSON.parse(JSON.stringify(teaserPrototype))],
+                    ignoredItems: [],
+                    scenario: {
+                        teaserWidth: {},
+                        desktopLayout: {},
+                        contentPlacement: {},
+                        mobileLayout: {},
+                    },
+                };
+            },
+        },
+        /* Obtain base-url for the image uploader */
+        uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
+        },
+        /* Obtain admin url */
+        adminPrefix: {
+            type: String,
+            default: 'admin',
+        },
+        /* Obtain content-constructor's config file */
+        ccConfig: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+    },
+    computed: {
+        imageTeasersContentPositions: function () {
+            var data = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(function (key) { return data[key]; });
+        },
+    },
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         */
+        'component-configurator__save': function () {
+            this.onSave();
+        },
+    },
+    filters: {
+        /**
+         * Two-way filter for step content displaing in textarea and keeping in configuration.
+         */
+        prettify: {
+            /**
+             * Displays stringified JSON in textarea if not step is not stringified yet.
+             *  If step is already stringified because it couldn't be saved, just return back what came in.
+             * @param stepContent {string} - content of textarea
+             * @param stepIndex {number} - index of a single step
+             * @return {String} - Stringified JSON of given step
+             */
+            read: function (stepContent, stepIndex) {
+                return JSON.stringify(stepContent, null, 2);
+            },
+            /**
+             * Tests if step content provided in textarea can be JSON.parsed.
+             *  If yes - saves in component's configuration and removes step error if there was any.
+             *  If not - obtains error message and passes it to setError method. Returns what came in.
+             * @param newStepContent {string} - current content of textarea
+             * @param oldStepContent {string} - content of textarea in state it was before change was made
+             * @param stepIndex {number} - index of a single step
+             * @return {JSON, String} - if string can be parsed to JSON, returns JSON, otherwise String
+             */
+            write: function (newStepContent, oldStepContent, stepIndex) {
+                var result;
+                try {
+                    result = JSON.parse(newStepContent);
+                }
+                catch (err) {
+                    if (err.hasOwnProperty('message')) {
+                        alert("Error in teaser " + stepIndex + ": " + err.message);
+                    }
+                }
+                if (result) {
+                    return result;
+                }
+                return newStepContent;
+            },
+        },
+        /**
+         * Translates given string
+         * @param txt {string} - original, english string to be translated
+         * @return {string} - translated string
+         */
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+    },
+    methods: {
+        _collectPossibleOptions: function (filteredScenarios) {
+            var teaserWidthIndex = 0;
+            var desktopLayoutIndex = 1;
+            var contentPlacementIndex = 2;
+            var mobileLayoutIndex = 3;
+            var possibleOptions = {
+                teaserWidth: {},
+                desktopLayout: {},
+                contentPlacement: {},
+                mobileLayout: {},
+            };
+            filteredScenarios.forEach(function (filteredScenario) {
+                possibleOptions.teaserWidth[filteredScenario[teaserWidthIndex]] = true;
+                possibleOptions.desktopLayout[filteredScenario[desktopLayoutIndex]] = true;
+                possibleOptions.contentPlacement[filteredScenario[contentPlacementIndex]] = true;
+                filteredScenario[mobileLayoutIndex].forEach(function (mobileLayout) {
+                    possibleOptions.mobileLayout[mobileLayout] = true;
+                });
+            });
+            Object.keys(possibleOptions).forEach(function (scenarioElement) {
+                possibleOptions[scenarioElement] = Object.keys(possibleOptions[scenarioElement]);
+            });
+            return possibleOptions;
+        },
+        _findPossibleOptions: function (teaserWidth, desktopLayout, contentPlacement, mobileLayout) {
+            var teaserWidthIndex = 0;
+            var desktopLayoutIndex = 1;
+            var contentPlacementIndex = 2;
+            var mobileLayoutIndex = 3;
+            // Make a copy of available scenarios to prevent reference copying.
+            var filteredScenarios = JSON.parse(JSON.stringify(this.availableScenarios));
+            if (teaserWidth) {
+                filteredScenarios = filteredScenarios.filter(function (availableScenario) {
+                    return (availableScenario[teaserWidthIndex] === teaserWidth);
+                });
+            }
+            if (desktopLayout) {
+                filteredScenarios = filteredScenarios.filter(function (availableScenario) {
+                    return (availableScenario[desktopLayoutIndex] ===
+                        desktopLayout);
+                });
+            }
+            if (contentPlacement) {
+                filteredScenarios = filteredScenarios.filter(function (availableScenario) {
+                    return (!contentPlacement ||
+                        availableScenario[contentPlacementIndex] ===
+                            contentPlacement);
+                });
+            }
+            if (mobileLayout) {
+                filteredScenarios = filteredScenarios.filter(function (availableScenario) {
+                    return (availableScenario[mobileLayoutIndex].indexOf(mobileLayout) !== -1);
+                });
+                filteredScenarios = filteredScenarios.map(function (availableScenario) {
+                    availableScenario[mobileLayoutIndex] = [mobileLayout];
+                    return availableScenario;
+                });
+            }
+            return this._collectPossibleOptions(filteredScenarios);
+        },
+        toggleOption: function (optionCategory, optionId) {
+            if (this.configuration.scenario[optionCategory].id) {
+                this.configuration.scenario[optionCategory] = {};
+            }
+            else {
+                this.configuration.scenario[optionCategory] = this.scenarioOptions[optionCategory][optionId];
+                this.configuration.scenario[optionCategory].id = optionId;
+            }
+            this.togglePossibleOptions();
+        },
+        togglePossibleOptions: function () {
+            var _this = this;
+            var scenario = this.configuration.scenario;
+            var possibleOptions = this._findPossibleOptions(scenario.teaserWidth.id, scenario.desktopLayout.id, scenario.contentPlacement.id, scenario.mobileLayout.id);
+            Object.keys(this.scenarioOptions).forEach(function (optionCategory) {
+                Object.keys(_this.scenarioOptions[optionCategory]).forEach(function (scenarioOptionId) {
+                    _this.scenarioOptions[optionCategory][scenarioOptionId].disabled =
+                        possibleOptions[optionCategory].indexOf(scenarioOptionId) === -1;
+                });
+            });
+        },
+        /* Creates another teaser item using teaserItemPrototype */
+        createTeaserItem: function (index) {
+            this.configuration.items.splice(index, 0, JSON.parse(JSON.stringify(teaserPrototype)));
+            this.onChange();
+        },
+        /* Cleans configuration for M2C content constructor after Saving component
+         * All empty teaser items has to be removed to not get into configuration object
+         */
+        cleanupConfiguration: function () {
+            this.configuration.items = this.configuration.items.filter(function (item) { return item.image.raw !== ''; });
+            this.configuration.ignoredItems = this.configuration.ignoredItems.filter(function (item) { return item.image.raw !== ''; });
+            this.onChange();
+        },
+    },
+};
+
 var teaserItemPrototype = {
     image: '',
     decodedImage: '',
@@ -2529,16 +3495,14 @@ var teaserItemPrototype = {
  * This component is responsible for displaying image teaser's configuration form
  * @type {vuejs.ComponentOption} Vue component object.
  */
-var imageTeaserConfigurator = {
-    mixins: [
-        componentConfigurator,
-    ],
+var imageTeaserConfigurator$2 = {
+    mixins: [componentConfigurator],
     components: {
         'action-button': actionButton,
         'component-adder': componentAdder,
         'component-actions': componentActions,
     },
-    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Teaser Width</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.currentScenario.teaserWidth.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.teaserWidth\"\n                    @click=\"!option.disabled && toggleOption('teaserWidth', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Desktop Layout</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.currentScenario.desktopLayout.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.desktopLayout\"\n                    @click=\"!option.disabled && toggleOption('desktopLayout', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Text Positioning</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.currentScenario.textPositioning.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.textPositioning\"\n                    @click=\"!option.disabled && toggleOption('textPositioning', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Mobile Layout</h3>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.currentScenario.mobileLayout.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.mobileLayout\"\n                    @click=\"!option.disabled && toggleOption('mobileLayout', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-image-teaser-configurator__section\">\n            <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( 0 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <template v-for=\"item in configuration.items\">\n                <div class=\"cc-image-teaser-configurator__item\" id=\"cc-image-teaser-item-{{ $index }}\">\n                    <component-adder class=\"cc-component-adder cc-component-adder--first\" v-if=\"canAddTeaser()\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( $index )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n\n                    <div class=\"cc-image-teaser-configurator__item-content\">\n                        <div v-bind:class=\"[ 'cc-image-teaser-configurator__item-col-left', configuration.items[$index].image ? 'cc-image-teaser-configurator__item-col-left--look-image-uploaded' : '' ]\">\n                            <div class=\"cc-image-teaser-configurator__item-image-wrapper\">\n                                <img :src=\"configuration.items[$index].image\" class=\"cc-image-teaser-configurator__item-image\" v-show=\"configuration.items[$index].image\">\n                                <input type=\"hidden\" v-model=\"configuration.items[$index].image\">\n                                <input type=\"hidden\" class=\"cc-image-teaser-configurator__image-url\" id=\"image-teaser-img-{{$index}}\">\n                                <svg class=\"cc-image-teaser-configurator__item-image-placeholder\" v-show=\"!configuration.items[$index].image\">\n                                    <use xlink:href=\"#icon_image-placeholder\"></use>\n                                </svg>\n\n                                <div class=\"cc-image-teaser-configurator__item-actions\">\n                                    <component-actions>\n                                        <template slot=\"cc-component-actions__buttons\">\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | cc-image-teaser-configurator__item-action-button\" @click=\"moveImageTeaserUp( $index )\" :class=\"[ isFirstImageTeaser( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstImageTeaser( $index )\">\n                                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                    <use xlink:href=\"#icon_arrow-up\"></use>\n                                                </svg>\n                                            </button>\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | cc-image-teaser-configurator__item-action-button\" @click=\"moveImageTeaserDown( $index )\" :class=\"[ isLastImageTeaser( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastImageTeaser( $index )\">\n                                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                    <use xlink:href=\"#icon_arrow-down\"></use>\n                                                </svg>\n                                            </button>\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-image-teaser-configurator__item-action-button\" @click=\"getImageUploader( $index )\">\n                                                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                        <use xlink:href=\"#icon_upload-image\"></use>\n                                                    </svg>\n                                                    {{ configuration.items[$index].image ? imageUploadedText : noImageUploadedText }}\n                                            </button>\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | cc-image-teaser-configurator__item-action-button\" @click=\"deleteTeaserItem( $index )\">\n                                                <svg class=\"cc-action-button__icon\">\n                                                    <use xlink:href=\"#icon_trash-can\"></use>\n                                                </svg>\n                                            </button>\n                                        </template>\n                                    </component-actions>\n                                </div>\n\n                            </div>\n                        </div>\n                        <div class=\"cc-image-teaser-configurator__item-col-right\">\n                            <div class=\"cc-input cc-input--group\">\n                                <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                                    <label for=\"cfg-it-item{{ $index }}-variant\" class=\"cc-input__label\">" + $t('Display variant') + ":</label>\n                                    <select name=\"cfg-it-item{{ $index }}-variant\" class=\"cc-input__select\" id=\"cfg-it-item{{ $index }}-variant\" v-model=\"configuration.items[$index].displayVariant\">\n                                        <template v-for=\"(idx, scenario) in imageTeasersContentPositions\">\n                                            <option value=\"{{ idx + 1 }}\">" + $t('{{ scenario }}') + "</option>\n                                        </template>\n                                    </select>\n                                </div>\n                                <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                                    <label for=\"cfg-it-item{{ $index }}-color-scheme\" class=\"cc-input__label\">" + $t('Text color scheme') + ":</label>\n                                    <select name=\"cfg-it-item{{ $index }}-color-scheme\" class=\"cc-input__select\" id=\"cfg-it-item{{ $index }}-color-scheme\" v-model=\"configuration.items[$index].colorScheme\">\n                                        <option value=\"light\">" + $t('Light') + "</option>\n                                        <option value=\"dark\">" + $t('Dark') + "</option>\n                                    </select>\n                                </div>\n                            </div>\n                            <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n                                <input type=\"text\" v-model=\"configuration.items[$index].headline\" id=\"cfg-hc-item{{ $index }}-headline\" class=\"cc-input__input\">\n                            </div>\n                            <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n                                <input type=\"text\" v-model=\"configuration.items[$index].subheadline\" id=\"cfg-hc-item{{ $index }}-subheadline\" class=\"cc-input__input\">\n                            </div>\n                            <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cc-input__label\">" + $t('Paragraph') + ":</label>\n                                <textarea type=\"text\" v-model=\"configuration.items[$index].paragraph\" id=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cc-input__textarea\"></textarea>\n                            </div>\n                            <div class=\"cc-input cc-input--group\">\n                                <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                                    <label for=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cc-input__label\">" + $t('CTA label') + ":</label>\n                                    <input type=\"text\" v-model=\"configuration.items[$index].ctaLabel\" id=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cc-input__input\">\n                                </div>\n                                <div class=\"cc-input cc-input--type-addon | cc-image-teaser-configurator__item-form-element\">\n                                    <label for=\"image-teaser-ctatarget-output-{{ $index }}\" class=\"cc-input__label\">" + $t('CTA target link') + ":</label>\n                                    <input type=\"text\" class=\"cc-input__input | cc-image-teaser-configurator__cta-target-link\" v-model=\"configuration.items[$index].href\" id=\"image-teaser-ctatarget-output-{{ $index }}\">\n                                    <span class=\"cc-input__addon | cc-image-teaser-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal( $index )\">\n                                        <svg class=\"cc-input__addon-icon\">\n                                            <use xlink:href=\"#icon_link\"></use>\n                                        </svg>\n                                    </span>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n\n                    <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.items.length && canAddTeaser()\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( $index + 1 )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
+    template: "<div class=\"cc-image-teaser-legacy-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-legacy-configurator__section\">\n            <h3 class=\"cc-image-teaser-legacy-configurator__subtitle\">Teaser Width</h3>\n            <div class=\"cc-image-teaser-legacy-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-legacy-configurator__option--selected': configuration.currentScenario.teaserWidth.id == optionId,\n                        'cc-image-teaser-legacy-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-legacy-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.teaserWidth\"\n                    @click=\"!option.disabled && toggleOption('teaserWidth', optionId)\">\n                    <div class=\"cc-image-teaser-legacy-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-legacy-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-legacy-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n\n        </section>\n        <section class=\"cc-image-teaser-legacy-configurator__section\">\n            <h3 class=\"cc-image-teaser-legacy-configurator__subtitle\">Desktop Layout</h3>\n            <div class=\"cc-image-teaser-legacy-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-legacy-configurator__option--selected': configuration.currentScenario.desktopLayout.id == optionId,\n                        'cc-image-teaser-legacy-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-legacy-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.desktopLayout\"\n                    @click=\"!option.disabled && toggleOption('desktopLayout', optionId)\">\n                    <div class=\"cc-image-teaser-legacy-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-legacy-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-legacy-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-legacy-configurator__section\">\n            <h3 class=\"cc-image-teaser-legacy-configurator__subtitle\">Text Positioning</h3>\n            <div class=\"cc-image-teaser-legacy-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-legacy-configurator__option--selected': configuration.currentScenario.textPositioning.id == optionId,\n                        'cc-image-teaser-legacy-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-legacy-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.textPositioning\"\n                    @click=\"!option.disabled && toggleOption('textPositioning', optionId)\">\n                    <div class=\"cc-image-teaser-legacy-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-legacy-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-legacy-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-legacy-configurator__section\">\n            <h3 class=\"cc-image-teaser-legacy-configurator__subtitle\">Mobile Layout</h3>\n            <div class=\"cc-image-teaser-legacy-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-legacy-configurator__option--selected': configuration.currentScenario.mobileLayout.id == optionId,\n                        'cc-image-teaser-legacy-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-legacy-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.mobileLayout\"\n                    @click=\"!option.disabled && toggleOption('mobileLayout', optionId)\">\n                    <div class=\"cc-image-teaser-legacy-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-legacy-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-legacy-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-image-teaser-legacy-configurator__section\">\n            <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-image-teaser-legacy-configurator__item-action-button\" @click=\"createTeaserItem( 0 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <template v-for=\"item in configuration.items\">\n                <div class=\"cc-image-teaser-legacy-configurator__item\" id=\"cc-image-teaser-legacy-item-{{ $index }}\">\n                    <component-adder class=\"cc-component-adder cc-component-adder--first\" v-if=\"canAddTeaser()\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-legacy-configurator__item-action-button\" @click=\"createTeaserItem( $index )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n\n                    <div class=\"cc-image-teaser-legacy-configurator__item-content\">\n                        <div v-bind:class=\"[ 'cc-image-teaser-legacy-configurator__item-col-left', configuration.items[$index].image ? 'cc-image-teaser-legacy-configurator__item-col-left--look-image-uploaded' : '' ]\">\n                            <div class=\"cc-image-teaser-legacy-configurator__item-image-wrapper\">\n                                <img :src=\"configuration.items[$index].image\" class=\"cc-image-teaser-legacy-configurator__item-image\" v-show=\"configuration.items[$index].image\">\n                                <input type=\"hidden\" v-model=\"configuration.items[$index].image\">\n                                <input type=\"hidden\" class=\"cc-image-teaser-legacy-configurator__image-url\" id=\"image-teaser-img-{{$index}}\">\n                                <svg class=\"cc-image-teaser-legacy-configurator__item-image-placeholder\" v-show=\"!configuration.items[$index].image\">\n                                    <use xlink:href=\"#icon_image-placeholder\"></use>\n                                </svg>\n\n                                <div class=\"cc-image-teaser-legacy-configurator__item-actions\">\n                                    <component-actions>\n                                        <template slot=\"cc-component-actions__buttons\">\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | cc-image-teaser-legacy-configurator__item-action-button\" @click=\"moveImageTeaserUp( $index )\" :class=\"[ isFirstImageTeaser( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstImageTeaser( $index )\">\n                                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                    <use xlink:href=\"#icon_arrow-up\"></use>\n                                                </svg>\n                                            </button>\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | cc-image-teaser-legacy-configurator__item-action-button\" @click=\"moveImageTeaserDown( $index )\" :class=\"[ isLastImageTeaser( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastImageTeaser( $index )\">\n                                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                    <use xlink:href=\"#icon_arrow-down\"></use>\n                                                </svg>\n                                            </button>\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-image-teaser-legacy-configurator__item-action-button\" @click=\"getImageUploader( $index )\">\n                                                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                        <use xlink:href=\"#icon_upload-image\"></use>\n                                                    </svg>\n                                                    {{ configuration.items[$index].image ? imageUploadedText : noImageUploadedText }}\n                                            </button>\n                                            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | cc-image-teaser-legacy-configurator__item-action-button\" @click=\"deleteTeaserItem( $index )\">\n                                                <svg class=\"cc-action-button__icon\">\n                                                    <use xlink:href=\"#icon_trash-can\"></use>\n                                                </svg>\n                                            </button>\n                                        </template>\n                                    </component-actions>\n                                </div>\n\n                            </div>\n                        </div>\n                        <div class=\"cc-image-teaser-legacy-configurator__item-col-right\">\n                            <div class=\"cc-input cc-input--group\">\n                                <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                                    <label for=\"cfg-it-item{{ $index }}-variant\" class=\"cc-input__label\">" + $t('Display variant') + ":</label>\n                                    <select name=\"cfg-it-item{{ $index }}-variant\" class=\"cc-input__select\" id=\"cfg-it-item{{ $index }}-variant\" v-model=\"configuration.items[$index].displayVariant\">\n                                        <template v-for=\"(idx, scenario) in imageTeasersContentPositions\">\n                                            <option value=\"{{ idx + 1 }}\">" + $t('{{ scenario }}') + "</option>\n                                        </template>\n                                    </select>\n                                </div>\n                                <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                                    <label for=\"cfg-it-item{{ $index }}-color-scheme\" class=\"cc-input__label\">" + $t('Text color scheme') + ":</label>\n                                    <select name=\"cfg-it-item{{ $index }}-color-scheme\" class=\"cc-input__select\" id=\"cfg-it-item{{ $index }}-color-scheme\" v-model=\"configuration.items[$index].colorScheme\">\n                                        <option value=\"light\">" + $t('Light') + "</option>\n                                        <option value=\"dark\">" + $t('Dark') + "</option>\n                                    </select>\n                                </div>\n                            </div>\n                            <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n                                <input type=\"text\" v-model=\"configuration.items[$index].headline\" id=\"cfg-hc-item{{ $index }}-headline\" class=\"cc-input__input\">\n                            </div>\n                            <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n                                <input type=\"text\" v-model=\"configuration.items[$index].subheadline\" id=\"cfg-hc-item{{ $index }}-subheadline\" class=\"cc-input__input\">\n                            </div>\n                            <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cc-input__label\">" + $t('Paragraph') + ":</label>\n                                <textarea type=\"text\" v-model=\"configuration.items[$index].paragraph\" id=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cc-input__textarea\"></textarea>\n                            </div>\n                            <div class=\"cc-input cc-input--group\">\n                                <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                                    <label for=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cc-input__label\">" + $t('CTA label') + ":</label>\n                                    <input type=\"text\" v-model=\"configuration.items[$index].ctaLabel\" id=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cc-input__input\">\n                                </div>\n                                <div class=\"cc-input cc-input--type-addon | cc-image-teaser-legacy-configurator__item-form-element\">\n                                    <label for=\"image-teaser-ctatarget-output-{{ $index }}\" class=\"cc-input__label\">" + $t('CTA target link') + ":</label>\n                                    <input type=\"text\" class=\"cc-input__input | cc-image-teaser-legacy-configurator__cta-target-link\" v-model=\"configuration.items[$index].href\" id=\"image-teaser-ctatarget-output-{{ $index }}\">\n                                    <span class=\"cc-input__addon | cc-image-teaser-legacy-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal( $index )\">\n                                        <svg class=\"cc-input__addon-icon\">\n                                            <use xlink:href=\"#icon_link\"></use>\n                                        </svg>\n                                    </span>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n\n                    <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.items.length && canAddTeaser()\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-legacy-configurator__item-action-button\" @click=\"createTeaserItem( $index + 1 )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
     data: function () {
         return {
             imageUploadedText: $t('Change'),
@@ -2546,13 +3510,13 @@ var imageTeaserConfigurator = {
             scenarioOptions: {
                 // Teaser width scenario elements.
                 teaserWidth: {
-                    'c': {
+                    c: {
                         name: 'Container width',
                         iconId: 'tw_content-width',
                         disabled: false,
                         teasersLimit: true,
                     },
-                    'w': {
+                    w: {
                         name: 'Window width',
                         iconId: 'tw_window-width',
                         disabled: false,
@@ -2612,13 +3576,13 @@ var imageTeaserConfigurator = {
                 },
                 // Text positioning scenario elements.
                 textPositioning: {
-                    'over': {
+                    over: {
                         name: 'Text over image',
                         iconId: 'tl_over',
                         disabled: false,
                         textPosition: true,
                     },
-                    'under': {
+                    under: {
                         name: 'Text below image',
                         iconId: 'tl_under',
                         disabled: false,
@@ -2627,22 +3591,22 @@ var imageTeaserConfigurator = {
                 },
                 // Mobile layout scenario elements.
                 mobileLayout: {
-                    'large': {
+                    large: {
                         name: 'Large teaser',
                         iconId: 'ml_col',
                         disabled: false,
                     },
-                    'slider': {
+                    slider: {
                         name: 'Slider',
                         iconId: 'ml_slider',
                         disabled: false,
                     },
-                    'row': {
+                    row: {
                         name: 'Teasers in row',
                         iconId: 'ml_2-2',
                         disabled: false,
                     },
-                    'col': {
+                    col: {
                         name: 'Teasers in column',
                         iconId: 'ml_col',
                         disabled: false,
@@ -2805,22 +3769,25 @@ var imageTeaserConfigurator = {
             var filteredScenarios = JSON.parse(JSON.stringify(this.availableScenarios));
             if (teaserWidth) {
                 filteredScenarios = filteredScenarios.filter(function (availableScenario) {
-                    return availableScenario[teaserWidthIndex] === teaserWidth;
+                    return (availableScenario[teaserWidthIndex] === teaserWidth);
                 });
             }
             if (desktopLayout) {
                 filteredScenarios = filteredScenarios.filter(function (availableScenario) {
-                    return availableScenario[desktopLayoutIndex] === desktopLayout;
+                    return (availableScenario[desktopLayoutIndex] ===
+                        desktopLayout);
                 });
             }
             if (textPosition) {
                 filteredScenarios = filteredScenarios.filter(function (availableScenario) {
-                    return !textPosition || availableScenario[textPositionIndex] === textPosition;
+                    return (!textPosition ||
+                        availableScenario[textPositionIndex] ===
+                            textPosition);
                 });
             }
             if (mobileLayout) {
                 filteredScenarios = filteredScenarios.filter(function (availableScenario) {
-                    return availableScenario[mobileLayoutsIndex].indexOf(mobileLayout) !== -1;
+                    return (availableScenario[mobileLayoutsIndex].indexOf(mobileLayout) !== -1);
                 });
                 filteredScenarios = filteredScenarios.map(function (availableScenario) {
                     availableScenario[mobileLayoutsIndex] = [mobileLayout];
@@ -2842,8 +3809,10 @@ var imageTeaserConfigurator = {
         },
         adjustVisibleItems: function () {
             var items = this.configuration.items;
-            var itemsNumber = this.configuration.currentScenario.desktopLayout.teasersNum;
-            var itemsLimit = this.configuration.currentScenario.teaserWidth.teasersLimit;
+            var itemsNumber = this.configuration.currentScenario
+                .desktopLayout.teasersNum;
+            var itemsLimit = this.configuration.currentScenario
+                .teaserWidth.teasersLimit;
             if (itemsLimit && items.length > itemsNumber) {
                 var removedItems = items.splice(itemsNumber, items.length - itemsNumber);
                 this.configuration.ignoredItems = removedItems.concat(this.configuration.ignoredItems);
@@ -2861,14 +3830,16 @@ var imageTeaserConfigurator = {
             var possibleOptions = this._findPossibleOptions(currentScenario.teaserWidth.id, currentScenario.desktopLayout.id, currentScenario.textPositioning.id, currentScenario.mobileLayout.id);
             Object.keys(this.scenarioOptions).forEach(function (optionCategory) {
                 Object.keys(_this.scenarioOptions[optionCategory]).forEach(function (scenarioOptionId) {
-                    _this.scenarioOptions[optionCategory][scenarioOptionId].disabled = possibleOptions[optionCategory].indexOf(scenarioOptionId) === -1;
+                    _this.scenarioOptions[optionCategory][scenarioOptionId].disabled =
+                        possibleOptions[optionCategory].indexOf(scenarioOptionId) === -1;
                 });
             });
         },
         canAddTeaser: function () {
             var items = this.configuration.items;
-            var itemsLimit = this.configuration.currentScenario.teaserWidth.teasersLimit;
-            return (!itemsLimit || items.length < itemsLimit);
+            var itemsLimit = this.configuration.currentScenario
+                .teaserWidth.teasersLimit;
+            return !itemsLimit || items.length < itemsLimit;
         },
         /* Opens M2's built-in image manager modal.
          * Manages all images: image upload from hdd, select image that was already uploaded to server.
@@ -2887,7 +3858,7 @@ var imageTeaserConfigurator = {
             var component = this;
             var isAlreadyCalled = false;
             // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.cc-image-teaser-configurator__image-url', function (event) {
+            $(document).on('change', '.cc-image-teaser-legacy-configurator__image-url', function (event) {
                 if (!isAlreadyCalled) {
                     isAlreadyCalled = true;
                     component.onImageUploaded(event.target);
@@ -2905,9 +3876,11 @@ var imageTeaserConfigurator = {
         onImageUploaded: function (input) {
             var _this = this;
             var itemIndex = input.id.substr(input.id.lastIndexOf('-') + 1);
-            var encodedImage = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
+            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
             var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
-            this.configuration.items[itemIndex].decodedImage = Base64 ? Base64.decode(encodedImage) : window.atob(encodedImage);
+            this.configuration.items[itemIndex].decodedImage = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
                 var ar = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
@@ -2933,15 +3906,23 @@ var imageTeaserConfigurator = {
         moveImageTeaserUp: function (index) {
             var _this = this;
             if (index > 0) {
-                var $thisItem_1 = $("#cc-image-teaser-item-" + index);
-                var $prevItem_1 = $("#cc-image-teaser-item-" + (index - 1));
-                $thisItem_1.addClass('cc-image-teaser-configurator__item--animating').css('transform', "translateY(" + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
-                $prevItem_1.addClass('cc-image-teaser-configurator__item--animating').css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px )");
+                var $thisItem_1 = $("#cc-image-teaser-legacy-item-" + index);
+                var $prevItem_1 = $("#cc-image-teaser-legacy-item-" + (index - 1));
+                $thisItem_1
+                    .addClass('cc-image-teaser-legacy-configurator__item--animating')
+                    .css('transform', "translateY(" + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
+                $prevItem_1
+                    .addClass('cc-image-teaser-legacy-configurator__item--animating')
+                    .css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px )");
                 setTimeout(function () {
                     _this.configuration.items.splice(index - 1, 0, _this.configuration.items.splice(index, 1)[0]);
                     _this.onChange();
-                    $thisItem_1.removeClass('cc-image-teaser-configurator__item--animating').css('transform', '');
-                    $prevItem_1.removeClass('cc-image-teaser-configurator__item--animating').css('transform', '');
+                    $thisItem_1
+                        .removeClass('cc-image-teaser-legacy-configurator__item--animating')
+                        .css('transform', '');
+                    $prevItem_1
+                        .removeClass('cc-image-teaser-legacy-configurator__item--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -2952,15 +3933,23 @@ var imageTeaserConfigurator = {
         moveImageTeaserDown: function (index) {
             var _this = this;
             if (index < this.configuration.items.length - 1) {
-                var $thisItem_2 = $("#cc-image-teaser-item-" + index);
-                var $nextItem_1 = $("#cc-image-teaser-item-" + (index + 1));
-                $thisItem_2.addClass('cc-image-teaser-configurator__item--animating').css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
-                $nextItem_1.addClass('cc-image-teaser-configurator__item--animating').css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
+                var $thisItem_2 = $("#cc-image-teaser-legacy-item-" + index);
+                var $nextItem_1 = $("#cc-image-teaser-legacy-item-" + (index + 1));
+                $thisItem_2
+                    .addClass('cc-image-teaser-legacy-configurator__item--animating')
+                    .css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
+                $nextItem_1
+                    .addClass('cc-image-teaser-legacy-configurator__item--animating')
+                    .css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
                 setTimeout(function () {
                     _this.configuration.items.splice(index + 1, 0, _this.configuration.items.splice(index, 1)[0]);
                     _this.onChange();
-                    $thisItem_2.removeClass('cc-image-teaser-configurator__item--animating').css('transform', '');
-                    $nextItem_1.removeClass('cc-image-teaser-configurator__item--animating').css('transform', '');
+                    $thisItem_2
+                        .removeClass('cc-image-teaser-legacy-configurator__item--animating')
+                        .css('transform', '');
+                    $nextItem_1
+                        .removeClass('cc-image-teaser-legacy-configurator__item--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -2993,7 +3982,7 @@ var imageTeaserConfigurator = {
          */
         widgetSetListener: function () {
             var _this = this;
-            $('.cc-image-teaser-configurator__cta-target-link').on('change', function () {
+            $('.cc-image-teaser-legacy-configurator__cta-target-link').on('change', function () {
                 _this.onChange();
             });
         },
@@ -3005,7 +3994,8 @@ var imageTeaserConfigurator = {
          */
         wWidgetListener: function (itemIndex) {
             var _this = this;
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
+            if (typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== '') {
                 var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
                 button.onclick = null;
                 button.addEventListener('click', function () {
@@ -3026,7 +4016,8 @@ var imageTeaserConfigurator = {
          * @returns Boolean
          */
         isPossibleToDelete: function (index) {
-            if ((index !== 0 || this.configuration.items.length > 1) && this.configuration.items[index].image !== '') {
+            if ((index !== 0 || this.configuration.items.length > 1) &&
+                this.configuration.items[index].image !== '') {
                 return true;
             }
             return false;
@@ -3043,7 +4034,7 @@ var imageTeaserConfigurator = {
                     confirm: function () {
                         component.configuration.items.splice(index, 1);
                         component.onChange();
-                    }
+                    },
                 },
             });
         },
@@ -3084,7 +4075,7 @@ var imageTeaserConfigurator = {
          */
         getAspectRatio: function (a, b) {
             var c = this.getGreatestCommonDivisor(a, b);
-            return (a / c) + ":" + (b / c);
+            return a / c + ":" + b / c;
         },
         /* Cleans configuration for M2C content constructor after Saving component
          * All empty teaser items has to be removed to not get into configuration object
@@ -4110,10 +5101,8 @@ var ccProductFinderConfigurator = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var productsGridConfigurator = {
-    mixins: [
-        componentConfigurator,
-    ],
-    template: "<div class=\"cc-products-grid-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Data source') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options cc-products-grid-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-category\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Category ID') + ":</label>\n                    <select class=\"cc-input__select tmp-select\" style=\"width:25em\">\n                        <option>" + $t('Select...') + "</option>\n                    </select>\n                    <input type=\"hidden\" name=\"cfg-pg-category-select\" class=\"cc-input__input | cc-products-grid-configurator__form-input\" id=\"cfg-pg-category\" v-model=\"configuration.category_id\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-filter\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Filter') + ":</label>\n                    <select name=\"cfg-pg-filter\" class=\"cc-input__select\" id=\"cfg-pg-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                        <option value=\"\">" + $t('No filter') + "</option>\n                        <template v-for=\"filter in productCollectionsFilters\">\n                            <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                        </template>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-skus\" class=\"cc-input__label\">" + $t('SKUs') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-skus\" class=\"cc-input__input\" id=\"cfg-pg-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n                    <div class=\"cc-input__hint\">" + $t('Multiple, comma-separated') + "</div>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-order-by\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Order by') + ":</label>\n                    <select name=\"cfg-pg-order-by\" class=\"cc-input__select\" id=\"cfg-pg-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                        <option value=\"\">" + $t('Not specified') + "</option>\n                        <template v-for=\"sorter in productCollectionsSorters\">\n                            <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                        </template>\n                    </select>\n                    <select name=\"cfg-pg-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                        <option value=\"ASC\">" + $t('Ascending') + "</option>\n                        <option value=\"DESC\">" + $t('Descending') + "</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-dataprovider\" class=\"cc-input__label\">" + $t('Custom Data Provider') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-dataprovider\" class=\"cc-input__input\" id=\"cfg-pg-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input__hint cc-input__hint--info-mark\" v-if=\"configuration.skus.length\">\n                    " + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Mobile Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_mobile', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_mobile\"\n                        @click=\"setOption('rows_mobile', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-ml-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-ml-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_mobile\" @change=\"setOption('rows_mobile', tmpConfiguration.rows_mobile)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Tablet Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_tablet', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_tablet\"\n                        @click=\"setOption('rows_tablet', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-tl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-tl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_tablet\" @change=\"setOption('rows_tablet', tmpConfiguration.rows_tablet)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Desktop Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_desktop', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_desktop\"\n                        @click=\"setOption('rows_desktop', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-dl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-dl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_desktop\" @change=\"setOption('rows_desktop', tmpConfiguration.rows_desktop)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Hero Teaser') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': configuration.hero.position == optionId,\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.hero.position\"\n                        @click=\"setOption('hero', optionId, 'position')\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <div class=\"cc-products-grid-configurator__item\" v-show=\"configuration.hero.position\">\n            <div class=\"cc-hero-carousel-configurator__item-content\">\n                <div v-bind:class=\"[ 'cc-products-grid-configurator__item-col-left', configuration.hero.image ? 'cc-products-grid-configurator__item-col-left--look-image-uploaded' : '' ]\">\n                    <div class=\"cc-products-grid-configurator__item-image-wrapper\">\n                        <img :src=\"configuration.hero.image\" class=\"cc-image-teaser-configurator__item-image\" v-show=\"configuration.hero.image\">\n                        <input type=\"hidden\" v-model=\"configuration.hero.image\">\n                        <input type=\"hidden\" class=\"cc-products-grid-configurator__image-url\" id=\"products-grid-img\">\n                        <svg class=\"cc-products-grid-configurator__item-image-placeholder\" v-show=\"!configuration.hero.image\">\n                            <use xlink:href=\"#icon_image-placeholder\"></use>\n                        </svg>\n\n                        <div class=\"cc-products-grid-configurator__item-actions\">\n                            <component-actions>\n                                <template slot=\"cc-component-actions__buttons\">\n                                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-products-grid-configurator__item-action-button\" @click=\"getImageUploader()\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_upload-image\"></use>\n                                            </svg>\n                                            {{ configuration.hero.image ? imageUploadedText : noImageUploadedText }}\n                                    </button>\n                                </template>\n                            </component-actions>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"cc-products-grid-configurator__item-col-right\">\n                    <div class=\"cc-input cc-input--group\">\n                        <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_content-position-variant\" class=\"cc-input__label\">" + $t('Display variant') + ":</label>\n                            <select name=\"cfg-pg-hero_content-position-variant\" class=\"cc-input__select\" id=\"cfg-pg-hero_content-position-variant\" v-model=\"configuration.hero.displayVariant\">\n                                <template v-for=\"(idx, scenario) in imageTeasersContentPositions\">\n                                    <option value=\"{{ idx + 1 }}\">" + $t('{{ scenario }}') + "</option>\n                                </template>\n                            </select>\n                        </div>\n                        <div class=\"cc-input | cc-image-teaser-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_color-scheme\" class=\"cc-input__label\">" + $t('Text color scheme') + ":</label>\n                            <select name=\"cfg-pg-hero_color-scheme\" class=\"cc-input__select\" id=\"cfg-pg-hero_color-scheme\" v-model=\"configuration.hero.colorScheme\">\n                                <option value=\"light\">" + $t('Light') + "</option>\n                                <option value=\"dark\">" + $t('Dark') + "</option>\n                            </select>\n                        </div>\n                    </div>\n                    <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                        <label for=\"cfg-pg-hero_headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n                        <input type=\"text\" name=\"cfg-pg-hero_headline\" class=\"cc-input__input\" id=\"cfg-pg-hero_headline\" v-model=\"configuration.hero.headline\" @change=\"onChange\">\n                    </div>\n                    <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                        <label for=\"cfg-pg-hero_subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n                        <input type=\"text\" name=\"cfg-pg-hero_subheadline\" class=\"cc-input__input\" id=\"cfg-pg-hero_subheadline\" v-model=\"configuration.hero.subheadline\" @change=\"onChange\">\n                    </div>\n                    <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                        <label for=\"cfg-pg-hero_paragraph\" class=\"cc-input__label | cc-products-grid-configurator__form-label--textarea\">" + $t('Paragraph') + ":</label>\n                        <textarea type=\"text\" name=\"cfg-pg-hero_paragraph\" class=\"cc-input__textarea\" id=\"cfg-pg-hero_paragraph\" v-model=\"configuration.hero.paragraph\"></textarea>\n                    </div>\n                    <div class=\"cc-input cc-input--group\">\n                        <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_button_label\" class=\"cc-input__label\">" + $t('Button label') + ":</label>\n                            <input type=\"text\" name=\"cfg-pg-hero_button_label\" class=\"cc-input__input\" id=\"cfg-pg-hero_button_label\" v-model=\"configuration.hero.button.label\" @change=\"onChange\">\n                        </div>\n                        <div class=\"cc-input cc-input--type-addon | cc-products-grid-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_url\" class=\"cc-input__label\">" + $t('Url') + ":</label>\n                            <input type=\"text\" name=\"cfg-pg-hero_url\" class=\"cc-input__input | cc-products-grid__hero-url\" id=\"cfg-pg-hero_url\" v-model=\"configuration.hero.href\">\n                            <span class=\"cc-input__addon | cc-products-grid-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal()\">\n                                <svg class=\"cc-input__addon-icon\">\n                                    <use xlink:href=\"#icon_link\"></use>\n                                </svg>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>",
+    mixins: [componentConfigurator],
+    template: "<div class=\"cc-products-grid-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Data source') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options cc-products-grid-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-category\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Category ID') + ":</label>\n                    <select class=\"cc-input__select tmp-select\" style=\"width:25em\">\n                        <option>" + $t('Select...') + "</option>\n                    </select>\n                    <input type=\"hidden\" name=\"cfg-pg-category-select\" class=\"cc-input__input | cc-products-grid-configurator__form-input\" id=\"cfg-pg-category\" v-model=\"configuration.category_id\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-filter\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Filter') + ":</label>\n                    <select name=\"cfg-pg-filter\" class=\"cc-input__select\" id=\"cfg-pg-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                        <option value=\"\">" + $t('No filter') + "</option>\n                        <template v-for=\"filter in productCollectionsFilters\">\n                            <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                        </template>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-skus\" class=\"cc-input__label\">" + $t('SKUs') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-skus\" class=\"cc-input__input\" id=\"cfg-pg-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n                    <div class=\"cc-input__hint\">" + $t('Multiple, comma-separated') + "</div>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-order-by\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Order by') + ":</label>\n                    <select name=\"cfg-pg-order-by\" class=\"cc-input__select\" id=\"cfg-pg-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                        <option value=\"\">" + $t('Not specified') + "</option>\n                        <template v-for=\"sorter in productCollectionsSorters\">\n                            <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                        </template>\n                    </select>\n                    <select name=\"cfg-pg-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                        <option value=\"ASC\">" + $t('Ascending') + "</option>\n                        <option value=\"DESC\">" + $t('Descending') + "</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-dataprovider\" class=\"cc-input__label\">" + $t('Custom Data Provider') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-dataprovider\" class=\"cc-input__input\" id=\"cfg-pg-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input__hint cc-input__hint--info-mark\" v-if=\"configuration.skus.length\">\n                    " + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Mobile Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_mobile', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_mobile\"\n                        @click=\"setOption('rows_mobile', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-ml-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-ml-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_mobile\" @change=\"setOption('rows_mobile', tmpConfiguration.rows_mobile)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Tablet Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_tablet', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_tablet\"\n                        @click=\"setOption('rows_tablet', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-tl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-tl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_tablet\" @change=\"setOption('rows_tablet', tmpConfiguration.rows_tablet)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Desktop Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_desktop', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_desktop\"\n                        @click=\"setOption('rows_desktop', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-dl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-dl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_desktop\" @change=\"setOption('rows_desktop', tmpConfiguration.rows_desktop)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Hero Teaser') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': configuration.hero.position == optionId,\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.hero.position\"\n                        @click=\"setOption('hero', optionId, 'position')\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <div class=\"cc-products-grid-configurator__item\" v-show=\"configuration.hero.position\">\n            <div class=\"cc-hero-carousel-configurator__item-content\">\n                <div v-bind:class=\"[ 'cc-products-grid-configurator__item-col-left', configuration.hero.image ? 'cc-products-grid-configurator__item-col-left--look-image-uploaded' : '' ]\">\n                    <div class=\"cc-products-grid-configurator__item-image-wrapper\">\n                        <img :src=\"configuration.hero.image\" class=\"cc-image-teaser-legacy-configurator__item-image\" v-show=\"configuration.hero.image\">\n                        <input type=\"hidden\" v-model=\"configuration.hero.image\">\n                        <input type=\"hidden\" class=\"cc-products-grid-configurator__image-url\" id=\"products-grid-img\">\n                        <svg class=\"cc-products-grid-configurator__item-image-placeholder\" v-show=\"!configuration.hero.image\">\n                            <use xlink:href=\"#icon_image-placeholder\"></use>\n                        </svg>\n\n                        <div class=\"cc-products-grid-configurator__item-actions\">\n                            <component-actions>\n                                <template slot=\"cc-component-actions__buttons\">\n                                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-products-grid-configurator__item-action-button\" @click=\"getImageUploader()\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_upload-image\"></use>\n                                            </svg>\n                                            {{ configuration.hero.image ? imageUploadedText : noImageUploadedText }}\n                                    </button>\n                                </template>\n                            </component-actions>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"cc-products-grid-configurator__item-col-right\">\n                    <div class=\"cc-input cc-input--group\">\n                        <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_content-position-variant\" class=\"cc-input__label\">" + $t('Display variant') + ":</label>\n                            <select name=\"cfg-pg-hero_content-position-variant\" class=\"cc-input__select\" id=\"cfg-pg-hero_content-position-variant\" v-model=\"configuration.hero.displayVariant\">\n                                <template v-for=\"(idx, scenario) in imageTeasersContentPositions\">\n                                    <option value=\"{{ idx + 1 }}\">" + $t('{{ scenario }}') + "</option>\n                                </template>\n                            </select>\n                        </div>\n                        <div class=\"cc-input | cc-image-teaser-legacy-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_color-scheme\" class=\"cc-input__label\">" + $t('Text color scheme') + ":</label>\n                            <select name=\"cfg-pg-hero_color-scheme\" class=\"cc-input__select\" id=\"cfg-pg-hero_color-scheme\" v-model=\"configuration.hero.colorScheme\">\n                                <option value=\"light\">" + $t('Light') + "</option>\n                                <option value=\"dark\">" + $t('Dark') + "</option>\n                            </select>\n                        </div>\n                    </div>\n                    <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                        <label for=\"cfg-pg-hero_headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n                        <input type=\"text\" name=\"cfg-pg-hero_headline\" class=\"cc-input__input\" id=\"cfg-pg-hero_headline\" v-model=\"configuration.hero.headline\" @change=\"onChange\">\n                    </div>\n                    <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                        <label for=\"cfg-pg-hero_subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n                        <input type=\"text\" name=\"cfg-pg-hero_subheadline\" class=\"cc-input__input\" id=\"cfg-pg-hero_subheadline\" v-model=\"configuration.hero.subheadline\" @change=\"onChange\">\n                    </div>\n                    <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                        <label for=\"cfg-pg-hero_paragraph\" class=\"cc-input__label | cc-products-grid-configurator__form-label--textarea\">" + $t('Paragraph') + ":</label>\n                        <textarea type=\"text\" name=\"cfg-pg-hero_paragraph\" class=\"cc-input__textarea\" id=\"cfg-pg-hero_paragraph\" v-model=\"configuration.hero.paragraph\"></textarea>\n                    </div>\n                    <div class=\"cc-input cc-input--group\">\n                        <div class=\"cc-input | cc-products-grid-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_button_label\" class=\"cc-input__label\">" + $t('Button label') + ":</label>\n                            <input type=\"text\" name=\"cfg-pg-hero_button_label\" class=\"cc-input__input\" id=\"cfg-pg-hero_button_label\" v-model=\"configuration.hero.button.label\" @change=\"onChange\">\n                        </div>\n                        <div class=\"cc-input cc-input--type-addon | cc-products-grid-configurator__item-form-element\">\n                            <label for=\"cfg-pg-hero_url\" class=\"cc-input__label\">" + $t('Url') + ":</label>\n                            <input type=\"text\" name=\"cfg-pg-hero_url\" class=\"cc-input__input | cc-products-grid__hero-url\" id=\"cfg-pg-hero_url\" v-model=\"configuration.hero.href\">\n                            <span class=\"cc-input__addon | cc-products-grid-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal()\">\n                                <svg class=\"cc-input__addon-icon\">\n                                    <use xlink:href=\"#icon_link\"></use>\n                                </svg>\n                            </span>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>",
     /**
      * Get dependencies
      */
@@ -4292,15 +5281,15 @@ var productsGridConfigurator = {
                             name: $t('No Hero Teaser'),
                             iconId: 'no_teaser',
                         },
-                        'left': {
+                        left: {
                             name: $t('Hero Teaser on the left'),
                             iconId: 'teaser_left',
                         },
-                        'right': {
+                        right: {
                             name: $t('Hero Teaser on the right'),
                             iconId: 'teaser_right',
-                        }
-                    }
+                        },
+                    },
                 },
             },
         };
@@ -4322,7 +5311,10 @@ var productsGridConfigurator = {
                 this.configuration[optionCategory][key] = optionId;
             }
             else {
-                this.configuration[optionCategory] = optionId === '1000' ? this.tmpConfiguration[optionCategory] : optionId;
+                this.configuration[optionCategory] =
+                    optionId === '1000'
+                        ? this.tmpConfiguration[optionCategory]
+                        : optionId;
             }
             this.setProductsLimit();
         },
@@ -4361,9 +5353,11 @@ var productsGridConfigurator = {
         onImageUploaded: function (input) {
             var _this = this;
             // const itemIndex: any = input.id.substr( input.id.length - 1 );
-            var encodedImage = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
+            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
             var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
-            this.configuration.hero.decoded_image = Base64 ? Base64.decode(encodedImage) : window.atob(encodedImage);
+            this.configuration.hero.decoded_image = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
                 _this.configuration.hero.image = img.getAttribute('src');
@@ -4395,7 +5389,8 @@ var productsGridConfigurator = {
          */
         wWidgetListener: function () {
             var _this = this;
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
+            if (typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== '') {
                 var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
                 button.onclick = null;
                 button.addEventListener('click', function () {
@@ -4414,7 +5409,8 @@ var productsGridConfigurator = {
          * @return {boolean}
          */
         isOptionSelected: function (optionCategory, optionId) {
-            return this.configuration[optionCategory] == optionId || (optionId === '1000' && this.configuration[optionCategory] > 4);
+            return (this.configuration[optionCategory] == optionId ||
+                (optionId === '1000' && this.configuration[optionCategory] > 4));
         },
         /**
          * This method is searching through ccConfig configuration
@@ -4430,15 +5426,18 @@ var productsGridConfigurator = {
          * then saves result to component's configuration
          */
         setProductsLimit: function () {
-            var heroWidth = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.x, 10);
-            var heroHeight = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.y, 10);
+            var heroWidth = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend
+                .product_grid.teasers_configuration.size.x, 10);
+            var heroHeight = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend
+                .product_grid.teasers_configuration.size.y, 10);
             var maxRowsSet = Math.max(this.configuration.rows_mobile, this.configuration.rows_tablet, this.configuration.rows_desktop);
             var isHeroEnabled = this.configuration.hero.position !== '';
             var heroSize = isHeroEnabled ? heroWidth * heroHeight : 0;
             if (heroSize >= 1 && maxRowsSet < heroHeight) {
                 heroSize = heroWidth;
             }
-            this.configuration.limit = (maxRowsSet * this.getMaxPossibleColumns()) - heroSize;
+            this.configuration.limit =
+                maxRowsSet * this.getMaxPossibleColumns() - heroSize;
         },
         /**
          * This returns number that is visible in the input of custom rows limit.
@@ -4447,13 +5446,21 @@ var productsGridConfigurator = {
          * @return {number} rows limit for custom input
          */
         getRowsSetup: function (layoutOption) {
-            return this.configuration[layoutOption] > 5 ? this.configuration[layoutOption] : 5;
+            return this.configuration[layoutOption] > 5
+                ? this.configuration[layoutOption]
+                : 5;
         },
     },
     ready: function () {
         var _this = this;
-        this.productCollectionsSorters = this.productCollectionsSorters !== '' ? JSON.parse(this.productCollectionsSorters) : [];
-        this.productCollectionsFilters = this.productCollectionsFilters !== '' ? JSON.parse(this.productCollectionsFilters) : [];
+        this.productCollectionsSorters =
+            this.productCollectionsSorters !== ''
+                ? JSON.parse(this.productCollectionsSorters)
+                : [];
+        this.productCollectionsFilters =
+            this.productCollectionsFilters !== ''
+                ? JSON.parse(this.productCollectionsFilters)
+                : [];
         if (!this.configuration.class_overrides) {
             this.configuration.class_overrides = {
                 dataProvider: '',
@@ -4576,6 +5583,7 @@ var contentConstructor = {
         'headline-configurator': headlineConfigurator,
         'hero-carousel-configurator': heroCarouselConfigurator,
         'image-teaser-configurator': imageTeaserConfigurator,
+        'image-teaser-legacy-configurator': imageTeaserConfigurator$2,
         'magento-product-grid-teasers-configurator': magentoProductGridTeasersConfigurator,
         'paragraph-configurator': paragraphConfigurator,
         'product-carousel-configurator': productCarouselConfigurator,
@@ -4652,9 +5660,11 @@ var contentConstructor = {
         this._configuratorSaveCallback = function () { return undefined; };
         this.setRestToken();
         // Initialize M2 loader for m2c modals
-        $('body').loadingPopup({
+        $('body')
+            .loadingPopup({
             timeout: false,
-        }).trigger('hideLoadingPopup');
+        })
+            .trigger('hideLoadingPopup');
     },
     events: {
         /**
@@ -4665,7 +5675,8 @@ var contentConstructor = {
             this.dumpConfiguration();
         },
         'component-configurator__saved': function (data) {
-            if (!data.hasOwnProperty('isError') || (data.hasOwnProperty('isError') && !data.isError)) {
+            if (!data.hasOwnProperty('isError') ||
+                (data.hasOwnProperty('isError') && !data.isError)) {
                 this._configuratorSavedCallback(data);
                 if ($configuratorModal && $configuratorModal.closeModal) {
                     $configuratorModal.closeModal();
@@ -4687,8 +5698,12 @@ var contentConstructor = {
     },
     methods: {
         getCCconfig: function () {
-            var ccConfig = this.ccProjectConfig ? JSON.parse(this.ccProjectConfig) : {};
-            return !$.isEmptyObject(ccConfig) ? ccConfig.vars.MageSuite_ContentConstructor : ccConfig;
+            var ccConfig = this.ccProjectConfig
+                ? JSON.parse(this.ccProjectConfig)
+                : {};
+            return !$.isEmptyObject(ccConfig)
+                ? ccConfig.vars.MageSuite_ContentConstructor
+                : ccConfig;
         },
         /**
          * Callback that will be invoked when user clicks plus button.
@@ -4704,8 +5719,11 @@ var contentConstructor = {
                     // Show ajax loader
                     $('body').trigger('showLoadingPopup');
                     // Get picker via AJAX
-                    component.$http.get(component.configuratorEndpoint + "picker").then(function (response) {
-                        component.$els.pickerModal.innerHTML = response.body;
+                    component.$http
+                        .get(component.configuratorEndpoint + "picker")
+                        .then(function (response) {
+                        component.$els.pickerModal.innerHTML =
+                            response.body;
                         component.$compile(component.$els.pickerModal);
                         component._isPickerLoaded = true;
                         // Hide loader
@@ -4728,8 +5746,13 @@ var contentConstructor = {
          */
         getComponentConfigurator: function (componentType) {
             var _this = this;
-            var newComponentId = 'component' + Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-            var section = this.ccConfig.sections.defaults[this.pageType] ? this.ccConfig.sections.defaults[this.pageType] : this.ccConfig.sections[this.pageType][0];
+            var newComponentId = 'component' +
+                Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            var section = this.ccConfig.sections.defaults[this.pageType]
+                ? this.ccConfig.sections.defaults[this.pageType]
+                : this.ccConfig.sections[this.pageType][0];
             this._configuratorSavedCallback = function (componentData) {
                 _this._addComponentInformation({
                     type: componentType,
@@ -4738,7 +5761,8 @@ var contentConstructor = {
                     data: componentData,
                 });
             };
-            if (componentType === 'brand-carousel' || componentType === 'separator') {
+            if (componentType === 'brand-carousel' ||
+                componentType === 'separator') {
                 this.$emit('component-configurator__saved', {
                     componentVisibility: {
                         mobile: true,
@@ -4783,10 +5807,15 @@ var contentConstructor = {
                 // Show ajax loader
                 $('body').trigger('showLoadingPopup');
                 // Get twig component
-                component.$http.get(component.configuratorEndpoint + componentInformation.type).then(function (response) {
-                    component.$els.configuratorModal.innerHTML = response.body;
+                component.$http
+                    .get(component.configuratorEndpoint +
+                    componentInformation.type)
+                    .then(function (response) {
+                    component.$els.configuratorModal.innerHTML =
+                        response.body;
                     // Set current component configuration data
-                    component.initialComponentConfiguration = componentInformation.data;
+                    component.initialComponentConfiguration =
+                        componentInformation.data;
                     // compile fetched component
                     cleanupConfiguratorModal = component.$compile(component.$els.configuratorModal);
                     // Hide loader
@@ -4804,7 +5833,9 @@ var contentConstructor = {
             $configuratorModal = modal(configuratorModalOptions, $(this.$els.configuratorModal));
         },
         dumpConfiguration: function () {
-            uiRegistry.get(this.pageType).source.set('data.components', JSON.stringify(this.$refs.layoutBuilder.getComponentInformation()));
+            uiRegistry
+                .get(this.pageType)
+                .source.set('data.components', JSON.stringify(this.$refs.layoutBuilder.getComponentInformation()));
         },
         setRestToken: function () {
             var component = this;

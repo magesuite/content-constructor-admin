@@ -2,7 +2,7 @@
  * Inputs
  * Skin - Magento Backend
  */
- 
+
 .cc-input {
     $root: &;
 
@@ -85,6 +85,7 @@
 
     &__textarea {
         @extend #{$root}__input;
+
         appearance: none;
         overflow: auto;
         height: 10rem;
@@ -93,6 +94,7 @@
 
     &__select {
         @extend #{$root}__input;
+
         width: auto;
         appearance: none;
         max-width: 100%;
@@ -100,18 +102,23 @@
         padding-bottom: 0.5rem;
         padding-right: 4.4rem;
         padding-top: 0.5rem;
-        background-image: url('../images/dropdown-arrows-bg.svg'), linear-gradient(#e3e3e3, #e3e3e3), linear-gradient(#adadad, #adadad); // stylelint-disable-line
-        background-position: calc(100% - 12px) -34px, 100%, calc(100% - 3.2rem) 0;
+        background-image: url('../images/dropdown-arrows-bg.svg'),
+            linear-gradient(#e3e3e3, #e3e3e3), linear-gradient(#adadad, #adadad); // stylelint-disable-line
+        background-position: calc(100% - 12px) -34px, 100%,
+            calc(100% - 3.2rem) 0;
         background-size: auto, 3.2rem 100%, 1px 100%;
         background-repeat: no-repeat;
 
         &:disabled {
-            background-image: url('../images/dropdown-arrows-bg.svg'), linear-gradient(#e4e4e4, #e4e4e4), linear-gradient(#d1d1d1, #d1d1d1); // stylelint-disable-line
+            background-image: url('../images/dropdown-arrows-bg.svg'),
+                linear-gradient(#e4e4e4, #e4e4e4),
+                linear-gradient(#d1d1d1, #d1d1d1); // stylelint-disable-line
         }
     }
 
     &__fake-select {
         @extend .cc-input__input;
+
         min-height: 3.1rem;
         line-height: 3rem;
         padding: 0 3.6rem 0 1rem;
@@ -133,15 +140,14 @@
             content: '';
             position: absolute;
             right: 0;
-            bottom: 0;
             width: 3.2rem;
             height: 3.1rem;
         }
 
         &:after {
-            border-color: #000 transparent transparent transparent;
+            border-color: #000 transparent transparent;
             border-style: solid;
-            border-width: 0.5rem 0.4rem 0 0.4rem;
+            border-width: 0.5rem 0.4rem 0;
             content: '';
             height: 0;
             position: absolute;
@@ -228,7 +234,7 @@
     &__addon {
         cursor: pointer;
         transition: background 0.15s linear;
-        
+
         &:hover {
             background: darken(#e3e3e3, 10%);
         }
@@ -491,6 +497,127 @@
 
     + #{$root}--type-inline:not(#{$root}--type-checkbox):not(#{$root}--type-radio) {
         margin: 3rem 0 0;
+    }
+
+    &--range {
+        position: relative;
+        width: 201px;
+        height: 11px;
+        border: 1px solid #adadad;
+        border-radius: 2px;
+        padding: 1px 0;
+        font-size: 0;
+        background: #fff;
+
+        &:before {
+            position: absolute;
+            content: '';
+            top: 2px;
+            left: 17px;
+            width: calc(100% - 30px);
+            height: 7px;
+        }
+    }
+
+    input[type='range'] {
+        /* removes default webkit styles */
+        -webkit-appearance: none;
+
+        /* fix for FF unable to apply focus style bug */
+        border: 1px solid transparent;
+
+        /* required for proper track sizing in FF */
+        width: 199px;
+
+        &::-webkit-slider-runnable-track {
+            width: 199px;
+            height: 5px;
+            background: transparent;
+            background-position: 15px 0;
+            border: none;
+            border-radius: 3px;
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            border: 1px solid #adadad;
+            height: 29px;
+            width: 12px;
+            border-radius: 2px;
+            background: #e3e3e3;
+            margin-top: -11px;
+        }
+
+        &:focus {
+            outline: none;
+
+            &::-webkit-slider-runnable-track {
+                background: #fff;
+            }
+        }
+
+        &::-moz-range-track {
+            width: 199px;
+            height: 5px;
+            background: #fff;
+            border: none;
+            border-radius: 3px;
+        }
+
+        &::-moz-range-thumb {
+            border: 1px solid #adadad;
+            height: 29px;
+            width: 12px;
+            border-radius: 2px;
+            background: #e3e3e3;
+        }
+
+        /* hide the outline behind the border */
+        &:-moz-focusring {
+            outline: 1px solid transparent;
+            outline-offset: -1px;
+        }
+
+        &::-ms-track {
+            width: 199px;
+            height: 5px;
+
+            /* remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+            background: transparent;
+
+            /* leave room for the larger thumb to overflow with a transparent border */
+            border-color: transparent;
+            border-width: 10px 0;
+
+            /* remove default tick marks */
+            color: transparent;
+        }
+
+        &::-ms-fill-lower {
+            background: inherit;
+            border-radius: 2px;
+        }
+
+        &::-ms-fill-upper {
+            background: inherit;
+            border-radius: 2px;
+        }
+
+        &::-ms-thumb {
+            border: 1px solid transparent;
+            height: 29px;
+            width: 12px;
+            border-radius: 2px;
+            background: #e3e3e3;
+        }
+
+        &:focus::-ms-fill-lower {
+            background-color: transparent;
+        }
+
+        &:focus::-ms-fill-upper {
+            background-color: transparent;
+        }
     }
 }
 
