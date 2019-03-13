@@ -5,6 +5,7 @@
 // Version 0.0.1
 
 // Import all previews
+@import '../_teaser/preview/teaser';
 @import '../brand-carousel/preview/brand-carousel';
 @import '../button/preview/button';
 @import '../category-links/preview/category-links';
@@ -13,6 +14,7 @@
 @import '../daily-deal-teaser/preview/daily-deal-teaser';
 @import '../headline/preview/headline';
 @import '../hero-carousel/preview/hero-carousel';
+@import '../image-teaser/preview/image-teaser-legacy';
 @import '../image-teaser/preview/image-teaser';
 @import '../magento-product-grid-teasers/preview/magento-product-grid-teasers';
 @import '../paragraph/preview/paragraph';
@@ -83,11 +85,14 @@
 
         &--animating {
             pointer-events: none;
-            transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+            transition: box-shadow 0.15s ease-in-out,
+                transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
         }
 
         &--duplicate {
-            transition: all 0.15s ease-in-out, transform 0.75s cubic-bezier(0,0.7,0.32,1), opacity 0.75s cubic-bezier(0,0.7,0.32,1);
+            transition: all 0.15s ease-in-out,
+                transform 0.75s cubic-bezier(0, 0.7, 0.32, 1),
+                opacity 0.75s cubic-bezier(0, 0.7, 0.32, 1);
         }
 
         &--show-up {
@@ -131,7 +136,8 @@
                 z-index: 3;
                 opacity: 0;
                 transform: scale(0.85);
-                transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1), opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
+                transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1),
+                    opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
             }
         }
 

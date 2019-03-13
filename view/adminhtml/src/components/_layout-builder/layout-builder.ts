@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
 import confirm from 'Magento_Ui/js/modal/confirm';
-import uiRegistry from 'uiRegistry';
 
 import actionButton from '../../utils/action-button/action-button';
 import componentActions from '../../utils/component-actions/component-actions';
@@ -18,6 +17,7 @@ import dailyDealTeaserPreview from '../daily-deal-teaser/preview/daily-deal-teas
 import headlinePreview from '../headline/preview/headline';
 import heroCarouselPreview from '../hero-carousel/preview/hero-carousel';
 import imageTeaserPreview from '../image-teaser/preview/image-teaser';
+import imageTeaserLegacyPreview from '../image-teaser/preview/image-teaser-legacy';
 import magentoProductGridTeasersPreview from '../magento-product-grid-teasers/preview/magento-product-grid-teasers';
 import paragraphPreview from '../paragraph/preview/paragraph';
 import productCarouselPreview from '../product-carousel/preview/product-carousel';
@@ -148,9 +148,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                     <component-placeholder>
                         <h3 class="cc-component-placeholder__headline" v-text="transformComponentTypeToText( component.type )"></h3>
                         <div class="cc-component-placeholder__component">
-                            
                             <component :is="component.type + '-preview'" :configuration="component.data" :index="$index" :assets-src="assetsSrc" :image-endpoint="imageEndpoint"></component>
-
                         </div>
                     </component-placeholder>
                 </div>
@@ -200,7 +198,8 @@ const layoutBuilder: vuejs.ComponentOption = {
         'daily-deal-teaser-preview': dailyDealTeaserPreview,
         'headline-preview': headlinePreview,
         'hero-carousel-preview': heroCarouselPreview,
-        'image-teaser-preview': imageTeaserPreview,
+        'image-teaser-preview': imageTeaserLegacyPreview,
+        'image-teaser-2-preview': imageTeaserPreview,
         'magento-product-grid-teasers-preview': magentoProductGridTeasersPreview,
         'paragraph-preview': paragraphPreview,
         'product-carousel-preview': productCarouselPreview,
@@ -246,7 +245,9 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         editComponent: {
             type: Function,
-            default: (componentInfo: IComponentInformation): IComponentInformation => componentInfo,
+            default: (
+                componentInfo: IComponentInformation
+            ): IComponentInformation => componentInfo,
         },
         /**
          * Callback invoked when edit component button is clicked.
@@ -279,8 +280,14 @@ const layoutBuilder: vuejs.ComponentOption = {
         },
     },
     ready(): void {
-        this.components = this.componentsConfiguration ? JSON.parse(this.componentsConfiguration) : [];
-        this.filters = (typeof(Storage) !== void(0) && window.localStorage.getItem('ccFilters')) ? JSON.parse(window.localStorage.getItem('ccFilters')) : this.ccConfig.filters;
+        this.components = this.componentsConfiguration
+            ? JSON.parse(this.componentsConfiguration)
+            : [];
+        this.filters =
+            typeof Storage !== void 0 &&
+            window.localStorage.getItem('ccFilters')
+                ? JSON.parse(window.localStorage.getItem('ccFilters'))
+                : this.ccConfig.filters;
         this.sortComponentsBySections();
         this.setupInitialDisplayProps();
         this.updateLayout();
@@ -297,7 +304,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          * Uses localStorage to save current filters state within layout builder.
          */
         saveFiltersState(): any {
-            if(typeof(Storage) !== void(0) && this.filters) {
+            if (typeof Storage !== void 0 && this.filters) {
                 window.localStorage.setItem(
                     'ccFilters',
                     JSON.stringify(this.filters)
@@ -316,9 +323,15 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @param {number}                index         Component index in components array.
          * @param {IComponentInformation} componentInfo Component information.
          */
-        addComponentInformation(index: number, componentInfo: IComponentInformation): void {
+        addComponentInformation(
+            index: number,
+            componentInfo: IComponentInformation
+        ): void {
             if (componentInfo) {
-                if (!componentInfo.data.hasOwnProperty('componentVisibility') && !this.getIsSpecialComponent(componentInfo.type)) {
+                if (
+                    !componentInfo.data.hasOwnProperty('componentVisibility') &&
+                    !this.getIsSpecialComponent(componentInfo.type)
+                ) {
                     componentInfo.data.componentVisibility = {
                         mobile: true,
                         desktop: true,
@@ -335,7 +348,10 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @param {number}                index         Component index in components array.
          * @param {IComponentInformation} componentInfo Component information.
          */
-        setComponentInformation(index: number, componentInfo: IComponentInformation): void {
+        setComponentInformation(
+            index: number,
+            componentInfo: IComponentInformation
+        ): void {
             if (componentInfo) {
                 this.components.$set(index, componentInfo);
                 this.setComponentsPlacementInfo();
@@ -359,7 +375,7 @@ const layoutBuilder: vuejs.ComponentOption = {
             const componentInfo: IComponentInformation = this.addComponent(
                 (asyncComponentInfo: IComponentInformation): void => {
                     this.addComponentInformation(index, asyncComponentInfo);
-                },
+                }
             );
             this.addComponentInformation(index, componentInfo);
         },
@@ -373,7 +389,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         editComponentSettings(index: number): void {
             // Create a static, non-reactive copy of component data.
             let componentInfo: IComponentInformation = JSON.parse(
-                JSON.stringify(this.components[index]),
+                JSON.stringify(this.components[index])
             );
             /**
              * To allow both sync and async set of new component data we call
@@ -385,7 +401,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                 componentInfo,
                 (asyncComponentInfo: IComponentInformation): void => {
                     this.setComponentInformation(index, asyncComponentInfo);
-                },
+                }
             );
             this.setComponentInformation(index, componentInfo);
         },
@@ -395,20 +411,40 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         moveComponentUp(index: number): void {
             if (index > 0) {
-                let previousComponent: IComponentInformation = this.components[index - 1];
-                const $thisComponent: any = $( `#${ this.components[index].id }` );
-                const $prevComponent: any = $( `#${ this.components[index - 1].id }` );
+                let previousComponent: IComponentInformation = this.components[
+                    index - 1
+                ];
+                const $thisComponent: any = $(`#${this.components[index].id}`);
+                const $prevComponent: any = $(
+                    `#${this.components[index - 1].id}`
+                );
 
-                $thisComponent.addClass('cc-layout-builder__component--animating').css('transform', `translateY(${ -Math.abs($prevComponent.outerHeight(true)) }px)`);
-                $prevComponent.addClass('cc-layout-builder__component--animating').css('transform', `translateY(${ $thisComponent.outerHeight(true) }px)`);
+                $thisComponent
+                    .addClass('cc-layout-builder__component--animating')
+                    .css(
+                        'transform',
+                        `translateY(${-Math.abs(
+                            $prevComponent.outerHeight(true)
+                        )}px)`
+                    );
+                $prevComponent
+                    .addClass('cc-layout-builder__component--animating')
+                    .css(
+                        'transform',
+                        `translateY(${$thisComponent.outerHeight(true)}px)`
+                    );
 
                 setTimeout((): void => {
                     this.components.$set(index - 1, this.components[index]);
                     this.components.$set(index, previousComponent);
                     this.setComponentsPlacementInfo();
                     this.updateLayout();
-                    $thisComponent.removeClass('cc-layout-builder__component--animating').css('transform', '');
-                    $prevComponent.removeClass('cc-layout-builder__component--animating').css('transform', '');
+                    $thisComponent
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
+                    $prevComponent
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -418,20 +454,40 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         moveComponentDown(index: number): void {
             if (index < this.components.length - 1) {
-                let previousComponent: IComponentInformation = this.components[index + 1];
-                const $thisComponent: any = $(`#${ this.components[index].id }`);
-                const $nextComponent: any = $(`#${ this.components[index + 1].id }`);
+                let previousComponent: IComponentInformation = this.components[
+                    index + 1
+                ];
+                const $thisComponent: any = $(`#${this.components[index].id}`);
+                const $nextComponent: any = $(
+                    `#${this.components[index + 1].id}`
+                );
 
-                $thisComponent.addClass('cc-layout-builder__component--animating').css('transform', `translateY(${ $nextComponent.outerHeight(true) }px)`);
-                $nextComponent.addClass('cc-layout-builder__component--animating').css('transform', `translateY(${ -Math.abs($thisComponent.outerHeight(true)) }px)`);
+                $thisComponent
+                    .addClass('cc-layout-builder__component--animating')
+                    .css(
+                        'transform',
+                        `translateY(${$nextComponent.outerHeight(true)}px)`
+                    );
+                $nextComponent
+                    .addClass('cc-layout-builder__component--animating')
+                    .css(
+                        'transform',
+                        `translateY(${-Math.abs(
+                            $thisComponent.outerHeight(true)
+                        )}px)`
+                    );
 
                 setTimeout((): void => {
                     this.components.$set(index + 1, this.components[index]);
                     this.components.$set(index, previousComponent);
                     this.setComponentsPlacementInfo();
                     this.updateLayout();
-                    $thisComponent.removeClass('cc-layout-builder__component--animating').css('transform', '');
-                    $nextComponent.removeClass('cc-layout-builder__component--animating').css('transform', '');
+                    $thisComponent
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
+                    $nextComponent
+                        .removeClass('cc-layout-builder__component--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -441,29 +497,44 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         duplicateComponent(index: number): void {
             let duplicate: IComponentInformation = JSON.parse(
-                JSON.stringify(this.components[index]),
+                JSON.stringify(this.components[index])
             );
             duplicate.id = `${duplicate.id}_duplicate`;
             this.addComponentInformation(index + 1, duplicate);
 
-            this.$nextTick((): void => {
-                const $origin: JQuery = $(`#${this.components[index].id }`);
-                const $duplicate: JQuery = $(`#${duplicate.id}`);
+            this.$nextTick(
+                (): void => {
+                    const $origin: JQuery = $(`#${this.components[index].id}`);
+                    const $duplicate: JQuery = $(`#${duplicate.id}`);
 
-                $duplicate.addClass('cc-layout-builder__component--duplicate cc-layout-builder__component--show-up');
+                    $duplicate.addClass(
+                        'cc-layout-builder__component--duplicate cc-layout-builder__component--show-up'
+                    );
 
-                setTimeout((): void => {
-                    $duplicate.removeClass('cc-layout-builder__component--show-up');
+                    setTimeout((): void => {
+                        $duplicate.removeClass(
+                            'cc-layout-builder__component--show-up'
+                        );
 
-                    $('html, body').animate({
-                        scrollTop: $origin.offset().top + $origin.outerHeight(true) - 150,
-                    }, 350, 'swing');
-                }, 10);
+                        $('html, body').animate(
+                            {
+                                scrollTop:
+                                    $origin.offset().top +
+                                    $origin.outerHeight(true) -
+                                    150,
+                            },
+                            350,
+                            'swing'
+                        );
+                    }, 10);
 
-                setTimeout((): void => {
-                    $duplicate.removeClass('cc-layout-builder__component--duplicate');
-                }, 800);
-            });
+                    setTimeout((): void => {
+                        $duplicate.removeClass(
+                            'cc-layout-builder__component--duplicate'
+                        );
+                    }, 800);
+                }
+            );
         },
         /**
          * Goes through all components and assigns section.
@@ -475,29 +546,42 @@ const layoutBuilder: vuejs.ComponentOption = {
                 let sectionIndex: number = 0;
 
                 for (let i: number = 0; i < this.components.length; i++) {
-                    if (this.specialComponents.indexOf(this.components[i].type) !== -1) {
+                    if (
+                        this.specialComponents.indexOf(
+                            this.components[i].type
+                        ) !== -1
+                    ) {
                         sectionIndex++;
-                        this.components[i].section = this.ccSections[sectionIndex];
+                        this.components[i].section = this.ccSections[
+                            sectionIndex
+                        ];
                         sectionIndex++;
                     } else {
-                        this.components[i].section = this.ccSections[sectionIndex];
+                        this.components[i].section = this.ccSections[
+                            sectionIndex
+                        ];
                     }
                 }
             }
         },
         /**
-         * Sorts components by their sections. 
+         * Sorts components by their sections.
          * Order is defined by this.ccSections
          */
         sortComponentsBySections(): void {
             if (this.components.length && this.ccSections.length > 1) {
-                this.components.sort((a: any, b: any): any => {
-                    return this.ccSections.indexOf(a.section) - this.ccSections.indexOf(b.section);
-                });
+                this.components.sort(
+                    (a: any, b: any): any => {
+                        return (
+                            this.ccSections.indexOf(a.section) -
+                            this.ccSections.indexOf(b.section)
+                        );
+                    }
+                );
             }
         },
         /**
-         * Backwards compatibility enhancement 
+         * Backwards compatibility enhancement
          * When components doesn't have {componentVisibility} object set - add defaults once
          * Special Components will not be modified
          */
@@ -505,14 +589,17 @@ const layoutBuilder: vuejs.ComponentOption = {
             for (let i: number = 0; i < this.components.length; i++) {
                 const c: any = this.components[i];
 
-                if (!c.data.hasOwnProperty('componentVisibility') && !this.getIsSpecialComponent(c.type)) {
+                if (
+                    !c.data.hasOwnProperty('componentVisibility') &&
+                    !this.getIsSpecialComponent(c.type)
+                ) {
                     let componentInfo: any = $.extend(true, {}, c, {
                         data: {
                             componentVisibility: {
                                 mobile: true,
                                 desktop: true,
-                            }
-                        }
+                            },
+                        },
                     });
 
                     this.setComponentInformation(i, componentInfo);
@@ -557,7 +644,10 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         isPossibleToEdit(componentType: string): boolean {
-            return componentType !== 'brand-carousel' && componentType !== 'separator';
+            return (
+                componentType !== 'brand-carousel' &&
+                componentType !== 'separator'
+            );
         },
 
         /**
@@ -577,7 +667,10 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         isPossibleToDuplicate(componentType: string): boolean {
-            return !this.getIsSpecialComponent(componentType) && componentType !== 'paragraph';
+            return (
+                !this.getIsSpecialComponent(componentType) &&
+                componentType !== 'paragraph'
+            );
         },
 
         /**
@@ -586,7 +679,10 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         isPossibleToControlDisplay(componentType: string): boolean {
-            return !this.getIsSpecialComponent(componentType) && componentType !== 'custom-html';
+            return (
+                !this.getIsSpecialComponent(componentType) &&
+                componentType !== 'custom-html'
+            );
         },
 
         /**
@@ -597,7 +693,12 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         getIsComponentHiddenFE(componentData: any): boolean {
             if (componentData.hasOwnProperty('componentVisibility')) {
-                return (!componentData.componentVisibility.mobile || componentData.componentVisibility.mobile === '') && (!componentData.componentVisibility.desktop || componentData.componentVisibility.desktop === '');
+                return (
+                    (!componentData.componentVisibility.mobile ||
+                        componentData.componentVisibility.mobile === '') &&
+                    (!componentData.componentVisibility.desktop ||
+                        componentData.componentVisibility.desktop === '')
+                );
             }
 
             return false;
@@ -610,19 +711,36 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         getIsComponentVisibleDashboard(componentData: any): boolean {
-            if (componentData.hasOwnProperty('componentVisibility') && this.filters) {
-                let visibleMobile: boolean = (componentData.componentVisibility.mobile !== '' && componentData.componentVisibility.mobile !== false);
-                let visibleDesktop: boolean = (componentData.componentVisibility.desktop !== '' && componentData.componentVisibility.desktop !== false);
+            if (
+                componentData.hasOwnProperty('componentVisibility') &&
+                this.filters
+            ) {
+                let visibleMobile: boolean =
+                    componentData.componentVisibility.mobile !== '' &&
+                    componentData.componentVisibility.mobile !== false;
+                let visibleDesktop: boolean =
+                    componentData.componentVisibility.desktop !== '' &&
+                    componentData.componentVisibility.desktop !== false;
 
-                if (this.filters.component_visibility.options.mobile.value && visibleMobile) {
+                if (
+                    this.filters.component_visibility.options.mobile.value &&
+                    visibleMobile
+                ) {
                     return true;
                 }
 
-                if (this.filters.component_visibility.options.desktop.value && visibleDesktop) {
+                if (
+                    this.filters.component_visibility.options.desktop.value &&
+                    visibleDesktop
+                ) {
                     return true;
                 }
 
-                if (this.filters.component_visibility.options.none.value && !visibleMobile && !visibleDesktop) {
+                if (
+                    this.filters.component_visibility.options.none.value &&
+                    !visibleMobile &&
+                    !visibleDesktop
+                ) {
                     return true;
                 }
 
@@ -635,7 +753,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          * If it's paragraph that is about to be removed, asks if corresponding CMS Block shall be removed as well
          * @param index {number} - index of the component in layoutBuilder
          */
-        deleteComponent( index: number ): void {
+        deleteComponent(index: number): void {
             const builder: any = this;
 
             confirm({
@@ -659,10 +777,15 @@ const layoutBuilder: vuejs.ComponentOption = {
             const component: any = this;
 
             confirm({
-                content: $t('Would you like to delete CMS Block related to this component (CMS Block ID: %s) ?').replace('%s', cmsBlockId),
+                content: $t(
+                    'Would you like to delete CMS Block related to this component (CMS Block ID: %s) ?'
+                ).replace('%s', cmsBlockId),
                 actions: {
                     confirm(): void {
-                        component.$dispatch('layout-builder__cmsblock-delete-request', cmsBlockId);
+                        component.$dispatch(
+                            'layout-builder__cmsblock-delete-request',
+                            cmsBlockId
+                        );
                     },
                 },
             });

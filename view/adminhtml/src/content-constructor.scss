@@ -10,6 +10,7 @@
 // Core essentials
 @import './components/_layout-builder/layout-builder';
 @import './components/_component-picker/component-picker';
+@import './components/_teaser/configurator/teaser';
 
 // Configurators
 @import './components/button/configurator/button';
@@ -19,6 +20,7 @@
 @import './components/daily-deal-teaser/configurator/daily-deal-teaser';
 @import './components/headline/configurator/headline';
 @import './components/hero-carousel/configurator/hero-carousel';
+@import './components/image-teaser/configurator/image-teaser-legacy';
 @import './components/image-teaser/configurator/image-teaser';
 @import './components/magento-product-grid-teasers/configurator/magento-product-grid-teasers';
 @import './components/paragraph/configurator/paragraph';

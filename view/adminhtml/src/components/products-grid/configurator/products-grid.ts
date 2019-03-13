@@ -13,59 +13,75 @@ import componentConfigurator from '../../_component-configurator/component-confi
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const productsGridConfigurator: vuejs.ComponentOption = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     template: `<div class="cc-products-grid-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-products-grid-configurator__section">
-            <h3 class="cc-products-grid-configurator__subtitle">${$t( 'Data source' )}:</h3>
+            <h3 class="cc-products-grid-configurator__subtitle">${$t(
+                'Data source'
+            )}:</h3>
             <div class="cc-products-grid-configurator__scenario-options cc-products-grid-configurator__scenario-options--inputs">
                 <div class="cc-input cc-input--type-inline | cc-products-grid-configurator__section-option">
-                    <label for="cfg-pg-category" class="cc-input__label | cc-products-grid-configurator__section-option-label">${$t( 'Category ID' )}:</label>
+                    <label for="cfg-pg-category" class="cc-input__label | cc-products-grid-configurator__section-option-label">${$t(
+                        'Category ID'
+                    )}:</label>
                     <select class="cc-input__select tmp-select" style="width:25em">
-                        <option>${$t( 'Select...' )}</option>
+                        <option>${$t('Select...')}</option>
                     </select>
                     <input type="hidden" name="cfg-pg-category-select" class="cc-input__input | cc-products-grid-configurator__form-input" id="cfg-pg-category" v-model="configuration.category_id" @change="onChange">
                 </div>
                 <div class="cc-input cc-input--type-inline | cc-products-grid-configurator__section-option">
-                    <label for="cfg-pg-filter" class="cc-input__label | cc-products-grid-configurator__section-option-label">${$t( 'Filter' )}:</label>
+                    <label for="cfg-pg-filter" class="cc-input__label | cc-products-grid-configurator__section-option-label">${$t(
+                        'Filter'
+                    )}:</label>
                     <select name="cfg-pg-filter" class="cc-input__select" id="cfg-pg-filter" v-model="configuration.filter" @change="onChange">
-                        <option value="">${$t( 'No filter' )}</option>
+                        <option value="">${$t('No filter')}</option>
                         <template v-for="filter in productCollectionsFilters">
                             <option value="{{ filter.value }}" :selected="filter.value === configuration.filter">{{ filter.label }}</option>
                         </template>
                     </select>
                 </div>
                 <div class="cc-input | cc-products-grid-configurator__section-option">
-                    <label for="cfg-pg-skus" class="cc-input__label">${$t( 'SKUs' )}:</label>
+                    <label for="cfg-pg-skus" class="cc-input__label">${$t(
+                        'SKUs'
+                    )}:</label>
                     <input type="text" name="cfg-pg-skus" class="cc-input__input" id="cfg-pg-skus" v-model="configuration.skus" @change="onChange">
-                    <div class="cc-input__hint">${$t( 'Multiple, comma-separated' )}</div>
+                    <div class="cc-input__hint">${$t(
+                        'Multiple, comma-separated'
+                    )}</div>
                 </div>
                 <div class="cc-input cc-input--type-inline | cc-products-grid-configurator__section-option">
-                    <label for="cfg-pg-order-by" class="cc-input__label | cc-products-grid-configurator__section-option-label">${$t( 'Order by' )}:</label>
+                    <label for="cfg-pg-order-by" class="cc-input__label | cc-products-grid-configurator__section-option-label">${$t(
+                        'Order by'
+                    )}:</label>
                     <select name="cfg-pg-order-by" class="cc-input__select" id="cfg-pg-order-by" v-model="configuration.order_by" @change="onChange">
-                        <option value="">${$t( 'Not specified' )}</option>
+                        <option value="">${$t('Not specified')}</option>
                         <template v-for="sorter in productCollectionsSorters">
                             <option value="{{ sorter.value }}" :selected="sorter.value === configuration.order_by">{{ sorter.label }}</option>
                         </template>
                     </select>
                     <select name="cfg-pg-order-type" class="cc-input__select" v-model="configuration.order_type" @change="onChange">
-                        <option value="ASC">${$t( 'Ascending' )}</option>
-                        <option value="DESC">${$t( 'Descending' )}</option>
+                        <option value="ASC">${$t('Ascending')}</option>
+                        <option value="DESC">${$t('Descending')}</option>
                     </select>
                 </div>
                 <div class="cc-input | cc-products-grid-configurator__section-option">
-                    <label for="cfg-pg-dataprovider" class="cc-input__label">${$t( 'Custom Data Provider' )}:</label>
+                    <label for="cfg-pg-dataprovider" class="cc-input__label">${$t(
+                        'Custom Data Provider'
+                    )}:</label>
                     <input type="text" name="cfg-pg-dataprovider" class="cc-input__input" id="cfg-pg-dataprovider" v-model="configuration.class_overrides.dataProvider" @change="onChange">
                 </div>
                 <div class="cc-input__hint cc-input__hint--info-mark" v-if="configuration.skus.length">
-                    ${$t( 'Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.' )}
+                    ${$t(
+                        'Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.'
+                    )}
                 </div>
             </div>
         </section>
 
         <section class="cc-products-grid-configurator__section">
-            <h3 class="cc-products-grid-configurator__subtitle">${$t( 'Mobile Layout' )}:</h3>
+            <h3 class="cc-products-grid-configurator__subtitle">${$t(
+                'Mobile Layout'
+            )}:</h3>
             <div class="cc-products-grid-configurator__scenario-options">
                 <ul class="cc-products-grid-configurator__scenario-options-list">
                     <li
@@ -90,7 +106,9 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         </section>
 
         <section class="cc-products-grid-configurator__section">
-            <h3 class="cc-products-grid-configurator__subtitle">${$t( 'Tablet Layout' )}:</h3>
+            <h3 class="cc-products-grid-configurator__subtitle">${$t(
+                'Tablet Layout'
+            )}:</h3>
             <div class="cc-products-grid-configurator__scenario-options">
                 <ul class="cc-products-grid-configurator__scenario-options-list">
                     <li
@@ -115,7 +133,9 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         </section>
 
         <section class="cc-products-grid-configurator__section">
-            <h3 class="cc-products-grid-configurator__subtitle">${$t( 'Desktop Layout' )}:</h3>
+            <h3 class="cc-products-grid-configurator__subtitle">${$t(
+                'Desktop Layout'
+            )}:</h3>
             <div class="cc-products-grid-configurator__scenario-options">
                 <ul class="cc-products-grid-configurator__scenario-options-list">
                     <li
@@ -140,7 +160,9 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         </section>
 
         <section class="cc-products-grid-configurator__section">
-            <h3 class="cc-products-grid-configurator__subtitle">${$t( 'Hero Teaser' )}:</h3>
+            <h3 class="cc-products-grid-configurator__subtitle">${$t(
+                'Hero Teaser'
+            )}:</h3>
             <div class="cc-products-grid-configurator__scenario-options">
                 <ul class="cc-products-grid-configurator__scenario-options-list">
                     <li
@@ -167,7 +189,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             <div class="cc-hero-carousel-configurator__item-content">
                 <div v-bind:class="[ 'cc-products-grid-configurator__item-col-left', configuration.hero.image ? 'cc-products-grid-configurator__item-col-left--look-image-uploaded' : '' ]">
                     <div class="cc-products-grid-configurator__item-image-wrapper">
-                        <img :src="configuration.hero.image" class="cc-image-teaser-configurator__item-image" v-show="configuration.hero.image">
+                        <img :src="configuration.hero.image" class="cc-image-teaser-legacy-configurator__item-image" v-show="configuration.hero.image">
                         <input type="hidden" v-model="configuration.hero.image">
                         <input type="hidden" class="cc-products-grid-configurator__image-url" id="products-grid-img">
                         <svg class="cc-products-grid-configurator__item-image-placeholder" v-show="!configuration.hero.image">
@@ -191,41 +213,57 @@ const productsGridConfigurator: vuejs.ComponentOption = {
 
                 <div class="cc-products-grid-configurator__item-col-right">
                     <div class="cc-input cc-input--group">
-                        <div class="cc-input | cc-image-teaser-configurator__item-form-element">
-                            <label for="cfg-pg-hero_content-position-variant" class="cc-input__label">${$t( 'Display variant' )}:</label>
+                        <div class="cc-input | cc-image-teaser-legacy-configurator__item-form-element">
+                            <label for="cfg-pg-hero_content-position-variant" class="cc-input__label">${$t(
+                                'Display variant'
+                            )}:</label>
                             <select name="cfg-pg-hero_content-position-variant" class="cc-input__select" id="cfg-pg-hero_content-position-variant" v-model="configuration.hero.displayVariant">
                                 <template v-for="(idx, scenario) in imageTeasersContentPositions">
-                                    <option value="{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
+                                    <option value="{{ idx + 1 }}">${$t(
+                                        '{{ scenario }}'
+                                    )}</option>
                                 </template>
                             </select>
                         </div>
-                        <div class="cc-input | cc-image-teaser-configurator__item-form-element">
-                            <label for="cfg-pg-hero_color-scheme" class="cc-input__label">${$t( 'Text color scheme' )}:</label>
+                        <div class="cc-input | cc-image-teaser-legacy-configurator__item-form-element">
+                            <label for="cfg-pg-hero_color-scheme" class="cc-input__label">${$t(
+                                'Text color scheme'
+                            )}:</label>
                             <select name="cfg-pg-hero_color-scheme" class="cc-input__select" id="cfg-pg-hero_color-scheme" v-model="configuration.hero.colorScheme">
-                                <option value="light">${$t( 'Light' )}</option>
-                                <option value="dark">${$t( 'Dark' )}</option>
+                                <option value="light">${$t('Light')}</option>
+                                <option value="dark">${$t('Dark')}</option>
                             </select>
                         </div>
                     </div>
                     <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                        <label for="cfg-pg-hero_headline" class="cc-input__label">${$t( 'Headline' )}:</label>
+                        <label for="cfg-pg-hero_headline" class="cc-input__label">${$t(
+                            'Headline'
+                        )}:</label>
                         <input type="text" name="cfg-pg-hero_headline" class="cc-input__input" id="cfg-pg-hero_headline" v-model="configuration.hero.headline" @change="onChange">
                     </div>
                     <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                        <label for="cfg-pg-hero_subheadline" class="cc-input__label">${$t( 'Subheadline' )}:</label>
+                        <label for="cfg-pg-hero_subheadline" class="cc-input__label">${$t(
+                            'Subheadline'
+                        )}:</label>
                         <input type="text" name="cfg-pg-hero_subheadline" class="cc-input__input" id="cfg-pg-hero_subheadline" v-model="configuration.hero.subheadline" @change="onChange">
                     </div>
                     <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                        <label for="cfg-pg-hero_paragraph" class="cc-input__label | cc-products-grid-configurator__form-label--textarea">${$t( 'Paragraph' )}:</label>
+                        <label for="cfg-pg-hero_paragraph" class="cc-input__label | cc-products-grid-configurator__form-label--textarea">${$t(
+                            'Paragraph'
+                        )}:</label>
                         <textarea type="text" name="cfg-pg-hero_paragraph" class="cc-input__textarea" id="cfg-pg-hero_paragraph" v-model="configuration.hero.paragraph"></textarea>
                     </div>
                     <div class="cc-input cc-input--group">
                         <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                            <label for="cfg-pg-hero_button_label" class="cc-input__label">${$t( 'Button label' )}:</label>
+                            <label for="cfg-pg-hero_button_label" class="cc-input__label">${$t(
+                                'Button label'
+                            )}:</label>
                             <input type="text" name="cfg-pg-hero_button_label" class="cc-input__input" id="cfg-pg-hero_button_label" v-model="configuration.hero.button.label" @change="onChange">
                         </div>
                         <div class="cc-input cc-input--type-addon | cc-products-grid-configurator__item-form-element">
-                            <label for="cfg-pg-hero_url" class="cc-input__label">${$t( 'Url' )}:</label>
+                            <label for="cfg-pg-hero_url" class="cc-input__label">${$t(
+                                'Url'
+                            )}:</label>
                             <input type="text" name="cfg-pg-hero_url" class="cc-input__input | cc-products-grid__hero-url" id="cfg-pg-hero_url" v-model="configuration.hero.href">
                             <span class="cc-input__addon | cc-products-grid-configurator__widget-chooser-trigger" @click="openCtaTargetModal()">
                                 <svg class="cc-input__addon-icon">
@@ -346,19 +384,19 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             scenarioOptions: {
                 rows_mobile: {
                     1: {
-                        name:  $t('1 row of products'),
+                        name: $t('1 row of products'),
                         iconId: 'pr_1',
                     },
                     2: {
-                        name:  $t('2 rows of products'),
+                        name: $t('2 rows of products'),
                         iconId: 'pr_2',
                     },
                     3: {
-                        name:  $t('3 rows of products'),
+                        name: $t('3 rows of products'),
                         iconId: 'pr_3',
                     },
                     4: {
-                        name:  $t('4 rows of products'),
+                        name: $t('4 rows of products'),
                         iconId: 'pr_4',
                     },
                     1000: {
@@ -368,19 +406,19 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 },
                 rows_tablet: {
                     1: {
-                        name:  $t('1 row of products'),
+                        name: $t('1 row of products'),
                         iconId: 'pr_1',
                     },
                     2: {
-                        name:  $t('2 rows of products'),
+                        name: $t('2 rows of products'),
                         iconId: 'pr_2',
                     },
                     3: {
-                        name:  $t('3 rows of products'),
+                        name: $t('3 rows of products'),
                         iconId: 'pr_3',
                     },
                     4: {
-                        name:  $t('4 rows of products'),
+                        name: $t('4 rows of products'),
                         iconId: 'pr_4',
                     },
                     1000: {
@@ -390,19 +428,19 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 },
                 rows_desktop: {
                     1: {
-                        name:  $t('1 row of products'),
+                        name: $t('1 row of products'),
                         iconId: 'pr_1',
                     },
                     2: {
-                        name:  $t('2 rows of products'),
+                        name: $t('2 rows of products'),
                         iconId: 'pr_2',
                     },
                     3: {
-                        name:  $t('3 rows of products'),
+                        name: $t('3 rows of products'),
                         iconId: 'pr_3',
                     },
                     4: {
-                        name:  $t('4 rows of products'),
+                        name: $t('4 rows of products'),
                         iconId: 'pr_4',
                     },
                     1000: {
@@ -413,18 +451,18 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 hero: {
                     position: {
                         '': {
-                            name:  $t('No Hero Teaser'),
+                            name: $t('No Hero Teaser'),
                             iconId: 'no_teaser',
                         },
-                        'left': {
-                            name:  $t('Hero Teaser on the left'),
+                        left: {
+                            name: $t('Hero Teaser on the left'),
                             iconId: 'teaser_left',
                         },
-                        'right': {
-                            name:  $t('Hero Teaser on the right'),
+                        right: {
+                            name: $t('Hero Teaser on the right'),
                             iconId: 'teaser_right',
-                        }
-                    }
+                        },
+                    },
                 },
             },
         };
@@ -442,11 +480,18 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         },
     },
     methods: {
-        setOption(optionCategory: string, optionId: string, key?: string): void {
+        setOption(
+            optionCategory: string,
+            optionId: string,
+            key?: string
+        ): void {
             if (key) {
                 this.configuration[optionCategory][key] = optionId;
             } else {
-                this.configuration[optionCategory] = optionId === '1000' ? this.tmpConfiguration[optionCategory] : optionId;
+                this.configuration[optionCategory] =
+                    optionId === '1000'
+                        ? this.tmpConfiguration[optionCategory]
+                        : optionId;
             }
 
             this.setProductsLimit();
@@ -455,14 +500,15 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * Manages all images: image upload from hdd, select image that was already uploaded to server.
          * @param index {number} - index of image of image teaser.
          */
-        getImageUploader( index: number ): void {
-            MediabrowserUtility.openDialog(`${this.uploaderBaseUrl}target_element_id/products-grid-img/`,
+        getImageUploader(index: number): void {
+            MediabrowserUtility.openDialog(
+                `${this.uploaderBaseUrl}target_element_id/products-grid-img/`,
                 'auto',
                 'auto',
                 $t('Insert File...'),
                 {
                     closed: true,
-                },
+                }
             );
         },
 
@@ -475,15 +521,19 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             let isAlreadyCalled: boolean = false;
 
             // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.cc-products-grid-configurator__image-url', (event: Event): void => {
-                if (!isAlreadyCalled) {
-                    isAlreadyCalled = true;
-                    component.onImageUploaded(event.target);
-                    setTimeout((): void => {
-                        isAlreadyCalled = false;
-                    }, 100);
+            $(document).on(
+                'change',
+                '.cc-products-grid-configurator__image-url',
+                (event: Event): void => {
+                    if (!isAlreadyCalled) {
+                        isAlreadyCalled = true;
+                        component.onImageUploaded(event.target);
+                        setTimeout((): void => {
+                            isAlreadyCalled = false;
+                        }, 100);
+                    }
                 }
-            });
+            );
         },
 
         /* Action after image was uploaded
@@ -494,10 +544,17 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         onImageUploaded(input: any): void {
             const _this: any = this;
             // const itemIndex: any = input.id.substr( input.id.length - 1 );
-            const encodedImage: any = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
-            const imgEndpoint: string = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
+            const encodedImage: any = input.value.match(
+                '___directive/([a-zA-Z0-9]*)'
+            )[1];
+            const imgEndpoint: string = this.imageEndpoint.replace(
+                '{/encoded_image}',
+                encodedImage
+            );
 
-            this.configuration.hero.decoded_image = Base64 ? Base64.decode(encodedImage) : window.atob(encodedImage);
+            this.configuration.hero.decoded_image = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
 
             const img: any = new Image();
             img.onload = function(): void {
@@ -511,7 +568,11 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * Opens modal with M2 built-in widget chooser
          */
         openCtaTargetModal(): void {
-            widgetTools.openDialog(`${window.location.origin}/${this.adminPrefix}/admin/widget/index/widget_target_id/cfg-pg-hero_url`);
+            widgetTools.openDialog(
+                `${window.location.origin}/${
+                    this.adminPrefix
+                }/admin/widget/index/widget_target_id/cfg-pg-hero_url`
+            );
 
             this.wWidgetListener();
         },
@@ -521,9 +582,12 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * after value of item.ctaTarget is changed
          */
         widgetSetListener(): void {
-            $('.cc-products-grid__hero-url').on('change', (): void => {
-                this.onChange();
-            });
+            $('.cc-products-grid__hero-url').on(
+                'change',
+                (): void => {
+                    this.onChange();
+                }
+            );
         },
 
         /*
@@ -532,14 +596,22 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * to clear input's value before inserting new one
          */
         wWidgetListener(): void {
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
-                const button: any = widgetTools.dialogWindow[0].querySelector('#insert_button');
+            if (
+                typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== ''
+            ) {
+                const button: any = widgetTools.dialogWindow[0].querySelector(
+                    '#insert_button'
+                );
 
                 button.onclick = null;
-                button.addEventListener( 'click', (): void => {
-                    this.configuration.hero.href = '';
-                    wWidget.insertWidget();
-                } );
+                button.addEventListener(
+                    'click',
+                    (): void => {
+                        this.configuration.hero.href = '';
+                        wWidget.insertWidget();
+                    }
+                );
             } else {
                 setTimeout(this.wWidgetListener, 300);
             }
@@ -551,7 +623,10 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * @return {boolean}
          */
         isOptionSelected(optionCategory: string, optionId: string): boolean {
-            return this.configuration[optionCategory] == optionId || (optionId === '1000' && this.configuration[optionCategory] > 4);
+            return (
+                this.configuration[optionCategory] == optionId ||
+                (optionId === '1000' && this.configuration[optionCategory] > 4)
+            );
         },
 
         /**
@@ -561,25 +636,42 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          */
         getMaxPossibleColumns(): number {
             const maxColumns: object = this.ccConfig.columns['one-column'];
-            return Math.max.apply(Math, Object.keys(maxColumns).map(key => (<any>maxColumns)[key]));
+            return Math.max.apply(
+                Math,
+                Object.keys(maxColumns).map(key => (<any>maxColumns)[key])
+            );
         },
 
         /**
-         * Calculate how many products should be returned by BE, 
+         * Calculate how many products should be returned by BE,
          * then saves result to component's configuration
          */
         setProductsLimit(): void {
-            const heroWidth: number = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.x, 10);
-            const heroHeight: number = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend.product_grid.teasers_configuration.size.y, 10);
-            const maxRowsSet: number = Math.max(this.configuration.rows_mobile, this.configuration.rows_tablet, this.configuration.rows_desktop);
-            const isHeroEnabled: boolean = this.configuration.hero.position !== '';
+            const heroWidth: number = parseInt(
+                this.viewXml.vars.MageSuite_ContentConstructorFrontend
+                    .product_grid.teasers_configuration.size.x,
+                10
+            );
+            const heroHeight: number = parseInt(
+                this.viewXml.vars.MageSuite_ContentConstructorFrontend
+                    .product_grid.teasers_configuration.size.y,
+                10
+            );
+            const maxRowsSet: number = Math.max(
+                this.configuration.rows_mobile,
+                this.configuration.rows_tablet,
+                this.configuration.rows_desktop
+            );
+            const isHeroEnabled: boolean =
+                this.configuration.hero.position !== '';
             let heroSize: number = isHeroEnabled ? heroWidth * heroHeight : 0;
 
             if (heroSize >= 1 && maxRowsSet < heroHeight) {
                 heroSize = heroWidth;
             }
 
-            this.configuration.limit = (maxRowsSet * this.getMaxPossibleColumns()) - heroSize;
+            this.configuration.limit =
+                maxRowsSet * this.getMaxPossibleColumns() - heroSize;
         },
 
         /**
@@ -589,12 +681,20 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * @return {number} rows limit for custom input
          */
         getRowsSetup(layoutOption: string): number {
-            return this.configuration[layoutOption] > 5 ? this.configuration[layoutOption] : 5;
+            return this.configuration[layoutOption] > 5
+                ? this.configuration[layoutOption]
+                : 5;
         },
     },
     ready(): void {
-        this.productCollectionsSorters = this.productCollectionsSorters !== '' ? JSON.parse(this.productCollectionsSorters) : [];
-        this.productCollectionsFilters = this.productCollectionsFilters !== '' ? JSON.parse(this.productCollectionsFilters) : [];
+        this.productCollectionsSorters =
+            this.productCollectionsSorters !== ''
+                ? JSON.parse(this.productCollectionsSorters)
+                : [];
+        this.productCollectionsFilters =
+            this.productCollectionsFilters !== ''
+                ? JSON.parse(this.productCollectionsFilters)
+                : [];
 
         if (!this.configuration.class_overrides) {
             this.configuration.class_overrides = {
@@ -608,19 +708,25 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         $('body').trigger('showLoadingPopup');
 
         // Get categories JSON with AJAX
-        this.$http.get(this.categoriesDataUrl).then((response: any): void => {
-            this.categoryPicker = new categoryPicker($('#cfg-pg-category'), JSON.parse(response.body), {
-                multiple: false,
-            });
+        this.$http.get(this.categoriesDataUrl).then(
+            (response: any): void => {
+                this.categoryPicker = new categoryPicker(
+                    $('#cfg-pg-category'),
+                    JSON.parse(response.body),
+                    {
+                        multiple: false,
+                    }
+                );
 
-            // Hide loader
-            $('body').trigger('hideLoadingPopup');
-            $('.tmp-select').remove();
-        });
+                // Hide loader
+                $('body').trigger('hideLoadingPopup');
+                $('.tmp-select').remove();
+            }
+        );
 
         this.imageUploadListener();
         this.widgetSetListener();
     },
-}
+};
 
 export default productsGridConfigurator;
