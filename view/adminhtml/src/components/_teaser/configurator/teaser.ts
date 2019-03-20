@@ -504,8 +504,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
         isCurrentContentAlign(x: number, y: number): boolean {
             return (
-                this.configuration.content_align.x === x &&
-                this.configuration.content_align.y === y
+                Number(this.configuration.content_align.x) === x &&
+                Number(this.configuration.content_align.y) === y
             );
         },
 

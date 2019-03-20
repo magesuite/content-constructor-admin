@@ -6,6 +6,7 @@ import $ from 'jquery';
 interface IComponentInformationImage {
     raw: string;
     decoded: string;
+    endpoint: string;
     aspect_ratio: string;
 }
 
@@ -73,19 +74,19 @@ interface IComponentInformation {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const teaserPreview: vuejs.ComponentOption = {
-    template: `<div class="cc-teaser-preview cc-teaser-preview--content-{{ parentConfiguration.scenario.contentPlacement.id ? parentConfiguration.scenario.contentPlacement.id : 'over' }}{{configuration.image.raw ? '' : ' cc-teaser-preview--no-image'}}">
+    template: `<div class="cc-teaser-preview cc-teaser-preview--content-{{ parentConfiguration.scenario.contentPlacement.id ? parentConfiguration.scenario.contentPlacement.id : 'over' }}{{configuration.image.image ? '' : ' cc-teaser-preview--no-image'}}">
         <div class="cc-teaser-preview__slide cc-teaser-preview__slide--scheme-{{configuration.optimizers.color_scheme}}" v-el:scale-relation>
             <div class="cc-teaser-preview__aspect-ratio" v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" :style="{paddingTop: aspectRatio}"></div>
             <div class="cc-teaser-preview__slide-wrapper">
                 <div class="cc-teaser-preview__aspect-ratio" v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id === 'under'" :style="{paddingTop: aspectRatio}"></div>
                 <figure class="cc-teaser-preview__figure">
                     <img
-                        :src="configuration.image.raw"
+                        :src="configuration.image.image"
                         class="cc-teaser-preview__image"
                         :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
-                        v-if="configuration.image.raw"
+                        v-if="configuration.image.image"
                     >
-                    <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.raw">
+                    <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image">
                         <use xlink:href="#icon_image-placeholder"></use>
                     </svg>
                 </figure>
@@ -142,6 +143,11 @@ const teaserPreview: vuejs.ComponentOption = {
         configuration: {
             type: Object,
         },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
+        },
     },
     computed: {
         aspectRatio: function(): string {
@@ -161,16 +167,6 @@ const teaserPreview: vuejs.ComponentOption = {
             isScaleScheduled: false,
             fontSize: this.recalculateFontSize(),
         };
-    },
-    filters: {
-        /**
-         * Translates given string
-         * @param txt {string} - original, english string to be translated
-         * @return {string} - translated string
-         */
-        translate(txt: string): string {
-            return $.mage.__(txt);
-        },
     },
     methods: {
         recalculateFontSize(): number {

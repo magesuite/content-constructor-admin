@@ -4,7 +4,7 @@ namespace MageSuite\ContentConstructorAdmin\Helper;
 
 class ConfigurationMediaResolver
 {
-    protected $decodedImageArrayKeys = ['decodedImage', 'decoded_image'];
+    protected $decodedImageArrayKeys = ['decodedImage', 'decoded_image', 'decoded'];
 
     /**
      * @var \MageSuite\ContentConstructor\Service\MediaResolver

@@ -1075,7 +1075,8 @@
       -webkit-box-align: start;
           -ms-flex-align: start;
               align-items: flex-start;
-      padding: 3.76%; }
+      padding: 3.76%;
+      text-align: left; }
     .cc-teaser-preview__content-wrapper--content-align-x-2 {
       -webkit-box-pack: center !important;
           -ms-flex-pack: center !important;

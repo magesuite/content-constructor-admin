@@ -27,7 +27,7 @@ const componentPicker: vuejs.ComponentOption = {
     template: `<section class="cc-component-picker | {{ class }}">
         <ul class="cc-component-picker__list" v-if="availableComponents.length">
             <li class="cc-component-picker__list-item cc-component-picker__list-item--{{component.type}}" v-for="component in availableComponents">
-                <a class="cc-component-picker__component-link" href="#" @click.prevent="onPickComponent( component.type )">
+                <a class="cc-component-picker__component-link" href="#" @click.prevent="onPickComponent( component.type, component.name )">
                     <span class="cc-component-picker__component-figure">
                         <svg class="cc-component-picker__component-icon">
                             <use v-bind="{ 'xlink:href': '#icon_component-' + component.type }"></use>
@@ -49,7 +49,8 @@ const componentPicker: vuejs.ComponentOption = {
         class: {
             type: String,
             default: '',
-            coerce: (value: String): String => value.replace('cc-component-picker', ''),
+            coerce: (value: string): string =>
+                value.replace('cc-component-picker', ''),
         },
         /**
          * Property containing callback triggered when user picks component.
@@ -90,9 +91,11 @@ const componentPicker: vuejs.ComponentOption = {
             this.availableComponents = JSON.parse(this.components);
         } else if (this.componentsEndpoint) {
             // Otherwise load from endpoint if URL provided.
-            this.$http.get(this.componentsEndpoint).then(function(response: vuejs.HttpResponse): void {
-                this.availableComponents = response.json();
-            });
+            this.$http
+                .get(this.componentsEndpoint)
+                .then(function(response: vuejs.HttpResponse): void {
+                    this.availableComponents = response.json();
+                });
         }
     },
     methods: {
@@ -101,11 +104,15 @@ const componentPicker: vuejs.ComponentOption = {
          * This handler triggers "cc-component-picker__pick" event up the DOM chain when called.
          * @param {Event} event Click event object.
          */
-        onPickComponent(componentType: String): void {
-            this.$dispatch('component-picker__pick', componentType);
+        onPickComponent(componentType: string, componentName: string): void {
+            this.$dispatch(
+                'component-picker__pick',
+                componentType,
+                componentName
+            );
 
             if (typeof this.pickComponent === 'function') {
-                this.pickComponent(componentType);
+                this.pickComponent(componentType, componentName);
             }
         },
     },

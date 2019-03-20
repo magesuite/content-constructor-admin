@@ -296,7 +296,10 @@ const contentConstructor: vuejs.ComponentOption = {
          * This method should open magento modal with component configurator.
          * @param {componentType} String - type of component chosen
          */
-        getComponentConfigurator(componentType: string): void {
+        getComponentConfigurator(
+            componentType: string,
+            componentName: string
+        ): void {
             const newComponentId: string =
                 'component' +
                 Math.floor((1 + Math.random()) * 0x10000)
@@ -311,6 +314,7 @@ const contentConstructor: vuejs.ComponentOption = {
             this._configuratorSavedCallback = (componentData: any): void => {
                 this._addComponentInformation({
                     type: componentType,
+                    name: componentName,
                     id: newComponentId,
                     section: section,
                     data: componentData,
@@ -330,6 +334,7 @@ const contentConstructor: vuejs.ComponentOption = {
             } else {
                 this.initConfiguratorModal({
                     type: componentType,
+                    name: componentName,
                     id: newComponentId,
                     section: section,
                     data: undefined,
@@ -349,6 +354,7 @@ const contentConstructor: vuejs.ComponentOption = {
         ): void {
             this._configuratorSavedCallback = (componentData: any): void => {
                 setComponentInformation({
+                    name: prevComponentData.name,
                     type: prevComponentData.type,
                     id: prevComponentData.id,
                     section: prevComponentData.section,
@@ -466,8 +472,15 @@ const contentConstructor: vuejs.ComponentOption = {
         },
 
         transformComponentTypeToText(componentType: string): string {
-            const txt: string = componentType.replace('-', ' ');
-            return txt.charAt(0).toUpperCase() + txt.slice(1);
+            const txt: string = componentType
+                .replace(/\-+/g, ' ')
+                .replace(/[0-9]/g, '');
+            return (
+                txt
+                    .trim()
+                    .charAt(0)
+                    .toUpperCase() + txt.slice(1)
+            );
         },
     },
 };

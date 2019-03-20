@@ -648,7 +648,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                 .teaserWidth.teasersLimit;
 
             if (itemsLimit && items.length > itemsNumber) {
-                const removedItems: Array<any> = items.splice(
+                const removedItems: any[] = items.splice(
                     itemsNumber,
                     items.length - itemsNumber
                 );
@@ -699,7 +699,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         },
 
         canAddTeaser(): boolean {
-            const items: Array<TeaserItem> = this.configuration.items;
+            const items: TeaserItem[] = this.configuration.items;
             const itemsLimit: number = this.configuration.currentScenario
                 .teaserWidth.teasersLimit;
 
@@ -754,7 +754,6 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          * @param input { object } - input with raw image path which is used in admin panel
          */
         onImageUploaded(input: any): void {
-            const _this: any = this;
             const itemIndex: any = input.id.substr(
                 input.id.lastIndexOf('-') + 1
             );
@@ -771,22 +770,22 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                 : window.atob(encodedImage);
 
             const img: any = new Image();
-            img.onload = function(): void {
-                const ar: string = _this.getAspectRatio(
+            img.onload = () => {
+                const ar: string = this.getAspectRatio(
                     img.naturalWidth,
                     img.naturalHeight
                 );
-                _this.configuration.items[itemIndex].image = img.getAttribute(
+                this.configuration.items[itemIndex].image = img.getAttribute(
                     'src'
                 );
-                _this.configuration.items[itemIndex].sizeInfo = `${
+                this.configuration.items[itemIndex].sizeInfo = `${
                     img.naturalWidth
                 }x${img.naturalHeight}px (${ar})`;
-                _this.configuration.items[itemIndex].aspectRatio = ar;
+                this.configuration.items[itemIndex].aspectRatio = ar;
 
                 setTimeout((): void => {
-                    _this.checkImageSizes();
-                    _this.onChange();
+                    this.checkImageSizes();
+                    this.onChange();
                 }, 400);
             };
             img.src = imgEndpoint;

@@ -30,7 +30,7 @@ import staticBlockPreview from '../static-block/preview/static-block';
  * Single component information interface.
  */
 interface IComponentInformation {
-    name: string;
+    name?: string;
     id: string;
     type: string;
     section: string;
@@ -146,7 +146,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                 </div>
                 <div class="cc-layout-builder__component-wrapper">
                     <component-placeholder>
-                        <h3 class="cc-component-placeholder__headline" v-text="transformComponentTypeToText( component.type )"></h3>
+                        <h3 class="cc-component-placeholder__headline" v-text="transformComponentTypeToText( component.name || component.type )"></h3>
                         <div class="cc-component-placeholder__component">
                             <component :is="component.type + '-preview'" :configuration="component.data" :index="$index" :assets-src="assetsSrc" :image-endpoint="imageEndpoint"></component>
                         </div>
@@ -624,7 +624,10 @@ const layoutBuilder: vuejs.ComponentOption = {
         },
 
         transformComponentTypeToText(componentType: string): string {
-            return componentType.replace('-', ' ');
+            return componentType
+                .replace(/\-+/g, ' ')
+                .replace(/[0-9]+/g, '')
+                .trim();
         },
 
         /**
