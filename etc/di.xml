@@ -106,7 +106,7 @@
                     <item name="daily-deal-teaser" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\DailyDealTeaser</item>
                         <item name="name" xsi:type="string">Daily Deal Teaser</item>
-                        <item name="description" xsi:type="string">Daily Deal Teaser.</item>
+                        <item name="description" xsi:type="string">Compontent for promoting products with Daily Deal status.</item>
                     </item>
                     <item name="picker" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Picker</item>
@@ -121,7 +121,12 @@
                     <item name="image-teaser-2" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ImageTeaser</item>
                         <item name="name" xsi:type="string">Image Teaser</item>
-                        <item name="description" xsi:type="string">This component allows you to add 1-6 image teasers with or without text in a row that will scale proportionally.</item>
+                        <item name="description" xsi:type="string">This component allows you to add 1-4 teasers with or without text in a row that will scale proportionally.</item>
+                    </item>
+                    <item name="icon" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Icon</item>
+                        <item name="name" xsi:type="string">Icon</item>
+                        <item name="description" xsi:type="string">This component allows you to add 4-6 teasers with or without text under the image.</item>
                     </item>
                 </item>
             </argument>

@@ -16,6 +16,7 @@ import customHtmlPreview from '../custom-html/preview/custom-html';
 import dailyDealTeaserPreview from '../daily-deal-teaser/preview/daily-deal-teaser';
 import headlinePreview from '../headline/preview/headline';
 import heroCarouselPreview from '../hero-carousel/preview/hero-carousel';
+import iconPreview from '../icon/preview/icon';
 import imageTeaserPreview from '../image-teaser/preview/image-teaser';
 import imageTeaserLegacyPreview from '../image-teaser/preview/image-teaser-legacy';
 import magentoProductGridTeasersPreview from '../magento-product-grid-teasers/preview/magento-product-grid-teasers';
@@ -207,6 +208,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         'product-grid-preview': productGridPreview,
         'separator-preview': separatorPreview,
         'static-cms-block-preview': staticBlockPreview,
+        'icon-preview': iconPreview,
     },
     props: {
         /**

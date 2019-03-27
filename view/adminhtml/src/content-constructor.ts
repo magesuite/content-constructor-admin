@@ -27,6 +27,7 @@ import customHtmlConfigurator from './components/custom-html/configurator/custom
 import dailyDealTeaserConfigurator from './components/daily-deal-teaser/configurator/daily-deal-teaser';
 import headlineConfigurator from './components/headline/configurator/headline';
 import heroCarouselConfigurator from './components/hero-carousel/configurator/hero-carousel';
+import iconConfigurator from './components/icon/configurator/icon';
 import imageTeaserConfigurator from './components/image-teaser/configurator/image-teaser';
 import imageTeaserLegacyConfigurator from './components/image-teaser/configurator/image-teaser-legacy';
 import magentoProductGridTeasersConfigurator from './components/magento-product-grid-teasers/configurator/magento-product-grid-teasers';
@@ -124,6 +125,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'product-finder-configurator': productFinderConfigurator,
         'products-grid-configurator': productsGridConfigurator,
         'static-block-configurator': staticBlockConfigurator,
+        'icon-configurator': iconConfigurator,
     },
     props: {
         configuration: {

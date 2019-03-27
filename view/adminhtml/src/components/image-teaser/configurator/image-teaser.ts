@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import $t from 'mage/translate';
 import alert from 'Magento_Ui/js/modal/alert';
 
 import actionButton from '../../../utils/action-button/action-button';
@@ -583,6 +582,9 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             );
             this.onChange();
         },
+    },
+    ready(): void {
+        this.togglePossibleOptions();
     },
 };
 
