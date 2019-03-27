@@ -14,6 +14,7 @@ $image-teaser-preview-item-gap: 1.3rem;
         list-style: none;
         margin: 0 #{-$image-teaser-preview-item-gap / 2};
         flex-wrap: wrap;
+        min-height: 12rem;
     }
 
     &__item {
@@ -21,16 +22,12 @@ $image-teaser-preview-item-gap: 1.3rem;
         position: relative;
         margin: 0 #{$image-teaser-preview-item-gap / 2} #{$image-teaser-preview-item-gap};
 
-        #{$root}__scene--2-in-row & {
-            width: calc(50% - #{$image-teaser-preview-item-gap});
-        }
-
-        #{$root}__scene--3-in-row & {
-            width: calc(100% / 3 - #{$image-teaser-preview-item-gap});
-        }
-
-        #{$root}__scene--4-in-row & {
-            width: calc(25% - #{$image-teaser-preview-item-gap});
+        @for $in-row from 2 to 8 {
+            #{$root}__scene--#{$in-row}-in-row & {
+                width: calc(
+                    #{100% / $in-row} - #{$image-teaser-preview-item-gap}
+                );
+            }
         }
     }
 }

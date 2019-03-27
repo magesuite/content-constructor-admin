@@ -74,19 +74,19 @@ interface IComponentInformation {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const teaserPreview: vuejs.ComponentOption = {
-    template: `<div class="cc-teaser-preview cc-teaser-preview--content-{{ parentConfiguration.scenario.contentPlacement.id ? parentConfiguration.scenario.contentPlacement.id : 'over' }}{{configuration.image.image ? '' : ' cc-teaser-preview--no-image'}}">
+    template: `<div class="cc-teaser-preview cc-teaser-preview--content-{{ parentConfiguration.scenario.contentPlacement.id ? parentConfiguration.scenario.contentPlacement.id : 'over' }}{{configuration.image.image || configuration.image.raw ? '' : ' cc-teaser-preview--no-image'}}">
         <div class="cc-teaser-preview__slide cc-teaser-preview__slide--scheme-{{configuration.optimizers.color_scheme}}" v-el:scale-relation>
             <div class="cc-teaser-preview__aspect-ratio" v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" :style="{paddingTop: aspectRatio}"></div>
             <div class="cc-teaser-preview__slide-wrapper">
                 <div class="cc-teaser-preview__aspect-ratio" v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id === 'under'" :style="{paddingTop: aspectRatio}"></div>
                 <figure class="cc-teaser-preview__figure">
                     <img
-                        :src="configuration.image.image"
+                        :src="configuration.image.image || configuration.image.raw"
                         class="cc-teaser-preview__image"
                         :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
-                        v-if="configuration.image.image"
+                        v-if="configuration.image.image || configuration.image.raw"
                     >
-                    <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image">
+                    <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
                         <use xlink:href="#icon_image-placeholder"></use>
                     </svg>
                 </figure>
@@ -100,6 +100,7 @@ const teaserPreview: vuejs.ComponentOption = {
 
                 <div
                     class="cc-teaser-preview__content-wrapper cc-teaser-preview__content-wrapper--content-align-x-{{configuration.content_align.x}} cc-teaser-preview__content-wrapper--content-align-y-{{configuration.content_align.y}}"
+                    v-if="configuration.slogan || configuration.description || (configuration.cta.label && configuration.cta.href)"
                 >
                     <div
                         class="cc-teaser-preview__content"

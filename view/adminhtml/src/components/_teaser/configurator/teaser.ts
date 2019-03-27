@@ -231,7 +231,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         <template v-if="tab.content && tab.content === '#style'">
                             <div class="cc-teaser-configurator__tab-section">
                                 <label class="cc-input__label">{{'Contrast Optimizer' | translate}}</label>
-                                <ul class="cc-teaser-configurator__optimizers">
+                                <ul
+                                    class="cc-teaser-configurator__optimizers"
+                                    :class="{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}"
+                                >
                                     <li
                                         v-for="(index, optimizer) in configuration.optimizers.scenarios"
                                         class="cc-teaser-configurator__optimizer"
