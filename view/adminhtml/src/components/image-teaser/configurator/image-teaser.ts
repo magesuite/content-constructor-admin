@@ -50,7 +50,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
 
         </section>
         <section class="cc-image-teaser-configurator__section">
-            <h3 class="cc-image-teaser-configurator__subtitle">Desktop Layout</h3>
+            <h3 class="cc-image-teaser-configurator__subtitle">Desktop and Tablet Layout</h3>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
