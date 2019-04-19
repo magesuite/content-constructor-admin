@@ -127,7 +127,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                                 <div class="cc-component-display-controller__control">
                                     <label :class="[ component.data.componentVisibility.mobile ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]">
                                         <input type="checkbox" v-model="component.data.componentVisibility.mobile" class="cc-input__checkbox" @change="updateLayout()">
-                                        {{ getTranslatedText('Mobile') }}
+                                        {{ getTranslatedText('Mobile and Tablet') }}
                                     </label>
                                 </div>
                                 <div class="cc-component-display-controller__control">
