@@ -15,7 +15,7 @@ class PreviewButton implements ButtonProviderInterface
         $data = [
             'label' => __('Preview'),
             'class' => '',
-            'on_click' => "previewContentConstructor(document.querySelector('input[name=\"components\"]').value)",
+            'on_click' => "if (typeof previewContentConstructor !== \"undefined\") { previewContentConstructor(document.querySelector('input[name=\"components\"]').value); } else { alert(\"Please open Content tab first and click on Preview again\") }",
             'sort_order' => 20,
         ];
 
