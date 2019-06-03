@@ -74,6 +74,7 @@ interface IComponentInformation {
     cta: IComponentInformationCta;
     content_align: IComponentInformationContentAlign;
     optimizers: IComponentInformationOptimizers;
+    type: string
 }
 
 /**
@@ -94,9 +95,11 @@ const teaserPreview: vuejs.ComponentOption = {
                         :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
                         v-if="configuration.image.image || configuration.image.raw"
                     >
-                    <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
-                        <use xlink:href="#icon_image-placeholder"></use>
-                    </svg>
+                    <template v-if="teaserType !== 'text-only'">
+                        <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
+                            <use xlink:href="#icon_image-placeholder"></use>
+                        </svg>
+                    </template
                 </figure>
 
                 <div class="cc-teaser-preview__overlay" v-if="configuration.optimizers.scenarios.overlay.enabled" :style="{opacity: configuration.optimizers.scenarios.overlay.intensity / 100}"></div>
@@ -163,6 +166,11 @@ const teaserPreview: vuejs.ComponentOption = {
             type: String,
             default: '',
         },
+        /* Type of slide - can be full/text-only */
+        teaserType: {
+            type: String,
+            default: 'full',
+        }
     },
     computed: {
         aspectRatio: function (): string {
