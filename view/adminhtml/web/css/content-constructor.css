@@ -1135,6 +1135,27 @@
     font-weight: 600;
     border-radius: 3px;
     line-height: 1; }
+  .cc-teaser-preview__label-wrapper {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    padding: 1.88%;
+    text-align: left;
+    background: #0072ff;
+    color: #fff; }
+    .cc-teaser-preview__label-wrapper--content-align-x-2 {
+      left: 50%;
+      -webkit-transform: translateX(50%);
+              transform: translateX(50%); }
+    .cc-teaser-preview__label-wrapper--content-align-x-3 {
+      left: auto;
+      right: 0; }
+    .cc-teaser-preview__label-wrapper--content-align-y-2 {
+      top: 50%; }
+    .cc-teaser-preview__label-wrapper--content-align-y-3 {
+      top: auto;
+      bottom: 0; }
   .cc-teaser-preview__overlay, .cc-teaser-preview__gradient {
     position: absolute;
     top: 0;

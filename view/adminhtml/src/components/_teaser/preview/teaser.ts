@@ -99,6 +99,13 @@ const teaserPreview: vuejs.ComponentOption = {
                 ></div>
 
                 <div
+                    class="cc-teaser-preview__label-wrapper cc-teaser-preview__label-wrapper--content-align-x-{{configuration.label.align.x}} cc-teaser-preview__label-wrapper--content-align-y-{{configuration.label.align.y}}"
+                    v-if="configuration.label.value"
+                >
+                {{configuration.label.value}}
+                </div>
+
+                <div
                     class="cc-teaser-preview__content-wrapper cc-teaser-preview__content-wrapper--content-align-x-{{configuration.content_align.x}} cc-teaser-preview__content-wrapper--content-align-y-{{configuration.content_align.y}}"
                     v-if="configuration.slogan || configuration.description || (configuration.cta.label && configuration.cta.href)"
                 >
@@ -151,7 +158,7 @@ const teaserPreview: vuejs.ComponentOption = {
         },
     },
     computed: {
-        aspectRatio: function(): string {
+        aspectRatio: function (): string {
             if (this.configuration.image.aspect_ratio.length) {
                 const rawArr: any[] = this.configuration.image.aspect_ratio.split(
                     ':'
@@ -177,7 +184,7 @@ const teaserPreview: vuejs.ComponentOption = {
                     this.$els.scaleRelation.offsetWidth *
                     this.scaleRatio
                 );
-            } catch (error) {}
+            } catch (error) { }
         },
 
         setEvents(): void {

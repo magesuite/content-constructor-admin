@@ -163,6 +163,40 @@
         line-height: 1;
     }
 
+    &__label-wrapper {
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        left: 0;
+        padding: 1.88%;
+        text-align: left;
+        background: #0072ff;
+        color: #fff;
+
+        &--content-align-x {
+            &-2 {
+                left: 50%;
+                transform: translateX(50%);
+            }
+
+            &-3 {
+                left: auto;
+                right: 0;
+            }
+        }
+
+        &--content-align-y {
+            &-2 {
+                top: 50%;
+            }
+
+            &-3 {
+                top: auto;
+                bottom: 0;
+            }
+        }
+    }
+
     // Contrast Optimizers
     &__overlay,
     &__gradient {
