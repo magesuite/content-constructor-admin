@@ -2909,7 +2909,7 @@ var teaserConfigurator = {
              * @return {String} - HTML ready
              */
             read: function (txt) {
-                return txt.replace(/<br\s*[\/]?>/gi, '\n');
+                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
             },
             /**
              * @param txt {string} - current content of v-model

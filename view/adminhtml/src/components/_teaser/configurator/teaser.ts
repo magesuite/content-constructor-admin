@@ -531,7 +531,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
              * @return {String} - HTML ready
              */
             read(txt: string): string {
-                return txt.replace(/<br\s*[\/]?>/gi, '\n');
+                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
             },
 
             /**
