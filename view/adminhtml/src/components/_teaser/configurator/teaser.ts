@@ -79,14 +79,14 @@ export const teaserPrototype: any = {
             },
         },
     },
-    label: {
+    badge: {
         value: '',
         align: {
             x: 1,
             y: 1,
         },
         examples: [
-            { text: 'Nur {{price sku="some_sku"}}' },
+            { text: 'Only {{price sku="some_sku"}}' },
         ]
     }
 };
@@ -346,7 +346,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             </div>
                         </template>
 
-                        <template v-if="tab.content && tab.content === '#label'">
+                        <template v-if="tab.content && tab.content === '#badge'">
                             <div
                                 class="cc-teaser-configurator__tab-section"
                                 :class="{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}"
@@ -354,37 +354,37 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
                                         <label for="cfg-teaser-{{teaserIndex}}-label-content" class="cc-input__label">
-                                            {{'Label value' | translate}}: 
+                                            {{'Badge text' | translate}}: 
                                         </label>
-                                        <textarea v-model="configuration.label.value | prettify"  type="text" class="cc-input__textarea" id="cfg-teaser-{{teaserIndex}}-label-content" >
+                                        <textarea v-model="configuration.badge.value | prettify"  type="text" class="cc-input__textarea" id="cfg-teaser-{{teaserIndex}}-label-content" >
                                         </textarea>
                                     </div>
                                     <div class="cc-input cc-teaser-configurator__form-element">
                                         <p>Add content with special markup, e.g.:
-                                            <template v-for="example in configuration.label.examples">
+                                            <template v-for="example in configuration.badge.examples">
                                                 <br>- {{example.text}}<br>
                                             </template>
                                         </p>
                                     </div>
                                 </div>    
                                 <br>                        
-                                <label class="cc-input__label">{{'Label align' | translate }}:</label>
+                                <label class="cc-input__label">{{'Badge align' | translate }}:</label>
                                 <div class="cc-teaser-configurator__position-grid">
                                     <template v-for="y in 3">
                                         <template v-for="x in 3">
                                             <span
                                                 class="cc-teaser-configurator__position-grid-item"
-                                                :class="{'cc-teaser-configurator__position-grid-item--active': isCurrentLabelAlign(x+1, y+1)}"
-                                                @click="setLabelAlign(x+1, y+1)"
+                                                :class="{'cc-teaser-configurator__position-grid-item--active': isCurrentBadgeAlign(x+1, y+1)}"
+                                                @click="setBadgeAlign(x+1, y+1)"
                                             ></span>
                                         </template>
                                     </template>
                                 </div>
-                                <p>Note: Please verify text position configuration in the "Content" tab. It might overlap the label position.</p>
+                                <p>Note: Please verify text position configuration in the "Content" tab. It might overlap the badge position.</p>
                             </div>
                         </template>
 
-                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#label'">
+                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#badge'">
                             <div class="cc-teaser-configurator__tab-section">
                                 <template v-for="(fieldIndex, field) in tab.content.fields">
                                     <div
@@ -593,15 +593,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
             return 10;
         },
 
-        setLabelAlign(x: number, y: number): void {
-            this.configuration.label.align.x = x;
-            this.configuration.label.align.y = y;
+        setBadgeAlign(x: number, y: number): void {
+            this.configuration.badge.align.x = x;
+            this.configuration.badge.align.y = y;
         },
 
-        isCurrentLabelAlign(x: number, y: number): boolean {
+        isCurrentBadgeAlign(x: number, y: number): boolean {
             return (
-                Number(this.configuration.label.align.x) === x &&
-                Number(this.configuration.label.align.y) === y
+                Number(this.configuration.badge.align.x) === x &&
+                Number(this.configuration.badge.align.y) === y
             );
         },
 
