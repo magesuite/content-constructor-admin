@@ -2798,9 +2798,9 @@ var teaserPrototype = {
             y: 1,
         },
         examples: [
-            { text: 'Only {{price sku="some_sku"}}' },
+            { text: '<small>Only</small><br> {{price sku="some_sku"}}' },
             { text: '{{sku sku="some_sku"}}' },
-            { text: 'Only {{qty sku="some_sku"}} left' }
+            { text: '<big>Only</big> {{qty sku="some_sku"}} left' }
         ]
     }
 };
