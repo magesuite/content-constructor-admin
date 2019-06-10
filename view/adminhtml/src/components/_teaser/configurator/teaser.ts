@@ -87,6 +87,8 @@ export const teaserPrototype: any = {
         },
         examples: [
             { text: 'Only {{price sku="some_sku"}}' },
+            { text: '{{sku sku="some_sku"}}' },
+            { text: 'Only {{qty sku="some_sku"}} left' }
         ]
     }
 };
@@ -360,9 +362,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </textarea>
                                     </div>
                                     <div class="cc-input cc-teaser-configurator__form-element">
+                                        <br>
                                         <p>Add content with special markup, e.g.:
                                             <template v-for="example in configuration.badge.examples">
-                                                <br>- {{example.text}}<br>
+                                                <br>- {{example.text}}
                                             </template>
                                         </p>
                                     </div>
