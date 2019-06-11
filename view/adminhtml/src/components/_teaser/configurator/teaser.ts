@@ -79,6 +79,18 @@ export const teaserPrototype: any = {
             },
         },
     },
+    badge: {
+        value: '',
+        align: {
+            x: 1,
+            y: 1,
+        },
+        examples: [
+            { text: '<small>Only</small><br> {{price sku="some_sku"}}' },
+            { text: '{{sku sku="some_sku"}}' },
+            { text: '<big>Only</big> {{qty sku="some_sku"}} left' }
+        ]
+    }
 };
 
 interface IAdvancedField {
@@ -336,7 +348,46 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             </div>
                         </template>
 
-                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style'">
+                        <template v-if="tab.content && tab.content === '#badge'">
+                            <div
+                                class="cc-teaser-configurator__tab-section"
+                                :class="{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}"
+                            >
+                                <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <label for="cfg-teaser-{{teaserIndex}}-label-content" class="cc-input__label">
+                                            {{'Badge text' | translate}}: 
+                                        </label>
+                                        <textarea v-model="configuration.badge.value | prettify"  type="text" class="cc-input__textarea" id="cfg-teaser-{{teaserIndex}}-label-content" >
+                                        </textarea>
+                                    </div>
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <br>
+                                        <p>Add content with special markup, e.g.:
+                                            <template v-for="example in configuration.badge.examples">
+                                                <br>- {{example.text}}
+                                            </template>
+                                        </p>
+                                    </div>
+                                </div>    
+                                <br>                        
+                                <label class="cc-input__label">{{'Badge align' | translate }}:</label>
+                                <div class="cc-teaser-configurator__position-grid">
+                                    <template v-for="y in 3">
+                                        <template v-for="x in 3">
+                                            <span
+                                                class="cc-teaser-configurator__position-grid-item"
+                                                :class="{'cc-teaser-configurator__position-grid-item--active': isCurrentBadgeAlign(x+1, y+1)}"
+                                                @click="setBadgeAlign(x+1, y+1)"
+                                            ></span>
+                                        </template>
+                                    </template>
+                                </div>
+                                <p>Note: Please verify text position configuration in the "Content" tab. It might overlap the badge position.</p>
+                            </div>
+                        </template>
+
+                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#badge'">
                             <div class="cc-teaser-configurator__tab-section">
                                 <template v-for="(fieldIndex, field) in tab.content.fields">
                                     <div
@@ -437,13 +488,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
     },
     computed: {
-        configuration: function(): object {
+        configuration: function (): object {
             return this.parentConfiguration.items[this.teaserIndex];
         },
-        imageActionText: function(): string {
+        imageActionText: function (): string {
             return this.configuration.image.raw ? 'Change' : 'Upload';
         },
-        mirrorImageTextOutput: function(): string {
+        mirrorImageTextOutput: function (): string {
             return this.configuration.optimizers.mirror_image ? 'Yes' : 'No';
         },
     },
@@ -483,7 +534,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
              * @return {String} - HTML ready
              */
             read(txt: string): string {
-                return txt.replace(/<br\s*[\/]?>/gi, '\n');
+                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
             },
 
             /**
@@ -524,7 +575,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         ): boolean {
             return (
                 this.configuration.optimizers.scenarios[index].direction.x ===
-                    x &&
+                x &&
                 this.configuration.optimizers.scenarios[index].direction.y === y
             );
         },
@@ -543,6 +594,18 @@ const teaserConfigurator: vuejs.ComponentOption = {
             }
 
             return 10;
+        },
+
+        setBadgeAlign(x: number, y: number): void {
+            this.configuration.badge.align.x = x;
+            this.configuration.badge.align.y = y;
+        },
+
+        isCurrentBadgeAlign(x: number, y: number): boolean {
+            return (
+                Number(this.configuration.badge.align.x) === x &&
+                Number(this.configuration.badge.align.y) === y
+            );
         },
 
         /* Opens M2's built-in image manager modal.
@@ -692,7 +755,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         openCtaTargetModal(index: number): void {
             widgetTools.openDialog(
                 `${window.location.origin}/${
-                    this.adminPrefix
+                this.adminPrefix
                 }/admin/widget/index/filter_widgets/Link/widget_target_id/cfg-teaser-${index}-cta-href/`
             );
 
