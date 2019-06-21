@@ -571,7 +571,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             widgetTools.openDialog(
                 `${window.location.origin}/${
                     this.adminPrefix
-                }/admin/widget/index/widget_target_id/cfg-pg-hero_url`
+                }/admin/widget/index/widget_target_id/cfg-pg-hero_url/`
             );
 
             this.wWidgetListener();

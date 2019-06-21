@@ -18,7 +18,7 @@ const heroItemDataPattern: any = {
     headline: '',
     subheadline: '',
     paragraph: '',
-    ctaLabel: $t( 'Check offer' ),
+    ctaLabel: $t('Check offer'),
     href: '',
     sizeInfo: '',
     aspectRatio: '',
@@ -30,9 +30,7 @@ const heroItemDataPattern: any = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const heroCarouselConfigurator: vuejs.ComponentOption = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     /**
      * Get dependencies
      */
@@ -128,40 +126,58 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                     <div class="cc-hero-carousel-configurator__item-col-right">
                         <div class="cc-input cc-input--group">
                             <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                                <label for="cfg-hc-item{{ $index }}-variant" class="cc-input__label">${$t( 'Display variant' )}:</label>
+                                <label for="cfg-hc-item{{ $index }}-variant" class="cc-input__label">${$t(
+                                    'Display variant'
+                                )}:</label>
                                 <select name="cfg-hc-item{{ $index }}-variant" class="cc-input__select | cc-hero-carousel-configurator__select" id="cfg-hc-item{{ $index }}-variant" v-model="configuration.items[$index].displayVariant"">
                                     <template v-for="(idx, scenario) in imageTeasersContentPositions">
-                                        <option value="variant-{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
+                                        <option value="variant-{{ idx + 1 }}">${$t(
+                                            '{{ scenario }}'
+                                        )}</option>
                                     </template>
                                 </select>
                             </div>
                             <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                                <label for="cfg-hc-item{{ $index }}-color-scheme" class="cc-input__label">${$t( 'Text color scheme' )}:</label>
+                                <label for="cfg-hc-item{{ $index }}-color-scheme" class="cc-input__label">${$t(
+                                    'Text color scheme'
+                                )}:</label>
                                 <select name="cfg-hc-item{{ $index }}-color-scheme" class="cc-input__select | cc-hero-carousel-configurator__select" id="cfg-hc-item{{ $index }}-color-scheme" v-model="configuration.items[$index].colorScheme">
-                                    <option value="light">${$t( 'Light' )}</option>
-                                    <option value="dark">${$t( 'Dark' )}</option>
+                                    <option value="light">${$t(
+                                        'Light'
+                                    )}</option>
+                                    <option value="dark">${$t('Dark')}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                            <label for="cfg-hc-item{{ $index }}-headline" class="cc-input__label">${$t( 'Headline' )}:</label>
+                            <label for="cfg-hc-item{{ $index }}-headline" class="cc-input__label">${$t(
+                                'Headline'
+                            )}:</label>
                             <input type="text" v-model="configuration.items[$index].headline" id="cfg-hc-item{{ $index }}-headline" class="cc-input__input">
                         </div>
                         <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                            <label for="cfg-hc-item{{ $index }}-subheadline" class="cc-input__label">${$t( 'Subheadline' )}:</label>
+                            <label for="cfg-hc-item{{ $index }}-subheadline" class="cc-input__label">${$t(
+                                'Subheadline'
+                            )}:</label>
                             <input type="text" v-model="configuration.items[$index].subheadline" id="cfg-hc-item{{ $index }}-subheadline" class="cc-input__input">
                         </div>
                         <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                            <label for="cfg-hc-item{{ $index }}-paragraph" class="cc-input__label">${$t( 'Paragraph' )}:</label>
+                            <label for="cfg-hc-item{{ $index }}-paragraph" class="cc-input__label">${$t(
+                                'Paragraph'
+                            )}:</label>
                             <textarea type="text" v-model="configuration.items[$index].paragraph" id="cfg-hc-item{{ $index }}-paragraph" class="cc-input__textarea"></textarea>
                         </div>
                         <div class="cc-input cc-input--group">
                             <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                                <label for="cfg-hc-item{{ $index }}-cta-label" class="cc-input__label">${$t( 'CTA label' )}:</label>
+                                <label for="cfg-hc-item{{ $index }}-cta-label" class="cc-input__label">${$t(
+                                    'CTA label'
+                                )}:</label>
                                 <input type="text" v-model="configuration.items[$index].ctaLabel" id="cfg-hc-item{{ $index }}-cta-label" class="cc-input__input">
                             </div>
                             <div class="cc-input cc-input--type-addon | cc-hero-carousel-configurator__item-form-element">
-                                <label for="hero-ctatarget-output-{{ $index }}" class="cc-input__label">${$t( 'CTA target link' )}:</label>
+                                <label for="hero-ctatarget-output-{{ $index }}" class="cc-input__label">${$t(
+                                    'CTA target link'
+                                )}:</label>
                                 <input type="text" class="cc-input__input | cc-hero-carousel-configurator__cta-target-link" v-model="configuration.items[$index].href" id="hero-ctatarget-output-{{ $index }}">
                                 <span class="cc-input__addon | cc-hero-carousel-configurator__widget-chooser-trigger" @click="openCtaTargetModal( $index )">
                                     <svg class="cc-input__addon-icon">
@@ -239,15 +255,15 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             scenarioOptions: {
                 // Mobile layout scenario elements.
                 mobileDisplayVariant: {
-                    'list': {
+                    list: {
                         name: 'Large teaser',
                         iconId: 'ml_col',
                     },
-                    'slider': {
+                    slider: {
                         name: 'Slider',
                         iconId: 'ml_slider',
                     },
-                    'hidden': {
+                    hidden: {
                         name: 'Hidden',
                         iconId: 'ml_hidden',
                     },
@@ -266,7 +282,9 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
     },
     methods: {
         setOption(optionCategory: string, optionId: string): void {
-            this.configuration[optionCategory] = this.scenarioOptions[optionCategory][optionId];
+            this.configuration[optionCategory] = this.scenarioOptions[
+                optionCategory
+            ][optionId];
             this.configuration[optionCategory].id = optionId;
         },
         /* Opens M2's built-in image manager modal
@@ -274,13 +292,14 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * @param index {number} - index of image of hero item
          */
         getImageUploader(index: number): void {
-            MediabrowserUtility.openDialog(`${this.uploaderBaseUrl}target_element_id/hero-img-${index}/`,
+            MediabrowserUtility.openDialog(
+                `${this.uploaderBaseUrl}target_element_id/hero-img-${index}/`,
                 'auto',
                 'auto',
                 $t('Insert File...'),
                 {
                     closed: true,
-                },
+                }
             );
         },
 
@@ -293,15 +312,19 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             let isAlreadyCalled: boolean = false;
 
             // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.cc-hero-carousel-configurator__image-url', (event: Event): void => {
-                if (!isAlreadyCalled) {
-                    isAlreadyCalled = true;
-                    component.onImageUploaded(event.target);
-                    setTimeout((): void => {
-                        isAlreadyCalled = false;
-                    }, 100);
+            $(document).on(
+                'change',
+                '.cc-hero-carousel-configurator__image-url',
+                (event: Event): void => {
+                    if (!isAlreadyCalled) {
+                        isAlreadyCalled = true;
+                        component.onImageUploaded(event.target);
+                        setTimeout((): void => {
+                            isAlreadyCalled = false;
+                        }, 100);
+                    }
                 }
-            });
+            );
         },
 
         /* Action after image was uploaded
@@ -311,17 +334,33 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          */
         onImageUploaded(input: any): void {
             const _this: any = this;
-            const itemIndex: any = input.id.substr(input.id.lastIndexOf('-') + 1);
-            const encodedImage: any = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
-            const imgEndpoint: string = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
+            const itemIndex: any = input.id.substr(
+                input.id.lastIndexOf('-') + 1
+            );
+            const encodedImage: any = input.value.match(
+                '___directive/([a-zA-Z0-9]*)'
+            )[1];
+            const imgEndpoint: string = this.imageEndpoint.replace(
+                '{/encoded_image}',
+                encodedImage
+            );
 
-            this.configuration.items[itemIndex].decodedImage = Base64 ? Base64.decode(encodedImage) : window.atob(encodedImage);
+            this.configuration.items[itemIndex].decodedImage = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
 
             const img: any = new Image();
             img.onload = function(): void {
-                const ar: string = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
-                _this.configuration.items[itemIndex].image = img.getAttribute('src');
-                _this.configuration.items[itemIndex].sizeInfo = `${img.naturalWidth}x${img.naturalHeight}px (${ar})`;
+                const ar: string = _this.getAspectRatio(
+                    img.naturalWidth,
+                    img.naturalHeight
+                );
+                _this.configuration.items[itemIndex].image = img.getAttribute(
+                    'src'
+                );
+                _this.configuration.items[itemIndex].sizeInfo = `${
+                    img.naturalWidth
+                }x${img.naturalHeight}px (${ar})`;
                 _this.configuration.items[itemIndex].aspectRatio = ar;
                 setTimeout((): void => {
                     _this.checkImageSizes();
@@ -334,7 +373,11 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * @param index {number} - index of teaser item to know where to place output of widget chooser
          */
         openCtaTargetModal(index: number): void {
-            widgetTools.openDialog(`${window.location.origin}/${this.adminPrefix}/admin/widget/index/filter_widgets/Link/widget_target_id/hero-ctatarget-output-${index}`);
+            widgetTools.openDialog(
+                `${window.location.origin}/${
+                    this.adminPrefix
+                }/admin/widget/index/filter_widgets/Link/widget_target_id/hero-ctatarget-output-${index}/`
+            );
             this.wWidgetListener(index);
         },
         /* Sets listener for widget chooser
@@ -342,9 +385,12 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * after value of item.href is changed
          */
         widgetSetListener(): void {
-            $('.cc-hero-carousel-configurator__cta-target-link').on('change', (): void => {
-                this.onChange();
-            });
+            $('.cc-hero-carousel-configurator__cta-target-link').on(
+                'change',
+                (): void => {
+                    this.onChange();
+                }
+            );
         },
         /*
          * Check if widget chooser is loaded. If not, wait for it, if yes:
@@ -353,14 +399,22 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * @param {number} index Hero item's index in array.
          */
         wWidgetListener(itemIndex: number): void {
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
-                const button: any = widgetTools.dialogWindow[0].querySelector('#insert_button');
+            if (
+                typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== ''
+            ) {
+                const button: any = widgetTools.dialogWindow[0].querySelector(
+                    '#insert_button'
+                );
 
                 button.onclick = null;
-                button.addEventListener('click', (): void => {
-                    this.configuration.items[itemIndex].href = '';
-                    wWidget.insertWidget();
-                });
+                button.addEventListener(
+                    'click',
+                    (): void => {
+                        this.configuration.items[itemIndex].href = '';
+                        wWidget.insertWidget();
+                    }
+                );
             } else {
                 window.setTimeout((): void => {
                     this.wWidgetListener(itemIndex);
@@ -372,7 +426,11 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * @param {number} index New component's index in components array.
          */
         createNewHeroItem(index: number): void {
-            this.configuration.items.splice(index, 0, JSON.parse(JSON.stringify(heroItemDataPattern)));
+            this.configuration.items.splice(
+                index,
+                0,
+                JSON.parse(JSON.stringify(heroItemDataPattern))
+            );
             this.onChange();
         },
         /**
@@ -381,17 +439,43 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          */
         moveHeroItemUp(index: number): void {
             if (index > 0) {
-                const $thisItem: any = $(`#m2c-hero-carousel-item-${ index }`);
-                const $prevItem: any = $(`#m2c-hero-carousel-item-${ index - 1 }`);
+                const $thisItem: any = $(`#m2c-hero-carousel-item-${index}`);
+                const $prevItem: any = $(
+                    `#m2c-hero-carousel-item-${index - 1}`
+                );
 
-                $thisItem.addClass('cc-hero-carousel-configurator__item--animating').css('transform', `translateY( ${ -Math.abs($prevItem.outerHeight(true)) }px)`);
-                $prevItem.addClass( 'cc-hero-carousel-configurator__item--animating' ).css( 'transform', `translateY(${ $thisItem.outerHeight(true) }px)`);
+                $thisItem
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css(
+                        'transform',
+                        `translateY( ${-Math.abs(
+                            $prevItem.outerHeight(true)
+                        )}px)`
+                    );
+                $prevItem
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css(
+                        'transform',
+                        `translateY(${$thisItem.outerHeight(true)}px)`
+                    );
 
                 setTimeout((): void => {
-                    this.configuration.items.splice(index - 1, 0, this.configuration.items.splice(index, 1)[0]);
+                    this.configuration.items.splice(
+                        index - 1,
+                        0,
+                        this.configuration.items.splice(index, 1)[0]
+                    );
                     this.onChange();
-                    $thisItem.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
-                    $prevItem.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
+                    $thisItem
+                        .removeClass(
+                            'cc-hero-carousel-configurator__item--animating'
+                        )
+                        .css('transform', '');
+                    $prevItem
+                        .removeClass(
+                            'cc-hero-carousel-configurator__item--animating'
+                        )
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -401,17 +485,41 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          */
         moveHeroItemDown(index: number): void {
             if (index < this.configuration.items.length - 1) {
-                const $thisItem: any = $(`#cc-hero-carousel-item-${ index }`);
-                const $nextItem: any = $(`#cc-hero-carousel-item-${ index + 1 }`);
+                const $thisItem: any = $(`#cc-hero-carousel-item-${index}`);
+                const $nextItem: any = $(`#cc-hero-carousel-item-${index + 1}`);
 
-                $thisItem.addClass('cc-hero-carousel-configurator__item--animating').css('transform', `translateY(${ $nextItem.outerHeight(true) }px)`);
-                $nextItem.addClass('cc-hero-carousel-configurator__item--animating').css('transform', `translateY(${ -Math.abs($thisItem.outerHeight(true)) }px)`);
+                $thisItem
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css(
+                        'transform',
+                        `translateY(${$nextItem.outerHeight(true)}px)`
+                    );
+                $nextItem
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css(
+                        'transform',
+                        `translateY(${-Math.abs(
+                            $thisItem.outerHeight(true)
+                        )}px)`
+                    );
 
                 setTimeout((): void => {
-                    this.configuration.items.splice(index + 1, 0, this.configuration.items.splice(index, 1)[0]);
+                    this.configuration.items.splice(
+                        index + 1,
+                        0,
+                        this.configuration.items.splice(index, 1)[0]
+                    );
                     this.onChange();
-                    $thisItem.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
-                    $nextItem.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
+                    $thisItem
+                        .removeClass(
+                            'cc-hero-carousel-configurator__item--animating'
+                        )
+                        .css('transform', '');
+                    $nextItem
+                        .removeClass(
+                            'cc-hero-carousel-configurator__item--animating'
+                        )
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -452,7 +560,9 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * All empty hero items has to be removed to not get into configuration object
          */
         cleanupConfiguration(): void {
-            const filteredArray: any = this.configuration.items.filter((item: any): any => item.image !== '');
+            const filteredArray: any = this.configuration.items.filter(
+                (item: any): any => item.image !== ''
+            );
             this.configuration.items = filteredArray;
             this.onChange();
         },
@@ -461,15 +571,23 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * @param images {array} - array of all uploaded images
          */
         checkImageSizes(): boolean {
-            const itemsToCheck = JSON.parse(JSON.stringify(this.configuration.items)).filter((item: any): boolean => {
-                return Boolean(item.aspectRatio); // Filter out items without aspect ratio set yet.
-            });
+            const itemsToCheck = JSON.parse(
+                JSON.stringify(this.configuration.items)
+            ).filter(
+                (item: any): boolean => {
+                    return Boolean(item.aspectRatio); // Filter out items without aspect ratio set yet.
+                }
+            );
 
             for (let i: number = 0; i < itemsToCheck.length; i++) {
-                if (itemsToCheck[i].aspectRatio !== itemsToCheck[0].aspectRatio) {
+                if (
+                    itemsToCheck[i].aspectRatio !== itemsToCheck[0].aspectRatio
+                ) {
                     alert({
                         title: $t('Warning'),
-                        content: $t('Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'),
+                        content: $t(
+                            'Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'
+                        ),
                     });
                     return false;
                 }
@@ -496,7 +614,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
         getAspectRatio(a: number, b: number): string {
             let c: number = this.getGreatestCommonDivisor(a, b);
 
-            return `${(a / c)}:${(b / c)}`;
+            return `${a / c}:${b / c}`;
         },
     },
     ready(): void {

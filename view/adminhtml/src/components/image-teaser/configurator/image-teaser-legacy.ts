@@ -929,7 +929,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             widgetTools.openDialog(
                 `${window.location.origin}/${
                     this.adminPrefix
-                }/admin/widget/index/filter_widgets/Link/widget_target_id/image-teaser-ctatarget-output-${index}`
+                }/admin/widget/index/filter_widgets/Link/widget_target_id/image-teaser-ctatarget-output-${index}/`
             );
 
             this.wWidgetListener(index);

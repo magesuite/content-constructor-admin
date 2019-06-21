@@ -10,16 +10,16 @@ import componentConfigurator from '../../_component-configurator/component-confi
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const paragraphConfigurator: vuejs.ComponentOption = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     template: `<form class="cc-paragraph-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
 
         <div class="cc-paragraph-configurator__error" v-text="tempConfiguration.errorMessage" v-show="tempConfiguration.errorMessage">
         </div>
 
         <section class="cc-paragraph-configurator__section">
-            <h3 class="cc-paragraph-configurator__subtitle">${$t( 'Paragraph width' )}</h3>
+            <h3 class="cc-paragraph-configurator__subtitle">${$t(
+                'Paragraph width'
+            )}</h3>
             <div class="cc-paragraph-configurator__scenario-options">
                 <div
                     :class="{
@@ -34,7 +34,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                         </svg>
                     </div>
                     <p class="cc-paragraph-configurator__option-name">
-                        ${$t( '{{ option.name }}' )}
+                        ${$t('{{ option.name }}')}
                     </p>
                 </div>
             </div>
@@ -42,33 +42,59 @@ const paragraphConfigurator: vuejs.ComponentOption = {
 
         <section class="cc-paragraph-configurator__section">
             <div class="cc-input">
-                <label for="input-cfg-id" class="cc-input__label">${$t( 'Identifier' )}:</label>
+                <label for="input-cfg-id" class="cc-input__label">${$t(
+                    'Identifier'
+                )}:</label>
                 <input type="text" name="cfg-id" v-model="tempConfiguration.identifier" id="input-cfg-id" class="cc-input__input cc-input__input--limited-width" @blur="stripSpaces( tempConfiguration.identifier )" maxlength="30">
             </div>
             <div class="cc-input">
-                <label for="input-cfg-title" class="cc-input__label">${$t( 'Title' )}:</label>
+                <label for="input-cfg-title" class="cc-input__label">${$t(
+                    'Title'
+                )}:</label>
                 <input type="text" name="cfg-title" v-model="tempConfiguration.title" id="input-cfg-title" class="cc-input__input cc-input__input--limited-width" maxlength="100">
             </div>
             <div class="cc-input" v-if="isColumnsConfigAvailable()">
-                <label for="input-cfg-columns" class="cc-input__label">${$t( 'Number of columns' )}:</label>
+                <label for="input-cfg-columns" class="cc-input__label">${$t(
+                    'Number of columns'
+                )}:</label>
                 <select name="input-cfg-columns" class="cc-input__select | cc-paragraph-configurator__select" id="input-cfg-columns" v-model="configuration.columns">
-                    <option value="none">${$t( 'Don\'t split content - display full width' )}</option>
-                    <option value="2">${$t( 'Split content into 2 columns' )}</option>
-                    <option value="3">${$t( 'Split content into 3 columns' )}</option>
-                    <option value="4">${$t( 'Split content into 4 columns' )}</option>
+                    <option value="none">${$t(
+                        "Don't split content - display full width"
+                    )}</option>
+                    <option value="2">${$t(
+                        'Split content into 2 columns'
+                    )}</option>
+                    <option value="3">${$t(
+                        'Split content into 3 columns'
+                    )}</option>
+                    <option value="4">${$t(
+                        'Split content into 4 columns'
+                    )}</option>
                 </select>
                 <div class="admin__field-note cc-input__note">
-                    <span>${$t( 'Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.' )}</span>
+                    <span>${$t(
+                        'Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.'
+                    )}</span>
                 </div>
             </div>
             <div class="cc-input">
-                <label for="textarea-cfg-paragraph" class="cc-input__label cc-input__label--look-top-align">${$t( 'HTML' )}:</label>
+                <label for="textarea-cfg-paragraph" class="cc-input__label cc-input__label--look-top-align">${$t(
+                    'HTML'
+                )}:</label>
 
                 <div class="buttons-set | cc-paragraph-configurator__wysiwyg-buttons">
-                    <button type="button" class="scalable action-show-hide" id="toggle-wysiwyg">${$t( 'Show / Hide Editor' )}</button>
-                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()" v-show="!isEditorVisible">${$t( 'Insert Widget' )}...</button>
-                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()" v-show="!isEditorVisible">${$t( 'Insert Image' )}...</button>
-                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()" v-show="!isEditorVisible">${$t( 'Insert Variable' )}...</button>
+                    <button type="button" class="scalable action-show-hide" id="toggle-wysiwyg">${$t(
+                        'Show / Hide Editor'
+                    )}</button>
+                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()" v-show="!isEditorVisible">${$t(
+                        'Insert Widget'
+                    )}...</button>
+                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()" v-show="!isEditorVisible">${$t(
+                        'Insert Image'
+                    )}...</button>
+                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()" v-show="!isEditorVisible">${$t(
+                        'Insert Variable'
+                    )}...</button>
                 </div>
 
                 <textarea name="cfg-paragraph" v-model="tempConfiguration.content" id="textarea-cfg-paragraph" class="cc-input__textarea | cc-paragraph-configurator__textarea"></textarea>
@@ -87,8 +113,8 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     title: '',
                     columns: 'none',
                     scenarios: {
-                        reading: {}
-                    }
+                        reading: {},
+                    },
                 };
             },
         },
@@ -138,11 +164,11 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             scenarioOptions: {
                 // Reading scenario options.
                 reading: {
-                    'full': {
+                    full: {
                         name: 'Container width',
                         iconId: 'tw_content-width-text',
                     },
-                    'optimal': {
+                    optimal: {
                         name: 'Optimal reading width',
                         iconId: 'tw_optimal-reading',
                     },
@@ -158,9 +184,12 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         }
 
         // Init loader and hide it
-        $('body').one().loadingPopup( {
-            timeout: false,
-        }).trigger('hideLoadingPopup');
+        $('body')
+            .one()
+            .loadingPopup({
+                timeout: false,
+            })
+            .trigger('hideLoadingPopup');
 
         // If ID is already provided (means we're in edit mode)
         if (this.configuration.blockId) {
@@ -174,26 +203,33 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     Authorization: this.restToken,
                 },
                 method: 'get',
-                url: `${ window.location.origin }/rest/all/V1/cmsBlock/${this.configuration.blockId}`,
-            }).then((response: any): void => {
-                const responseData: any = (typeof response.data === 'string') ? JSON.parse(response.data) : response.data;
-                // Hide loader
-                $('body').trigger('hideLoadingPopup');
+                url: `${window.location.origin}/rest/all/V1/cmsBlock/${
+                    this.configuration.blockId
+                }`,
+            }).then(
+                (response: any): void => {
+                    const responseData: any =
+                        typeof response.data === 'string'
+                            ? JSON.parse(response.data)
+                            : response.data;
+                    // Hide loader
+                    $('body').trigger('hideLoadingPopup');
 
-                // Update components tempConfiguration
-                this.tempConfiguration.identifier = responseData.identifier;
-                this.tempConfiguration.title = responseData.title;
-                this.tempConfiguration.content = responseData.content;
-                this.configuration.title = responseData.title;
+                    // Update components tempConfiguration
+                    this.tempConfiguration.identifier = responseData.identifier;
+                    this.tempConfiguration.title = responseData.title;
+                    this.tempConfiguration.content = responseData.content;
+                    this.configuration.title = responseData.title;
 
-                // initialize customized WYSIWYG
-                if (this.wysiwygCfg) {
-                    this.initWysiwyg();
+                    // initialize customized WYSIWYG
+                    if (this.wysiwygCfg) {
+                        this.initWysiwyg();
+                    }
+                },
+                (): void => {
+                    $('body').trigger('hideLoadingPopup');
                 }
-
-            }, (): void => {
-                $('body').trigger('hideLoadingPopup');
-            } );
+            );
         } else {
             // initialize customized WYSIWYG
             if (this.wysiwygCfg) {
@@ -222,85 +258,119 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             $('body').trigger('showLoadingPopup');
 
             // Send request to REST API
-            this.$http( {
+            this.$http({
                 headers: {
                     Accept: 'application/json',
                     Authorization: this.restToken,
                 },
                 method: this.configuration.blockId ? 'put' : 'post',
-                url: this.configuration.blockId ? `${ window.location.origin }/rest/all/V1/cmsBlock/${this.configuration.blockId}` : `${ window.location.origin }/rest/all/V1/cmsBlock`,
+                url: this.configuration.blockId
+                    ? `${window.location.origin}/rest/all/V1/cmsBlock/${
+                          this.configuration.blockId
+                      }`
+                    : `${window.location.origin}/rest/all/V1/cmsBlock`,
                 body: dataConstruct,
-            }).then((response: any): void => {
-                // If status is OK update component's configuration and run Save to save component data
-                if (response.ok) {
-                    const responseData: any = (typeof response.data === 'string') ? JSON.parse(response.data) : response.data;
-                    this.configuration.blockId = responseData.id;
-                    this.configuration.title = responseData.title;
+            }).then(
+                (response: any): void => {
+                    // If status is OK update component's configuration and run Save to save component data
+                    if (response.ok) {
+                        const responseData: any =
+                            typeof response.data === 'string'
+                                ? JSON.parse(response.data)
+                                : response.data;
+                        this.configuration.blockId = responseData.id;
+                        this.configuration.title = responseData.title;
 
-                    // Hide loader
-                    $('body').trigger('hideLoadingPopup');
+                        // Hide loader
+                        $('body').trigger('hideLoadingPopup');
+
+                        // Set headers back
+                        Vue.http.headers.custom.Accept = 'text/html';
+
+                        this.onSave();
+                    }
+                },
+                (response: any): void => {
+                    // if failed and response returned any message, put it into error div, else put default text
+                    let responseData: any = {};
+                    try {
+                        responseData = JSON.parse(response.data);
+
+                        this.tempConfiguration.errorMessage = responseData.message
+                            ? responseData.message
+                            : $t(
+                                  'An unknown error occured. Please try again later.'
+                              );
+
+                        // Scroll modal to top to make message visible
+                        const $configuratorModal: any = $(
+                            '.content-constructor__modal--configurator'
+                        ).closest('.modal-content');
+
+                        if ($configuratorModal.length) {
+                            $configuratorModal.animate(
+                                {
+                                    scrollTop: 0,
+                                },
+                                150
+                            );
+                        }
+                    } catch (err) {
+                        console.warn(
+                            `Could not parse response as JSON: ${err}`
+                        );
+                    }
 
                     // Set headers back
                     Vue.http.headers.custom.Accept = 'text/html';
 
-                    this.onSave();
+                    // Hide loader
+                    $('body').trigger('hideLoadingPopup');
                 }
-            }, (response: any): void => {
-                // if failed and response returned any message, put it into error div, else put default text
-                let responseData: any = {};
-                try {
-                    responseData = JSON.parse(response.data);
-
-                    this.tempConfiguration.errorMessage = responseData.message
-                        ? responseData.message
-                        : $t('An unknown error occured. Please try again later.');
-
-                    // Scroll modal to top to make message visible
-                    const $configuratorModal: any = $('.content-constructor__modal--configurator').closest('.modal-content');
-
-                    if($configuratorModal.length) {
-                        $configuratorModal.animate({
-                            scrollTop: 0,
-                        }, 150);
-                    }
-                } catch (err) {
-                    console.warn(`Could not parse response as JSON: ${err}`);
-                };
-
-                // Set headers back
-                Vue.http.headers.custom.Accept = 'text/html';
-
-                // Hide loader
-                $('body').trigger('hideLoadingPopup');
-            } );
+            );
         },
     },
     methods: {
         stripSpaces(str: string): void {
-            const striped: string = str.split(' ').join('-').toLowerCase();
+            const striped: string = str
+                .split(' ')
+                .join('-')
+                .toLowerCase();
             this.tempConfiguration.identifier = striped;
         },
         /* Opens modal with M2 built-in widget chooser
          */
         openWidgetModal(): void {
-            widgetTools.openDialog( `${this.wysiwygCfg.widget_window_url}widget_target_id/textarea-cfg-paragraph` );
+            widgetTools.openDialog(
+                `${
+                    this.wysiwygCfg.widget_window_url
+                }widget_target_id/textarea-cfg-paragraph/`
+            );
         },
         /* Opens modal with M2 built-in media uploader
          */
         openMediaModal(): void {
-            MediabrowserUtility.openDialog(`${this.uploaderBaseUrl}target_element_id/textarea-cfg-paragraph`,
+            MediabrowserUtility.openDialog(
+                `${
+                    this.uploaderBaseUrl
+                }target_element_id/textarea-cfg-paragraph/`,
                 'auto',
                 'auto',
                 $t('Insert File...'),
                 {
                     closed: true,
-                },
+                }
             );
         },
         /* Opens modal with M2 built-in variables
          */
         openMagentoVariablesModal(): void {
-            MagentovariablePlugin.loadChooser(`${window.location.origin}/${this.adminPrefix}/admin/system_variable/wysiwygPlugin/`, 'textarea-cfg-paragraph');
+            MagentovariablePlugin.loadChooser(
+                `${window.location.origin}/${
+                    this.adminPrefix
+                }/admin/system_variable/wysiwygPlugin/`,
+                'textarea-cfg-paragraph'
+            );
         },
         /**
          * Initializes TinyMCE WYSIWYG with given configuration (this.wysiwygConfig).
@@ -314,7 +384,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             const editorConfig: JSON = JSON.parse(this.wysiwygConfig);
 
             require([
-                'mage/adminhtml/wysiwyg/tiny_mce/setup'
+                'mage/adminhtml/wysiwyg/tiny_mce/setup',
             ], function(): void {
                 editor = new wysiwygSetup(
                     'textarea-cfg-paragraph',
@@ -323,10 +393,14 @@ const paragraphConfigurator: vuejs.ComponentOption = {
 
                 editor.setup('exact');
 
-                Event.observe('toggle-wysiwyg', 'click', function(): void {
-                    editor.toggle();
-                    _this.isEditorVisible = !_this.isEditorVisible;
-                }.bind(editor));
+                Event.observe(
+                    'toggle-wysiwyg',
+                    'click',
+                    function(): void {
+                        editor.toggle();
+                        _this.isEditorVisible = !_this.isEditorVisible;
+                    }.bind(editor)
+                );
 
                 _this.isEditorVisible = true;
             });
@@ -336,7 +410,9 @@ const paragraphConfigurator: vuejs.ComponentOption = {
          * Set the proper option after variant click
          */
         toggleOption(optionCategory: string, optionId: string): void {
-            this.configuration.scenarios[optionCategory] = this.scenarioOptions[optionCategory][optionId];
+            this.configuration.scenarios[optionCategory] = this.scenarioOptions[
+                optionCategory
+            ][optionId];
             this.configuration.scenarios[optionCategory].id = optionId;
         },
         isColumnsConfigAvailable(): boolean {
@@ -350,8 +426,13 @@ const paragraphConfigurator: vuejs.ComponentOption = {
          */
         updateConfigurationProp(): void {
             const propDefaults: Object = this.$options.props.configuration.default();
-            this.configuration = $.extend({}, propDefaults, this.configuration, true);
-        }
+            this.configuration = $.extend(
+                {},
+                propDefaults,
+                this.configuration,
+                true
+            );
+        },
     },
 };
 

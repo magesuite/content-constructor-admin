@@ -1499,9 +1499,7 @@ var componentConfigurator = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var buttonConfigurator = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     template: "<form class=\"cc-button-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-label\" class=\"cc-input__label\">" + $t('Label') + ":</label>\n            <input type=\"text\" v-model=\"configuration.label\" id=\"cfg-label\" class=\"cc-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-addon cc-input--type-inline | cc-button-configurator__item-form-element\">\n            <label for=\"cfg-target\" class=\"cc-input__label\">" + $t('Target') + ":</label>\n            <div class=\"cc-input__addon-wrapper\">\n                <input type=\"text\" class=\"cc-input__input | cc-button-configurator__target\" v-model=\"configuration.target\" id=\"cfg-target\">\n                <span class=\"cc-input__addon | cc-button-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal()\">\n                    <svg class=\"cc-input__addon-icon\">\n                        <use xlink:href=\"#icon_link\"></use>\n                    </svg>\n                </span>\n            </div>\n        </div>\n    </form>",
     props: {
         /*
@@ -1539,7 +1537,7 @@ var buttonConfigurator = {
         /* Opens modal with M2 built-in widget chooser
          */
         openCtaTargetModal: function () {
-            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/cfg-target");
+            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/cfg-target/");
             this.wWidgetListener();
         },
         /* Sets listener for widget chooser
@@ -1559,7 +1557,8 @@ var buttonConfigurator = {
          */
         wWidgetListener: function () {
             var _this = this;
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
+            if (typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== '') {
                 var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
                 button.onclick = null;
                 button.addEventListener('click', function () {
@@ -2400,9 +2399,7 @@ var heroItemDataPattern = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var heroCarouselConfigurator = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     /**
      * Get dependencies
      */
@@ -2466,15 +2463,15 @@ var heroCarouselConfigurator = {
             scenarioOptions: {
                 // Mobile layout scenario elements.
                 mobileDisplayVariant: {
-                    'list': {
+                    list: {
                         name: 'Large teaser',
                         iconId: 'ml_col',
                     },
-                    'slider': {
+                    slider: {
                         name: 'Slider',
                         iconId: 'ml_slider',
                     },
-                    'hidden': {
+                    hidden: {
                         name: 'Hidden',
                         iconId: 'ml_hidden',
                     },
@@ -2531,9 +2528,11 @@ var heroCarouselConfigurator = {
         onImageUploaded: function (input) {
             var _this = this;
             var itemIndex = input.id.substr(input.id.lastIndexOf('-') + 1);
-            var encodedImage = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
+            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
             var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
-            this.configuration.items[itemIndex].decodedImage = Base64 ? Base64.decode(encodedImage) : window.atob(encodedImage);
+            this.configuration.items[itemIndex].decodedImage = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
                 var ar = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
@@ -2551,7 +2550,7 @@ var heroCarouselConfigurator = {
          * @param index {number} - index of teaser item to know where to place output of widget chooser
          */
         openCtaTargetModal: function (index) {
-            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/hero-ctatarget-output-" + index);
+            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/hero-ctatarget-output-" + index + "/");
             this.wWidgetListener(index);
         },
         /* Sets listener for widget chooser
@@ -2572,7 +2571,8 @@ var heroCarouselConfigurator = {
          */
         wWidgetListener: function (itemIndex) {
             var _this = this;
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
+            if (typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== '') {
                 var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
                 button.onclick = null;
                 button.addEventListener('click', function () {
@@ -2603,13 +2603,21 @@ var heroCarouselConfigurator = {
             if (index > 0) {
                 var $thisItem_1 = $("#m2c-hero-carousel-item-" + index);
                 var $prevItem_1 = $("#m2c-hero-carousel-item-" + (index - 1));
-                $thisItem_1.addClass('cc-hero-carousel-configurator__item--animating').css('transform', "translateY( " + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
-                $prevItem_1.addClass('cc-hero-carousel-configurator__item--animating').css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
+                $thisItem_1
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY( " + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
+                $prevItem_1
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
                 setTimeout(function () {
                     _this.configuration.items.splice(index - 1, 0, _this.configuration.items.splice(index, 1)[0]);
                     _this.onChange();
-                    $thisItem_1.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
-                    $prevItem_1.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
+                    $thisItem_1
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
+                    $prevItem_1
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -2622,13 +2630,21 @@ var heroCarouselConfigurator = {
             if (index < this.configuration.items.length - 1) {
                 var $thisItem_2 = $("#cc-hero-carousel-item-" + index);
                 var $nextItem_1 = $("#cc-hero-carousel-item-" + (index + 1));
-                $thisItem_2.addClass('cc-hero-carousel-configurator__item--animating').css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
-                $nextItem_1.addClass('cc-hero-carousel-configurator__item--animating').css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
+                $thisItem_2
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
+                $nextItem_1
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
                 setTimeout(function () {
                     _this.configuration.items.splice(index + 1, 0, _this.configuration.items.splice(index, 1)[0]);
                     _this.onChange();
-                    $thisItem_2.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
-                    $nextItem_1.removeClass('cc-hero-carousel-configurator__item--animating').css('transform', '');
+                    $thisItem_2
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
+                    $nextItem_1
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -2709,7 +2725,7 @@ var heroCarouselConfigurator = {
          */
         getAspectRatio: function (a, b) {
             var c = this.getGreatestCommonDivisor(a, b);
-            return (a / c) + ":" + (b / c);
+            return a / c + ":" + b / c;
         },
     },
     ready: function () {
@@ -4092,7 +4108,7 @@ var imageTeaserConfigurator$2 = {
          * @param index {number} - index of teaser item to know where to place output of widget chooser
          */
         openCtaTargetModal: function (index) {
-            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/image-teaser-ctatarget-output-" + index);
+            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/image-teaser-ctatarget-output-" + index + "/");
             this.wWidgetListener(index);
         },
         /* Sets listener for widget chooser
@@ -4216,7 +4232,7 @@ var teaserDataPattern = {
     sizeSelect: '2x1',
     size: {
         x: 2,
-        y: 1
+        y: 1,
     },
     position: 'left',
     row: 1,
@@ -4237,9 +4253,7 @@ var teaserDataPattern = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var magentoProductGridTeasersConfigurator = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     template: "<div class=\"cc-magento-product-grid-teasers-configurator | {{ class }}\">\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.teasers.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.teasers\">\n            <div class=\"cc-magento-product-grid-teasers-configurator__item\" id=\"cc-magento-pg-teaser-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <div class=\"cc-magento-product-grid-teasers-configurator__item-content\">\n                    <div v-bind:class=\"[ 'cc-magento-product-grid-teasers-configurator__item-col-left', configuration.teasers[$index].image ? 'cc-magento-product-grid-teasers-configurator__item-col-left--look-image-uploaded' : '' ]\">\n                        <div class=\"cc-magento-product-grid-teasers-configurator__item-image-wrapper\">\n                            <img :src=\"configuration.teasers[$index].image\" class=\"cc-magento-product-grid-teasers-configurator__item-image\" v-show=\"configuration.teasers[$index].image\">\n                            <input type=\"hidden\" v-model=\"configuration.teasers[$index].image\">\n                            <input type=\"hidden\" class=\"cc-magento-product-grid-teasers-configurator__image-url\" id=\"mpg-teaser-img-{{$index}}\">\n                            <svg class=\"cc-magento-product-grid-teasers-configurator__item-image-placeholder\" v-show=\"!configuration.teasers[$index].image\">\n                                <use xlink:href=\"#icon_image-placeholder\"></use>\n                            </svg>\n\n                            <div class=\"cc-magento-product-grid-teasers-configurator__item-actions\">\n                                <component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"moveTeaserUp( $index )\" :class=\"[ isFirstTeaser( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstTeaser( $index )\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"moveTeaserDown( $index )\" :class=\"[ isLastTeaser( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastTeaser( $index )\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"getImageUploader( $index )\">\n                                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                    <use xlink:href=\"#icon_upload-image\"></use>\n                                                </svg>\n                                                {{ configuration.teasers[$index].image ? imageUploadedText : noImageUploadedText }}\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"deleteTeaser( $index )\">\n                                            <svg class=\"cc-action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </component-actions>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"cc-magento-product-grid-teasers-configurator__item-col-right\">\n                        <div class=\"cc-input cc-input--group cc-input--group-quarter\">\n                            <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"cfg-mpg-teaser{{ $index }}-size-select\" class=\"cc-input__label\">" + $t('Teaser size') + ":</label>\n                                <select name=\"cfg-mpg-teaser{{ $index }}-size-select\" class=\"cc-input__select | cc-magento-product-grid-teasers-configurator__select\" id=\"cfg-mpg-teaser{{ $index }}-size-select\" v-model=\"configuration.teasers[$index].sizeSelect\" @change=\"setTeaserSize($index)\">\n                                    <option value=\"1x1\">" + $t('1x1') + "</option>\n                                    <option value=\"1x2\">" + $t('1x2') + "</option>\n                                    <option value=\"2x1\">" + $t('2x1') + "</option>\n                                    <option value=\"2x2\">" + $t('2x2') + "</option>\n                                </select>\n                            </div>\n                            <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"cfg-mpg-teaser{{ $index }}-position\" class=\"cc-input__label\">" + $t('Position') + ":</label>\n                                <select name=\"cfg-mpg-teaser{{ $index }}-position\" class=\"cc-input__select | cc-magento-product-grid-teasers-configurator__select\" id=\"cfg-mpg-teaser{{ $index }}-position\" v-model=\"configuration.teasers[$index].position\">\n                                    <option value=\"left\">" + $t('Left') + "</option>\n                                    <option value=\"center\">" + $t('Center') + "</option>\n                                    <option value=\"right\">" + $t('Right') + "</option>\n                                </select>\n                            </div>\n                            <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"cfg-mpg-teaser{{ $index }}-row\" class=\"cc-input__label\">" + $t('Row') + ":</label>\n                                <select name=\"cfg-mpg-teaser{{ $index }}-row\" class=\"cc-input__select | cc-magento-product-grid-teasers-configurator__select\" id=\"cfg-mpg-teaser{{ $index }}-row\" v-model=\"configuration.teasers[$index].row\">\n                                    <option v-for=\"i in rowsCount\" value=\"{{ i + 1 }}\">{{ i + 1 }}</option>\n                                    <option value=\"1000\">" + $t('as last') + "</option>\n                                </select>\n                            </div>\n                            <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"cfg-mpg-teaser{{ $index }}-mobile\" class=\"cc-input__label\">" + $t('Show in mobiles') + ":</label>\n                                <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                                    <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"cfg-mpg-teaser{{ $index }}-mobile\" name=\"cfg-mpg-teaser{{ $index }}-mobile\" v-model=\"configuration.teasers[$index].isAvailableForMobile\">\n                                    <label class=\"admin__actions-switch-label\" for=\"cfg-mpg-teaser{{ $index }}-mobile\"\">\n                                        <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                                    </label>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"cc-input cc-input--group\">\n                            <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"cfg-mpg-teaser{{ $index }}-variant\" class=\"cc-input__label\">" + $t('Display variant') + ":</label>\n                                <select name=\"cfg-mpg-teaser{{ $index }}-variant\" class=\"cc-input__select | cc-magento-product-grid-teasers-configurator__select\" id=\"cfg-mpg-teaser{{ $index }}-variant\" v-model=\"configuration.teasers[$index].displayVariant\">\n                                    <template v-for=\"(idx, scenario) in imageTeasersContentPositions\">\n                                        <option value=\"variant-{{ idx + 1 }}\">" + $t('{{ scenario }}') + "</option>\n                                    </template>\n                                </select>\n                            </div>\n                            <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"cfg-mpg-teaser{{ $index }}-color-scheme\" class=\"cc-input__label\">" + $t('Text color scheme') + ":</label>\n                                <select name=\"cfg-mpg-teaser{{ $index }}-color-scheme\" class=\"cc-input__select | cc-magento-product-grid-teasers-configurator__select\" id=\"cfg-mpg-teaser{{ $index }}-color-scheme\" v-model=\"configuration.teasers[$index].colorScheme\">\n                                    <option value=\"light\">" + $t('Light') + "</option>\n                                    <option value=\"dark\">" + $t('Dark') + "</option>\n                                </select>\n                            </div>\n                        </div>\n                        <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                            <label for=\"cfg-mpg-teaser{{ $index }}-headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n                            <input type=\"text\" v-model=\"configuration.teasers[$index].headline\" id=\"cfg-mpg-teaser{{ $index }}-headline\" class=\"cc-input__input\">\n                        </div>\n                        <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                            <label for=\"cfg-mpg-teaser{{ $index }}-subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n                            <input type=\"text\" v-model=\"configuration.teasers[$index].subheadline\" id=\"cfg-mpg-teaser{{ $index }}-subheadline\" class=\"cc-input__input\">\n                        </div>\n                        <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                            <label for=\"cfg-mpg-teaser{{ $index }}-paragraph\" class=\"cc-input__label\">" + $t('Paragraph') + ":</label>\n                            <textarea type=\"text\" v-model=\"configuration.teasers[$index].paragraph\" id=\"cfg-mpg-teaser{{ $index }}-paragraph\" class=\"cc-input__textarea\"></textarea>\n                        </div>\n                        <div class=\"cc-input cc-input--group\">\n                            <div class=\"cc-input | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"cfg-mpg-teaser{{ $index }}-cta-label\" class=\"cc-input__label\">" + $t('CTA label') + ":</label>\n                                <input type=\"text\" v-model=\"configuration.teasers[$index].ctaLabel\" id=\"cfg-mpg-teaser{{ $index }}-cta-label\" class=\"cc-input__input\">\n                            </div>\n                            <div class=\"cc-input cc-input--type-addon | cc-magento-product-grid-teasers-configurator__item-form-element\">\n                                <label for=\"teaser-ctatarget-output-{{ $index }}\" class=\"cc-input__label\">" + $t('CTA target link') + ":</label>\n                                <input type=\"text\" class=\"cc-input__input | cc-magento-product-grid-teasers-configurator__cta-target-link\" v-model=\"configuration.teasers[$index].href\" id=\"teaser-ctatarget-output-{{ $index }}\">\n                                <span class=\"cc-input__addon | cc-magento-product-grid-teasers-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal( $index )\">\n                                    <svg class=\"cc-input__addon-icon\">\n                                        <use xlink:href=\"#icon_link\"></use>\n                                    </svg>\n                                </span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-magento-product-grid-teasers-configurator__modal\" v-el:error-modal></div>\n    </div>",
     /**
      * Get dependencies
@@ -4336,7 +4350,10 @@ var magentoProductGridTeasersConfigurator = {
         getVirtualBricksLength: function () {
             var virtualLength = parseInt(this.productsPerPage, 10);
             for (var i = 0; i < this.configuration.teasers.length; i++) {
-                virtualLength += this.configuration.teasers[i].size.x * this.configuration.teasers[i].size.y - 1;
+                virtualLength +=
+                    this.configuration.teasers[i].size.x *
+                        this.configuration.teasers[i].size.y -
+                        1;
             }
             return virtualLength;
         },
@@ -4346,7 +4363,9 @@ var magentoProductGridTeasersConfigurator = {
          * @return {number} number of rows in FE grid
          */
         getCurrentFErowsCount: function () {
-            return Math.ceil(this.getVirtualBricksLength() / this.ccConfig.columns[this.ccConfig.columns.default_layout].desktop);
+            return Math.ceil(this.getVirtualBricksLength() /
+                this.ccConfig.columns[this.ccConfig.columns.default_layout]
+                    .desktop);
         },
         /**
          * When you open component after changes in M2 grid settings (when products per page chnaged)
@@ -4397,9 +4416,11 @@ var magentoProductGridTeasersConfigurator = {
         onImageUploaded: function (input) {
             var _this = this;
             var itemIndex = input.id.substr(input.id.lastIndexOf('-') + 1);
-            var encodedImage = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
+            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
             var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
-            this.configuration.teasers[itemIndex].decodedImage = Base64 ? Base64.decode(encodedImage) : window.atob(encodedImage);
+            this.configuration.teasers[itemIndex].decodedImage = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
                 _this.configuration.teasers[itemIndex].image = img.getAttribute('src');
@@ -4411,7 +4432,7 @@ var magentoProductGridTeasersConfigurator = {
          * @param index {number} - index of teaser item to know where to place output of widget chooser
          */
         openCtaTargetModal: function (index) {
-            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/teaser-ctatarget-output-" + index);
+            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/teaser-ctatarget-output-" + index + "/");
             this.wWidgetListener(index);
         },
         /* Sets listener for widget chooser
@@ -4432,7 +4453,8 @@ var magentoProductGridTeasersConfigurator = {
          */
         wWidgetListener: function (itemIndex) {
             var _this = this;
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
+            if (typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== '') {
                 var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
                 button.onclick = null;
                 button.addEventListener('click', function () {
@@ -4470,13 +4492,21 @@ var magentoProductGridTeasersConfigurator = {
             if (index > 0) {
                 var $thisItem_1 = $("#cc-magento-pg-teaser-" + index);
                 var $prevItem_1 = $("#cc-magento-pg-teaser-" + (index - 1));
-                $thisItem_1.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', "translateY(" + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
-                $prevItem_1.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
+                $thisItem_1
+                    .addClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                    .css('transform', "translateY(" + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
+                $prevItem_1
+                    .addClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                    .css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
                 setTimeout(function () {
                     _this.configuration.teasers.splice(index - 1, 0, _this.configuration.teasers.splice(index, 1)[0]);
                     _this.onChange();
-                    $thisItem_1.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
-                    $prevItem_1.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
+                    $thisItem_1
+                        .removeClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                        .css('transform', '');
+                    $prevItem_1
+                        .removeClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -4489,13 +4519,21 @@ var magentoProductGridTeasersConfigurator = {
             if (index < this.configuration.teasers.length - 1) {
                 var $thisItem_2 = $("#cc-magento-pg-teaser-" + index);
                 var $nextItem_1 = $("#cc-magento-pg-teaser-" + (index + 1));
-                $thisItem_2.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
-                $nextItem_1.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
+                $thisItem_2
+                    .addClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                    .css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
+                $nextItem_1
+                    .addClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                    .css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
                 setTimeout(function () {
                     _this.configuration.teasers.splice(index + 1, 0, _this.configuration.teasers.splice(index, 1)[0]);
                     _this.onChange();
-                    $thisItem_2.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
-                    $nextItem_1.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
+                    $thisItem_2
+                        .removeClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                        .css('transform', '');
+                    $nextItem_1
+                        .removeClass('cc-magento-product-grid-teasers-configurator__item--animating')
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -4574,10 +4612,8 @@ var magentoProductGridTeasersConfigurator = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var paragraphConfigurator = {
-    mixins: [
-        componentConfigurator,
-    ],
-    template: "<form class=\"cc-paragraph-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n\n        <div class=\"cc-paragraph-configurator__error\" v-text=\"tempConfiguration.errorMessage\" v-show=\"tempConfiguration.errorMessage\">\n        </div>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <h3 class=\"cc-paragraph-configurator__subtitle\">" + $t('Paragraph width') + "</h3>\n            <div class=\"cc-paragraph-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-paragraph-configurator__option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-paragraph-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-paragraph-configurator__option-wrapper\">\n                        <svg class=\"cc-paragraph-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-paragraph-configurator__option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-id\" class=\"cc-input__label\">" + $t('Identifier') + ":</label>\n                <input type=\"text\" name=\"cfg-id\" v-model=\"tempConfiguration.identifier\" id=\"input-cfg-id\" class=\"cc-input__input cc-input__input--limited-width\" @blur=\"stripSpaces( tempConfiguration.identifier )\" maxlength=\"30\">\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-title\" class=\"cc-input__label\">" + $t('Title') + ":</label>\n                <input type=\"text\" name=\"cfg-title\" v-model=\"tempConfiguration.title\" id=\"input-cfg-title\" class=\"cc-input__input cc-input__input--limited-width\" maxlength=\"100\">\n            </div>\n            <div class=\"cc-input\" v-if=\"isColumnsConfigAvailable()\">\n                <label for=\"input-cfg-columns\" class=\"cc-input__label\">" + $t('Number of columns') + ":</label>\n                <select name=\"input-cfg-columns\" class=\"cc-input__select | cc-paragraph-configurator__select\" id=\"input-cfg-columns\" v-model=\"configuration.columns\">\n                    <option value=\"none\">" + $t('Don\'t split content - display full width') + "</option>\n                    <option value=\"2\">" + $t('Split content into 2 columns') + "</option>\n                    <option value=\"3\">" + $t('Split content into 3 columns') + "</option>\n                    <option value=\"4\">" + $t('Split content into 4 columns') + "</option>\n                </select>\n                <div class=\"admin__field-note cc-input__note\">\n                    <span>" + $t('Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.') + "</span>\n                </div>\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"textarea-cfg-paragraph\" class=\"cc-input__label cc-input__label--look-top-align\">" + $t('HTML') + ":</label>\n\n                <div class=\"buttons-set | cc-paragraph-configurator__wysiwyg-buttons\">\n                    <button type=\"button\" class=\"scalable action-show-hide\" id=\"toggle-wysiwyg\">" + $t('Show / Hide Editor') + "</button>\n                    <button type=\"button\" class=\"scalable action-add-widget plugin\" @click=\"openWidgetModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Widget') + "...</button>\n                    <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"openMediaModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Image') + "...</button>\n                    <button type=\"button\" class=\"scalable add-variable plugin\" @click=\"openMagentoVariablesModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Variable') + "...</button>\n                </div>\n\n                <textarea name=\"cfg-paragraph\" v-model=\"tempConfiguration.content\" id=\"textarea-cfg-paragraph\" class=\"cc-input__textarea | cc-paragraph-configurator__textarea\"></textarea>\n            </div>\n        </section>\n    </form>",
+    mixins: [componentConfigurator],
+    template: "<form class=\"cc-paragraph-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n\n        <div class=\"cc-paragraph-configurator__error\" v-text=\"tempConfiguration.errorMessage\" v-show=\"tempConfiguration.errorMessage\">\n        </div>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <h3 class=\"cc-paragraph-configurator__subtitle\">" + $t('Paragraph width') + "</h3>\n            <div class=\"cc-paragraph-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-paragraph-configurator__option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-paragraph-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-paragraph-configurator__option-wrapper\">\n                        <svg class=\"cc-paragraph-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-paragraph-configurator__option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-id\" class=\"cc-input__label\">" + $t('Identifier') + ":</label>\n                <input type=\"text\" name=\"cfg-id\" v-model=\"tempConfiguration.identifier\" id=\"input-cfg-id\" class=\"cc-input__input cc-input__input--limited-width\" @blur=\"stripSpaces( tempConfiguration.identifier )\" maxlength=\"30\">\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-title\" class=\"cc-input__label\">" + $t('Title') + ":</label>\n                <input type=\"text\" name=\"cfg-title\" v-model=\"tempConfiguration.title\" id=\"input-cfg-title\" class=\"cc-input__input cc-input__input--limited-width\" maxlength=\"100\">\n            </div>\n            <div class=\"cc-input\" v-if=\"isColumnsConfigAvailable()\">\n                <label for=\"input-cfg-columns\" class=\"cc-input__label\">" + $t('Number of columns') + ":</label>\n                <select name=\"input-cfg-columns\" class=\"cc-input__select | cc-paragraph-configurator__select\" id=\"input-cfg-columns\" v-model=\"configuration.columns\">\n                    <option value=\"none\">" + $t("Don't split content - display full width") + "</option>\n                    <option value=\"2\">" + $t('Split content into 2 columns') + "</option>\n                    <option value=\"3\">" + $t('Split content into 3 columns') + "</option>\n                    <option value=\"4\">" + $t('Split content into 4 columns') + "</option>\n                </select>\n                <div class=\"admin__field-note cc-input__note\">\n                    <span>" + $t('Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.') + "</span>\n                </div>\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"textarea-cfg-paragraph\" class=\"cc-input__label cc-input__label--look-top-align\">" + $t('HTML') + ":</label>\n\n                <div class=\"buttons-set | cc-paragraph-configurator__wysiwyg-buttons\">\n                    <button type=\"button\" class=\"scalable action-show-hide\" id=\"toggle-wysiwyg\">" + $t('Show / Hide Editor') + "</button>\n                    <button type=\"button\" class=\"scalable action-add-widget plugin\" @click=\"openWidgetModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Widget') + "...</button>\n                    <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"openMediaModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Image') + "...</button>\n                    <button type=\"button\" class=\"scalable add-variable plugin\" @click=\"openMagentoVariablesModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Variable') + "...</button>\n                </div>\n\n                <textarea name=\"cfg-paragraph\" v-model=\"tempConfiguration.content\" id=\"textarea-cfg-paragraph\" class=\"cc-input__textarea | cc-paragraph-configurator__textarea\"></textarea>\n            </div>\n        </section>\n    </form>",
     props: {
         /*
          * Single's component configuration
@@ -4590,8 +4626,8 @@ var paragraphConfigurator = {
                     title: '',
                     columns: 'none',
                     scenarios: {
-                        reading: {}
-                    }
+                        reading: {},
+                    },
                 };
             },
         },
@@ -4638,11 +4674,11 @@ var paragraphConfigurator = {
             scenarioOptions: {
                 // Reading scenario options.
                 reading: {
-                    'full': {
+                    full: {
                         name: 'Container width',
                         iconId: 'tw_content-width-text',
                     },
-                    'optimal': {
+                    optimal: {
                         name: 'Optimal reading width',
                         iconId: 'tw_optimal-reading',
                     },
@@ -4658,9 +4694,12 @@ var paragraphConfigurator = {
             this.wysiwygCfg.height = '300px';
         }
         // Init loader and hide it
-        $('body').one().loadingPopup({
+        $('body')
+            .one()
+            .loadingPopup({
             timeout: false,
-        }).trigger('hideLoadingPopup');
+        })
+            .trigger('hideLoadingPopup');
         // If ID is already provided (means we're in edit mode)
         if (this.configuration.blockId) {
             // Show loader before request
@@ -4674,7 +4713,9 @@ var paragraphConfigurator = {
                 method: 'get',
                 url: window.location.origin + "/rest/all/V1/cmsBlock/" + this.configuration.blockId,
             }).then(function (response) {
-                var responseData = (typeof response.data === 'string') ? JSON.parse(response.data) : response.data;
+                var responseData = typeof response.data === 'string'
+                    ? JSON.parse(response.data)
+                    : response.data;
                 // Hide loader
                 $('body').trigger('hideLoadingPopup');
                 // Update components tempConfiguration
@@ -4722,12 +4763,16 @@ var paragraphConfigurator = {
                     Authorization: this.restToken,
                 },
                 method: this.configuration.blockId ? 'put' : 'post',
-                url: this.configuration.blockId ? window.location.origin + "/rest/all/V1/cmsBlock/" + this.configuration.blockId : window.location.origin + "/rest/all/V1/cmsBlock",
+                url: this.configuration.blockId
+                    ? window.location.origin + "/rest/all/V1/cmsBlock/" + this.configuration.blockId
+                    : window.location.origin + "/rest/all/V1/cmsBlock",
                 body: dataConstruct,
             }).then(function (response) {
                 // If status is OK update component's configuration and run Save to save component data
                 if (response.ok) {
-                    var responseData = (typeof response.data === 'string') ? JSON.parse(response.data) : response.data;
+                    var responseData = typeof response.data === 'string'
+                        ? JSON.parse(response.data)
+                        : response.data;
                     _this.configuration.blockId = responseData.id;
                     _this.configuration.title = responseData.title;
                     // Hide loader
@@ -4755,7 +4800,6 @@ var paragraphConfigurator = {
                 catch (err) {
                     console.warn("Could not parse response as JSON: " + err);
                 }
-                
                 // Set headers back
                 Vue.http.headers.custom.Accept = 'text/html';
                 // Hide loader
@@ -4765,18 +4809,21 @@ var paragraphConfigurator = {
     },
     methods: {
         stripSpaces: function (str) {
-            var striped = str.split(' ').join('-').toLowerCase();
+            var striped = str
+                .split(' ')
+                .join('-')
+                .toLowerCase();
             this.tempConfiguration.identifier = striped;
         },
         /* Opens modal with M2 built-in widget chooser
          */
         openWidgetModal: function () {
-            widgetTools.openDialog(this.wysiwygCfg.widget_window_url + "widget_target_id/textarea-cfg-paragraph");
+            widgetTools.openDialog(this.wysiwygCfg.widget_window_url + "widget_target_id/textarea-cfg-paragraph/");
         },
         /* Opens modal with M2 built-in media uploader
          */
         openMediaModal: function () {
-            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/textarea-cfg-paragraph", 'auto', 'auto', $t('Insert File...'), {
+            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/textarea-cfg-paragraph/", 'auto', 'auto', $t('Insert File...'), {
                 closed: true,
             });
         },
@@ -4796,7 +4843,7 @@ var paragraphConfigurator = {
             var editor;
             var editorConfig = JSON.parse(this.wysiwygConfig);
             require([
-                'mage/adminhtml/wysiwyg/tiny_mce/setup'
+                'mage/adminhtml/wysiwyg/tiny_mce/setup',
             ], function () {
                 editor = new wysiwygSetup('textarea-cfg-paragraph', editorConfig);
                 editor.setup('exact');
@@ -4826,7 +4873,7 @@ var paragraphConfigurator = {
         updateConfigurationProp: function () {
             var propDefaults = this.$options.props.configuration.default();
             this.configuration = $.extend({}, propDefaults, this.configuration, true);
-        }
+        },
     },
 };
 
@@ -5488,7 +5535,7 @@ var productsGridConfigurator = {
          * Opens modal with M2 built-in widget chooser
          */
         openCtaTargetModal: function () {
-            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/widget_target_id/cfg-pg-hero_url");
+            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/widget_target_id/cfg-pg-hero_url/");
             this.wWidgetListener();
         },
         /* Sets listener for widget chooser

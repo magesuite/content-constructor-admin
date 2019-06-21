@@ -9,16 +9,18 @@ import componentConfigurator from '../../_component-configurator/component-confi
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const buttonConfigurator: vuejs.ComponentOption = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     template: `<form class="cc-button-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
         <div class="cc-input cc-input--type-inline">
-            <label for="cfg-label" class="cc-input__label">${$t( 'Label' )}:</label>
+            <label for="cfg-label" class="cc-input__label">${$t(
+                'Label'
+            )}:</label>
             <input type="text" v-model="configuration.label" id="cfg-label" class="cc-input__input" @change="onChange">
         </div>
         <div class="cc-input cc-input--type-addon cc-input--type-inline | cc-button-configurator__item-form-element">
-            <label for="cfg-target" class="cc-input__label">${$t( 'Target' )}:</label>
+            <label for="cfg-target" class="cc-input__label">${$t(
+                'Target'
+            )}:</label>
             <div class="cc-input__addon-wrapper">
                 <input type="text" class="cc-input__input | cc-button-configurator__target" v-model="configuration.target" id="cfg-target">
                 <span class="cc-input__addon | cc-button-configurator__widget-chooser-trigger" @click="openCtaTargetModal()">
@@ -65,7 +67,11 @@ const buttonConfigurator: vuejs.ComponentOption = {
         /* Opens modal with M2 built-in widget chooser
          */
         openCtaTargetModal(): void {
-            widgetTools.openDialog(`${window.location.origin}/${this.adminPrefix}/admin/widget/index/filter_widgets/Link/widget_target_id/cfg-target`);
+            widgetTools.openDialog(
+                `${window.location.origin}/${
+                    this.adminPrefix
+                }/admin/widget/index/filter_widgets/Link/widget_target_id/cfg-target/`
+            );
 
             this.wWidgetListener();
         },
@@ -76,9 +82,12 @@ const buttonConfigurator: vuejs.ComponentOption = {
         widgetSetListener(): void {
             const component: any = this;
 
-            $('.cc-button-configurator__cta-target-link').on('change', (): void => {
-                component.onChange();
-            });
+            $('.cc-button-configurator__cta-target-link').on(
+                'change',
+                (): void => {
+                    component.onChange();
+                }
+            );
         },
         /*
          * Check if widget chooser is loaded. If not, wait for it, if yes:
@@ -86,14 +95,22 @@ const buttonConfigurator: vuejs.ComponentOption = {
          * to clear input's value before inserting new one
          */
         wWidgetListener(): void {
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
-                const button: any = widgetTools.dialogWindow[0].querySelector('#insert_button');
+            if (
+                typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== ''
+            ) {
+                const button: any = widgetTools.dialogWindow[0].querySelector(
+                    '#insert_button'
+                );
 
                 button.onclick = null;
-                button.addEventListener('click', (): void => {
-                    this.configuration.target = '';
-                    wWidget.insertWidget();
-                });
+                button.addEventListener(
+                    'click',
+                    (): void => {
+                        this.configuration.target = '';
+                        wWidget.insertWidget();
+                    }
+                );
             } else {
                 setTimeout(this.wWidgetListener, 300);
             }
