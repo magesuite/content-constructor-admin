@@ -36,6 +36,7 @@ import productCarouselConfigurator from './components/product-carousel/configura
 import productFinderConfigurator from './components/product-finder/configurator/product-finder';
 import productsGridConfigurator from './components/products-grid/configurator/products-grid';
 import staticBlockConfigurator from './components/static-block/configurator/static-block';
+import teaserAndTextConfigurator from './components/teaser-and-text/configurator/teaser-and-text';
 
 // Use Vue resource
 Vue.use(vr);
@@ -126,6 +127,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'products-grid-configurator': productsGridConfigurator,
         'static-block-configurator': staticBlockConfigurator,
         'icon-configurator': iconConfigurator,
+        'teaser-and-text-configurator': teaserAndTextConfigurator,
     },
     props: {
         configuration: {
@@ -262,7 +264,7 @@ const contentConstructor: vuejs.ComponentOption = {
             // Save adding callback for async use.
             this._addComponentInformation = addComponentInformation;
 
-            pickerModalOptions.opened = function(): void {
+            pickerModalOptions.opened = function (): void {
                 if (!component._isPickerLoaded) {
                     // Show ajax loader
                     $('body').trigger('showLoadingPopup');
@@ -373,7 +375,7 @@ const contentConstructor: vuejs.ComponentOption = {
             const component: any = this;
             let cleanupConfiguratorModal = (): undefined => undefined;
 
-            configuratorModalOptions.buttons[1].click = function(): void {
+            configuratorModalOptions.buttons[1].click = function (): void {
                 component.$broadcast('component-configurator__save');
             };
             configuratorModalOptions.title = `${$t(
@@ -383,7 +385,7 @@ const contentConstructor: vuejs.ComponentOption = {
             )}</span>`;
 
             // Configurator modal opened callback
-            configuratorModalOptions.opened = function(): void {
+            configuratorModalOptions.opened = function (): void {
                 // Show ajax loader
                 $('body').trigger('showLoadingPopup');
 
@@ -391,7 +393,7 @@ const contentConstructor: vuejs.ComponentOption = {
                 component.$http
                     .get(
                         component.configuratorEndpoint +
-                            componentInformation.type
+                        componentInformation.type
                     )
                     .then(
                         (response: any): void => {
@@ -413,7 +415,7 @@ const contentConstructor: vuejs.ComponentOption = {
                     );
             };
 
-            configuratorModalOptions.closed = function(): void {
+            configuratorModalOptions.closed = function (): void {
                 // Cleanup configurator component and then remove modal
                 cleanupConfiguratorModal();
                 component.$els.configuratorModal.innerHTML = '';

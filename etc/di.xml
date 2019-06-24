@@ -128,6 +128,11 @@
                         <item name="name" xsi:type="string">Icon</item>
                         <item name="description" xsi:type="string">This component allows you to add 4-6 teasers with or without text under the image.</item>
                     </item>
+                    <item name="teaser-and-text" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\TeaserAndText</item>
+                        <item name="name" xsi:type="string">Teaser and text</item>
+                        <item name="description" xsi:type="string">This component allows you to add teaser (image) and text and choose their order.</item>
+                    </item>
                 </item>
             </argument>
         </arguments>

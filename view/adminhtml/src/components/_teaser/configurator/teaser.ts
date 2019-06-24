@@ -90,7 +90,8 @@ export const teaserPrototype: any = {
             { text: '{{sku sku="some_sku"}}' },
             { text: '<big>Only</big> {{qty sku="some_sku"}} left' }
         ]
-    }
+    },
+    teaserType: 'full'
 };
 
 interface IAdvancedField {
@@ -114,13 +115,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'component-actions': componentActions,
         'teaser-preview': teaserPreview,
     },
-    template: `<div class="cc-teaser-configurator">
+    template: `<div class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}}">
         <section class="cc-teaser-configurator__section">
             <div class="cc-teaser-configurator__content" id="cc-teaser-{{teaserIndex}}">
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--preview" :class="{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}">
                     <div class="cc-teaser-configurator__image-wrapper">
 
-                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration"></teaser-preview>
+                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType"></teaser-preview>
 
                         <input type="hidden" class="cc-teaser-configurator__image-url" id="teaser-img-{{teaserIndex}}">
 
@@ -130,7 +131,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     <button
                                         class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-teaser-configurator__action-button"
                                         :class="{'cc-action-button--look_disabled': isFirstImageTeaser(teaserIndex)}"
-                                        @click="moveImageTeaserUp(teaserIndex)"
+                                        @click="configuratorLayout === 'column' ? moveImageTeaserLeft(teaserIndex) : moveImageTeaserUp(teaserIndex)"
                                         :disabled="isFirstImageTeaser(teaserIndex)"
                                     >
                                         <svg class="cc-action-button__icon cc-action-button__icon--size_100">
@@ -141,21 +142,23 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-teaser-configurator__action-button"
                                         :class="{'cc-action-button--look_disabled': isLastImageTeaser(teaserIndex)}"
                                         :disabled="isLastImageTeaser(teaserIndex)"
-                                        @click="moveImageTeaserDown(teaserIndex)"
+                                        @click="configuratorLayout === 'column' ? moveImageTeaserRight(teaserIndex) : moveImageTeaserDown(teaserIndex)"
                                     >
                                         <svg class="cc-action-button__icon cc-action-button__icon--size_100">
                                             <use xlink:href="#icon_arrow-down"></use>
                                         </svg>
                                     </button>
-                                    <button
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
-                                        @click="getImageUploader(teaserIndex)"
-                                    >
-                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                            <use xlink:href="#icon_upload-image"></use>
-                                        </svg>
-                                        {{imageActionText | translate}}
-                                    </button>
+                                    <template v-if="teaserType !== 'text-only'">
+                                        <button
+                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
+                                            @click="getImageUploader(teaserIndex)"  
+                                        >
+                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                                <use xlink:href="#icon_upload-image"></use>
+                                            </svg>
+                                            {{imageActionText | translate}}
+                                        </button>
+                                    </template>
                                     <button
                                         class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"
                                         @click="deleteTeaserItem(teaserIndex)"
@@ -486,6 +489,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 return {};
             },
         },
+        /* Default layout is row (image on the left, texts on the right, but can be also column) */
+        configuratorLayout: {
+            type: String,
+            default: 'row',
+        },
+        teaserType: {
+            type: String,
+            default: 'full',
+        },
     },
     computed: {
         configuration: function (): object {
@@ -713,6 +725,86 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         'transform',
                         `translateY(${-Math.abs(
                             $thisItem.outerHeight(true)
+                        )}px)`
+                    );
+
+                setTimeout((): void => {
+                    this.parentConfiguration.items.splice(
+                        index + 1,
+                        0,
+                        this.parentConfiguration.items.splice(index, 1)[0]
+                    );
+                    $thisItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    $nextItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    this.onChange();
+                }, 400);
+            }
+        },
+        /**
+         * Moves image teaser item left by swaping it with previous element.
+         * @param {number} index Image teaser's index in array.
+        */
+        moveImageTeaserLeft(index: number): void {
+            if (index > 0) {
+                const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
+                const $prevItem: any = $(`#cc-image-teaser-item-${index - 1}`);
+
+                $thisItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${-Math.abs(
+                            $prevItem.outerWidth(true)
+                        )}px)`
+                    );
+                $prevItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${$thisItem.outerWidth(true)}px )`
+                    );
+
+                setTimeout((): void => {
+                    this.parentConfiguration.items.splice(
+                        index - 1,
+                        0,
+                        this.parentConfiguration.items.splice(index, 1)[0]
+                    );
+                    $thisItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    $prevItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    this.onChange();
+                }, 400);
+            }
+        },
+        /**
+         * Moves image teaser item right by swaping it with next element.
+         * @param {number} index Image teaser's index in array.
+         */
+        moveImageTeaserRight(index: number): void {
+            if (index < this.parentConfiguration.items.length - 1) {
+                const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
+                const $nextItem: any = $(`#cc-image-teaser-item-${index + 1}`);
+
+                $thisItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${$nextItem.outerWidth(true)}px)`
+                    );
+                $nextItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${-Math.abs(
+                            $thisItem.outerWidth(true)
                         )}px)`
                     );
 
