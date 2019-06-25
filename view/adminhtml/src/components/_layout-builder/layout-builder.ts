@@ -27,6 +27,7 @@ import productGridPreview from '../products-grid/preview/products-grid';
 import separatorPreview from '../separator/preview/separator';
 import staticBlockPreview from '../static-block/preview/static-block';
 import teaserAndTextPreview from '../teaser-and-text/preview/teaser-and-text';
+import instagramFeedPreview from '../instagram-feed/preview/instagram-feed';
 
 /**
  * Single component information interface.
@@ -211,6 +212,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         'static-cms-block-preview': staticBlockPreview,
         'icon-preview': iconPreview,
         'teaser-and-text-preview': teaserAndTextPreview,
+        'instagram-feed-preview': instagramFeedPreview,
     },
     props: {
         /**

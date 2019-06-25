@@ -1,0 +1,110 @@
+import imageTeaserConfigurator from '../../image-teaser/configurator/image-teaser';
+
+/**
+ * Instagran feed configurator component.
+ * This component is responsible for displaying instagram feed configuration form
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+const instagramFeedConfigurator: vuejs.ComponentOption = {
+    extends: imageTeaserConfigurator,
+    template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+        <section class="cc-image-teaser-configurator__section">
+            <h3 class="cc-image-teaser-configurator__subtitle">{{'Number of slides' | translate}}:</h3>
+            <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
+                <div class="cc-input cc-teaser-configurator__form-element">
+                    <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
+                        {{'Number of slides' | translate}}:
+                    </label>
+                    <select class="cc-input__select">
+                        <option v-for="(optionId, option) in scenarioOptions.numberOfSlides" :value="optionId">{{ option.name }}</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+    </div>`,
+    props: {
+        /**
+         * Image teaser configuration
+         */
+        configuration: {
+            type: Object,
+            default(): object {
+                return {
+                    customCssClass: '',
+                    scenario: {
+                        teaserWidth: {
+                            name: 'Content width',
+                            disabled: false,
+                            id: 'container'
+                        },
+                        desktopLayout: {
+                            disabled: ',',
+                            id: '4',
+                            name: '4 in row',
+                            teasersNum: '4'
+                        },
+                        contentPlacement: {
+                            contentPlacement: '1',
+                            disabled: '',
+                            id: 'over',
+                            name: 'Text over image'
+                        },
+                        mobileLayout: {
+                            id: 'slider',
+                            name: 'Slider',
+                            disabled: false,
+                        },
+                        numberOfSlides: 4
+                    },
+                };
+            },
+        },
+        adminPrefix: {
+            type: String,
+            default: 'admin',
+        },
+        /* Obtain content-constructor's config file */
+        ccConfig: {
+            type: Object,
+            default(): any {
+                return {};
+            },
+        },
+    },
+    ready(): void {
+        this.scenarioOptions = {
+            // Number of slides
+            numberOfSlides: {
+                '4': {
+                    name: '4 slides',
+                    disabled: false,
+                },
+                '8': {
+                    name: '8 slides',
+                    disabled: false,
+                },
+                '12': {
+                    name: '12 slides',
+                    disabled: false,
+                },
+            },
+
+        };
+        this.availableScenarios = [
+            ['container', '4', 'over', ['mobile-slider']],
+        ];
+
+        if (
+            this.configuration.numberOfSlides &&
+            !this.configuration.numberOfSlides
+        ) {
+            this.toggleOption('contentPlacement', '4');
+        }
+
+        this.togglePossibleOptions = function () {
+            return true;
+        }
+    },
+};
+
+export default instagramFeedConfigurator;

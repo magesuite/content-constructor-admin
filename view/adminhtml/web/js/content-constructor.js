@@ -934,6 +934,15 @@ var teaserAndTextPreview = {
 };
 
 /**
+ * Instagram feed preview component.
+ * This component is responsible for displaying preview of instagram feed component in Layout Builder (admin panel)
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var instagramFeedPreview = {
+    template: "<ul class=\"cc-instagram-feed-preview\">\n        <template v-for=\"item in 4\">\n            <li class=\"cc-instagram-feed-preview__tile\">\n                <div class=\"cc-instagram-feed-preview__tile-inner\">\n                    <svg class=\"cc-instagram-feed-preview__icon\">\n                        <use xlink:href=\"#icon_instagram\"></use>\n                    </svg>\n                </div>\n            </li>\n        </template>\n    </ul",
+};
+
+/**
  * Layout builder component.
  * This component is responsible for displaying and handling user interactions of
  * entire Content Constructor
@@ -969,6 +978,7 @@ var layoutBuilder = {
         'static-cms-block-preview': staticBlockPreview,
         'icon-preview': iconPreview,
         'teaser-and-text-preview': teaserAndTextPreview,
+        'instagram-feed-preview': instagramFeedPreview,
     },
     props: {
         /**
@@ -5811,6 +5821,94 @@ var teaserAndTextConfigurator = {
     },
 };
 
+/**
+ * Instagran feed configurator component.
+ * This component is responsible for displaying instagram feed configuration form
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var instagramFeedConfigurator = {
+    extends: imageTeaserConfigurator,
+    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">{{'Number of slides' | translate}}:</h3>\n            <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                <div class=\"cc-input cc-teaser-configurator__form-element\">\n                    <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                        {{'Number of slides' | translate}}:\n                    </label>\n                    <select class=\"cc-input__select\">\n                        <option v-for=\"(optionId, option) in scenarioOptions.numberOfSlides\" :value=\"optionId\">{{ option.name }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n    </div>",
+    props: {
+        /**
+         * Image teaser configuration
+         */
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    customCssClass: '',
+                    scenario: {
+                        teaserWidth: {
+                            name: 'Content width',
+                            disabled: false,
+                            id: 'container'
+                        },
+                        desktopLayout: {
+                            disabled: ',',
+                            id: '4',
+                            name: '4 in row',
+                            teasersNum: '4'
+                        },
+                        contentPlacement: {
+                            contentPlacement: '1',
+                            disabled: '',
+                            id: 'over',
+                            name: 'Text over image'
+                        },
+                        mobileLayout: {
+                            id: 'slider',
+                            name: 'Slider',
+                            disabled: false,
+                        },
+                        numberOfSlides: 4
+                    },
+                };
+            },
+        },
+        adminPrefix: {
+            type: String,
+            default: 'admin',
+        },
+        /* Obtain content-constructor's config file */
+        ccConfig: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+    },
+    ready: function () {
+        this.scenarioOptions = {
+            // Number of slides
+            numberOfSlides: {
+                '4': {
+                    name: '4 slides',
+                    disabled: false,
+                },
+                '8': {
+                    name: '8 slides',
+                    disabled: false,
+                },
+                '12': {
+                    name: '12 slides',
+                    disabled: false,
+                },
+            },
+        };
+        this.availableScenarios = [
+            ['container', '4', 'over', ['mobile-slider']],
+        ];
+        if (this.configuration.numberOfSlides &&
+            !this.configuration.numberOfSlides) {
+            this.toggleOption('contentPlacement', '4');
+        }
+        this.togglePossibleOptions = function () {
+            return true;
+        };
+    },
+};
+
 /* tslint:disable:no-console */
 // Use Vue resource
 Vue.use(vr);
@@ -5884,6 +5982,7 @@ var contentConstructor = {
         'static-block-configurator': staticBlockConfigurator,
         'icon-configurator': iconConfigurator,
         'teaser-and-text-configurator': teaserAndTextConfigurator,
+        'instagram-feed-configurator': instagramFeedConfigurator,
     },
     props: {
         configuration: {
