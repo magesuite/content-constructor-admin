@@ -37,6 +37,7 @@ import productFinderConfigurator from './components/product-finder/configurator/
 import productsGridConfigurator from './components/products-grid/configurator/products-grid';
 import staticBlockConfigurator from './components/static-block/configurator/static-block';
 import teaserAndTextConfigurator from './components/teaser-and-text/configurator/teaser-and-text';
+import instagramFeedConfigurator from './components/instagram-feed/configurator/instagram-feed';
 
 // Use Vue resource
 Vue.use(vr);
@@ -128,6 +129,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'static-block-configurator': staticBlockConfigurator,
         'icon-configurator': iconConfigurator,
         'teaser-and-text-configurator': teaserAndTextConfigurator,
+        'instagram-feed-configurator': instagramFeedConfigurator,
     },
     props: {
         configuration: {

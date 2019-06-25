@@ -345,7 +345,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         },
     },
     computed: {
-        imageTeasersContentPositions: function(): object {
+        imageTeasersContentPositions: function (): object {
             const data: object = this.ccConfig.image_teasers_content_positions;
             return Object.keys(data).map(key => (data as any)[key]);
         },
@@ -496,7 +496,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                         return (
                             !contentPlacement ||
                             availableScenario[contentPlacementIndex] ===
-                                contentPlacement
+                            contentPlacement
                         );
                     }
                 );
