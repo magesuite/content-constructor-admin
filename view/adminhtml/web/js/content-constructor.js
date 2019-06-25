@@ -3612,9 +3612,20 @@ var imageTeaserConfigurator = {
             this.configuration.ignoredItems = this.configuration.ignoredItems.filter(function (item) { return item.image.raw !== ''; });
             this.onChange();
         },
+        /*
+         * Backward compatibility enhancement.
+         * When new props are added to the 'configuration' prop, none of already saved component has it.
+         * This leads to backward compatibility issues and JS errors for existing components
+         * This method takes defaults of 'configuration' and merges is with exising configuration object
+         */
+        updateConfigurationProp: function () {
+            var propDefaults = this.$options.props.configuration.default();
+            this.configuration = $.extend({}, propDefaults, this.configuration, true);
+        }
     },
     ready: function () {
         this.togglePossibleOptions();
+        this.updateConfigurationProp();
     },
 };
 
