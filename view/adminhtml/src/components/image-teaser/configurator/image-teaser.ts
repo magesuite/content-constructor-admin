@@ -582,9 +582,21 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             );
             this.onChange();
         },
+
+        /*
+         * Backward compatibility enhancement.
+         * When new props are added to the 'configuration' prop, none of already saved component has it.
+         * This leads to backward compatibility issues and JS errors for existing components
+         * This method takes defaults of 'configuration' and merges is with exising configuration object
+         */
+        updateConfigurationProp(): void {
+            const propDefaults: Object = this.$options.props.configuration.default();
+            this.configuration = $.extend({}, propDefaults, this.configuration, true);
+        }
     },
     ready(): void {
         this.togglePossibleOptions();
+        this.updateConfigurationProp();
     },
 };
 
