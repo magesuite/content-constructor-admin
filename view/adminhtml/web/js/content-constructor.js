@@ -5839,7 +5839,7 @@ var teaserAndTextConfigurator = {
  */
 var instagramFeedConfigurator = {
     extends: imageTeaserConfigurator,
-    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">{{'Number of slides' | translate}}:</h3>\n            <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                <div class=\"cc-input cc-teaser-configurator__form-element\">\n                    <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                        {{'Number of slides' | translate}}:\n                    </label>\n                    <select class=\"cc-input__select\">\n                        <option v-for=\"(optionId, option) in scenarioOptions.numberOfSlides\" :value=\"optionId\">{{ option.name }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n    </div>",
+    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">{{'Number of slides' | translate}}:</h3>\n            <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                <div class=\"cc-input cc-teaser-configurator__form-element\">\n                    <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                        {{'Number of slides' | translate}}:\n                    </label>\n                    <select class=\"cc-input__select\" v-model=\"configuration.scenario.numberOfSlides\">\n                        <option v-for=\"(optionId, option) in scenarioOptions.numberOfSlides\" :value=\"optionId\">{{ option.name }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n    </div>",
     props: {
         /**
          * Image teaser configuration
@@ -5853,7 +5853,7 @@ var instagramFeedConfigurator = {
                         teaserWidth: {
                             name: 'Content width',
                             disabled: false,
-                            id: 'container'
+                            id: 'container-slider'
                         },
                         desktopLayout: {
                             disabled: ',',
@@ -5868,7 +5868,7 @@ var instagramFeedConfigurator = {
                             name: 'Text over image'
                         },
                         mobileLayout: {
-                            id: 'slider',
+                            id: 'mobile-slider',
                             name: 'Slider',
                             disabled: false,
                         },
