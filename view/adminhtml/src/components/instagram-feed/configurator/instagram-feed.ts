@@ -15,7 +15,7 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
                     <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
                         {{'Number of slides' | translate}}:
                     </label>
-                    <select class="cc-input__select">
+                    <select class="cc-input__select" v-model="configuration.scenario.numberOfSlides">
                         <option v-for="(optionId, option) in scenarioOptions.numberOfSlides" :value="optionId">{{ option.name }}</option>
                     </select>
                 </div>
@@ -35,7 +35,7 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
                         teaserWidth: {
                             name: 'Content width',
                             disabled: false,
-                            id: 'container'
+                            id: 'container-slider'
                         },
                         desktopLayout: {
                             disabled: ',',
@@ -50,7 +50,7 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
                             name: 'Text over image'
                         },
                         mobileLayout: {
-                            id: 'slider',
+                            id: 'mobile-slider',
                             name: 'Slider',
                             disabled: false,
                         },
