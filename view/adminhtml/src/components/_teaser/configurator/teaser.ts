@@ -9,6 +9,13 @@ import teaserPreview from '../preview/teaser';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
+import customElementTextInput from '../../_custom-elements/text-input';
+import customElementSelect from '../../_custom-elements/select';
+import customElementTextarea from '../../_custom-elements/textarea';
+import customElementCheckbox from '../../_custom-elements/checkbox';
+import customElementRadio from '../../_custom-elements/radio';
+import customElementPosition from '../../_custom-elements/position-grid';
+
 export const teaserPrototype: any = {
     image: {
         raw: '',
@@ -94,15 +101,6 @@ export const teaserPrototype: any = {
     teaserType: 'full'
 };
 
-interface IAdvancedField {
-    label: string;
-    type: string;
-    id: string;
-    name: string;
-    options?: any[];
-    isChecked?: boolean;
-}
-
 /**
  * Teaser configurator component.
  * This component handles logic for configuring teasers within CC components.
@@ -114,6 +112,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'action-button': actionButton,
         'component-actions': componentActions,
         'teaser-preview': teaserPreview,
+        'custom-element-input': customElementTextInput,
+        'custom-element-select': customElementSelect,
+        'custom-element-textarea': customElementTextarea,
+        'custom-element-checkbox': customElementCheckbox,
+        'custom-element-radio': customElementRadio,
+        'custom-element-position': customElementPosition,
     },
     template: `<div class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}}">
         <section class="cc-teaser-configurator__section">
@@ -351,86 +355,18 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             </div>
                         </template>
 
-                        <template v-if="tab.content && tab.content === '#badge'">
-                            <div
-                                class="cc-teaser-configurator__tab-section"
-                                :class="{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}"
-                            >
-                                <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
-                                    <div class="cc-input cc-teaser-configurator__form-element">
-                                        <label for="cfg-teaser-{{teaserIndex}}-label-content" class="cc-input__label">
-                                            {{'Badge text' | translate}}: 
-                                        </label>
-                                        <textarea v-model="configuration.badge.value | prettify"  type="text" class="cc-input__textarea" id="cfg-teaser-{{teaserIndex}}-label-content" >
-                                        </textarea>
-                                    </div>
-                                    <div class="cc-input cc-teaser-configurator__form-element">
-                                        <br>
-                                        <p>Add content with special markup, e.g.:
-                                            <template v-for="example in configuration.badge.examples">
-                                                <br>- {{example.text}}
-                                            </template>
-                                        </p>
-                                    </div>
-                                </div>    
-                                <br>                        
-                                <label class="cc-input__label">{{'Badge align' | translate }}:</label>
-                                <div class="cc-teaser-configurator__position-grid">
-                                    <template v-for="y in 3">
-                                        <template v-for="x in 3">
-                                            <span
-                                                class="cc-teaser-configurator__position-grid-item"
-                                                :class="{'cc-teaser-configurator__position-grid-item--active': isCurrentBadgeAlign(x+1, y+1)}"
-                                                @click="setBadgeAlign(x+1, y+1)"
-                                            ></span>
-                                        </template>
-                                    </template>
-                                </div>
-                                <p>Note: Please verify text position configuration in the "Content" tab. It might overlap the badge position.</p>
-                            </div>
-                        </template>
-
-                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#badge'">
+                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style'">
                             <div class="cc-teaser-configurator__tab-section">
-                                <template v-for="(fieldIndex, field) in tab.content.fields">
-                                    <div
-                                        v-if="field.type === 'select'"
-                                        class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group"
-                                    >
-                                        <div class="cc-input cc-teaser-configurator__form-element">
-                                            <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
-                                                {{field.label | translate}}:
-                                            </label>
-                                            <select class="cc-input__select">
-                                                <option v-for="(value, label) in field.options" :value="value">{{ label }}</option>
-                                            </select>
-                                        </div>
-                                    </div v-if="field.type === 'select'">
-
-                                    <div
-                                        v-if="field.type === 'input'"
-                                        class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group"
-                                    >
-                                        <div class="cc-input cc-teaser-configurator__form-element">
-                                            <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
-                                                {{field.label | translate}}:
-                                            </label>
-                                            <input type="text" class="cc-input__input" :value="field.value">
-                                        </div>
-                                    </div v-if="field.type === 'input'">
-
-                                    <div
-                                        v-if="field.type === 'textarea'"
-                                        class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group"
-                                    >
-                                        <div class="cc-input cc-teaser-configurator__form-element">
-                                            <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
-                                                {{field.label | translate}}:
-                                                </label>
-                                            <textarea type="text" class="cc-input__textarea">{{ field.value }}</textarea>
-                                        </div>
-                                    </div v-if="field.type === 'textarea'">
-                                </template>
+                                <div class="cc-custom-fields cc-custom-fields--narrow">
+                                    <div class="cc-custom-fields__form-group" v-for="field in tab.content.fields">
+                                        <component 
+                                            :is="'custom-element-' + field.type" 
+                                            :configuration="configuration" 
+                                            :field-configuration="field" 
+                                            :teaser-index="teaserIndex"
+                                        ></component>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -534,10 +470,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
             return `${txt.charAt(0).toUpperCase()}${txt.slice(1)}`;
         },
 
-        randomizeElementId(id: string): string {
-            return `cfg-teaser-${id}-${Math.floor(
-                Math.random() * (1000 - 99999)
-            ) + 1000}`;
+        prefixFieldId(id: string): string {
+            return `cfg-teaser-${this.teaserIndex}-${id}`;
         },
 
         prettify: {
