@@ -163,47 +163,6 @@
         line-height: 1;
     }
 
-    &__badge-wrapper {
-        $badge: &;
-
-        position: absolute;
-        z-index: 3;
-        top: 1.88%;;
-        left: 1.88%;;
-        padding: 1.88%;
-        text-align: left;
-        background: #0072ff;
-        color: #fff;
-
-        &--content-align-x {
-            &-2 {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            &-3 {
-                left: auto;
-                right: 1.88%;
-            }
-        }
-
-        &--content-align-y {
-            &-2 {
-                top: 50%;
-                transform: translateY(-50%);
-
-                &#{$badge}--content-align-x-2 {
-                    transform: translate(-50%, -50%);
-                }
-            }
-
-            &-3 {
-                top: auto;
-                bottom: 1.88%;;
-            }
-        }
-    }
-
     // Contrast Optimizers
     &__overlay,
     &__gradient {
