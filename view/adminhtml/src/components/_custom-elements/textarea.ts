@@ -23,7 +23,7 @@ const customElementTextarea: vuejs.ComponentOption = {
 
     props: {
         fieldConfiguration: {
-            type: IFieldInformation,
+            type: Object,
             default(): any {
                 return {};
             },
