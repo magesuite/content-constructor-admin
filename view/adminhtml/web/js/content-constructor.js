@@ -2767,7 +2767,7 @@ var customElementTextInput = {
     template: "<div class=\"cc-input cc-input--type-text\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <input type=\"text\" class=\"cc-input__input\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
     props: {
         fieldConfiguration: {
-            type: IFieldInformation,
+            type: Object,
             default: function () {
                 return {};
             },
@@ -2806,7 +2806,7 @@ var customElementSelect = {
     template: "<div class=\"cc-input cc-input--type-select\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <select class=\"cc-input__select\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n            <option v-for=\"(value, label) in fieldConfiguration.options\" :value=\"value\">{{ label }}</option>\n        </select>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
     props: {
         fieldConfiguration: {
-            type: IFieldInformation,
+            type: Object,
             default: function () {
                 return {};
             },
@@ -2845,7 +2845,7 @@ var customElementTextarea = {
     template: "<div class=\"cc-input cc-input--type-textarea\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <textarea class=\"cc-input__textarea\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model] | prettify\"></textarea>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
     props: {
         fieldConfiguration: {
-            type: IFieldInformation,
+            type: Object,
             default: function () {
                 return {};
             },
@@ -2892,7 +2892,7 @@ var customElementCheckbox = {
     template: "<div class=\"cc-input cc-input--type-switcher\">\n        <div class=\"admin__actions-switch\" data-role=\"switcher\">\n            <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n            <label class=\"admin__actions-switch-label\" for=\"{{fieldConfiguration.model | prefixFieldId}}\" v-if=\"fieldConfiguration.label\">\n                <span class=\"admin__actions-switch-text\">{{fieldConfiguration.label | translate}}</span>\n            </label>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
     props: {
         fieldConfiguration: {
-            type: IFieldInformation,
+            type: Object,
             default: function () {
                 return {};
             },
@@ -2931,7 +2931,7 @@ var customElementRadio = {
     template: "<div class=\"cc-input cc-input--wrapper\">\n        <label class=\"cc-input__label cc-input__label--radio-group\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}\n        </label>\n        <div class=\"cc-input cc-input--type-radio\" v-for=\"(value, label) in fieldConfiguration.options\">\n            <input type=\"radio\" id=\"{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}\" class=\"cc-input__radio\" :name=\"fieldConfiguration.model\" :value=\"value\" v-model=\"configuration[fieldConfiguration.model]\">\n            <label for=\"{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}\" class=\"cc-input__label cc-input__label--radio\">{{label | translate}}</label>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
     props: {
         fieldConfiguration: {
-            type: IFieldInformation,
+            type: Object,
             default: function () {
                 return {};
             },
@@ -2970,7 +2970,7 @@ var customElementPosition = {
     template: "<div class=\"cc-input cc-input--type-position-grid\">\n        <label class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">{{fieldConfiguration.label | translate}}:</label>\n        <div \n            class=\"cc-position-grid\"\n            :style=\"{'width': gridWidth}\"\n        >\n            <template v-for=\"y in rows\">\n                <template v-for=\"x in columns\">\n                    <span\n                        class=\"cc-position-grid__item\"\n                        :class=\"{\n                            'cc-position-grid__item--active': isCurrentPosition(x+1, y+1)\n                        }\"\n                        @click=\"setPosition(x+1, y+1)\"\n                    ></span>\n                </template>\n            </template>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
     props: {
         fieldConfiguration: {
-            type: IFieldInformation,
+            type: Object,
             default: function () {
                 return {};
             },
