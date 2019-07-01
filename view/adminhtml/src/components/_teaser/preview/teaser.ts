@@ -57,14 +57,6 @@ interface IComponentInformationOptimizers {
 }
 
 /**
- * Badge interface
- */
-interface IComponentBadge {
-    value: string;
-    align: IComponentInformationContentAlign;
-}
-
-/**
  * Single component information interface.
  */
 interface IComponentInformation {
@@ -108,12 +100,6 @@ const teaserPreview: vuejs.ComponentOption = {
                     class="cc-teaser-preview__gradient cc-teaser-preview__gradient--direction-x-{{configuration.optimizers.scenarios.gradient.direction.x}} cc-teaser-preview__gradient--direction-y-{{configuration.optimizers.scenarios.gradient.direction.y}}"
                     :style="{opacity: configuration.optimizers.scenarios.gradient.intensity / 100}"
                 ></div>
-                <div
-                    class="cc-teaser-preview__badge-wrapper cc-teaser-preview__badge-wrapper--content-align-x-{{configuration.badge.align.x}} cc-teaser-preview__badge-wrapper--content-align-y-{{configuration.badge.align.y}}"
-                    v-if="configuration.badge.value"
-                >
-                    {{configuration.badge.value}}
-                </div>
 
                 <div
                     class="cc-teaser-preview__content-wrapper cc-teaser-preview__content-wrapper--content-align-x-{{configuration.content_align.x}} cc-teaser-preview__content-wrapper--content-align-y-{{configuration.content_align.y}}"
