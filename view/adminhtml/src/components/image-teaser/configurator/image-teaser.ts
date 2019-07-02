@@ -636,23 +636,25 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         },
 
         _collectTeasersCssClasses(): void {
-            const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+            if (this.configuration.items != null) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
 
-            this.configuration.items.forEach(
-                (teaser: any, index: number) => {
-                    const cssClasses: Array<string> = [];
+                this.configuration.items.forEach(
+                    (teaser: any, index: number) => {
+                        const cssClasses: Array<string> = [];
 
-                    cssClassFields.forEach(
-                        (model: string) => {
-                            if (teaser[model] && typeof teaser[model] === 'string') {
-                                cssClasses.push(teaser[model]);
+                        cssClassFields.forEach(
+                            (model: string) => {
+                                if (teaser[model] && typeof teaser[model] === 'string') {
+                                    cssClasses.push(teaser[model]);
+                                }
                             }
-                        }
-                    );
+                        );
 
-                    teaser.cc_css_classes = cssClasses.join(' ');
-                }
-            );
+                        teaser.cc_css_classes = cssClasses.join(' ');
+                    }
+                );
+            }
         },
 
         _collectComponentCssClasses(): void {
