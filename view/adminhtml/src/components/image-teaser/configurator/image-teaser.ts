@@ -129,7 +129,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
-        <section class="cc-image-teaser-configurator__section" v-for="section in ccConfig.image_teaser.custom_sections">
+        <section class="cc-image-teaser-configurator__section" v-if="ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null" v-for="section in ccConfig.image_teaser.custom_sections">
             <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
@@ -658,18 +658,23 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         },
 
         _collectComponentCssClasses(): void {
-            const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
-            const cssClasses: Array<string> = [];
+            if (
+                this.ccConfig.image_teaser != null && 
+                this.ccConfig.image_teaser.custom_sections != null
+            ) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
+                const cssClasses: Array<string> = [];
 
-            cssClassFields.forEach(
-                (model: string) => {
-                    if (this.configuration[model] && typeof this.configuration[model] === 'string') {
-                        cssClasses.push(this.configuration[model]);
+                cssClassFields.forEach(
+                    (model: string) => {
+                        if (this.configuration[model] && typeof this.configuration[model] === 'string') {
+                            cssClasses.push(this.configuration[model]);
+                        }
                     }
-                }
-            );
+                );
 
-            this.configuration.cc_css_classes = cssClasses.join(' ');
+                this.configuration.cc_css_classes = cssClasses.join(' ');
+            }
         },
 
         /*
