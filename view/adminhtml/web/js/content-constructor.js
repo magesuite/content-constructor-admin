@@ -3903,16 +3903,18 @@ var imageTeaserConfigurator = {
             return cssClassFields;
         },
         _collectTeasersCssClasses: function () {
-            var cssClassFields = this._getCustomCssFields(this.ccConfig.teaser.tabs);
-            this.configuration.items.forEach(function (teaser, index) {
-                var cssClasses = [];
-                cssClassFields.forEach(function (model) {
-                    if (teaser[model] && typeof teaser[model] === 'string') {
-                        cssClasses.push(teaser[model]);
-                    }
+            if (this.configuration.items != null) {
+                var cssClassFields_1 = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+                this.configuration.items.forEach(function (teaser, index) {
+                    var cssClasses = [];
+                    cssClassFields_1.forEach(function (model) {
+                        if (teaser[model] && typeof teaser[model] === 'string') {
+                            cssClasses.push(teaser[model]);
+                        }
+                    });
+                    teaser.cc_css_classes = cssClasses.join(' ');
                 });
-                teaser.cc_css_classes = cssClasses.join(' ');
-            });
+            }
         },
         _collectComponentCssClasses: function () {
             var _this = this;
