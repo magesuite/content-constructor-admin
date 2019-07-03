@@ -6157,7 +6157,7 @@ var teaserAndTextConfigurator = {
  */
 var instagramFeedConfigurator = {
     extends: imageTeaserConfigurator,
-    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">{{'Number of slides' | translate}}:</h3>\n            <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                <div class=\"cc-input cc-teaser-configurator__form-element\">\n                    <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                        {{'Number of slides' | translate}}:\n                    </label>\n                    <select class=\"cc-input__select\" v-model=\"configuration.scenario.numberOfSlides\">\n                        <option v-for=\"(optionId, option) in scenarioOptions.numberOfSlides\" :value=\"optionId\">{{ option.name }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n    </div>",
+    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">{{'Instagram images limit' | translate}}:</h3>\n            <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                <div class=\"cc-input cc-teaser-configurator__form-element\">\n                    <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                        {{'Instagram images limit' | translate}}:\n                    </label>\n                    <select class=\"cc-input__select\" v-model=\"configuration.scenario.numberOfSlides\">\n                        <option v-for=\"(optionId, option) in scenarioOptions.numberOfSlides\" :value=\"optionId\">{{ option.name }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n    </div>",
     props: {
         /**
          * Image teaser configuration
@@ -6212,15 +6212,15 @@ var instagramFeedConfigurator = {
             // Number of slides
             numberOfSlides: {
                 '4': {
-                    name: '4 slides',
+                    name: '4 instagram images',
                     disabled: false,
                 },
                 '8': {
-                    name: '8 slides',
+                    name: '8 instagram images',
                     disabled: false,
                 },
                 '12': {
-                    name: '12 slides',
+                    name: '12 Instagram images',
                     disabled: false,
                 },
             },
