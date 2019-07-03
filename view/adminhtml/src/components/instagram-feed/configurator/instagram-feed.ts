@@ -9,11 +9,11 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
     extends: imageTeaserConfigurator,
     template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
-            <h3 class="cc-image-teaser-configurator__subtitle">{{'Number of slides' | translate}}:</h3>
+            <h3 class="cc-image-teaser-configurator__subtitle">{{'Instagram images limit' | translate}}:</h3>
             <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
                 <div class="cc-input cc-teaser-configurator__form-element">
                     <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
-                        {{'Number of slides' | translate}}:
+                        {{'Instagram images limit' | translate}}:
                     </label>
                     <select class="cc-input__select" v-model="configuration.scenario.numberOfSlides">
                         <option v-for="(optionId, option) in scenarioOptions.numberOfSlides" :value="optionId">{{ option.name }}</option>
@@ -76,15 +76,15 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
             // Number of slides
             numberOfSlides: {
                 '4': {
-                    name: '4 slides',
+                    name: '4 instagram images',
                     disabled: false,
                 },
                 '8': {
-                    name: '8 slides',
+                    name: '8 instagram images',
                     disabled: false,
                 },
                 '12': {
-                    name: '12 slides',
+                    name: '12 Instagram images',
                     disabled: false,
                 },
             },
