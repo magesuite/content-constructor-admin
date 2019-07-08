@@ -415,8 +415,7 @@
       height: 29px;
       width: 12px;
       border-radius: 2px;
-      background: #e3e3e3;
-      cursor: pointer; }
+      background: #e3e3e3; }
     .cc-input input[type='range']:-moz-focusring {
       outline: 1px solid transparent;
       outline-offset: -1px; }
