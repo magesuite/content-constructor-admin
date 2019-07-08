@@ -26,6 +26,8 @@ import productFinderPreview from '../product-finder/preview/product-finder';
 import productGridPreview from '../products-grid/preview/products-grid';
 import separatorPreview from '../separator/preview/separator';
 import staticBlockPreview from '../static-block/preview/static-block';
+import teaserAndTextPreview from '../teaser-and-text/preview/teaser-and-text';
+import instagramFeedPreview from '../instagram-feed/preview/instagram-feed';
 
 /**
  * Single component information interface.
@@ -209,6 +211,8 @@ const layoutBuilder: vuejs.ComponentOption = {
         'separator-preview': separatorPreview,
         'static-cms-block-preview': staticBlockPreview,
         'icon-preview': iconPreview,
+        'teaser-and-text-preview': teaserAndTextPreview,
+        'instagram-feed-preview': instagramFeedPreview,
     },
     props: {
         /**
@@ -272,11 +276,11 @@ const layoutBuilder: vuejs.ComponentOption = {
         };
     },
     computed: {
-        ccSections: function(): object {
+        ccSections: function (): object {
             const data: object = this.ccConfig.sections[this.pageType];
             return Object.keys(data).map(key => (<any>data)[key]);
         },
-        specialComponents: function(): object {
+        specialComponents: function (): object {
             const data: object = this.ccConfig.special_components;
             return Object.keys(data).map(key => (<any>data)[key]);
         },
@@ -287,7 +291,7 @@ const layoutBuilder: vuejs.ComponentOption = {
             : [];
         this.filters =
             typeof Storage !== void 0 &&
-            window.localStorage.getItem('ccFilters')
+                window.localStorage.getItem('ccFilters')
                 ? JSON.parse(window.localStorage.getItem('ccFilters'))
                 : this.ccConfig.filters;
         this.sortComponentsBySections();

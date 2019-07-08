@@ -14,7 +14,7 @@ const teaserDataPattern: any = {
     sizeSelect: '2x1',
     size: {
         x: 2,
-        y: 1
+        y: 1,
     },
     position: 'left',
     row: 1,
@@ -36,9 +36,7 @@ const teaserDataPattern: any = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
-    mixins: [
-        componentConfigurator,
-    ],
+    mixins: [componentConfigurator],
     template: `<div class="cc-magento-product-grid-teasers-configurator | {{ class }}">
         <component-adder class="cc-component-adder cc-component-adder--static" v-show="!configuration.teasers.length">
             <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button" @click="createNewTeaser( 0 )">
@@ -100,75 +98,109 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                     <div class="cc-magento-product-grid-teasers-configurator__item-col-right">
                         <div class="cc-input cc-input--group cc-input--group-quarter">
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="cfg-mpg-teaser{{ $index }}-size-select" class="cc-input__label">${$t( 'Teaser size' )}:</label>
+                                <label for="cfg-mpg-teaser{{ $index }}-size-select" class="cc-input__label">${$t(
+                                    'Teaser size'
+                                )}:</label>
                                 <select name="cfg-mpg-teaser{{ $index }}-size-select" class="cc-input__select | cc-magento-product-grid-teasers-configurator__select" id="cfg-mpg-teaser{{ $index }}-size-select" v-model="configuration.teasers[$index].sizeSelect" @change="setTeaserSize($index)">
-                                    <option value="1x1">${$t( '1x1' )}</option>
-                                    <option value="1x2">${$t( '1x2' )}</option>
-                                    <option value="2x1">${$t( '2x1' )}</option>
-                                    <option value="2x2">${$t( '2x2' )}</option>
+                                    <option value="1x1">${$t('1x1')}</option>
+                                    <option value="1x2">${$t('1x2')}</option>
+                                    <option value="2x1">${$t('2x1')}</option>
+                                    <option value="2x2">${$t('2x2')}</option>
                                 </select>
                             </div>
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="cfg-mpg-teaser{{ $index }}-position" class="cc-input__label">${$t( 'Position' )}:</label>
+                                <label for="cfg-mpg-teaser{{ $index }}-position" class="cc-input__label">${$t(
+                                    'Position'
+                                )}:</label>
                                 <select name="cfg-mpg-teaser{{ $index }}-position" class="cc-input__select | cc-magento-product-grid-teasers-configurator__select" id="cfg-mpg-teaser{{ $index }}-position" v-model="configuration.teasers[$index].position">
-                                    <option value="left">${$t( 'Left' )}</option>
-                                    <option value="center">${$t( 'Center' )}</option>
-                                    <option value="right">${$t( 'Right' )}</option>
+                                    <option value="left">${$t('Left')}</option>
+                                    <option value="center">${$t(
+                                        'Center'
+                                    )}</option>
+                                    <option value="right">${$t(
+                                        'Right'
+                                    )}</option>
                                 </select>
                             </div>
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="cfg-mpg-teaser{{ $index }}-row" class="cc-input__label">${$t( 'Row' )}:</label>
+                                <label for="cfg-mpg-teaser{{ $index }}-row" class="cc-input__label">${$t(
+                                    'Row'
+                                )}:</label>
                                 <select name="cfg-mpg-teaser{{ $index }}-row" class="cc-input__select | cc-magento-product-grid-teasers-configurator__select" id="cfg-mpg-teaser{{ $index }}-row" v-model="configuration.teasers[$index].row">
                                     <option v-for="i in rowsCount" value="{{ i + 1 }}">{{ i + 1 }}</option>
-                                    <option value="1000">${$t( 'as last' )}</option>
+                                    <option value="1000">${$t(
+                                        'as last'
+                                    )}</option>
                                 </select>
                             </div>
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="cfg-mpg-teaser{{ $index }}-mobile" class="cc-input__label">${$t( 'Show in mobiles' )}:</label>
+                                <label for="cfg-mpg-teaser{{ $index }}-mobile" class="cc-input__label">${$t(
+                                    'Show in mobiles'
+                                )}:</label>
                                 <div class="admin__actions-switch" data-role="switcher">
                                     <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-mpg-teaser{{ $index }}-mobile" name="cfg-mpg-teaser{{ $index }}-mobile" v-model="configuration.teasers[$index].isAvailableForMobile">
                                     <label class="admin__actions-switch-label" for="cfg-mpg-teaser{{ $index }}-mobile"">
-                                        <span class="admin__actions-switch-text" data-text-on="${$t( 'Yes' )}" data-text-off="${$t( 'No' )}"></span>
+                                        <span class="admin__actions-switch-text" data-text-on="${$t(
+                                            'Yes'
+                                        )}" data-text-off="${$t('No')}"></span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="cc-input cc-input--group">
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="cfg-mpg-teaser{{ $index }}-variant" class="cc-input__label">${$t( 'Display variant' )}:</label>
+                                <label for="cfg-mpg-teaser{{ $index }}-variant" class="cc-input__label">${$t(
+                                    'Display variant'
+                                )}:</label>
                                 <select name="cfg-mpg-teaser{{ $index }}-variant" class="cc-input__select | cc-magento-product-grid-teasers-configurator__select" id="cfg-mpg-teaser{{ $index }}-variant" v-model="configuration.teasers[$index].displayVariant">
                                     <template v-for="(idx, scenario) in imageTeasersContentPositions">
-                                        <option value="variant-{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
+                                        <option value="variant-{{ idx + 1 }}">${$t(
+                                            '{{ scenario }}'
+                                        )}</option>
                                     </template>
                                 </select>
                             </div>
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="cfg-mpg-teaser{{ $index }}-color-scheme" class="cc-input__label">${$t( 'Text color scheme' )}:</label>
+                                <label for="cfg-mpg-teaser{{ $index }}-color-scheme" class="cc-input__label">${$t(
+                                    'Text color scheme'
+                                )}:</label>
                                 <select name="cfg-mpg-teaser{{ $index }}-color-scheme" class="cc-input__select | cc-magento-product-grid-teasers-configurator__select" id="cfg-mpg-teaser{{ $index }}-color-scheme" v-model="configuration.teasers[$index].colorScheme">
-                                    <option value="light">${$t( 'Light' )}</option>
-                                    <option value="dark">${$t( 'Dark' )}</option>
+                                    <option value="light">${$t(
+                                        'Light'
+                                    )}</option>
+                                    <option value="dark">${$t('Dark')}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                            <label for="cfg-mpg-teaser{{ $index }}-headline" class="cc-input__label">${$t( 'Headline' )}:</label>
+                            <label for="cfg-mpg-teaser{{ $index }}-headline" class="cc-input__label">${$t(
+                                'Headline'
+                            )}:</label>
                             <input type="text" v-model="configuration.teasers[$index].headline" id="cfg-mpg-teaser{{ $index }}-headline" class="cc-input__input">
                         </div>
                         <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                            <label for="cfg-mpg-teaser{{ $index }}-subheadline" class="cc-input__label">${$t( 'Subheadline' )}:</label>
+                            <label for="cfg-mpg-teaser{{ $index }}-subheadline" class="cc-input__label">${$t(
+                                'Subheadline'
+                            )}:</label>
                             <input type="text" v-model="configuration.teasers[$index].subheadline" id="cfg-mpg-teaser{{ $index }}-subheadline" class="cc-input__input">
                         </div>
                         <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                            <label for="cfg-mpg-teaser{{ $index }}-paragraph" class="cc-input__label">${$t( 'Paragraph' )}:</label>
+                            <label for="cfg-mpg-teaser{{ $index }}-paragraph" class="cc-input__label">${$t(
+                                'Paragraph'
+                            )}:</label>
                             <textarea type="text" v-model="configuration.teasers[$index].paragraph" id="cfg-mpg-teaser{{ $index }}-paragraph" class="cc-input__textarea"></textarea>
                         </div>
                         <div class="cc-input cc-input--group">
                             <div class="cc-input | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="cfg-mpg-teaser{{ $index }}-cta-label" class="cc-input__label">${$t( 'CTA label' )}:</label>
+                                <label for="cfg-mpg-teaser{{ $index }}-cta-label" class="cc-input__label">${$t(
+                                    'CTA label'
+                                )}:</label>
                                 <input type="text" v-model="configuration.teasers[$index].ctaLabel" id="cfg-mpg-teaser{{ $index }}-cta-label" class="cc-input__input">
                             </div>
                             <div class="cc-input cc-input--type-addon | cc-magento-product-grid-teasers-configurator__item-form-element">
-                                <label for="teaser-ctatarget-output-{{ $index }}" class="cc-input__label">${$t( 'CTA target link' )}:</label>
+                                <label for="teaser-ctatarget-output-{{ $index }}" class="cc-input__label">${$t(
+                                    'CTA target link'
+                                )}:</label>
                                 <input type="text" class="cc-input__input | cc-magento-product-grid-teasers-configurator__cta-target-link" v-model="configuration.teasers[$index].href" id="teaser-ctatarget-output-{{ $index }}">
                                 <span class="cc-input__addon | cc-magento-product-grid-teasers-configurator__widget-chooser-trigger" @click="openCtaTargetModal( $index )">
                                     <svg class="cc-input__addon-icon">
@@ -288,8 +320,15 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
         getVirtualBricksLength(): number {
             let virtualLength: number = parseInt(this.productsPerPage, 10);
 
-            for (let i: number = 0; i < this.configuration.teasers.length; i++) {
-                virtualLength += this.configuration.teasers[i].size.x * this.configuration.teasers[i].size.y - 1;
+            for (
+                let i: number = 0;
+                i < this.configuration.teasers.length;
+                i++
+            ) {
+                virtualLength +=
+                    this.configuration.teasers[i].size.x *
+                        this.configuration.teasers[i].size.y -
+                    1;
             }
 
             return virtualLength;
@@ -300,7 +339,11 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * @return {number} number of rows in FE grid
          */
         getCurrentFErowsCount(): number {
-            return Math.ceil(this.getVirtualBricksLength() / this.ccConfig.columns[this.ccConfig.columns.default_layout].desktop);
+            return Math.ceil(
+                this.getVirtualBricksLength() /
+                    this.ccConfig.columns[this.ccConfig.columns.default_layout]
+                        .desktop
+            );
         },
 
         /**
@@ -312,7 +355,11 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
         fixOverflowedRowsSetup(): void {
             this.rowsCount = this.getCurrentFErowsCount();
 
-            for (let i: number = 0; i < this.configuration.teasers.length; i++) {
+            for (
+                let i: number = 0;
+                i < this.configuration.teasers.length;
+                i++
+            ) {
                 if (this.configuration.teasers[i].row > this.rowsCount) {
                     this.configuration.teasers[i].row = this.rowsCount;
                 }
@@ -323,13 +370,16 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * @param index {number} - index of image of hero item
          */
         getImageUploader(index: number): void {
-            MediabrowserUtility.openDialog(`${this.uploaderBaseUrl}target_element_id/mpg-teaser-img-${index}/`,
+            MediabrowserUtility.openDialog(
+                `${
+                    this.uploaderBaseUrl
+                }target_element_id/mpg-teaser-img-${index}/`,
                 'auto',
                 'auto',
                 $t('Insert File...'),
                 {
                     closed: true,
-                },
+                }
             );
         },
 
@@ -342,32 +392,47 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
             let isAlreadyCalled: boolean = false;
 
             // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.cc-magento-product-grid-teasers-configurator__image-url', (event: Event): void => {
-                if (!isAlreadyCalled) {
-                    isAlreadyCalled = true;
-                    component.onImageUploaded(event.target);
-                    setTimeout((): void => {
-                        isAlreadyCalled = false;
-                    }, 100);
+            $(document).on(
+                'change',
+                '.cc-magento-product-grid-teasers-configurator__image-url',
+                (event: Event): void => {
+                    if (!isAlreadyCalled) {
+                        isAlreadyCalled = true;
+                        component.onImageUploaded(event.target);
+                        setTimeout((): void => {
+                            isAlreadyCalled = false;
+                        }, 100);
+                    }
                 }
-            } );
+            );
         },
         /* Action after image was uploaded
          * URL is encoded, so strip it and decode Base64 to get {{ media url="..."}} format
          * which will go to the items.image and will be used to display image on front end
          * @param input { object } - input with raw image path which is used in admin panel
          */
-        onImageUploaded( input: any ): void {
+        onImageUploaded(input: any): void {
             const _this: any = this;
-            const itemIndex: any = input.id.substr(input.id.lastIndexOf('-') + 1);
-            const encodedImage: any = input.value.match('___directive\/([a-zA-Z0-9]*)')[1];
-            const imgEndpoint: string = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
+            const itemIndex: any = input.id.substr(
+                input.id.lastIndexOf('-') + 1
+            );
+            const encodedImage: any = input.value.match(
+                '___directive/([a-zA-Z0-9]*)'
+            )[1];
+            const imgEndpoint: string = this.imageEndpoint.replace(
+                '{/encoded_image}',
+                encodedImage
+            );
 
-            this.configuration.teasers[itemIndex].decodedImage = Base64 ? Base64.decode(encodedImage) : window.atob(encodedImage);
+            this.configuration.teasers[itemIndex].decodedImage = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
 
             const img: any = new Image();
             img.onload = function(): void {
-                _this.configuration.teasers[itemIndex].image = img.getAttribute('src');
+                _this.configuration.teasers[itemIndex].image = img.getAttribute(
+                    'src'
+                );
                 _this.onChange();
             };
             img.src = imgEndpoint;
@@ -376,7 +441,11 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * @param index {number} - index of teaser item to know where to place output of widget chooser
          */
         openCtaTargetModal(index: number): void {
-            widgetTools.openDialog(`${window.location.origin}/${this.adminPrefix}/admin/widget/index/filter_widgets/Link/widget_target_id/teaser-ctatarget-output-${index}`);
+            widgetTools.openDialog(
+                `${window.location.origin}/${
+                    this.adminPrefix
+                }/admin/widget/index/filter_widgets/Link/widget_target_id/teaser-ctatarget-output-${index}/`
+            );
             this.wWidgetListener(index);
         },
         /* Sets listener for widget chooser
@@ -384,9 +453,14 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * after value of item.href is changed
          */
         widgetSetListener(): void {
-            $('.cc-magento-product-grid-teasers-configurator__cta-target-link').on('change', (): void => {
-                this.onChange();
-            });
+            $(
+                '.cc-magento-product-grid-teasers-configurator__cta-target-link'
+            ).on(
+                'change',
+                (): void => {
+                    this.onChange();
+                }
+            );
         },
         /*
          * Check if widget chooser is loaded. If not, wait for it, if yes:
@@ -395,14 +469,22 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * @param {number} index Hero item's index in array.
          */
         wWidgetListener(itemIndex: number): void {
-            if (typeof wWidget !== 'undefined' && widgetTools.dialogWindow[0].innerHTML !== '') {
-                const button: any = widgetTools.dialogWindow[0].querySelector('#insert_button');
+            if (
+                typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== ''
+            ) {
+                const button: any = widgetTools.dialogWindow[0].querySelector(
+                    '#insert_button'
+                );
 
                 button.onclick = null;
-                button.addEventListener('click', (): void => {
-                    this.configuration.teasers[itemIndex].href = '';
-                    wWidget.insertWidget();
-                } );
+                button.addEventListener(
+                    'click',
+                    (): void => {
+                        this.configuration.teasers[itemIndex].href = '';
+                        wWidget.insertWidget();
+                    }
+                );
             } else {
                 window.setTimeout((): void => {
                     this.wWidgetListener(itemIndex);
@@ -412,7 +494,9 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
         setTeaserSize(index: number) {
             this.fixOverflowedRowsSetup();
 
-            const size: any = this.configuration.teasers[index].sizeSelect.split('x');
+            const size: any = this.configuration.teasers[
+                index
+            ].sizeSelect.split('x');
             this.configuration.teasers[index].size.x = size[0];
             this.configuration.teasers[index].size.y = size[1];
         },
@@ -421,7 +505,11 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * @param {number} index New component's index in components array.
          */
         createNewTeaser(index: number): void {
-            this.configuration.teasers.splice(index, 0, JSON.parse(JSON.stringify(teaserDataPattern)));
+            this.configuration.teasers.splice(
+                index,
+                0,
+                JSON.parse(JSON.stringify(teaserDataPattern))
+            );
             this.rowsCount = this.getCurrentFErowsCount();
             this.onChange();
         },
@@ -431,17 +519,45 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          */
         moveTeaserUp(index: number): void {
             if (index > 0) {
-                const $thisItem: any = $(`#cc-magento-pg-teaser-${ index }`);
-                const $prevItem: any = $(`#cc-magento-pg-teaser-${ index - 1 }`);
+                const $thisItem: any = $(`#cc-magento-pg-teaser-${index}`);
+                const $prevItem: any = $(`#cc-magento-pg-teaser-${index - 1}`);
 
-                $thisItem.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', `translateY(${ -Math.abs($prevItem.outerHeight(true)) }px)`);
-                $prevItem.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', `translateY(${ $thisItem.outerHeight(true) }px)`);
+                $thisItem
+                    .addClass(
+                        'cc-magento-product-grid-teasers-configurator__item--animating'
+                    )
+                    .css(
+                        'transform',
+                        `translateY(${-Math.abs(
+                            $prevItem.outerHeight(true)
+                        )}px)`
+                    );
+                $prevItem
+                    .addClass(
+                        'cc-magento-product-grid-teasers-configurator__item--animating'
+                    )
+                    .css(
+                        'transform',
+                        `translateY(${$thisItem.outerHeight(true)}px)`
+                    );
 
                 setTimeout((): void => {
-                    this.configuration.teasers.splice(index - 1, 0, this.configuration.teasers.splice(index, 1)[0]);
+                    this.configuration.teasers.splice(
+                        index - 1,
+                        0,
+                        this.configuration.teasers.splice(index, 1)[0]
+                    );
                     this.onChange();
-                    $thisItem.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
-                    $prevItem.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
+                    $thisItem
+                        .removeClass(
+                            'cc-magento-product-grid-teasers-configurator__item--animating'
+                        )
+                        .css('transform', '');
+                    $prevItem
+                        .removeClass(
+                            'cc-magento-product-grid-teasers-configurator__item--animating'
+                        )
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -449,19 +565,47 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * Moves hero item under given index down by swaping it with next element.
          * @param {number} index Hero item's index in array.
          */
-        moveTeaserDown( index: number ): void {
+        moveTeaserDown(index: number): void {
             if (index < this.configuration.teasers.length - 1) {
-                const $thisItem: any = $(`#cc-magento-pg-teaser-${ index }`);
-                const $nextItem: any = $(`#cc-magento-pg-teaser-${ index + 1 }`);
+                const $thisItem: any = $(`#cc-magento-pg-teaser-${index}`);
+                const $nextItem: any = $(`#cc-magento-pg-teaser-${index + 1}`);
 
-                $thisItem.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', `translateY(${ $nextItem.outerHeight(true) }px)`);
-                $nextItem.addClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', `translateY(${ -Math.abs($thisItem.outerHeight(true)) }px)`);
+                $thisItem
+                    .addClass(
+                        'cc-magento-product-grid-teasers-configurator__item--animating'
+                    )
+                    .css(
+                        'transform',
+                        `translateY(${$nextItem.outerHeight(true)}px)`
+                    );
+                $nextItem
+                    .addClass(
+                        'cc-magento-product-grid-teasers-configurator__item--animating'
+                    )
+                    .css(
+                        'transform',
+                        `translateY(${-Math.abs(
+                            $thisItem.outerHeight(true)
+                        )}px)`
+                    );
 
                 setTimeout((): void => {
-                    this.configuration.teasers.splice(index + 1, 0, this.configuration.teasers.splice(index, 1)[0]);
+                    this.configuration.teasers.splice(
+                        index + 1,
+                        0,
+                        this.configuration.teasers.splice(index, 1)[0]
+                    );
                     this.onChange();
-                    $thisItem.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
-                    $nextItem.removeClass('cc-magento-product-grid-teasers-configurator__item--animating').css('transform', '');
+                    $thisItem
+                        .removeClass(
+                            'cc-magento-product-grid-teasers-configurator__item--animating'
+                        )
+                        .css('transform', '');
+                    $nextItem
+                        .removeClass(
+                            'cc-magento-product-grid-teasers-configurator__item--animating'
+                        )
+                        .css('transform', '');
                 }, 400);
             }
         },
@@ -497,13 +641,15 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                         component.onChange();
                     },
                 },
-            } );
+            });
         },
         /* Cleans configuration for M2C content constructor after Saving component
          * All empty teasers have to be removed to not get into configuration object
          */
         cleanupConfiguration(): void {
-            const filteredArray: any = this.configuration.teasers.filter((teaser: any): any => teaser.image !== '');
+            const filteredArray: any = this.configuration.teasers.filter(
+                (teaser: any): any => teaser.image !== ''
+            );
             this.configuration.teasers = filteredArray;
             this.onChange();
         },
@@ -512,10 +658,16 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
         generateTeasersConfig(): void {
             this.configuration.json = [];
 
-            for (let i: number = 0; i < this.configuration.teasers.length; i++) {
+            for (
+                let i: number = 0;
+                i < this.configuration.teasers.length;
+                i++
+            ) {
                 const teaser: any = {
                     id: i + 1,
-                    mobile: Number(this.configuration.teasers[i].isAvailableForMobile),
+                    mobile: Number(
+                        this.configuration.teasers[i].isAvailableForMobile
+                    ),
                     size: {
                         x: Number(this.configuration.teasers[i].size.x),
                         y: Number(this.configuration.teasers[i].size.y),

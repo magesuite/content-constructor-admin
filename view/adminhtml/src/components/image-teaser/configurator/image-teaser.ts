@@ -12,6 +12,13 @@ import {
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
+import customElementTextInput from '../../_custom-elements/text-input';
+import customElementSelect from '../../_custom-elements/select';
+import customElementTextarea from '../../_custom-elements/textarea';
+import customElementCheckbox from '../../_custom-elements/checkbox';
+import customElementRadio from '../../_custom-elements/radio';
+import customElementPosition from '../../_custom-elements/position-grid';
+
 /**
  * Image teaser configurator component.
  * This component is responsible for displaying image teaser's configuration form
@@ -24,6 +31,12 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         'component-adder': componentAdder,
         'component-actions': componentActions,
         'teaser-configurator': teaserConfigurator,
+        'custom-element-input': customElementTextInput,
+        'custom-element-select': customElementSelect,
+        'custom-element-textarea': customElementTextarea,
+        'custom-element-checkbox': customElementCheckbox,
+        'custom-element-radio': customElementRadio,
+        'custom-element-position': customElementPosition,
     },
     template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
@@ -112,6 +125,20 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                     <p class="cc-image-teaser-configurator__option-name">
                         {{ option.name }}
                     </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cc-image-teaser-configurator__section" v-if="ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null" v-for="section in ccConfig.image_teaser.custom_sections">
+            <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component 
+                        :is="'custom-element-' + field.type" 
+                        :configuration="configuration" 
+                        :field-configuration="field" 
+                        :teaser-index="9999"
+                    ></component>
                 </div>
             </div>
         </section>
@@ -345,7 +372,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         },
     },
     computed: {
-        imageTeasersContentPositions: function(): object {
+        imageTeasersContentPositions: function (): object {
             const data: object = this.ccConfig.image_teasers_content_positions;
             return Object.keys(data).map(key => (data as any)[key]);
         },
@@ -355,6 +382,8 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
+            this._collectTeasersCssClasses();
+            this._collectComponentCssClasses();
             this.onSave();
         },
     },
@@ -496,7 +525,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                         return (
                             !contentPlacement ||
                             availableScenario[contentPlacementIndex] ===
-                                contentPlacement
+                            contentPlacement
                         );
                     }
                 );
@@ -582,9 +611,86 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             );
             this.onChange();
         },
+
+        _getCustomCssFields(source: object): Array<any> {
+            const cssClassFields: Array<any> = [];
+
+            Object.keys(source).forEach(
+                (tabKey: string) => {
+                    if (
+                        typeof source[tabKey].content !== 'string' && 
+                        source[tabKey].content.fields != null
+                    ) {
+                        Object.keys(source[tabKey].content.fields).forEach(
+                            (fieldKey: string) => {
+                                if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
+                                    cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+
+            return cssClassFields;
+        },
+
+        _collectTeasersCssClasses(): void {
+            if (this.configuration.items != null) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+
+                this.configuration.items.forEach(
+                    (teaser: any, index: number) => {
+                        const cssClasses: Array<string> = [];
+
+                        cssClassFields.forEach(
+                            (model: string) => {
+                                if (teaser[model] && typeof teaser[model] === 'string') {
+                                    cssClasses.push(teaser[model]);
+                                }
+                            }
+                        );
+
+                        teaser.cc_css_classes = cssClasses.join(' ');
+                    }
+                );
+            }
+        },
+
+        _collectComponentCssClasses(): void {
+            if (
+                this.ccConfig.image_teaser != null && 
+                this.ccConfig.image_teaser.custom_sections != null
+            ) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
+                const cssClasses: Array<string> = [];
+
+                cssClassFields.forEach(
+                    (model: string) => {
+                        if (this.configuration[model] && typeof this.configuration[model] === 'string') {
+                            cssClasses.push(this.configuration[model]);
+                        }
+                    }
+                );
+
+                this.configuration.cc_css_classes = cssClasses.join(' ');
+            }
+        },
+
+        /*
+         * Backward compatibility enhancement.
+         * When new props are added to the 'configuration' prop, none of already saved component has it.
+         * This leads to backward compatibility issues and JS errors for existing components
+         * This method takes defaults of 'configuration' and merges is with exising configuration object
+         */
+        updateConfigurationProp(): void {
+            const propDefaults: Object = this.$options.props.configuration.default();
+            this.configuration = $.extend({}, propDefaults, this.configuration, true);
+        }
     },
     ready(): void {
         this.togglePossibleOptions();
+        this.updateConfigurationProp();
     },
 };
 

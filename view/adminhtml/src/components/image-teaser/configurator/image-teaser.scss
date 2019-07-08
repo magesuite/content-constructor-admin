@@ -13,6 +13,11 @@
             justify-content: flex-end;
         }
 
+        &--2-columns {
+            display: flex;
+            justify-content: space-between;
+        }
+
         &:first-child {
             margin: 0;
             padding: 0;
@@ -22,6 +27,10 @@
 
     &__item {
         position: relative;
+
+        &--column {
+            width: calc(50% - 1rem);
+        }
 
         &:hover {
             .cc-component-adder {

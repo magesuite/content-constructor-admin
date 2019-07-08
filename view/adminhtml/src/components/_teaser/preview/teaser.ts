@@ -57,14 +57,6 @@ interface IComponentInformationOptimizers {
 }
 
 /**
- * Badge interface
- */
-interface IComponentBadge {
-    value: string;
-    align: IComponentInformationContentAlign;
-}
-
-/**
  * Single component information interface.
  */
 interface IComponentInformation {
@@ -74,6 +66,7 @@ interface IComponentInformation {
     cta: IComponentInformationCta;
     content_align: IComponentInformationContentAlign;
     optimizers: IComponentInformationOptimizers;
+    type: string
 }
 
 /**
@@ -94,9 +87,11 @@ const teaserPreview: vuejs.ComponentOption = {
                         :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
                         v-if="configuration.image.image || configuration.image.raw"
                     >
-                    <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
-                        <use xlink:href="#icon_image-placeholder"></use>
-                    </svg>
+                    <template v-if="teaserType !== 'text-only'">
+                        <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
+                            <use xlink:href="#icon_image-placeholder"></use>
+                        </svg>
+                    </template
                 </figure>
 
                 <div class="cc-teaser-preview__overlay" v-if="configuration.optimizers.scenarios.overlay.enabled" :style="{opacity: configuration.optimizers.scenarios.overlay.intensity / 100}"></div>
@@ -105,12 +100,6 @@ const teaserPreview: vuejs.ComponentOption = {
                     class="cc-teaser-preview__gradient cc-teaser-preview__gradient--direction-x-{{configuration.optimizers.scenarios.gradient.direction.x}} cc-teaser-preview__gradient--direction-y-{{configuration.optimizers.scenarios.gradient.direction.y}}"
                     :style="{opacity: configuration.optimizers.scenarios.gradient.intensity / 100}"
                 ></div>
-                <div
-                    class="cc-teaser-preview__badge-wrapper cc-teaser-preview__badge-wrapper--content-align-x-{{configuration.badge.align.x}} cc-teaser-preview__badge-wrapper--content-align-y-{{configuration.badge.align.y}}"
-                    v-if="configuration.badge.value"
-                >
-                    {{configuration.badge.value}}
-                </div>
 
                 <div
                     class="cc-teaser-preview__content-wrapper cc-teaser-preview__content-wrapper--content-align-x-{{configuration.content_align.x}} cc-teaser-preview__content-wrapper--content-align-y-{{configuration.content_align.y}}"
@@ -163,6 +152,11 @@ const teaserPreview: vuejs.ComponentOption = {
             type: String,
             default: '',
         },
+        /* Type of slide - can be full/text-only */
+        teaserType: {
+            type: String,
+            default: 'full',
+        }
     },
     computed: {
         aspectRatio: function (): string {

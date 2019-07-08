@@ -9,6 +9,13 @@ import teaserPreview from '../preview/teaser';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
+import customElementTextInput from '../../_custom-elements/text-input';
+import customElementSelect from '../../_custom-elements/select';
+import customElementTextarea from '../../_custom-elements/textarea';
+import customElementCheckbox from '../../_custom-elements/checkbox';
+import customElementRadio from '../../_custom-elements/radio';
+import customElementPosition from '../../_custom-elements/position-grid';
+
 export const teaserPrototype: any = {
     image: {
         raw: '',
@@ -90,17 +97,9 @@ export const teaserPrototype: any = {
             { text: '{{sku sku="some_sku"}}' },
             { text: '<big>Only</big> {{qty sku="some_sku"}} left' }
         ]
-    }
+    },
+    teaserType: 'full'
 };
-
-interface IAdvancedField {
-    label: string;
-    type: string;
-    id: string;
-    name: string;
-    options?: any[];
-    isChecked?: boolean;
-}
 
 /**
  * Teaser configurator component.
@@ -113,14 +112,20 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'action-button': actionButton,
         'component-actions': componentActions,
         'teaser-preview': teaserPreview,
+        'custom-element-input': customElementTextInput,
+        'custom-element-select': customElementSelect,
+        'custom-element-textarea': customElementTextarea,
+        'custom-element-checkbox': customElementCheckbox,
+        'custom-element-radio': customElementRadio,
+        'custom-element-position': customElementPosition,
     },
-    template: `<div class="cc-teaser-configurator">
+    template: `<div class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}}">
         <section class="cc-teaser-configurator__section">
             <div class="cc-teaser-configurator__content" id="cc-teaser-{{teaserIndex}}">
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--preview" :class="{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}">
                     <div class="cc-teaser-configurator__image-wrapper">
 
-                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration"></teaser-preview>
+                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType"></teaser-preview>
 
                         <input type="hidden" class="cc-teaser-configurator__image-url" id="teaser-img-{{teaserIndex}}">
 
@@ -130,7 +135,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     <button
                                         class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-teaser-configurator__action-button"
                                         :class="{'cc-action-button--look_disabled': isFirstImageTeaser(teaserIndex)}"
-                                        @click="moveImageTeaserUp(teaserIndex)"
+                                        @click="configuratorLayout === 'column' ? moveImageTeaserLeft(teaserIndex) : moveImageTeaserUp(teaserIndex)"
                                         :disabled="isFirstImageTeaser(teaserIndex)"
                                     >
                                         <svg class="cc-action-button__icon cc-action-button__icon--size_100">
@@ -141,21 +146,23 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-teaser-configurator__action-button"
                                         :class="{'cc-action-button--look_disabled': isLastImageTeaser(teaserIndex)}"
                                         :disabled="isLastImageTeaser(teaserIndex)"
-                                        @click="moveImageTeaserDown(teaserIndex)"
+                                        @click="configuratorLayout === 'column' ? moveImageTeaserRight(teaserIndex) : moveImageTeaserDown(teaserIndex)"
                                     >
                                         <svg class="cc-action-button__icon cc-action-button__icon--size_100">
                                             <use xlink:href="#icon_arrow-down"></use>
                                         </svg>
                                     </button>
-                                    <button
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
-                                        @click="getImageUploader(teaserIndex)"
-                                    >
-                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                            <use xlink:href="#icon_upload-image"></use>
-                                        </svg>
-                                        {{imageActionText | translate}}
-                                    </button>
+                                    <template v-if="teaserType !== 'text-only'">
+                                        <button
+                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
+                                            @click="getImageUploader(teaserIndex)"  
+                                        >
+                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                                <use xlink:href="#icon_upload-image"></use>
+                                            </svg>
+                                            {{imageActionText | translate}}
+                                        </button>
+                                    </template>
                                     <button
                                         class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"
                                         @click="deleteTeaserItem(teaserIndex)"
@@ -348,86 +355,18 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             </div>
                         </template>
 
-                        <template v-if="tab.content && tab.content === '#badge'">
-                            <div
-                                class="cc-teaser-configurator__tab-section"
-                                :class="{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}"
-                            >
-                                <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
-                                    <div class="cc-input cc-teaser-configurator__form-element">
-                                        <label for="cfg-teaser-{{teaserIndex}}-label-content" class="cc-input__label">
-                                            {{'Badge text' | translate}}: 
-                                        </label>
-                                        <textarea v-model="configuration.badge.value | prettify"  type="text" class="cc-input__textarea" id="cfg-teaser-{{teaserIndex}}-label-content" >
-                                        </textarea>
-                                    </div>
-                                    <div class="cc-input cc-teaser-configurator__form-element">
-                                        <br>
-                                        <p>Add content with special markup, e.g.:
-                                            <template v-for="example in configuration.badge.examples">
-                                                <br>- {{example.text}}
-                                            </template>
-                                        </p>
-                                    </div>
-                                </div>    
-                                <br>                        
-                                <label class="cc-input__label">{{'Badge align' | translate }}:</label>
-                                <div class="cc-teaser-configurator__position-grid">
-                                    <template v-for="y in 3">
-                                        <template v-for="x in 3">
-                                            <span
-                                                class="cc-teaser-configurator__position-grid-item"
-                                                :class="{'cc-teaser-configurator__position-grid-item--active': isCurrentBadgeAlign(x+1, y+1)}"
-                                                @click="setBadgeAlign(x+1, y+1)"
-                                            ></span>
-                                        </template>
-                                    </template>
-                                </div>
-                                <p>Note: Please verify text position configuration in the "Content" tab. It might overlap the badge position.</p>
-                            </div>
-                        </template>
-
-                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#badge'">
+                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style'">
                             <div class="cc-teaser-configurator__tab-section">
-                                <template v-for="(fieldIndex, field) in tab.content.fields">
-                                    <div
-                                        v-if="field.type === 'select'"
-                                        class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group"
-                                    >
-                                        <div class="cc-input cc-teaser-configurator__form-element">
-                                            <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
-                                                {{field.label | translate}}:
-                                            </label>
-                                            <select class="cc-input__select">
-                                                <option v-for="(value, label) in field.options" :value="value">{{ label }}</option>
-                                            </select>
-                                        </div>
-                                    </div v-if="field.type === 'select'">
-
-                                    <div
-                                        v-if="field.type === 'input'"
-                                        class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group"
-                                    >
-                                        <div class="cc-input cc-teaser-configurator__form-element">
-                                            <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
-                                                {{field.label | translate}}:
-                                            </label>
-                                            <input type="text" class="cc-input__input" :value="field.value">
-                                        </div>
-                                    </div v-if="field.type === 'input'">
-
-                                    <div
-                                        v-if="field.type === 'textarea'"
-                                        class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group"
-                                    >
-                                        <div class="cc-input cc-teaser-configurator__form-element">
-                                            <label for="{{fieldId | randomizeElementId}}" class="cc-input__label">
-                                                {{field.label | translate}}:
-                                                </label>
-                                            <textarea type="text" class="cc-input__textarea">{{ field.value }}</textarea>
-                                        </div>
-                                    </div v-if="field.type === 'textarea'">
-                                </template>
+                                <div class="cc-custom-fields cc-custom-fields--narrow">
+                                    <div class="cc-custom-fields__form-group" v-for="field in tab.content.fields">
+                                        <component 
+                                            :is="'custom-element-' + field.type" 
+                                            :configuration="configuration" 
+                                            :field-configuration="field" 
+                                            :teaser-index="teaserIndex"
+                                        ></component>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -486,6 +425,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 return {};
             },
         },
+        /* Default layout is row (image on the left, texts on the right, but can be also column) */
+        configuratorLayout: {
+            type: String,
+            default: 'row',
+        },
+        teaserType: {
+            type: String,
+            default: 'full',
+        },
     },
     computed: {
         configuration: function (): object {
@@ -522,10 +470,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
             return `${txt.charAt(0).toUpperCase()}${txt.slice(1)}`;
         },
 
-        randomizeElementId(id: string): string {
-            return `cfg-teaser-${id}-${Math.floor(
-                Math.random() * (1000 - 99999)
-            ) + 1000}`;
+        prefixFieldId(id: string): string {
+            return `cfg-teaser-${this.teaserIndex}-${id}`;
         },
 
         prettify: {
@@ -713,6 +659,86 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         'transform',
                         `translateY(${-Math.abs(
                             $thisItem.outerHeight(true)
+                        )}px)`
+                    );
+
+                setTimeout((): void => {
+                    this.parentConfiguration.items.splice(
+                        index + 1,
+                        0,
+                        this.parentConfiguration.items.splice(index, 1)[0]
+                    );
+                    $thisItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    $nextItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    this.onChange();
+                }, 400);
+            }
+        },
+        /**
+         * Moves image teaser item left by swaping it with previous element.
+         * @param {number} index Image teaser's index in array.
+        */
+        moveImageTeaserLeft(index: number): void {
+            if (index > 0) {
+                const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
+                const $prevItem: any = $(`#cc-image-teaser-item-${index - 1}`);
+
+                $thisItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${-Math.abs(
+                            $prevItem.outerWidth(true)
+                        )}px)`
+                    );
+                $prevItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${$thisItem.outerWidth(true)}px )`
+                    );
+
+                setTimeout((): void => {
+                    this.parentConfiguration.items.splice(
+                        index - 1,
+                        0,
+                        this.parentConfiguration.items.splice(index, 1)[0]
+                    );
+                    $thisItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    $prevItem
+                        .removeClass('cc-teaser-configurator--animating')
+                        .css('transform', '');
+                    this.onChange();
+                }, 400);
+            }
+        },
+        /**
+         * Moves image teaser item right by swaping it with next element.
+         * @param {number} index Image teaser's index in array.
+         */
+        moveImageTeaserRight(index: number): void {
+            if (index < this.parentConfiguration.items.length - 1) {
+                const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
+                const $nextItem: any = $(`#cc-image-teaser-item-${index + 1}`);
+
+                $thisItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${$nextItem.outerWidth(true)}px)`
+                    );
+                $nextItem
+                    .addClass('cc-teaser-configurator--animating')
+                    .css(
+                        'transform',
+                        `translateX(${-Math.abs(
+                            $thisItem.outerWidth(true)
                         )}px)`
                     );
 
