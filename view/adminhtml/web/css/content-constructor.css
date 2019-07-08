@@ -371,10 +371,11 @@
     .cc-input--range:before {
       position: absolute;
       content: '';
-      top: 2px;
-      left: 17px;
-      width: calc(100% - 30px);
-      height: 7px; }
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; }
   .cc-input input[type='range'] {
     /* removes default webkit styles */
     -webkit-appearance: none;
@@ -413,7 +414,8 @@
       height: 29px;
       width: 12px;
       border-radius: 2px;
-      background: #e3e3e3; }
+      background: #e3e3e3;
+      cursor: pointer; }
     .cc-input input[type='range']:-moz-focusring {
       outline: 1px solid transparent;
       outline-offset: -1px; }
