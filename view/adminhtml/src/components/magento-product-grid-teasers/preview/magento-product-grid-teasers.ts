@@ -37,7 +37,12 @@ const magentoProductGridTeasersPreview: vuejs.ComponentOption = {
                     <div class="cc-magento-product-grid-teasers-preview__teasers-count">
                         {{ teasersLength }}
                     </div>
-                    ${$t('teasers')}
+                    <template v-if="teasersLength === 1">
+                        ${$t('teaser')}
+                    </template>
+                    <template v-else>
+                        ${$t('teasers')}
+                    </template>
                 </div>
             </li>
         </ul>

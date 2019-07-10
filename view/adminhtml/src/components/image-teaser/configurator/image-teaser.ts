@@ -133,10 +133,10 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
-                    <component 
-                        :is="'custom-element-' + field.type" 
-                        :configuration="configuration" 
-                        :field-configuration="field" 
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
                         :teaser-index="9999"
                     ></component>
                 </div>
@@ -383,7 +383,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          */
         'component-configurator__save'(): void {
             this._collectTeasersCssClasses();
-            this._collectComponentCssClasses();
+            // this._collectComponentCssClasses();
             this.onSave();
         },
     },
@@ -618,7 +618,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             Object.keys(source).forEach(
                 (tabKey: string) => {
                     if (
-                        typeof source[tabKey].content !== 'string' && 
+                        typeof source[tabKey].content !== 'string' &&
                         source[tabKey].content.fields != null
                     ) {
                         Object.keys(source[tabKey].content.fields).forEach(
