@@ -383,7 +383,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          */
         'component-configurator__save'(): void {
             this._collectTeasersCssClasses();
-            // this._collectComponentCssClasses();
+            this._collectComponentCssClasses();
             this.onSave();
         },
     },
