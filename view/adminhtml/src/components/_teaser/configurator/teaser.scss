@@ -18,7 +18,7 @@
     &--column {
         height: 100%;
 
-        .cc-component-actions__button--down, 
+        .cc-component-actions__button--down,
         .cc-component-actions__button--up {
             transform: rotate(-90deg);
         }
@@ -297,6 +297,12 @@
             display: inline-block;
             min-width: 6.9rem;
             white-space: nowrap;
+        }
+
+        &-block {
+            display: block;
+            text-align: left;
+            padding: 0.5rem 0;
         }
 
         .cc-input__label {

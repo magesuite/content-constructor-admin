@@ -32,6 +32,14 @@ export const teaserPrototype: any = {
         x: 1,
         y: 1,
     },
+    sizeSelect: '2x1',
+    size: {
+        x: 2,
+        y: 1,
+    },
+    row: 1,
+    position: 'left',
+    isAvailableForMobile: 1,
     optimizers: {
         color_scheme: 'dark',
         mirror_image: false,
@@ -155,12 +163,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     <template v-if="teaserType !== 'text-only'">
                                         <button
                                             class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
-                                            @click="getImageUploader(teaserIndex)"  
+                                            @click="getImageUploader(teaserIndex)"
                                         >
                                             <svg class="cc-action-button__icon cc-action-button__icon--size_100">
                                                 <use xlink:href="#icon_upload-image"></use>
                                             </svg>
-                                            {{imageActionText | translate}}
+                                            {{ imageActionText | translate }}
                                         </button>
                                     </template>
                                     <button
@@ -188,6 +196,14 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         >
                             <span class="cc-teaser-configurator__tab-label">{{tab.label}}</span>
                         </li>
+                        <li
+                            v-if="callerComponentType === 'magento-product-grid-teasers'"
+                            class="cc-teaser-configurator__tab"
+                            :class="{'cc-teaser-configurator__tab--current': currentTab == callerComponentType}"
+                            @click="switchTab(callerComponentType)"
+                        >
+                            <span class="cc-teaser-configurator__tab-label">{{ 'Position' | translate }}</span>
+                        </li>
                     </ul>
 
                     <div
@@ -201,7 +217,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 class="cc-teaser-configurator__tab-section"
                                 :class="{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}"
                             >
-                                <label class="cc-input__label">{{'Content align' | translate }}:</label>
+                                <label class="cc-input__label">{{ 'Content align' | translate }}:</label>
                                 <div class="cc-teaser-configurator__position-grid">
                                     <template v-for="y in 3">
                                         <template v-for="x in 3">
@@ -218,11 +234,11 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
-                                        <label for="cfg-teaser-{{teaserIndex}}-slogan" class="cc-input__label">{{'Slogan' | translate}}:</label>
+                                        <label for="cfg-teaser-{{teaserIndex}}-slogan" class="cc-input__label">{{ 'Slogan' | translate }}:</label>
                                         <textarea v-model="configuration.slogan | prettify" id="cfg-teaser-{{teaserIndex}}-slogan" class="cc-input__textarea"></textarea>
                                     </div>
                                     <div class="cc-input cc-teaser-configurator__form-element">
-                                        <label for="cfg-teaser-{{teaserIndex}}-description" class="cc-input__label">{{'Description' | translate}}:</label>
+                                        <label for="cfg-teaser-{{teaserIndex}}-description" class="cc-input__label">{{ 'Description' | translate }}:</label>
                                         <textarea v-model="configuration.description | prettify" id="cfg-teaser-{{teaserIndex}}-description" class="cc-input__textarea"></textarea>
                                     </div>
                                 </div>
@@ -231,11 +247,11 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
-                                        <label for="cfg-teaser-{{teaserIndex}}-cta-label" class="cc-input__label">{{'CTA label' | translate}}:</label>
+                                        <label for="cfg-teaser-{{teaserIndex}}-cta-label" class="cc-input__label">{{ 'CTA label' | translate }}:</label>
                                         <input type="text" v-model="configuration.cta.label" id="cfg-teaser-{{teaserIndex}}-cta-label" class="cc-input__input">
                                     </div>
                                     <div class="cc-input cc-input--type-addon cc-teaser-configurator__form-element">
-                                        <label for="cfg-teaser-{{teaserIndex}}-cta-href" class="cc-input__label">{{'CTA target link' | translate}}:</label>
+                                        <label for="cfg-teaser-{{teaserIndex}}-cta-href" class="cc-input__label">{{ 'CTA target link' | translate }}:</label>
                                         <input type="text" class="cc-input__input cc-teaser-configurator__cta-target-link" v-model="configuration.cta.href" id="cfg-teaser-{{teaserIndex}}-cta-href">
                                         <span class="cc-input__addon cc-teaser-configurator__widget-chooser-trigger" @click="openCtaTargetModal(teaserIndex)">
                                             <svg class="cc-input__addon-icon">
@@ -249,7 +265,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
                         <template v-if="tab.content && tab.content === '#style'">
                             <div class="cc-teaser-configurator__tab-section">
-                                <label class="cc-input__label">{{'Contrast Optimizer' | translate}}</label>
+                                <label class="cc-input__label">{{ 'Contrast Optimizer' | translate }}</label>
                                 <ul
                                     class="cc-teaser-configurator__optimizers"
                                     :class="{'block-disabled': parentConfiguration.scenario.contentPlacement.id === 'under'}"
@@ -266,7 +282,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                             </svg>
                                         </div>
                                         <label class="cc-teaser-configurator__optimizer-label">
-                                            {{optimizer.configurator.label | translate}}
+                                            {{ optimizer.configurator.label | translate }}
                                         </label>
                                     </li>
                                 </ul>
@@ -280,7 +296,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         class="cc-teaser-configurator__optimizer-tool"
                                         :class="{'block-disabled': optimizer.intensity === 'disabled'}"
                                     >
-                                        <label class="cc-input__label cc-teaser-configurator__optimizer-tool-label">{{'Intensity' | translate}}</label>
+                                        <label class="cc-input__label cc-teaser-configurator__optimizer-tool-label">{{ 'Intensity' | translate }}</label>
                                         <div class="cc-input cc-input--range">
                                             <input
                                                 class="cc-input__range cc-input__range--step-{{ getOptimizerIntensityStep(key) }} cc-teaser-configurator__optimizer-range"
@@ -301,7 +317,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         class="cc-teaser-configurator__optimizer-tool"
                                         :class="{'block-disabled': optimizer.direction === 'disabled'}"
                                     >
-                                        <label class="cc-input__label cc-teaser-configurator__optimizer-tool-label">{{'Direction' | translate}}</label>
+                                        <label class="cc-input__label cc-teaser-configurator__optimizer-tool-label">{{ 'Direction' | translate }}</label>
                                         <div class="cc-teaser-configurator__position-grid cc-teaser-configurator__position-grid--small">
                                             <template v-for="y in 3">
                                                 <template v-for="x in 3">
@@ -323,20 +339,20 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
-                                        <label for="cfg-teaser-{{teaserIndex}}-color-scheme" class="cc-input__label">{{'Text style' | translate}}:</label>
+                                        <label for="cfg-teaser-{{teaserIndex}}-color-scheme" class="cc-input__label">{{ 'Text style' | translate }}:</label>
                                         <select
                                             name="cfg-teaser-{{teaserIndex}}-color-scheme"
                                             class="cc-input__select"
                                             id="cfg-teaser-{{teaserIndex}}-color-scheme"
                                             v-model="configuration.optimizers.color_scheme"
                                         >
-                                            <option v-for="scheme in ccConfig.teaser.color_schemes" value="{{scheme}}">{{scheme | capitalize | translate}}</option>
+                                            <option v-for="scheme in ccConfig.teaser.color_schemes" value="{{scheme}}">{{ scheme | capitalize | translate}}</option>
                                         </select>
                                     </div>
 
                                     <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher">
                                         <div class="admin__actions-switch" data-role="switcher" :class="{'block-disabled': !configuration.image.raw}">
-                                            <label for="cfg-teaser-{{teaserIndex}}-mirror-image" class="cc-input__label">{{'Mirror image' | translate}}: </label>
+                                            <label for="cfg-teaser-{{teaserIndex}}-mirror-image" class="cc-input__label">{{ 'Mirror image' | translate }}: </label>
                                             <input
                                                 type="checkbox"
                                                 class="admin__actions-switch-checkbox"
@@ -359,10 +375,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-custom-fields cc-custom-fields--narrow">
                                     <div class="cc-custom-fields__form-group" v-for="field in tab.content.fields">
-                                        <component 
-                                            :is="'custom-element-' + field.type" 
-                                            :configuration="configuration" 
-                                            :field-configuration="field" 
+                                        <component
+                                            :is="'custom-element-' + field.type"
+                                            :configuration="configuration"
+                                            :field-configuration="field"
                                             :teaser-index="teaserIndex"
                                         ></component>
                                     </div>
@@ -370,6 +386,53 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             </div>
                         </template>
                     </div>
+
+                    <div
+                        class="cc-teaser-configurator__tab-content"
+                        :class="{'cc-teaser-configurator__tab-content--current': currentTab == callerComponentType}"
+                    >
+                        <template v-if="currentTab === 'magento-product-grid-teasers'">
+                            <div class="cc-teaser-configurator__tab-section">
+                                <div class="cc-input cc-input--group">
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <label for="cfg-mpg-teaser-{{ teaserIndex }}-size-select" class="cc-input__label">{{ 'Teaser size' | translate }}:</label>
+                                        <select name="cfg-mpg-teaser-{{ teaserIndex }}-size-select" class="cc-input__select" id="cfg-mpg-teaser-{{ teaserIndex }}-size-select" v-model="configuration.sizeSelect" @change="setTeaserSize()">
+                                            <option value="1x1">{{ '1x1' | translate }}</option>
+                                            <option value="1x2">{{ '1x2' | translate }}</option>
+                                            <option value="2x1">{{ '2x1' | translate }}</option>
+                                            <option value="2x2">{{ '2x2' | translate }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <label for="cfg-mpg-teaser-{{ teaserIndex }}-position" class="cc-input__label">{{ 'Position' | translate}}:</label>
+                                        <select name="cfg-mpg-teaser-{{ teaserIndex }}-position" class="cc-input__select" id="cfg-mpg-teaser-{{ teaserIndex }}-position" v-model="configuration.position">
+                                            <option value="left">{{ 'Left' | translate }}</option>
+                                            <option value="center">{{ 'Center' | translate }}</option>
+                                            <option value="right">{{ 'Right' | translate }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="cc-input cc-input--group">
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <label for="cfg-mpg-teaser-{{ teaserIndex }}-row" class="cc-input__label">{{ 'Row' | translate }}:</label>
+                                        <select name="cfg-mpg-teaser{{ teaserIndex }}-row" class="cc-input__select" id="cfg-mpg-teaser-{{ teaserIndex }}-row" v-model="configuration.row">
+                                            <option v-for="i in rowsCount" value="{{ i + 1 }}">{{ i + 1 }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <label for="cfg-mpg-teaser-{{ teaserIndex }}-mobile" class="cc-input__label">{{ 'Show in mobiles' | translate }}:</label>
+                                        <div class="admin__actions-switch-block" data-role="switcher">
+                                            <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-mpg-teaser-{{ teaserIndex }}-mobile" name="cfg-mpg-teaser-{{ teaserIndex }}-mobile" v-model="configuration.isAvailableForMobile">
+                                            <label class="admin__actions-switch-label" for="cfg-mpg-teaser-{{ teaserIndex }}-mobile"">
+                                                <span class="admin__actions-switch-text" data-text-on="{{ 'Yes' | translate }}" data-text-off="{{ 'No' | translate }}"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -383,11 +446,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
             default(): object {
                 return {
                     items: [],
-                    scenario: {
-                        contentPlacement: {
-                            id: 'over',
-                        },
-                    },
                 };
             },
         },
@@ -434,9 +492,21 @@ const teaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'full',
         },
+        rowsCount: {
+            type: Number,
+            default: '',
+        }
     },
     computed: {
+        /**
+         * Magento product grid teasers use configuration with 'teasers' instead of 'items'
+         * Backend change is required, for now if teaser is called from product grid
+         * then it uses teasers instead of items (as other components do)
+         */
         configuration: function (): object {
+            if(this.callerComponentType === 'magento-product-grid-teasers') {
+                return this.parentConfiguration.teasers[this.teaserIndex];
+            }
             return this.parentConfiguration.items[this.teaserIndex];
         },
         imageActionText: function (): string {
@@ -445,10 +515,22 @@ const teaserConfigurator: vuejs.ComponentOption = {
         mirrorImageTextOutput: function (): string {
             return this.configuration.optimizers.mirror_image ? 'Yes' : 'No';
         },
+        /**
+         * Magento product grid teasers use configuration with 'teasers' instead of 'items'
+         * Backend change is required, for now if teaser is called from product grid
+         * then it uses teasers instead of items (as other components do)
+         */
+        parentConfigurationVariation: function (): object {
+            if(this.callerComponentType === 'magento-product-grid-teasers') {
+                return this.parentConfiguration.teasers;
+            } else {
+                return this.parentConfiguration.items;
+            }
+        }
     },
     data(): any {
         return {
-            currentTab: 0,
+            currentTab: 0
         };
     },
     filters: {
@@ -554,6 +636,32 @@ const teaserConfigurator: vuejs.ComponentOption = {
             );
         },
 
+        setTeaserSize(): void {
+            this.fixOverflowedRowsSetup();
+
+            const size: any = this.configuration.sizeSelect.split('x');
+            this.configuration.size.x = size[0];
+            this.configuration.size.y = size[1];
+        },
+
+        /**
+         * When you open component after changes in M2 grid settings (when products per page chnaged)
+         * Or, after you delete some teasers - this method updates available rows count on FE side and checks if
+         * current row setting of the teaser is not higher than this.rowsCount.
+         * If yes, it changes row setting to be equal this.rowsCount
+         */
+        fixOverflowedRowsSetup(): void {
+            for (
+                let i: number = 0;
+                i < this.configuration.length;
+                i++
+            ) {
+                if (this.configuration.row > this.rowsCount) {
+                    this.configuration.row = this.rowsCount;
+                }
+            }
+        },
+
         /* Opens M2's built-in image manager modal.
          * Manages all images: image upload from hdd, select image that was already uploaded to server.
          * @param index {number} - index of image of image teaser.
@@ -607,6 +715,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
                 const $prevItem: any = $(`#cc-image-teaser-item-${index - 1}`);
 
+
                 $thisItem
                     .addClass('cc-teaser-configurator--animating')
                     .css(
@@ -623,10 +732,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    this.parentConfiguration.items.splice(
+                    this.parentConfigurationVariation.splice(
                         index - 1,
                         0,
-                        this.parentConfiguration.items.splice(index, 1)[0]
+                        this.parentConfigurationVariation.splice(index, 1)[0]
                     );
                     $thisItem
                         .removeClass('cc-teaser-configurator--animating')
@@ -643,7 +752,9 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @param {number} index Image teaser's index in array.
          */
         moveImageTeaserDown(index: number): void {
-            if (index < this.parentConfiguration.items.length - 1) {
+
+
+            if (index < this.parentConfigurationVariation.length - 1) {
                 const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
                 const $nextItem: any = $(`#cc-image-teaser-item-${index + 1}`);
 
@@ -663,10 +774,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    this.parentConfiguration.items.splice(
+                    this.parentConfigurationVariation.splice(
                         index + 1,
                         0,
-                        this.parentConfiguration.items.splice(index, 1)[0]
+                        this.parentConfigurationVariation.splice(index, 1)[0]
                     );
                     $thisItem
                         .removeClass('cc-teaser-configurator--animating')
@@ -703,10 +814,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    this.parentConfiguration.items.splice(
+                    this.parentConfigurationVariation.splice(
                         index - 1,
                         0,
-                        this.parentConfiguration.items.splice(index, 1)[0]
+                        this.parentConfigurationVariation.splice(index, 1)[0]
                     );
                     $thisItem
                         .removeClass('cc-teaser-configurator--animating')
@@ -723,7 +834,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @param {number} index Image teaser's index in array.
          */
         moveImageTeaserRight(index: number): void {
-            if (index < this.parentConfiguration.items.length - 1) {
+            if (index < this.parentConfigurationVariation.length - 1) {
                 const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
                 const $nextItem: any = $(`#cc-image-teaser-item-${index + 1}`);
 
@@ -743,10 +854,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    this.parentConfiguration.items.splice(
+                    this.parentConfigurationVariation.splice(
                         index + 1,
                         0,
-                        this.parentConfiguration.items.splice(index, 1)[0]
+                        this.parentConfigurationVariation.splice(index, 1)[0]
                     );
                     $thisItem
                         .removeClass('cc-teaser-configurator--animating')
@@ -772,7 +883,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @return {boolean}       If image teaser is last in array.
          */
         isLastImageTeaser(index: number): boolean {
-            return index === this.parentConfiguration.items.length - 1;
+            return index === this.parentConfigurationVariation.length - 1;
         },
 
         /* Opens modal with M2 built-in widget chooser
@@ -829,7 +940,11 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 ),
                 actions: {
                     confirm(): void {
-                        component.parentConfiguration.items.splice(index, 1);
+                        if(component.callerComponentType === 'magento-product-grid-teasers') {
+                            component.parentConfiguration.teasers.splice(index, 1);
+                        } else {
+                            component.parentConfiguration.items.splice(index, 1);
+                        }
                     },
                 },
             });
@@ -841,7 +956,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
          */
         checkImageSizes(): boolean {
             const itemsToCheck = JSON.parse(
-                JSON.stringify(this.parentConfiguration.items)
+                JSON.stringify(this.parentConfigurationVariation)
             ).filter(
                 (item: any): boolean => {
                     return Boolean(item.image.aspect_ratio); // Filter out items without aspect ratio set yet.
