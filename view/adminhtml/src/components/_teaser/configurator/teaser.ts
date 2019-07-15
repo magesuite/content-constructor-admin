@@ -531,7 +531,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
     data(): any {
         return {
             currentTab: 0,
-            rowsCount: this.getCurrentFErowsCount(),
+            rowsCount: this.callerComponentType === 'magento-product-grid-teasers' ? this.getCurrentFErowsCount() : null,
         };
     },
     filters: {
