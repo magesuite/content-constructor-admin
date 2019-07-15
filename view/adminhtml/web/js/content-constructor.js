@@ -3231,7 +3231,7 @@ var teaserConfigurator = {
     data: function () {
         return {
             currentTab: 0,
-            rowsCount: this.getCurrentFErowsCount(),
+            rowsCount: this.callerComponentType === 'magento-product-grid-teasers' ? this.getCurrentFErowsCount() : null,
         };
     },
     filters: {
@@ -4901,7 +4901,6 @@ var magentoProductGridTeasersConfigurator = {
          */
         createNewTeaser: function (index) {
             this.configuration.teasers.splice(index, 0, JSON.parse(JSON.stringify(teaserPrototype)));
-            // this.rowsCount = this.getCurrentFErowsCount();
             this.onChange();
         },
         /* Cleans configuration for M2C content constructor after Saving component
