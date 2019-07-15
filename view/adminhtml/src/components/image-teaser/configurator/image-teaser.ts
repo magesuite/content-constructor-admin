@@ -659,7 +659,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
 
         _collectComponentCssClasses(): void {
             if (
-                this.ccConfig.image_teaser != null && 
+                this.ccConfig.image_teaser != null &&
                 this.ccConfig.image_teaser.custom_sections != null
             ) {
                 const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);

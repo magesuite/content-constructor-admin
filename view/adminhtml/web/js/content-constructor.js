@@ -3191,10 +3191,10 @@ var teaserConfigurator = {
             type: String,
             default: 'full',
         },
-        rowsCount: {
-            type: Number,
-            default: '',
-        }
+        productsPerPage: {
+            type: String,
+            default: '30',
+        },
     },
     computed: {
         /**
@@ -3226,11 +3226,12 @@ var teaserConfigurator = {
             else {
                 return this.parentConfiguration.items;
             }
-        }
+        },
     },
     data: function () {
         return {
-            currentTab: 0
+            currentTab: 0,
+            rowsCount: this.getCurrentFErowsCount(),
         };
     },
     filters: {
@@ -3312,6 +3313,7 @@ var teaserConfigurator = {
                 Number(this.configuration.badge.align.y) === y);
         },
         setTeaserSize: function () {
+            this.getCurrentFErowsCount();
             this.fixOverflowedRowsSetup();
             var size = this.configuration.sizeSelect.split('x');
             this.configuration.size.x = size[0];
@@ -3324,11 +3326,38 @@ var teaserConfigurator = {
          * If yes, it changes row setting to be equal this.rowsCount
          */
         fixOverflowedRowsSetup: function () {
-            for (var i = 0; i < this.configuration.length; i++) {
-                if (this.configuration.row > this.rowsCount) {
-                    this.configuration.row = this.rowsCount;
+            for (var i = 0; i < this.parentConfiguration.teasers.length; i++) {
+                if (this.parentConfiguration.teasers[i].row > this.rowsCount) {
+                    this.parentConfiguration.teasers[i].row = this.rowsCount;
                 }
             }
+        },
+        /**
+         * Calculates how many rows there's displayed if the grid on front-end
+         * Currently divider is hardcoded for desktop breakpoint
+         * @return {number} number of rows in FE grid
+         *
+         * If a store uses horizontal filters, please adjust default_layout in etc/view.xml to "one-column"
+         */
+        getCurrentFErowsCount: function () {
+            return Math.floor(this.getVirtualBricksLength() /
+                this.ccConfig.columns[this.ccConfig.columns.default_layout]
+                    .desktop);
+        },
+        /**
+         * Calculates "virtual" length of products in the grid
+         * "virtual" means that teasers are included and their sizes are calculated too
+         * f.e if teaser covers 2 tiles it counts as 2 brics, accordingly if it's 2x2 then it takes 4 bricks
+         * @return {number} number of available bricks in grid
+         */
+        getVirtualBricksLength: function () {
+            var virtualLength = parseInt(this.productsPerPage, 10);
+            for (var i = 0; i < this.parentConfiguration.teasers.length; i++) {
+                virtualLength +=
+                    this.parentConfiguration.teasers[i].size.x *
+                        this.parentConfiguration.teasers[i].size.y;
+            }
+            return virtualLength;
         },
         /* Opens M2's built-in image manager modal.
          * Manages all images: image upload from hdd, select image that was already uploaded to server.
@@ -3348,7 +3377,7 @@ var teaserConfigurator = {
                 : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
-                // this.configuration.image.raw = img.getAttribute('src');
+                _this.configuration.image.image = img.getAttribute('src');
                 _this.configuration.image.aspect_ratio = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
                 setTimeout(function () {
                     _this.checkImageSizes();
@@ -3427,7 +3456,7 @@ var teaserConfigurator = {
                     .addClass('cc-teaser-configurator--animating')
                     .css('transform', "translateX(" + $thisItem_3.outerWidth(true) + "px )");
                 setTimeout(function () {
-                    _this.parentConfigurationVariation.splice(index - 1, 0, _this.parentConfigurationVariation.splice(index, 1)[0]);
+                    _this.parentConfiguration.items.splice(index - 1, 0, _this.parentConfiguration.items.splice(index, 1)[0]);
                     $thisItem_3
                         .removeClass('cc-teaser-configurator--animating')
                         .css('transform', '');
@@ -3444,7 +3473,7 @@ var teaserConfigurator = {
          */
         moveImageTeaserRight: function (index) {
             var _this = this;
-            if (index < this.parentConfigurationVariation.length - 1) {
+            if (index < this.parentConfiguration.items.length - 1) {
                 var $thisItem_4 = $("#cc-image-teaser-item-" + index);
                 var $nextItem_2 = $("#cc-image-teaser-item-" + (index + 1));
                 $thisItem_4
@@ -3454,7 +3483,7 @@ var teaserConfigurator = {
                     .addClass('cc-teaser-configurator--animating')
                     .css('transform', "translateX(" + -Math.abs($thisItem_4.outerWidth(true)) + "px)");
                 setTimeout(function () {
-                    _this.parentConfigurationVariation.splice(index + 1, 0, _this.parentConfigurationVariation.splice(index, 1)[0]);
+                    _this.parentConfiguration.items.splice(index + 1, 0, _this.parentConfiguration.items.splice(index, 1)[0]);
                     $thisItem_4
                         .removeClass('cc-teaser-configurator--animating')
                         .css('transform', '');
@@ -3479,7 +3508,7 @@ var teaserConfigurator = {
          * @return {boolean}       If image teaser is last in array.
          */
         isLastImageTeaser: function (index) {
-            return index === this.parentConfigurationVariation.length - 1;
+            return index === this.parentConfiguration.items.length - 1;
         },
         /* Opens modal with M2 built-in widget chooser
          * @param index {number} - index of teaser item to know where to place output of widget chooser
@@ -3522,6 +3551,8 @@ var teaserConfigurator = {
                     confirm: function () {
                         if (component.callerComponentType === 'magento-product-grid-teasers') {
                             component.parentConfiguration.teasers.splice(index, 1);
+                            component.getCurrentFErowsCount();
+                            component.fixOverflowedRowsSetup();
                         }
                         else {
                             component.parentConfiguration.items.splice(index, 1);
@@ -3576,6 +3607,9 @@ var teaserConfigurator = {
     },
     ready: function () {
         this.handleJqEvents();
+        if (this.callerComponentType === 'magento-product-grid-teasers') {
+            this.fixOverflowedRowsSetup();
+        }
     },
 };
 
@@ -4705,7 +4739,7 @@ var imageTeaserConfigurator$2 = {
  */
 var magentoProductGridTeasersConfigurator = {
     mixins: [componentConfigurator],
-    template: "<div class=\"cc-magento-product-grid-teasers-configurator | {{ class }}\">\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.teasers.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.teasers\">\n            <div class=\"cc-magento-product-grid-teasers-configurator__item\" id=\"cc-magento-pg-teaser-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <teaser-configurator :teaser-index=\"$index\" :configuration=\"item[$index]\" :parent-configuration=\"configuration\" :uploader-base-url=\"uploaderBaseUrl\" :image-endpoint=\"imageEndpoint\" :admin-prefix=\"adminPrefix\" :cc-config=\"ccConfig\" :caller-component-type=\"'magento-product-grid-teasers'\" :rows-count=\"rowsCount\"></teaser-configurator>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-magento-product-grid-teasers-configurator__modal\" v-el:error-modal></div>\n    </div>",
+    template: "<div class=\"cc-magento-product-grid-teasers-configurator | {{ class }}\">\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.teasers.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.teasers\">\n            <div class=\"cc-magento-product-grid-teasers-configurator__item\" id=\"cc-magento-pg-teaser-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <teaser-configurator :teaser-index=\"$index\" :configuration=\"item[$index]\" :parent-configuration=\"configuration\" :uploader-base-url=\"uploaderBaseUrl\" :image-endpoint=\"imageEndpoint\" :admin-prefix=\"adminPrefix\" :cc-config=\"ccConfig\" :caller-component-type=\"'magento-product-grid-teasers'\" :products-per-page=\"productsPerPage\"></teaser-configurator>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button\" @click=\"createNewTeaser( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-magento-product-grid-teasers-configurator__modal\" v-el:error-modal></div>\n    </div>",
     /**
      * Get dependencies
      */
@@ -4728,21 +4762,6 @@ var magentoProductGridTeasersConfigurator = {
                 };
             },
         },
-        /* get assets for displaying component images */
-        assetsSrc: {
-            type: String,
-            default: '',
-        },
-        /* Obtain base-url for the image uploader */
-        uploaderBaseUrl: {
-            type: String,
-            default: '',
-        },
-        /* Obtain image endpoint to place permanent url for uploaded images */
-        imageEndpoint: {
-            type: String,
-            default: '',
-        },
         /* Obtain content-constructor's config file */
         ccConfig: {
             type: Object,
@@ -4759,19 +4778,20 @@ var magentoProductGridTeasersConfigurator = {
             type: String,
             default: 'admin',
         },
-    },
-    computed: {
-        imageTeasersContentPositions: function () {
-            var data = this.ccConfig.image_teasers_content_positions;
-            return Object.keys(data).map(function (key) { return data[key]; });
+        /* Obtain base-url for the image uploader */
+        uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
         },
     },
     data: function () {
         return {
-            imageUploadedText: $t('Change'),
-            noImageUploadedText: $t('Upload'),
             configuration: this.getInitialConfiguration(),
-            rowsCount: this.getCurrentFErowsCount(),
         };
     },
     events: {
@@ -4779,7 +4799,7 @@ var magentoProductGridTeasersConfigurator = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save': function () {
-            //this.cleanupConfiguration();
+            // this.cleanupConfiguration();
             this.generateTeasersConfig();
             this.onSave();
         },
@@ -4876,99 +4896,12 @@ var magentoProductGridTeasersConfigurator = {
             });
         },
         /**
-         * Calculates "virtual" length of products in the grid
-         * "virtual" means that teasers are included and their sizes are calculated too
-         * f.e if teaser covers 2 tiles it counts as 2 brics, accordingly if it's 2x2 then it takes 4 bricks
-         * @return {number} number of available bricks in grid
-         */
-        getVirtualBricksLength: function () {
-            var virtualLength = parseInt(this.productsPerPage, 10);
-            for (var i = 0; i < this.configuration.teasers.length; i++) {
-                virtualLength +=
-                    this.configuration.teasers[i].size.x *
-                        this.configuration.teasers[i].size.y -
-                        1;
-            }
-            return virtualLength;
-        },
-        /**
-         * Calculates how many rows there's displayed if the grid on front-end
-         * Currently divider is hardcoded for desktop breakpoint
-         * @return {number} number of rows in FE grid
-         */
-        getCurrentFErowsCount: function () {
-            return Math.ceil(this.getVirtualBricksLength() /
-                this.ccConfig.columns[this.ccConfig.columns.default_layout]
-                    .desktop);
-        },
-        /**
-         * When you open component after changes in M2 grid settings (when products per page chnaged)
-         * Or, after you delete some teasers - this method updates available rows count on FE side and checks if
-         * current row setting of the teaser is not higher than this.rowsCount.
-         * If yes, it changes row setting to be equal this.rowsCount
-         */
-        fixOverflowedRowsSetup: function () {
-            for (var i = 0; i < this.configuration.length; i++) {
-                if (this.configuration.teasers[i].row > this.rowsCount) {
-                    this.configuration.teasers[i].row = this.rowsCount;
-                }
-            }
-        },
-        /* Listener for image uploader
-         * Since Magento does not provide any callback after image has been chosen
-         * we have to watch for target where decoded url is placed
-         */
-        imageUploadListener: function () {
-            var component = this;
-            var isAlreadyCalled = false;
-            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.cc-magento-product-grid-teasers-configurator__image-url', function (event) {
-                if (!isAlreadyCalled) {
-                    isAlreadyCalled = true;
-                    component.onImageUploaded(event.target);
-                    setTimeout(function () {
-                        isAlreadyCalled = false;
-                    }, 100);
-                }
-            });
-        },
-        /* Action after image was uploaded
-         * URL is encoded, so strip it and decode Base64 to get {{ media url="..."}} format
-         * which will go to the items.image and will be used to display image on front end
-         * @param input { object } - input with raw image path which is used in admin panel
-         */
-        onImageUploaded: function (input) {
-            var _this = this;
-            var itemIndex = input.id.substr(input.id.lastIndexOf('-') + 1);
-            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
-            var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
-            this.configuration.teasers[itemIndex].image.decoded = Base64
-                ? Base64.decode(encodedImage)
-                : window.atob(encodedImage);
-            var img = new Image();
-            img.onload = function () {
-                _this.configuration.teasers[itemIndex].image.raw = img.getAttribute('src');
-                _this.onChange();
-            };
-            img.src = imgEndpoint;
-        },
-        /* Sets listener for widget chooser
-         * It triggers component.onChange to update component's configuration
-         * after value of item.href is changed
-         */
-        widgetSetListener: function () {
-            var _this = this;
-            $('.cc-magento-product-grid-teasers-configurator__cta-target-link').on('change', function () {
-                _this.onChange();
-            });
-        },
-        /**
          * Creates new hero item and adds it to a specified index.
          * @param {number} index New component's index in components array.
          */
         createNewTeaser: function (index) {
             this.configuration.teasers.splice(index, 0, JSON.parse(JSON.stringify(teaserPrototype)));
-            this.rowsCount = this.getCurrentFErowsCount();
+            // this.rowsCount = this.getCurrentFErowsCount();
             this.onChange();
         },
         /* Cleans configuration for M2C content constructor after Saving component
@@ -4999,11 +4932,6 @@ var magentoProductGridTeasersConfigurator = {
                 this.configuration.json.push(teaser);
             }
         },
-    },
-    ready: function () {
-        this.imageUploadListener();
-        this.widgetSetListener();
-        this.fixOverflowedRowsSetup();
     },
 };
 
