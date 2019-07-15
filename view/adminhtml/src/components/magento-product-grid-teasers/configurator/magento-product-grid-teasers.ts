@@ -38,7 +38,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                     </button>
                 </component-adder>
 
-                <teaser-configurator :teaser-index="$index" :configuration="item[$index]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'magento-product-grid-teasers'" :rows-count="rowsCount"></teaser-configurator>
+                <teaser-configurator :teaser-index="$index" :configuration="item[$index]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'magento-product-grid-teasers'" :products-per-page="productsPerPage"></teaser-configurator>
 
                 <component-adder class="cc-component-adder cc-component-adder--last">
                     <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button" @click="createNewTeaser( $index + 1 )">
@@ -74,21 +74,6 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                 };
             },
         },
-        /* get assets for displaying component images */
-        assetsSrc: {
-            type: String,
-            default: '',
-        },
-        /* Obtain base-url for the image uploader */
-        uploaderBaseUrl: {
-            type: String,
-            default: '',
-        },
-        /* Obtain image endpoint to place permanent url for uploaded images */
-        imageEndpoint: {
-            type: String,
-            default: '',
-        },
         /* Obtain content-constructor's config file */
         ccConfig: {
             type: Object,
@@ -105,19 +90,20 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'admin',
         },
-    },
-    computed: {
-        imageTeasersContentPositions: function(): object {
-            const data: object = this.ccConfig.image_teasers_content_positions;
-            return Object.keys(data).map(key => (<any>data)[key]);
+        /* Obtain base-url for the image uploader */
+        uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
         },
     },
     data(): any {
         return {
-            imageUploadedText: $t('Change'),
-            noImageUploadedText: $t('Upload'),
             configuration: this.getInitialConfiguration(),
-            rowsCount: this.getCurrentFErowsCount(),
         };
     },
     events: {
@@ -125,7 +111,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
-            //this.cleanupConfiguration();
+            // this.cleanupConfiguration();
             this.generateTeasersConfig();
             this.onSave();
         },
@@ -241,128 +227,6 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
             );
         },
         /**
-         * Calculates "virtual" length of products in the grid
-         * "virtual" means that teasers are included and their sizes are calculated too
-         * f.e if teaser covers 2 tiles it counts as 2 brics, accordingly if it's 2x2 then it takes 4 bricks
-         * @return {number} number of available bricks in grid
-         */
-        getVirtualBricksLength(): number {
-            let virtualLength: number = parseInt(this.productsPerPage, 10);
-
-            for (
-                let i: number = 0;
-                i < this.configuration.teasers.length;
-                i++
-            ) {
-                virtualLength +=
-                    this.configuration.teasers[i].size.x *
-                        this.configuration.teasers[i].size.y -
-                    1;
-            }
-
-            return virtualLength;
-        },
-        /**
-         * Calculates how many rows there's displayed if the grid on front-end
-         * Currently divider is hardcoded for desktop breakpoint
-         * @return {number} number of rows in FE grid
-         */
-        getCurrentFErowsCount(): number {
-            return Math.ceil(
-                this.getVirtualBricksLength() /
-                    this.ccConfig.columns[this.ccConfig.columns.default_layout]
-                        .desktop
-            );
-        },
-
-        /**
-         * When you open component after changes in M2 grid settings (when products per page chnaged)
-         * Or, after you delete some teasers - this method updates available rows count on FE side and checks if
-         * current row setting of the teaser is not higher than this.rowsCount.
-         * If yes, it changes row setting to be equal this.rowsCount
-         */
-        fixOverflowedRowsSetup(): void {
-            for (
-                let i: number = 0;
-                i < this.configuration.length;
-                i++
-            ) {
-                if (this.configuration.teasers[i].row > this.rowsCount) {
-                    this.configuration.teasers[i].row = this.rowsCount;
-                }
-            }
-        },
-
-
-        /* Listener for image uploader
-         * Since Magento does not provide any callback after image has been chosen
-         * we have to watch for target where decoded url is placed
-         */
-        imageUploadListener(): void {
-            const component: any = this;
-            let isAlreadyCalled: boolean = false;
-
-            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on(
-                'change',
-                '.cc-magento-product-grid-teasers-configurator__image-url',
-                (event: Event): void => {
-                    if (!isAlreadyCalled) {
-                        isAlreadyCalled = true;
-                        component.onImageUploaded(event.target);
-                        setTimeout((): void => {
-                            isAlreadyCalled = false;
-                        }, 100);
-                    }
-                }
-            );
-        },
-        /* Action after image was uploaded
-         * URL is encoded, so strip it and decode Base64 to get {{ media url="..."}} format
-         * which will go to the items.image and will be used to display image on front end
-         * @param input { object } - input with raw image path which is used in admin panel
-         */
-        onImageUploaded(input: any): void {
-            const _this: any = this;
-            const itemIndex: any = input.id.substr(
-                input.id.lastIndexOf('-') + 1
-            );
-            const encodedImage: any = input.value.match(
-                '___directive/([a-zA-Z0-9]*)'
-            )[1];
-            const imgEndpoint: string = this.imageEndpoint.replace(
-                '{/encoded_image}',
-                encodedImage
-            );
-
-            this.configuration.teasers[itemIndex].image.decoded = Base64
-                ? Base64.decode(encodedImage)
-                : window.atob(encodedImage);
-
-            const img: any = new Image();
-            img.onload = function(): void {
-                _this.configuration.teasers[itemIndex].image.raw = img.getAttribute(
-                    'src'
-                );
-                _this.onChange();
-            };
-            img.src = imgEndpoint;
-        },
-        /* Sets listener for widget chooser
-         * It triggers component.onChange to update component's configuration
-         * after value of item.href is changed
-         */
-        widgetSetListener(): void {
-            $(
-                '.cc-magento-product-grid-teasers-configurator__cta-target-link'
-            ).on(
-                'change',
-                (): void => {
-                    this.onChange();
-                }
-            );
-        },
-        /**
          * Creates new hero item and adds it to a specified index.
          * @param {number} index New component's index in components array.
          */
@@ -372,10 +236,8 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                 0,
                 JSON.parse(JSON.stringify(teaserItemPrototype))
             );
-            this.rowsCount = this.getCurrentFErowsCount();
             this.onChange();
         },
-
         /* Cleans configuration for M2C content constructor after Saving component
          * All empty teasers have to be removed to not get into configuration object
          */
@@ -414,11 +276,6 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                 this.configuration.json.push(teaser);
             }
         },
-    },
-    ready(): void {
-        this.imageUploadListener();
-        this.widgetSetListener();
-        this.fixOverflowedRowsSetup();
     },
 };
 

@@ -492,10 +492,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'full',
         },
-        rowsCount: {
-            type: Number,
-            default: '',
-        }
+        productsPerPage: {
+            type: String,
+            default: '30',
+        },
     },
     computed: {
         /**
@@ -526,11 +526,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
             } else {
                 return this.parentConfiguration.items;
             }
-        }
+        },
     },
     data(): any {
         return {
-            currentTab: 0
+            currentTab: 0,
+            rowsCount: this.getCurrentFErowsCount(),
         };
     },
     filters: {
@@ -637,6 +638,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
 
         setTeaserSize(): void {
+            this.getCurrentFErowsCount();
             this.fixOverflowedRowsSetup();
 
             const size: any = this.configuration.sizeSelect.split('x');
@@ -653,13 +655,49 @@ const teaserConfigurator: vuejs.ComponentOption = {
         fixOverflowedRowsSetup(): void {
             for (
                 let i: number = 0;
-                i < this.configuration.length;
+                i < this.parentConfiguration.teasers.length;
                 i++
             ) {
-                if (this.configuration.row > this.rowsCount) {
-                    this.configuration.row = this.rowsCount;
+                if (this.parentConfiguration.teasers[i].row > this.rowsCount) {
+                    this.parentConfiguration.teasers[i].row = this.rowsCount;
                 }
             }
+        },
+
+        /**
+         * Calculates how many rows there's displayed if the grid on front-end
+         * Currently divider is hardcoded for desktop breakpoint
+         * @return {number} number of rows in FE grid
+         *
+         * If a store uses horizontal filters, please adjust default_layout in etc/view.xml to "one-column"
+         */
+        getCurrentFErowsCount(): number {
+            return Math.floor(
+                this.getVirtualBricksLength() /
+                    this.ccConfig.columns[this.ccConfig.columns.default_layout]
+                        .desktop
+            );
+        },
+        /**
+         * Calculates "virtual" length of products in the grid
+         * "virtual" means that teasers are included and their sizes are calculated too
+         * f.e if teaser covers 2 tiles it counts as 2 brics, accordingly if it's 2x2 then it takes 4 bricks
+         * @return {number} number of available bricks in grid
+         */
+        getVirtualBricksLength(): number {
+            let virtualLength: number = parseInt(this.productsPerPage, 10);
+
+            for (
+                let i: number = 0;
+                i < this.parentConfiguration.teasers.length;
+                i++
+            ) {
+                virtualLength +=
+                    this.parentConfiguration.teasers[i].size.x *
+                        this.parentConfiguration.teasers[i].size.y;
+            }
+
+            return virtualLength;
         },
 
         /* Opens M2's built-in image manager modal.
@@ -688,8 +726,9 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 : window.atob(encodedImage);
 
             const img: any = new Image();
+
             img.onload = (): void => {
-                // this.configuration.image.raw = img.getAttribute('src');
+                this.configuration.image.image = img.getAttribute('src');
                 this.configuration.image.aspect_ratio = this.getAspectRatio(
                     img.naturalWidth,
                     img.naturalHeight
@@ -752,8 +791,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @param {number} index Image teaser's index in array.
          */
         moveImageTeaserDown(index: number): void {
-
-
             if (index < this.parentConfigurationVariation.length - 1) {
                 const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
                 const $nextItem: any = $(`#cc-image-teaser-item-${index + 1}`);
@@ -814,10 +851,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    this.parentConfigurationVariation.splice(
+                    this.parentConfiguration.items.splice(
                         index - 1,
                         0,
-                        this.parentConfigurationVariation.splice(index, 1)[0]
+                        this.parentConfiguration.items.splice(index, 1)[0]
                     );
                     $thisItem
                         .removeClass('cc-teaser-configurator--animating')
@@ -834,7 +871,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @param {number} index Image teaser's index in array.
          */
         moveImageTeaserRight(index: number): void {
-            if (index < this.parentConfigurationVariation.length - 1) {
+            if (index < this.parentConfiguration.items.length - 1) {
                 const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
                 const $nextItem: any = $(`#cc-image-teaser-item-${index + 1}`);
 
@@ -854,10 +891,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    this.parentConfigurationVariation.splice(
+                    this.parentConfiguration.items.splice(
                         index + 1,
                         0,
-                        this.parentConfigurationVariation.splice(index, 1)[0]
+                        this.parentConfiguration.items.splice(index, 1)[0]
                     );
                     $thisItem
                         .removeClass('cc-teaser-configurator--animating')
@@ -883,7 +920,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @return {boolean}       If image teaser is last in array.
          */
         isLastImageTeaser(index: number): boolean {
-            return index === this.parentConfigurationVariation.length - 1;
+            return index === this.parentConfiguration.items.length - 1;
         },
 
         /* Opens modal with M2 built-in widget chooser
@@ -942,6 +979,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     confirm(): void {
                         if(component.callerComponentType === 'magento-product-grid-teasers') {
                             component.parentConfiguration.teasers.splice(index, 1);
+                            component.getCurrentFErowsCount();
+                            component.fixOverflowedRowsSetup();
                         } else {
                             component.parentConfiguration.items.splice(index, 1);
                         }
@@ -1011,6 +1050,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
     },
     ready(): void {
         this.handleJqEvents();
+
+        if (this.callerComponentType === 'magento-product-grid-teasers') {
+            this.fixOverflowedRowsSetup();
+        }
     },
 };
 
