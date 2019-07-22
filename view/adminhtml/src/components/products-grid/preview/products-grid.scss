@@ -10,6 +10,12 @@
     width: 100%;
     align-items: stretch;
 
+    .cc-teaser-preview {
+        width: calc(40% - 0.65rem);
+        border: 1px dashed #e4e1d9;
+        height: auto;
+    }
+
     &__hero {
         position: relative;
         width: calc(40% - 0.65rem);
@@ -107,6 +113,11 @@
             margin-right: 1.3rem;
         }
 
+        &--center {
+            width: 30%;
+            justify-content: space-around;
+        }
+
         &-item {
             margin-top: 1.15rem;
             width: calc(20% - 1.15rem);
@@ -118,6 +129,10 @@
             #{$root}__list--left &,
             #{$root}__list--right & {
                 width: calc((100% / 3) - 1.15rem);
+            }
+
+            #{$root}__list--center & {
+                width: calc((100% / 2) - 1.15rem);
             }
         }
     }

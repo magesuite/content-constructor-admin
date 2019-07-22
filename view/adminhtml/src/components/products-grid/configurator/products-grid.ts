@@ -7,6 +7,11 @@ import componentActions from '../../../utils/component-actions/component-actions
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
+import {
+    default as teaserConfigurator,
+    teaserPrototype as teaserItemPrototype,
+} from '../../_teaser/configurator/teaser';
+
 /**
  * Product grid configurator component.
  * This component is responsible for displaying products grid  configuration form
@@ -161,17 +166,17 @@ const productsGridConfigurator: vuejs.ComponentOption = {
 
         <section class="cc-products-grid-configurator__section">
             <h3 class="cc-products-grid-configurator__subtitle">${$t(
-                'Hero Teaser'
+                'Image Teaser'
             )}:</h3>
             <div class="cc-products-grid-configurator__scenario-options">
                 <ul class="cc-products-grid-configurator__scenario-options-list">
                     <li
                         :class="{
-                            'cc-products-grid-configurator__option--selected': configuration.hero.position == optionId,
+                            'cc-products-grid-configurator__option--selected': configuration.useTeaser == optionId,
                         }"
                         class="cc-products-grid-configurator__option"
-                        v-for="(optionId, option) in scenarioOptions.hero.position"
-                        @click="setOption('hero', optionId, 'position')">
+                        v-for="(optionId, option) in scenarioOptions.useTeaser"
+                        @click="setOption('useTeaser', optionId)">
                         <div class="cc-products-grid-configurator__option-wrapper">
                             <svg class="cc-products-grid-configurator__option-icon">
                                 <use v-bind="{ 'xlink:href': '#' + option.iconId }"></use>
@@ -185,96 +190,8 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
-        <div class="cc-products-grid-configurator__item" v-show="configuration.hero.position">
-            <div class="cc-hero-carousel-configurator__item-content">
-                <div v-bind:class="[ 'cc-products-grid-configurator__item-col-left', configuration.hero.image ? 'cc-products-grid-configurator__item-col-left--look-image-uploaded' : '' ]">
-                    <div class="cc-products-grid-configurator__item-image-wrapper">
-                        <img :src="configuration.hero.image" class="cc-image-teaser-legacy-configurator__item-image" v-show="configuration.hero.image">
-                        <input type="hidden" v-model="configuration.hero.image">
-                        <input type="hidden" class="cc-products-grid-configurator__image-url" id="products-grid-img">
-                        <svg class="cc-products-grid-configurator__item-image-placeholder" v-show="!configuration.hero.image">
-                            <use xlink:href="#icon_image-placeholder"></use>
-                        </svg>
+        <teaser-configurator :configuration="configuration.items" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'products-grid'" :products-per-page="productsPerPage" v-show="configuration.useTeaser"></teaser-configurator>
 
-                        <div class="cc-products-grid-configurator__item-actions">
-                            <component-actions>
-                                <template slot="cc-component-actions__buttons">
-                                    <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-products-grid-configurator__item-action-button" @click="getImageUploader()">
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_upload-image"></use>
-                                            </svg>
-                                            {{ configuration.hero.image ? imageUploadedText : noImageUploadedText }}
-                                    </button>
-                                </template>
-                            </component-actions>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cc-products-grid-configurator__item-col-right">
-                    <div class="cc-input cc-input--group">
-                        <div class="cc-input | cc-image-teaser-legacy-configurator__item-form-element">
-                            <label for="cfg-pg-hero_content-position-variant" class="cc-input__label">${$t(
-                                'Display variant'
-                            )}:</label>
-                            <select name="cfg-pg-hero_content-position-variant" class="cc-input__select" id="cfg-pg-hero_content-position-variant" v-model="configuration.hero.displayVariant">
-                                <template v-for="(idx, scenario) in imageTeasersContentPositions">
-                                    <option value="{{ idx + 1 }}">${$t(
-                                        '{{ scenario }}'
-                                    )}</option>
-                                </template>
-                            </select>
-                        </div>
-                        <div class="cc-input | cc-image-teaser-legacy-configurator__item-form-element">
-                            <label for="cfg-pg-hero_color-scheme" class="cc-input__label">${$t(
-                                'Text color scheme'
-                            )}:</label>
-                            <select name="cfg-pg-hero_color-scheme" class="cc-input__select" id="cfg-pg-hero_color-scheme" v-model="configuration.hero.colorScheme">
-                                <option value="light">${$t('Light')}</option>
-                                <option value="dark">${$t('Dark')}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                        <label for="cfg-pg-hero_headline" class="cc-input__label">${$t(
-                            'Headline'
-                        )}:</label>
-                        <input type="text" name="cfg-pg-hero_headline" class="cc-input__input" id="cfg-pg-hero_headline" v-model="configuration.hero.headline" @change="onChange">
-                    </div>
-                    <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                        <label for="cfg-pg-hero_subheadline" class="cc-input__label">${$t(
-                            'Subheadline'
-                        )}:</label>
-                        <input type="text" name="cfg-pg-hero_subheadline" class="cc-input__input" id="cfg-pg-hero_subheadline" v-model="configuration.hero.subheadline" @change="onChange">
-                    </div>
-                    <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                        <label for="cfg-pg-hero_paragraph" class="cc-input__label | cc-products-grid-configurator__form-label--textarea">${$t(
-                            'Paragraph'
-                        )}:</label>
-                        <textarea type="text" name="cfg-pg-hero_paragraph" class="cc-input__textarea" id="cfg-pg-hero_paragraph" v-model="configuration.hero.paragraph"></textarea>
-                    </div>
-                    <div class="cc-input cc-input--group">
-                        <div class="cc-input | cc-products-grid-configurator__item-form-element">
-                            <label for="cfg-pg-hero_button_label" class="cc-input__label">${$t(
-                                'Button label'
-                            )}:</label>
-                            <input type="text" name="cfg-pg-hero_button_label" class="cc-input__input" id="cfg-pg-hero_button_label" v-model="configuration.hero.button.label" @change="onChange">
-                        </div>
-                        <div class="cc-input cc-input--type-addon | cc-products-grid-configurator__item-form-element">
-                            <label for="cfg-pg-hero_url" class="cc-input__label">${$t(
-                                'Url'
-                            )}:</label>
-                            <input type="text" name="cfg-pg-hero_url" class="cc-input__input | cc-products-grid__hero-url" id="cfg-pg-hero_url" v-model="configuration.hero.href">
-                            <span class="cc-input__addon | cc-products-grid-configurator__widget-chooser-trigger" @click="openCtaTargetModal()">
-                                <svg class="cc-input__addon-icon">
-                                    <use xlink:href="#icon_link"></use>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>`,
     /**
      * Get dependencies
@@ -282,6 +199,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
     components: {
         'action-button': actionButton,
         'component-actions': componentActions,
+        'teaser-configurator': teaserConfigurator,
     },
     props: {
         configuration: {
@@ -300,27 +218,15 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                     class_overrides: {
                         dataProvider: '',
                     },
-                    hero: {
-                        position: '',
-                        image: '',
-                        displayVariant: '1',
-                        colorScheme: 'light',
-                        headline: '',
-                        subheadline: '',
-                        paragraph: '',
-                        href: '',
-                        button: {
-                            label: '',
-                        },
-                        decoded_image: '',
+                    useTeaser: '',
+                    scenario: {
+                        contentPlacement: {
+                            id: 'over',
+                        }
                     },
+                    items: [JSON.parse(JSON.stringify(teaserItemPrototype))],
                 };
             },
-        },
-        /* get assets for displaying component images */
-        assetsSrc: {
-            type: String,
-            default: '',
         },
         /* Obtain base-url for the image uploader */
         uploaderBaseUrl: {
@@ -365,16 +271,9 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             default: '',
         },
     },
-    computed: {
-        imageTeasersContentPositions: function(): object {
-            const data: object = this.ccConfig.image_teasers_content_positions;
-            return Object.keys(data).map(key => (<any>data)[key]);
-        },
-    },
     data(): Object {
         return {
-            imageUploadedText: $t('Change'),
-            noImageUploadedText: $t('Upload'),
+            configuration: this.getInitialConfiguration(),
             categoryPicker: undefined,
             tmpConfiguration: {
                 rows_mobile: this.getRowsSetup('rows_mobile'),
@@ -448,20 +347,14 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                         iconId: 'pr_custom',
                     },
                 },
-                hero: {
-                    position: {
-                        '': {
-                            name: $t('No Hero Teaser'),
-                            iconId: 'no_teaser',
-                        },
-                        left: {
-                            name: $t('Hero Teaser on the left'),
-                            iconId: 'teaser_left',
-                        },
-                        right: {
-                            name: $t('Hero Teaser on the right'),
-                            iconId: 'teaser_right',
-                        },
+                useTeaser: {
+                    '': {
+                        name: $t('No image teaser'),
+                        iconId: 'no_teaser',
+                    },
+                    true: {
+                        name: $t('With image teaser'),
+                        iconId: 'teaser_left',
                     },
                 },
             },
@@ -480,6 +373,82 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         },
     },
     methods: {
+        getInitialConfiguration(): any {
+            if (this.configuration.hero) {
+                this.$set('configuration.scenario.contentPlacement.id', 'over');
+                this.$set('configuration.useTeaser', 'true');
+                this.$set('configuration.items', [JSON.parse(JSON.stringify(teaserItemPrototype))]);
+
+                Object.entries(this.configuration.hero).map(
+                    (oldConfig: any) => {
+                        if(oldConfig[0] === 'colorScheme') {
+                            this.configuration.items[0].optimizers.color_scheme = oldConfig[1];
+                        }
+
+                        if(oldConfig[0] === 'image') {
+                            this.configuration.items[0].image.raw = oldConfig[1];
+                        }
+
+                        if(oldConfig[0] === 'decoded_image') {
+                            this.configuration.items[0].image.decoded = oldConfig[1];
+                        }
+
+                        if(oldConfig[0] === 'button') {
+                            this.configuration.items[0].cta.label = oldConfig[1].label;
+                        }
+
+                        if(oldConfig[0] === 'href') {
+                            this.configuration.items[0].cta.href = oldConfig[1];
+                        }
+
+                        if(oldConfig[0] === 'headline') {
+                            this.configuration.items[0].slogan = oldConfig[1];
+                        }
+
+                        if(oldConfig[0] === 'subheadline') {
+                            this.configuration.items[0].description = oldConfig[1];
+                        }
+
+                        if(oldConfig[0] === 'paragraph') {
+                            this.configuration.items[0].description += "<br/>" + oldConfig[1];
+                        }
+
+                        if(oldConfig[0] === 'displayVariant') {
+                            switch(oldConfig[1]) {
+                                case ('1'):
+                                    this.configuration.items[0].content_align.x = 1;
+                                    this.configuration.items[0].content_align.y = 2;
+                                    break;
+                                case ('2'):
+                                    this.configuration.items[0].content_align.x = 1;
+                                    this.configuration.items[0].content_align.y = 3;
+                                    break;
+                                case ('3'):
+                                    this.configuration.items[0].content_align.x = 2;
+                                    this.configuration.items[0].content_align.y = 2;
+                                    break;
+                                case ('4'):
+                                    this.configuration.items[0].content_align.x = 2;
+                                    this.configuration.items[0].content_align.y = 3;
+                                    break;
+                                default:
+                                    this.configuration.items[0].content_align.x = 1;
+                                    this.configuration.items[0].content_align.y = 1;
+                                    break;
+                            }
+                        }
+
+                        if(oldConfig[0] === 'position') {
+                            this.configuration.items[0].position = oldConfig[1];
+                        }
+                    }
+                );
+
+                delete(this.configuration.hero);
+            }
+
+            return this.configuration;
+        },
         setOption(
             optionCategory: string,
             optionId: string,
@@ -495,126 +464,6 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             }
 
             this.setProductsLimit();
-        },
-        /* Opens M2's built-in image manager modal.
-         * Manages all images: image upload from hdd, select image that was already uploaded to server.
-         * @param index {number} - index of image of image teaser.
-         */
-        getImageUploader(index: number): void {
-            MediabrowserUtility.openDialog(
-                `${this.uploaderBaseUrl}target_element_id/products-grid-img/`,
-                'auto',
-                'auto',
-                $t('Insert File...'),
-                {
-                    closed: true,
-                }
-            );
-        },
-
-        /* Listener for image uploader
-         * Since Magento does not provide any callback after image has been chosen
-         * we have to watch for target where decoded url is placed
-         */
-        imageUploadListener(): void {
-            const component: any = this;
-            let isAlreadyCalled: boolean = false;
-
-            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on(
-                'change',
-                '.cc-products-grid-configurator__image-url',
-                (event: Event): void => {
-                    if (!isAlreadyCalled) {
-                        isAlreadyCalled = true;
-                        component.onImageUploaded(event.target);
-                        setTimeout((): void => {
-                            isAlreadyCalled = false;
-                        }, 100);
-                    }
-                }
-            );
-        },
-
-        /* Action after image was uploaded
-         * URL is encoded, so strip it and decode Base64 to get {{ media url="..."}} format
-         * which will go to the items.image and will be used to display image on front end
-         * @param input { object } - input with raw image path which is used in admin panel
-         */
-        onImageUploaded(input: any): void {
-            const _this: any = this;
-            // const itemIndex: any = input.id.substr( input.id.length - 1 );
-            const encodedImage: any = input.value.match(
-                '___directive/([a-zA-Z0-9]*)'
-            )[1];
-            const imgEndpoint: string = this.imageEndpoint.replace(
-                '{/encoded_image}',
-                encodedImage
-            );
-
-            this.configuration.hero.decoded_image = Base64
-                ? Base64.decode(encodedImage)
-                : window.atob(encodedImage);
-
-            const img: any = new Image();
-            img.onload = function(): void {
-                _this.configuration.hero.image = img.getAttribute('src');
-                _this.onChange();
-            };
-            img.src = imgEndpoint;
-        },
-
-        /*
-         * Opens modal with M2 built-in widget chooser
-         */
-        openCtaTargetModal(): void {
-            widgetTools.openDialog(
-                `${window.location.origin}/${
-                    this.adminPrefix
-                }/admin/widget/index/widget_target_id/cfg-pg-hero_url/`
-            );
-
-            this.wWidgetListener();
-        },
-
-        /* Sets listener for widget chooser
-         * It triggers component.onChange to update component's configuration
-         * after value of item.ctaTarget is changed
-         */
-        widgetSetListener(): void {
-            $('.cc-products-grid__hero-url').on(
-                'change',
-                (): void => {
-                    this.onChange();
-                }
-            );
-        },
-
-        /*
-         * Check if widget chooser is loaded. If not, wait for it, if yes:
-         * Override default onClick for "Insert Widget" button in widget's modal window
-         * to clear input's value before inserting new one
-         */
-        wWidgetListener(): void {
-            if (
-                typeof wWidget !== 'undefined' &&
-                widgetTools.dialogWindow[0].innerHTML !== ''
-            ) {
-                const button: any = widgetTools.dialogWindow[0].querySelector(
-                    '#insert_button'
-                );
-
-                button.onclick = null;
-                button.addEventListener(
-                    'click',
-                    (): void => {
-                        this.configuration.hero.href = '';
-                        wWidget.insertWidget();
-                    }
-                );
-            } else {
-                setTimeout(this.wWidgetListener, 300);
-            }
         },
         /**
          * Checks if given option is currently selected
@@ -647,12 +496,12 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * then saves result to component's configuration
          */
         setProductsLimit(): void {
-            const heroWidth: number = parseInt(
+            const teaseroWidth: number = parseInt(
                 this.viewXml.vars.MageSuite_ContentConstructorFrontend
                     .product_grid.teasers_configuration.size.x,
                 10
             );
-            const heroHeight: number = parseInt(
+            const teaserHeight: number = parseInt(
                 this.viewXml.vars.MageSuite_ContentConstructorFrontend
                     .product_grid.teasers_configuration.size.y,
                 10
@@ -662,16 +511,16 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 this.configuration.rows_tablet,
                 this.configuration.rows_desktop
             );
-            const isHeroEnabled: boolean =
-                this.configuration.hero.position !== '';
-            let heroSize: number = isHeroEnabled ? heroWidth * heroHeight : 0;
+            const isTeaserEnabled: boolean =
+                this.configuration.useTeaser !== '';
+            let teaserSize: number = isTeaserEnabled ? teaseroWidth * teaserHeight : 0;
 
-            if (heroSize >= 1 && maxRowsSet < heroHeight) {
-                heroSize = heroWidth;
+            if (teaserSize >= 1 && maxRowsSet < teaserHeight) {
+                teaserSize = teaseroWidth;
             }
 
             this.configuration.limit =
-                maxRowsSet * this.getMaxPossibleColumns() - heroSize;
+                maxRowsSet * this.getMaxPossibleColumns() - teaserSize;
         },
 
         /**
@@ -723,9 +572,6 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 $('.tmp-select').remove();
             }
         );
-
-        this.imageUploadListener();
-        this.widgetSetListener();
     },
 };
 
