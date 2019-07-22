@@ -76,11 +76,11 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
             // Number of slides
             numberOfSlides: {
                 '4': {
-                    name: '4 instagram images',
+                    name: '4 Instagram images',
                     disabled: false,
                 },
                 '8': {
-                    name: '8 instagram images',
+                    name: '8 Instagram images',
                     disabled: false,
                 },
                 '12': {
