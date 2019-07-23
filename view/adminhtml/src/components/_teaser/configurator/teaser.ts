@@ -748,11 +748,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
             const img: any = new Image();
 
             img.onload = (): void => {
-                if (this.callerComponentType === 'magento-product-grid-teasers') {
-                    this.configuration.image.image = img.getAttribute('src');
-                } else {
-                    this.configuration.image.raw = img.getAttribute('src');
-                }
+                this.configuration.image.image = img.getAttribute('src');
 
                 this.configuration.image.aspect_ratio = this.getAspectRatio(
                     img.naturalWidth,
