@@ -3412,7 +3412,12 @@ var teaserConfigurator = {
                 : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
-                _this.configuration.image.image = img.getAttribute('src');
+                if (_this.configuration.image.image) {
+                    _this.configuration.image.image = img.getAttribute('src');
+                }
+                else {
+                    _this.configuration.image.raw = img.getAttribute('src');
+                }
                 _this.configuration.image.aspect_ratio = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
                 setTimeout(function () {
                     _this.checkImageSizes();
@@ -3642,7 +3647,6 @@ var teaserConfigurator = {
     },
     ready: function () {
         var _this = this;
-        var component = this;
         this.handleJqEvents();
         // get aspect ratio for images from hero image-teaser (old products grid)
         if (this.callerComponentType === 'products-grid') {
