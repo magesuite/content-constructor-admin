@@ -3412,12 +3412,7 @@ var teaserConfigurator = {
                 : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
-                if (_this.callerComponentType === 'magento-product-grid-teasers') {
-                    _this.configuration.image.image = img.getAttribute('src');
-                }
-                else {
-                    _this.configuration.image.raw = img.getAttribute('src');
-                }
+                _this.configuration.image.image = img.getAttribute('src');
                 _this.configuration.image.aspect_ratio = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
                 setTimeout(function () {
                     _this.checkImageSizes();
