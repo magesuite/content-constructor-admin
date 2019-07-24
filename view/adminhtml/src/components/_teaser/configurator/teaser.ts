@@ -748,7 +748,11 @@ const teaserConfigurator: vuejs.ComponentOption = {
             const img: any = new Image();
 
             img.onload = (): void => {
-                this.configuration.image.image = img.getAttribute('src');
+                if (this.configuration.image.image) {
+                    this.configuration.image.image = img.getAttribute('src');
+                } else {
+                    this.configuration.image.raw = img.getAttribute('src');
+                }
 
                 this.configuration.image.aspect_ratio = this.getAspectRatio(
                     img.naturalWidth,
@@ -1070,8 +1074,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
     },
     ready(): void {
-        const component = this;
-
         this.handleJqEvents();
 
         // get aspect ratio for images from hero image-teaser (old products grid)
