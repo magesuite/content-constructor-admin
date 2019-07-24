@@ -410,7 +410,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                         }
 
                         if(oldConfig[0] === 'paragraph') {
-                            this.configuration.items[0].description += "<br/>" + oldConfig[1];
+                            this.configuration.items[0].description += "<br>" + oldConfig[1];
                         }
 
                         if(oldConfig[0] === 'displayVariant') {

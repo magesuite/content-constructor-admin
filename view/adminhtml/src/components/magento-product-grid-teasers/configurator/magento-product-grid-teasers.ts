@@ -176,7 +176,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                     }
 
                     if(oldConfig[0] === 'paragraph') {
-                        this.configuration.teasers[index].description += "<br/>" + oldConfig[1];
+                        this.configuration.teasers[index].description += "<br>" + oldConfig[1];
                     }
 
                     if(oldConfig[0] === 'displayVariant') {

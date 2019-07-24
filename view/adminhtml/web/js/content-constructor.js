@@ -4903,7 +4903,7 @@ var magentoProductGridTeasersConfigurator = {
                     _this.configuration.teasers[index].description = oldConfig[1];
                 }
                 if (oldConfig[0] === 'paragraph') {
-                    _this.configuration.teasers[index].description += "<br/>" + oldConfig[1];
+                    _this.configuration.teasers[index].description += "<br>" + oldConfig[1];
                 }
                 if (oldConfig[0] === 'displayVariant') {
                     switch (oldConfig[1]) {
@@ -5856,7 +5856,7 @@ var productsGridConfigurator = {
                         _this.configuration.items[0].description = oldConfig[1];
                     }
                     if (oldConfig[0] === 'paragraph') {
-                        _this.configuration.items[0].description += "<br/>" + oldConfig[1];
+                        _this.configuration.items[0].description += "<br>" + oldConfig[1];
                     }
                     if (oldConfig[0] === 'displayVariant') {
                         switch (oldConfig[1]) {
