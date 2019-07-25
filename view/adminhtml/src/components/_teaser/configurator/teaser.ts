@@ -433,10 +433,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </div>
                                     </div>
                                 </div>
+                                <div class="cc-input">
+                                    <p class="cc-teaser-configurator__note">{{ 'Big image teasers (2x1 and 2x2) might not be displayed on mobile phones. Please switch Show in mobiles toggle to No.' | translate }}</p>
+                                </div>
                             </div>
                         </template>
                     </div>
-
                 </div>
             </div>
         </section>
