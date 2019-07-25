@@ -5710,13 +5710,6 @@ var productsGridConfigurator = {
                 return {};
             },
         },
-        /* Obtain content of etc/view.json of the current theme */
-        viewXml: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
         productCollectionsSorters: {
             type: [String, Array],
             default: '',
@@ -5823,6 +5816,7 @@ var productsGridConfigurator = {
             if (this.configuration.class_overrides.dataProvider === '') {
                 delete this.configuration.class_overrides;
             }
+            this.setProductsLimit();
             this.onSave();
         },
     },
@@ -5926,15 +5920,13 @@ var productsGridConfigurator = {
          * then saves result to component's configuration
          */
         setProductsLimit: function () {
-            var teaseroWidth = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend
-                .product_grid.teasers_configuration.size.x, 10);
-            var teaserHeight = parseInt(this.viewXml.vars.MageSuite_ContentConstructorFrontend
-                .product_grid.teasers_configuration.size.y, 10);
+            var teaserWidth = parseInt(this.configuration.items[0].size.x, 10);
+            var teaserHeight = parseInt(this.configuration.items[0].size.y, 10);
             var maxRowsSet = Math.max(this.configuration.rows_mobile, this.configuration.rows_tablet, this.configuration.rows_desktop);
             var isTeaserEnabled = this.configuration.useTeaser !== '';
-            var teaserSize = isTeaserEnabled ? teaseroWidth * teaserHeight : 0;
+            var teaserSize = isTeaserEnabled ? teaserWidth * teaserHeight : 0;
             if (teaserSize >= 1 && maxRowsSet < teaserHeight) {
-                teaserSize = teaseroWidth;
+                teaserSize = teaserWidth;
             }
             this.configuration.limit =
                 maxRowsSet * this.getMaxPossibleColumns() - teaserSize;
