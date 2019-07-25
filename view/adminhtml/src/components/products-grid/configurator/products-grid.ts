@@ -255,13 +255,6 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 return {};
             },
         },
-        /* Obtain content of etc/view.json of the current theme */
-        viewXml: {
-            type: Object,
-            default(): any {
-                return {};
-            },
-        },
         productCollectionsSorters: {
             type: [String, Array],
             default: '',
@@ -369,6 +362,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 delete this.configuration.class_overrides;
             }
 
+            this.setProductsLimit();
             this.onSave();
         },
     },
@@ -496,32 +490,35 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * then saves result to component's configuration
          */
         setProductsLimit(): void {
-            const teaseroWidth: number = parseInt(
-                this.viewXml.vars.MageSuite_ContentConstructorFrontend
-                    .product_grid.teasers_configuration.size.x,
+            const teaserWidth: number = parseInt(
+                this.configuration.items[0].size.x,
                 10
             );
+
             const teaserHeight: number = parseInt(
-                this.viewXml.vars.MageSuite_ContentConstructorFrontend
-                    .product_grid.teasers_configuration.size.y,
+                this.configuration.items[0].size.y,
                 10
             );
+
             const maxRowsSet: number = Math.max(
                 this.configuration.rows_mobile,
                 this.configuration.rows_tablet,
                 this.configuration.rows_desktop
             );
+
             const isTeaserEnabled: boolean =
                 this.configuration.useTeaser !== '';
-            let teaserSize: number = isTeaserEnabled ? teaseroWidth * teaserHeight : 0;
+
+            let teaserSize: number = isTeaserEnabled ? teaserWidth * teaserHeight : 0;
 
             if (teaserSize >= 1 && maxRowsSet < teaserHeight) {
-                teaserSize = teaseroWidth;
+                teaserSize = teaserWidth;
             }
 
             this.configuration.limit =
                 maxRowsSet * this.getMaxPossibleColumns() - teaserSize;
         },
+
 
         /**
          * This returns number that is visible in the input of custom rows limit.
