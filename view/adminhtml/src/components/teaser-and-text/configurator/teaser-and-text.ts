@@ -11,7 +11,7 @@ import {
  */
 const teaserAndTextConfigurator: vuejs.ComponentOption = {
     extends: imageTeaserConfigurator,
-    template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+    template: `<div class="cc-image-teaser-configurator cc-image-teaser-configurator--teaser-and-text {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Teaser Width</h3>
             <div class="cc-image-teaser-configurator__scenario-options">
@@ -73,13 +73,34 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
         
         <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--2-columns">
             <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-0">
-                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="image-teaser" configurator-layout="column"></teaser-configurator>
+                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" configurator-layout="column"></teaser-configurator>
             </div>
             <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-1">    
-                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="image-teaser" configurator-layout="column" teaser-type="text-only"></teaser-configurator>
+                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" configurator-layout="column" :teaser-type="'text-only'"></teaser-configurator>
             </div>            
         </section>
     </div>`,
+    props: {
+        /**
+         * Image teaser configuration
+         */
+        configuration: {
+            type: Object,
+            default(): object {
+                return {
+                    customCssClass: '',
+                    items: [JSON.parse(JSON.stringify(teaserItemPrototype)), JSON.parse(JSON.stringify(teaserItemPrototype))],
+                    ignoredItems: [],
+                    scenario: {
+                        teaserWidth: {},
+                        desktopLayout: {},
+                        contentPlacement: {},
+                        mobileLayout: {},
+                    },
+                };
+            },
+        },
+    },
     ready(): void {
         this.scenarioOptions = {
             // Teaser width scenario elements.
@@ -113,10 +134,6 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
 
         this.togglePossibleOptions = function () {
             return true;
-        }
-
-        if (this.configuration.items.length === 1) {
-            this.configuration.items = [JSON.parse(JSON.stringify(teaserItemPrototype)), JSON.parse(JSON.stringify(teaserItemPrototype))];
         }
     },
 };
