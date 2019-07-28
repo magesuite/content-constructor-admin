@@ -94,19 +94,7 @@ export const teaserPrototype: any = {
             },
         },
     },
-    badge: {
-        value: '',
-        align: {
-            x: 1,
-            y: 1,
-        },
-        examples: [
-            { text: '<small>Only</small><br> {{price sku="some_sku"}}' },
-            { text: '{{sku sku="some_sku"}}' },
-            { text: '<big>Only</big> {{qty sku="some_sku"}} left' }
-        ]
-    },
-    teaserType: 'full'
+    teaserType: ''
 };
 
 /**
@@ -127,7 +115,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'custom-element-radio': customElementRadio,
         'custom-element-position': customElementPosition,
     },
-    template: `<div class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}}">
+    template: `<div class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}} cc-teaser-configurator--{{teaserType}}">
         <section class="cc-teaser-configurator__section">
             <div class="cc-teaser-configurator__content" id="cc-teaser-{{teaserIndex}}">
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--preview" :class="{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}">
@@ -140,49 +128,44 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         <div class="cc-teaser-configurator__actions">
                             <component-actions>
                                 <template slot="cc-component-actions__buttons">
-                                    <template v-if="callerComponentType !== 'products-grid'">
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-teaser-configurator__action-button"
-                                            :class="{'cc-action-button--look_disabled': isFirstImageTeaser(teaserIndex)}"
-                                            @click="configuratorLayout === 'column' ? moveImageTeaserLeft(teaserIndex) : moveImageTeaserUp(teaserIndex)"
-                                            :disabled="isFirstImageTeaser(teaserIndex)"
-                                        >
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_arrow-up"></use>
-                                            </svg>
-                                        </button>
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-teaser-configurator__action-button"
-                                            :class="{'cc-action-button--look_disabled': isLastImageTeaser(teaserIndex)}"
-                                            :disabled="isLastImageTeaser(teaserIndex)"
-                                            @click="configuratorLayout === 'column' ? moveImageTeaserRight(teaserIndex) : moveImageTeaserDown(teaserIndex)"
-                                        >
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_arrow-down"></use>
-                                            </svg>
-                                        </button>
-                                    </template>
-                                    <template v-if="teaserType !== 'text-only'">
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
-                                            @click="getImageUploader(teaserIndex)"
-                                        >
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_upload-image"></use>
-                                            </svg>
-                                            {{ imageActionText | translate }}
-                                        </button>
-                                    </template>
-                                    <template v-if="callerComponentType !== 'products-grid'">
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"
-                                            @click="deleteTeaserItem(teaserIndex)"
-                                        >
-                                            <svg class="cc-action-button__icon">
-                                                <use xlink:href="#icon_trash-can"></use>
-                                            </svg>
-                                        </button>
-                                    </template>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-teaser-configurator__action-button"
+                                        :class="{'cc-action-button--look_disabled': isFirstImageTeaser(teaserIndex)}"
+                                        @click="callerComponentType === 'teaser-and-text' ? toggleTeaserAndTextItems(teaserIndex) : moveImageTeaserUp(teaserIndex)"
+                                        :disabled="isFirstImageTeaser(teaserIndex)"
+                                    >
+                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                            <use xlink:href="#icon_arrow-up"></use>
+                                        </svg>
+                                    </button>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-teaser-configurator__action-button"
+                                        :class="{'cc-action-button--look_disabled': isLastImageTeaser(teaserIndex)}"
+                                        :disabled="isLastImageTeaser(teaserIndex)"
+                                        @click="callerComponentType === 'teaser-and-text' ? toggleTeaserAndTextItems(teaserIndex) : moveImageTeaserDown(teaserIndex)"
+                                    >
+                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                            <use xlink:href="#icon_arrow-down"></use>
+                                        </svg>
+                                    </button>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
+                                        @click="getImageUploader(teaserIndex)"
+                                    >
+                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                            <use xlink:href="#icon_upload-image"></use>
+                                        </svg>
+                                        {{ imageActionText | translate }}
+                                    </button>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"
+                                        @click="deleteTeaserItem(teaserIndex)"
+                                    >
+                                        <svg class="cc-action-button__icon">
+                                            <use xlink:href="#icon_trash-can"></use>
+                                        </svg>
+                                    </button>
+                                    
                                 </template>
                             </component-actions>
                         </div>
@@ -201,7 +184,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             <span class="cc-teaser-configurator__tab-label">{{tab.label}}</span>
                         </li>
                         <li
-                            v-if="callerComponentType === 'magento-product-grid-teasers' || callerComponentType === 'products-grid'"
+                            v-if="callerComponentType === 'magento-product-grid-teasers'"
                             class="cc-teaser-configurator__tab"
                             :class="{'cc-teaser-configurator__tab--current': currentTab == callerComponentType}"
                             @click="switchTab(callerComponentType)"
@@ -268,7 +251,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         </template>
 
                         <template v-if="tab.content && tab.content === '#style'">
-                            <div class="cc-teaser-configurator__tab-section">
+                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--optimizer">
                                 <label class="cc-input__label">{{ 'Contrast Optimizer' | translate }}</label>
                                 <ul
                                     class="cc-teaser-configurator__optimizers"
@@ -354,7 +337,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </select>
                                     </div>
 
-                                    <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher">
+                                    <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--mirror-image">
                                         <div class="admin__actions-switch" data-role="switcher" :class="{'block-disabled': !configuration.image.raw}">
                                             <label for="cfg-teaser-{{teaserIndex}}-mirror-image" class="cc-input__label">{{ 'Mirror image' | translate }}: </label>
                                             <input
@@ -369,8 +352,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                                 {{ mirrorImageTextOutput | translate }}
                                             </span>
                                         </div>
-
                                     </div>
+
                                 </div>
                             </div>
                         </template>
@@ -395,7 +378,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         class="cc-teaser-configurator__tab-content"
                         :class="{'cc-teaser-configurator__tab-content--current': currentTab == callerComponentType}"
                     >
-                        <template v-if="currentTab === 'magento-product-grid-teasers' || currentTab ===  'products-grid'">
+                        <template v-if="currentTab === 'magento-product-grid-teasers'">
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
@@ -433,12 +416,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="cc-input">
-                                    <p class="cc-teaser-configurator__note">{{ 'Big image teasers (2x1 and 2x2) might not be displayed on mobile phones. Please switch Show in mobiles toggle to No.' | translate }}</p>
-                                </div>
                             </div>
                         </template>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -694,8 +675,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
         getCurrentFErowsCount(): number {
             return Math.floor(
                 this.getVirtualBricksLength() /
-                    this.ccConfig.columns[this.ccConfig.columns.default_layout]
-                        .desktop
+                this.ccConfig.columns[this.ccConfig.columns.default_layout]
+                    .desktop
             );
         },
         /**
@@ -714,7 +695,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
             ) {
                 virtualLength +=
                     this.parentConfiguration.teasers[i].size.x *
-                        this.parentConfiguration.teasers[i].size.y;
+                    this.parentConfiguration.teasers[i].size.y;
             }
 
             return virtualLength;
@@ -854,84 +835,41 @@ const teaserConfigurator: vuejs.ComponentOption = {
             }
         },
         /**
-         * Moves image teaser item left by swaping it with previous element.
-         * @param {number} index Image teaser's index in array.
-        */
-        moveImageTeaserLeft(index: number): void {
-            if (index > 0) {
-                const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
-                const $prevItem: any = $(`#cc-image-teaser-item-${index - 1}`);
-
-                $thisItem
-                    .addClass('cc-teaser-configurator--animating')
-                    .css(
-                        'transform',
-                        `translateX(${-Math.abs(
-                            $prevItem.outerWidth(true)
-                        )}px)`
-                    );
-                $prevItem
-                    .addClass('cc-teaser-configurator--animating')
-                    .css(
-                        'transform',
-                        `translateX(${$thisItem.outerWidth(true)}px )`
-                    );
-
-                setTimeout((): void => {
-                    this.parentConfiguration.items.splice(
-                        index - 1,
-                        0,
-                        this.parentConfiguration.items.splice(index, 1)[0]
-                    );
-                    $thisItem
-                        .removeClass('cc-teaser-configurator--animating')
-                        .css('transform', '');
-                    $prevItem
-                        .removeClass('cc-teaser-configurator--animating')
-                        .css('transform', '');
-                    this.onChange();
-                }, 400);
-            }
-        },
-        /**
-         * Moves image teaser item right by swaping it with next element.
+         * Toggle image teaser item right by swaping it with next element.
          * @param {number} index Image teaser's index in array.
          */
-        moveImageTeaserRight(index: number): void {
-            if (index < this.parentConfiguration.items.length - 1) {
-                const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
-                const $nextItem: any = $(`#cc-image-teaser-item-${index + 1}`);
+        toggleTeaserAndTextItems(index: number): void {
+            const $thisItem: any = $(`#cc-image-teaser-item-0`);
+            const $nextItem: any = $(`#cc-image-teaser-item-1`);
 
+            $(`.cc-teaser-configurator`).toggleClass('cc-teaser-configurator--text-only');
+
+            $thisItem
+                .addClass('cc-teaser-configurator--animating')
+                .css(
+                    'transform',
+                    `translateX(${$nextItem.outerWidth(true)}px)`
+                );
+            $nextItem
+                .addClass('cc-teaser-configurator--animating')
+                .css(
+                    'transform',
+                    `translateX(${-Math.abs(
+                        $thisItem.outerWidth(true)
+                    )}px)`
+                );
+
+            setTimeout((): void => {
                 $thisItem
-                    .addClass('cc-teaser-configurator--animating')
-                    .css(
-                        'transform',
-                        `translateX(${$nextItem.outerWidth(true)}px)`
-                    );
+                    .removeClass('cc-teaser-configurator--animating')
+                    .css('transform', '');
                 $nextItem
-                    .addClass('cc-teaser-configurator--animating')
-                    .css(
-                        'transform',
-                        `translateX(${-Math.abs(
-                            $thisItem.outerWidth(true)
-                        )}px)`
-                    );
+                    .removeClass('cc-teaser-configurator--animating')
+                    .css('transform', '');
 
-                setTimeout((): void => {
-                    this.parentConfiguration.items.splice(
-                        index + 1,
-                        0,
-                        this.parentConfiguration.items.splice(index, 1)[0]
-                    );
-                    $thisItem
-                        .removeClass('cc-teaser-configurator--animating')
-                        .css('transform', '');
-                    $nextItem
-                        .removeClass('cc-teaser-configurator--animating')
-                        .css('transform', '');
-                    this.onChange();
-                }, 400);
-            }
+                this.parentConfiguration.items.reverse()
+                this.onChange();
+            }, 400);
         },
         /**
          * Tells if item with given index is the first image teaser.
@@ -1004,7 +942,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 ),
                 actions: {
                     confirm(): void {
-                        if(component.callerComponentType === 'magento-product-grid-teasers') {
+                        if (component.callerComponentType === 'magento-product-grid-teasers') {
                             component.parentConfiguration.teasers.splice(index, 1);
                             component.getCurrentFErowsCount();
                             component.fixOverflowedRowsSetup();
@@ -1080,7 +1018,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
         // get aspect ratio for images from hero image-teaser (old products grid)
         if (this.callerComponentType === 'products-grid') {
-            if(!this.configuration.image.aspect_ratio) {
+            if (!this.configuration.image.aspect_ratio) {
                 const tempImg = new Image();
                 tempImg.src = this.configuration.image.raw;
                 tempImg.onload = () => {
@@ -1095,7 +1033,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
         if (this.callerComponentType === 'magento-product-grid-teasers') {
             this.fixOverflowedRowsSetup();
         }
-    },
+
+        if(!this.configuration.teaserType) {
+            this.configuration.teaserType = this.teaserType;
+        }
+
+        $(`#cc-image-teaser-item-${this.teaserIndex} .cc-teaser-configurator`).toggleClass('cc-teaser-configurator--text-only', this.configuration.teaserType === 'text-only');
+    }
 };
 
 export default teaserConfigurator;

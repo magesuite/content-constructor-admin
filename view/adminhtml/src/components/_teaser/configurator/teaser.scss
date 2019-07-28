@@ -15,6 +15,15 @@
             transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
     }
 
+    &--text-only {
+        .cc-component-actions__button--upload-image,
+        .cc-teaser-configurator__tab-section--optimizer,
+        .cc-teaser-configurator__switcher--mirror-image {
+            display: none;
+        }
+    }
+
+
     &--column {
         height: 100%;
 

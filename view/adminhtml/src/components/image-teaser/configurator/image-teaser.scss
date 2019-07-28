@@ -1,6 +1,13 @@
 .cc-image-teaser-configurator {
     $root: &;
 
+    &--teaser-and-text {
+        .cc-component-actions__button--delete {
+            display: none;
+        }
+    }
+    
+
     &__section {
         margin: 20px 0 0;
         padding: 20px 0 0;
