@@ -3625,7 +3625,6 @@ var teaserConfigurator = {
             this.configuration.teaserType = this.teaserType;
         }
         $("#cc-image-teaser-item-" + this.teaserIndex + " .cc-teaser-configurator").toggleClass('cc-teaser-configurator--text-only', this.configuration.teaserType === 'text-only');
-        console.log(this);
     }
 };
 
@@ -4816,6 +4815,8 @@ var magentoProductGridTeasersConfigurator = {
          */
         'component-configurator__save': function () {
             // this.cleanupConfiguration();
+            this._collectTeasersCssClasses();
+            this._collectComponentCssClasses();
             this.generateTeasersConfig();
             this.onSave();
         },
@@ -4926,6 +4927,48 @@ var magentoProductGridTeasersConfigurator = {
             var filteredArray = this.configuration.teasers.filter(function (teaser) { return teaser.image !== ''; });
             this.configuration.teasers = filteredArray;
             this.onChange();
+        },
+        _getCustomCssFields: function (source) {
+            var cssClassFields = [];
+            Object.keys(source).forEach(function (tabKey) {
+                if (typeof source[tabKey].content !== 'string' &&
+                    source[tabKey].content.fields != null) {
+                    Object.keys(source[tabKey].content.fields).forEach(function (fieldKey) {
+                        if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
+                            cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
+                        }
+                    });
+                }
+            });
+            return cssClassFields;
+        },
+        _collectTeasersCssClasses: function () {
+            if (this.configuration.teasers != null) {
+                var cssClassFields_1 = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+                this.configuration.teasers.forEach(function (teaser, index) {
+                    var cssClasses = [];
+                    cssClassFields_1.forEach(function (model) {
+                        if (teaser[model] && typeof teaser[model] === 'string') {
+                            cssClasses.push(teaser[model]);
+                        }
+                    });
+                    teaser.cc_css_classes = cssClasses.join(' ');
+                });
+            }
+        },
+        _collectComponentCssClasses: function () {
+            var _this = this;
+            if (this.ccConfig.image_teaser != null &&
+                this.ccConfig.image_teaser.custom_sections != null) {
+                var cssClassFields = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
+                var cssClasses_1 = [];
+                cssClassFields.forEach(function (model) {
+                    if (_this.configuration[model] && typeof _this.configuration[model] === 'string') {
+                        cssClasses_1.push(_this.configuration[model]);
+                    }
+                });
+                this.configuration.cc_css_classes = cssClasses_1.join(' ');
+            }
         },
         /* Generates 1:1 JSON for grid-layout component so it can be simply passed without any modifications within templates
          */

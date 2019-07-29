@@ -112,6 +112,8 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          */
         'component-configurator__save'(): void {
             // this.cleanupConfiguration();
+            this._collectTeasersCssClasses();
+            this._collectComponentCssClasses();
             this.generateTeasersConfig();
             this.onSave();
         },
@@ -247,6 +249,70 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
             );
             this.configuration.teasers = filteredArray;
             this.onChange();
+        },
+        _getCustomCssFields(source: object): Array<any> {
+            const cssClassFields: Array<any> = [];
+
+            Object.keys(source).forEach(
+                (tabKey: string) => {
+                    if (
+                        typeof source[tabKey].content !== 'string' &&
+                        source[tabKey].content.fields != null
+                    ) {
+                        Object.keys(source[tabKey].content.fields).forEach(
+                            (fieldKey: string) => {
+                                if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
+                                    cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+
+            return cssClassFields;
+        },
+
+        _collectTeasersCssClasses(): void {
+            if (this.configuration.teasers != null) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+
+                this.configuration.teasers.forEach(
+                    (teaser: any, index: number) => {
+                        const cssClasses: Array<string> = [];
+
+                        cssClassFields.forEach(
+                            (model: string) => {
+                                if (teaser[model] && typeof teaser[model] === 'string') {
+                                    cssClasses.push(teaser[model]);
+                                }
+                            }
+                        );
+
+                        teaser.cc_css_classes = cssClasses.join(' ');
+                    }
+                );
+            }
+        },
+
+        _collectComponentCssClasses(): void {
+            if (
+                this.ccConfig.image_teaser != null &&
+                this.ccConfig.image_teaser.custom_sections != null
+            ) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
+                const cssClasses: Array<string> = [];
+
+                cssClassFields.forEach(
+                    (model: string) => {
+                        if (this.configuration[model] && typeof this.configuration[model] === 'string') {
+                            cssClasses.push(this.configuration[model]);
+                        }
+                    }
+                );
+
+                this.configuration.cc_css_classes = cssClasses.join(' ');
+            }
         },
         /* Generates 1:1 JSON for grid-layout component so it can be simply passed without any modifications within templates
          */
