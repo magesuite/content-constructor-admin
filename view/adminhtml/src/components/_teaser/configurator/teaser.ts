@@ -128,44 +128,49 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         <div class="cc-teaser-configurator__actions">
                             <component-actions>
                                 <template slot="cc-component-actions__buttons">
-                                    <button
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-teaser-configurator__action-button"
-                                        :class="{'cc-action-button--look_disabled': isFirstImageTeaser(teaserIndex)}"
-                                        @click="callerComponentType === 'teaser-and-text' ? toggleTeaserAndTextItems(teaserIndex) : moveImageTeaserUp(teaserIndex)"
-                                        :disabled="isFirstImageTeaser(teaserIndex)"
-                                    >
-                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                            <use xlink:href="#icon_arrow-up"></use>
-                                        </svg>
-                                    </button>
-                                    <button
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-teaser-configurator__action-button"
-                                        :class="{'cc-action-button--look_disabled': isLastImageTeaser(teaserIndex)}"
-                                        :disabled="isLastImageTeaser(teaserIndex)"
-                                        @click="callerComponentType === 'teaser-and-text' ? toggleTeaserAndTextItems(teaserIndex) : moveImageTeaserDown(teaserIndex)"
-                                    >
-                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                            <use xlink:href="#icon_arrow-down"></use>
-                                        </svg>
-                                    </button>
-                                    <button
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
-                                        @click="getImageUploader(teaserIndex)"
-                                    >
-                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                            <use xlink:href="#icon_upload-image"></use>
-                                        </svg>
-                                        {{ imageActionText | translate }}
-                                    </button>
-                                    <button
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"
-                                        @click="deleteTeaserItem(teaserIndex)"
-                                    >
-                                        <svg class="cc-action-button__icon">
-                                            <use xlink:href="#icon_trash-can"></use>
-                                        </svg>
-                                    </button>
-                                    
+                                    <template v-if="callerComponentType !== 'products-grid'">
+                                        <button
+                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-teaser-configurator__action-button"
+                                            :class="{'cc-action-button--look_disabled': isFirstImageTeaser(teaserIndex)}"
+                                            @click="callerComponentType === 'teaser-and-text' ? toggleTeaserAndTextItems(teaserIndex) : moveImageTeaserUp(teaserIndex)"
+                                            :disabled="isFirstImageTeaser(teaserIndex)"
+                                        >
+                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                                <use xlink:href="#icon_arrow-up"></use>
+                                            </svg>
+                                        </button>
+                                        <button
+                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-teaser-configurator__action-button"
+                                            :class="{'cc-action-button--look_disabled': isLastImageTeaser(teaserIndex)}"
+                                            :disabled="isLastImageTeaser(teaserIndex)"
+                                            @click="callerComponentType === 'teaser-and-text' ? toggleTeaserAndTextItems(teaserIndex) : moveImageTeaserDown(teaserIndex)"
+                                        >
+                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                                <use xlink:href="#icon_arrow-down"></use>
+                                            </svg>
+                                        </button>
+                                    </template>
+                                    <template v-if="teaserType !== 'text-only'">
+                                        <button
+                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
+                                            @click="getImageUploader(teaserIndex)"
+                                        >
+                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                                <use xlink:href="#icon_upload-image"></use>
+                                            </svg>
+                                            {{ imageActionText | translate }}
+                                        </button>
+                                    </template>
+                                    <template v-if="callerComponentType !== 'products-grid'">
+                                        <button
+                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"
+                                            @click="deleteTeaserItem(teaserIndex)"
+                                        >
+                                            <svg class="cc-action-button__icon">
+                                                <use xlink:href="#icon_trash-can"></use>
+                                            </svg>
+                                        </button>
+                                    </template>
                                 </template>
                             </component-actions>
                         </div>
@@ -184,7 +189,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             <span class="cc-teaser-configurator__tab-label">{{tab.label}}</span>
                         </li>
                         <li
-                            v-if="callerComponentType === 'magento-product-grid-teasers'"
+                            v-if="callerComponentType === 'magento-product-grid-teasers' || callerComponentType === 'products-grid'"
                             class="cc-teaser-configurator__tab"
                             :class="{'cc-teaser-configurator__tab--current': currentTab == callerComponentType}"
                             @click="switchTab(callerComponentType)"
@@ -352,8 +357,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                                 {{ mirrorImageTextOutput | translate }}
                                             </span>
                                         </div>
-                                    </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -378,7 +383,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         class="cc-teaser-configurator__tab-content"
                         :class="{'cc-teaser-configurator__tab-content--current': currentTab == callerComponentType}"
                     >
-                        <template v-if="currentTab === 'magento-product-grid-teasers'">
+                        <template v-if="currentTab === 'magento-product-grid-teasers' || currentTab ===  'products-grid'">
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
@@ -416,10 +421,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </div>
                                     </div>
                                 </div>
+                                <div class="cc-input">
+                                    <p class="cc-teaser-configurator__note">{{ 'Big image teasers (2x1 and 2x2) might not be displayed on mobile phones. Please switch Show in mobiles toggle to No.' | translate }}</p>
+                                </div>
                             </div>
                         </template>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -675,8 +682,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
         getCurrentFErowsCount(): number {
             return Math.floor(
                 this.getVirtualBricksLength() /
-                this.ccConfig.columns[this.ccConfig.columns.default_layout]
-                    .desktop
+                    this.ccConfig.columns[this.ccConfig.columns.default_layout]
+                        .desktop
             );
         },
         /**
@@ -695,7 +702,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
             ) {
                 virtualLength +=
                     this.parentConfiguration.teasers[i].size.x *
-                    this.parentConfiguration.teasers[i].size.y;
+                        this.parentConfiguration.teasers[i].size.y;
             }
 
             return virtualLength;
@@ -942,7 +949,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 ),
                 actions: {
                     confirm(): void {
-                        if (component.callerComponentType === 'magento-product-grid-teasers') {
+                        if(component.callerComponentType === 'magento-product-grid-teasers') {
                             component.parentConfiguration.teasers.splice(index, 1);
                             component.getCurrentFErowsCount();
                             component.fixOverflowedRowsSetup();
@@ -1018,7 +1025,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
         // get aspect ratio for images from hero image-teaser (old products grid)
         if (this.callerComponentType === 'products-grid') {
-            if (!this.configuration.image.aspect_ratio) {
+            if(!this.configuration.image.aspect_ratio) {
                 const tempImg = new Image();
                 tempImg.src = this.configuration.image.raw;
                 tempImg.onload = () => {
@@ -1033,13 +1040,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         if (this.callerComponentType === 'magento-product-grid-teasers') {
             this.fixOverflowedRowsSetup();
         }
-
-        if(!this.configuration.teaserType) {
-            this.configuration.teaserType = this.teaserType;
-        }
-
-        $(`#cc-image-teaser-item-${this.teaserIndex} .cc-teaser-configurator`).toggleClass('cc-teaser-configurator--text-only', this.configuration.teaserType === 'text-only');
-    }
+    },
 };
 
 export default teaserConfigurator;
