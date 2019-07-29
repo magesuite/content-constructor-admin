@@ -1040,6 +1040,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
         if (this.callerComponentType === 'magento-product-grid-teasers') {
             this.fixOverflowedRowsSetup();
         }
+
+        if(!this.configuration.teaserType) {
+            this.configuration.teaserType = this.teaserType;
+        }
+
+        $(`#cc-image-teaser-item-${this.teaserIndex} .cc-teaser-configurator`).toggleClass('cc-teaser-configurator--text-only', this.configuration.teaserType === 'text-only');
+
     },
 };
 
