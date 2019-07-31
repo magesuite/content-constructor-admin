@@ -150,17 +150,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                             </svg>
                                         </button>
                                     </template>
-                                    <template v-if="teaserType !== 'text-only'">
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
-                                            @click="getImageUploader(teaserIndex)"
-                                        >
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_upload-image"></use>
-                                            </svg>
-                                            {{ imageActionText | translate }}
-                                        </button>
-                                    </template>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
+                                        @click="getImageUploader(teaserIndex)"
+                                    >
+                                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
+                                            <use xlink:href="#icon_upload-image"></use>
+                                        </svg>
+                                        {{ imageActionText | translate }}
+                                    </button>
                                     <template v-if="callerComponentType !== 'products-grid'">
                                         <button
                                             class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"
