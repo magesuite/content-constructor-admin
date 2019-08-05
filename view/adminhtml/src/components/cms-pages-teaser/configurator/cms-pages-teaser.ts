@@ -48,12 +48,18 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
                 </div>
 
                 <div class="cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option">
-                    <label for="cfg-cmspt-text-variant" class="cc-input__label | cc-cms-pages-teaser-configurator__section-option-label">${$t( 'Display variant' )}:</label>
-                    <select name="cfg-cmspt-text-variant" class="cc-input__select" id="cfg-cmspt-text-variant" v-model="configuration.textDisplayVariant" @change="onChange">
-                        <template v-for="(idx, scenario) in imageTeasersContentPositions">
-                            <option value="{{ idx + 1 }}">${$t( '{{ scenario }}' )}</option>
+                    <label for="cfg-cmspt-text-variant" class="cc-input__label | cc-cms-pages-teaser-configurator__section-option-label">{{ 'Content align' | translate }}:</label>
+                    <div class="cc-teaser-configurator__position-grid">
+                        <template v-for="y in 3">
+                            <template v-for="x in 3">
+                                <span
+                                    class="cc-teaser-configurator__position-grid-item"
+                                    :class="{'cc-teaser-configurator__position-grid-item--active': isCurrentContentAlign(x+1, y+1)}"
+                                    @click="setContentAlign(x+1, y+1)"
+                                ></span>
+                            </template>
                         </template>
-                    </select>
+                    </div>
                 </div>
             </div>
         </section>
@@ -124,7 +130,10 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
                     tags: '',
                     ids: '',
                     limit: '1000',
-                    textDisplayVariant: '1',
+                    content_align: {
+                        x: 1,
+                        y: 1,
+                    },
                     currentScenario: {
                         desktopLayout: {},
                         mobileLayout: {},
@@ -143,12 +152,6 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             default(): any {
                 return {};
             },
-        },
-    },
-    computed: {
-        imageTeasersContentPositions: function(): object {
-            const data: object = this.ccConfig.image_teasers_content_positions;
-            return Object.keys(data).map(key => (<any>data)[key]);
         },
     },
     events: {
@@ -177,11 +180,11 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
                 },
                 // Mobile layout scenario elements.
                 mobileLayout: {
-                    'slider': {
+                    'mobile-slider': {
                         name: 'Slider',
                         iconId: 'ml_slider',
                     },
-                    'grid': {
+                    'mobile-in-row': {
                         name: 'Grid',
                         iconId: 'ml_2-2',
                     },
@@ -196,6 +199,19 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
         toggleOption(optionCategory: string, optionId: string): void {
             this.configuration.currentScenario[optionCategory] = this.scenarioOptions[optionCategory][optionId];
             this.configuration.currentScenario[optionCategory].id = optionId;
+        },
+        /*
+         * Set content align
+         */
+        setContentAlign(x: number, y: number): void {
+            this.configuration.content_align.x = x;
+            this.configuration.content_align.y = y;
+        },
+        isCurrentContentAlign(x: number, y: number): boolean {
+            return (
+                Number(this.configuration.content_align.x) === x &&
+                Number(this.configuration.content_align.y) === y
+            );
         },
     },
     ready(): void {
@@ -215,7 +231,12 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
                 },
             });
         }
-    }
+
+        if (!this.configuration.content_align) {
+            this.$set('configuration.content_align.x', 1);
+            this.$set('configuration.content_align.y', 1);
+        }
+    },
 }
 
 export default cmsPagesTeaserConfigurator;
