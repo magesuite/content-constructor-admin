@@ -16,7 +16,7 @@ const teaserAndTextPreview: vuejs.ComponentOption = {
         <div class="cc-image-teaser-preview__wrapper">
             <ul class="cc-image-teaser-preview__scene cc-image-teaser-preview__scene--2-in-row" v-el:scene>
                 <template v-for="item in configuration.items">
-                    <li class="cc-image-teaser-preview__item">
+                    <li class="cc-image-teaser-preview__item cc-image-teaser-preview__item--{{configuration.items[$index].teaserType}}">
                         <teaser-preview :configuration="configuration.items[$index]" :parent-configuration="configuration"></teaser-preview>
                     </li>
                 </template>

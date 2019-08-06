@@ -29,5 +29,11 @@ $image-teaser-preview-item-gap: 1.3rem;
                 );
             }
         }
+
+        &--text-only {
+            .cc-teaser-preview__image-placeholder {
+                display: none;
+            }
+        }
     }
 }

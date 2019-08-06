@@ -1954,6 +1954,8 @@
     width: calc( 16.6666666667% - 1.3rem); }
   .cc-image-teaser-preview__scene--7-in-row .cc-image-teaser-preview__item {
     width: calc( 14.2857142857% - 1.3rem); }
+  .cc-image-teaser-preview__item--text-only .cc-teaser-preview__image-placeholder {
+    display: none; }
 
 .cc-magento-product-grid-teasers-preview {
   display: -webkit-box;
@@ -2711,7 +2713,8 @@
     transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1), -webkit-box-shadow 0.15s ease-in-out, -webkit-transform 0.4s cubic-bezier(0, 0.7, 0.32, 1); }
   .cc-teaser-configurator--text-only .cc-component-actions__button--upload-image,
   .cc-teaser-configurator--text-only .cc-teaser-configurator__tab-section--optimizer,
-  .cc-teaser-configurator--text-only .cc-teaser-configurator__switcher--mirror-image {
+  .cc-teaser-configurator--text-only .cc-teaser-configurator__switcher--mirror-image,
+  .cc-teaser-configurator--text-only .cc-teaser-preview__image-placeholder {
     display: none; }
   .cc-teaser-configurator--column {
     height: 100%; }

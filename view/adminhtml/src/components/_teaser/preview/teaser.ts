@@ -87,11 +87,9 @@ const teaserPreview: vuejs.ComponentOption = {
                         :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
                         v-if="configuration.image.image || configuration.image.raw"
                     >
-                    <template v-if="teaserType !== 'text-only'">
-                        <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
-                            <use xlink:href="#icon_image-placeholder"></use>
-                        </svg>
-                    </template
+                    <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
+                        <use xlink:href="#icon_image-placeholder"></use>
+                    </svg>
                 </figure>
 
                 <div class="cc-teaser-preview__overlay" v-if="configuration.optimizers.scenarios.overlay.enabled" :style="{opacity: configuration.optimizers.scenarios.overlay.intensity / 100}"></div>
