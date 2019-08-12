@@ -736,7 +736,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
             const img: any = new Image();
 
             img.onload = (): void => {
-                if (this.configuration.image.image) {
+                if (this.configuration.image && this.configuration.image.image) {
                     this.configuration.image.image = img.getAttribute('src');
                 } else {
                     this.configuration.image.raw = img.getAttribute('src');
@@ -964,6 +964,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @param images {array} - array of all uploaded images
          */
         checkImageSizes(): boolean {
+
+            // Do not open alert if there is another alert shown
+            if($('.modal-popup.confirm._show').length) {
+                return;
+            }
+
             const itemsToCheck = JSON.parse(
                 JSON.stringify(this.parentConfigurationVariation)
             ).filter(
@@ -974,8 +980,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
             for (let i: number = 0; i < itemsToCheck.length; i++) {
                 if (
-                    itemsToCheck[i].aspect_ratio !==
-                    itemsToCheck[0].aspect_ratio
+                    itemsToCheck[i].image.aspect_ratio !==
+                    itemsToCheck[0].image.aspect_ratio
                 ) {
                     alert({
                         title: $.mage.__('Warning'),

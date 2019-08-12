@@ -3412,7 +3412,7 @@ var teaserConfigurator = {
                 : window.atob(encodedImage);
             var img = new Image();
             img.onload = function () {
-                if (_this.configuration.image.image) {
+                if (_this.configuration.image && _this.configuration.image.image) {
                     _this.configuration.image.image = img.getAttribute('src');
                 }
                 else {
@@ -3578,12 +3578,16 @@ var teaserConfigurator = {
          * @param images {array} - array of all uploaded images
          */
         checkImageSizes: function () {
+            // Do not open alert if there is another alert shown
+            if ($('.modal-popup.confirm._show').length) {
+                return;
+            }
             var itemsToCheck = JSON.parse(JSON.stringify(this.parentConfigurationVariation)).filter(function (item) {
                 return Boolean(item.image.aspect_ratio); // Filter out items without aspect ratio set yet.
             });
             for (var i = 0; i < itemsToCheck.length; i++) {
-                if (itemsToCheck[i].aspect_ratio !==
-                    itemsToCheck[0].aspect_ratio) {
+                if (itemsToCheck[i].image.aspect_ratio !==
+                    itemsToCheck[0].image.aspect_ratio) {
                     alert({
                         title: $.mage.__('Warning'),
                         content: $.mage.__('Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'),
