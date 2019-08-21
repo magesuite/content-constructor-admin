@@ -379,7 +379,7 @@ var headlinePreview = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var heroCarouselPreview = {
-    template: "<div data-role=\"spinner\" class=\"cc-component-placeholder__loading\" v-show=\"isLoading\">\n        <div class=\"spinner\">\n            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>\n        </div>\n    </div>\n    <div class=\"cc-hero-carousel-preview\" v-show=\"!isLoading\">\n        <div v-bind:class=\"sceneClass\" v-el:scene>\n            <div class=\"cc-hero-carousel-preview__slide\" v-if=\"configuration.items.length > 1\">\n                <img v-if=\"configuration.items[configuration.items.length - 1].image\" :src=\"configuration.items[configuration.items.length - 1].image\" class=\"cc-hero-carousel-preview__image\">\n                <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[configuration.items.length - 1].image\">\n                    <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <template v-for=\"(index, item) in configuration.items\">\n                <div class=\"cc-hero-carousel-preview__slide\" v-if=\"index < 2\">\n                    <img v-if=\"configuration.items[$index].image\" :src=\"configuration.items[$index].image\" class=\"cc-hero-carousel-preview__image\">\n                    <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[$index].image\">\n                        <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                            <use xlink:href=\"#icon_image-placeholder\"></use>\n                        </svg>\n                    </div>\n                    <div class=\"cc-hero-carousel-preview__slide-content\" v-if=\"index == 0 || configuration.items.length == 1\">\n                        <div class=\"cc-hero-carousel-preview__thumbs\">\n                            <template v-for=\"(idx, slide) in configuration.items\">\n                                <img v-if=\"configuration.items[idx].image\" :src=\"configuration.items[idx].image\" class=\"cc-hero-carousel-preview__thumb\">\n                                <div class=\"cc-hero-carousel-preview__thumb-placeholder-wrapper\" v-show=\"!configuration.items[idx].image\">\n                                    <svg class=\"cc-hero-carousel-preview__thumb-placeholder\">\n                                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                                    </svg>\n                                </div>\n                            </template>\n                        </div>\n                        <div class=\"cc-hero-carousel-preview__slide-content-info\">\n                            <h2 class=\"cc-hero-carousel-preview__headline\" v-if=\"configuration.items[$index].headline\">{{ configuration.items[$index].headline }}</h2>\n                            <h3 class=\"cc-hero-carousel-preview__subheadline\" v-if=\"configuration.items[$index].subheadline\">{{ configuration.items[$index].subheadline }}</h3>\n                            <p class=\"cc-hero-carousel-preview__paragraph\" v-if=\"configuration.items[$index].paragraph\">{{ configuration.items[$index].paragraph }}</p>\n                            <template v-if=\"configuration.items[$index].href\">\n                                <button type=\"button\" class=\"cc-hero-carousel-preview__button\" v-if=\"configuration.items[$index].ctaLabel\">{{ configuration.items[$index].ctaLabel }}</button>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n            </template>\n        </div>\n    </div>",
+    template: "<div data-role=\"spinner\" class=\"cc-component-placeholder__loading\" v-show=\"isLoading\">\n        <div class=\"spinner\">\n            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>\n        </div>\n    </div>\n    <div class=\"cc-hero-carousel-preview\" v-show=\"!isLoading\">\n        <div v-bind:class=\"sceneClass\" v-el:scene>\n            <div class=\"cc-hero-carousel-preview__slide\" v-if=\"configuration.items.length > 1\">\n                <img v-if=\"configuration.items[configuration.items.length - 1].image.raw\" :src=\"configuration.items[configuration.items.length - 1].image.raw\" class=\"cc-hero-carousel-preview__image\">\n                <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[configuration.items.length - 1].image.raw\">\n                    <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <template v-for=\"(index, item) in configuration.items\">\n                <div class=\"cc-hero-carousel-preview__slide\" v-if=\"index < 2\">\n                    <img v-if=\"configuration.items[$index].image.raw\" :src=\"configuration.items[$index].image.raw\" class=\"cc-hero-carousel-preview__image\">\n                    <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[$index].image.raw\">\n                        <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                            <use xlink:href=\"#icon_image-placeholder\"></use>\n                        </svg>\n                    </div>\n                    <div class=\"cc-hero-carousel-preview__slide-content\" v-if=\"index == 0 || configuration.items.length == 1\">\n                        <div class=\"cc-hero-carousel-preview__thumbs\">\n                            <template v-for=\"(idx, slide) in configuration.items\">\n                                <img v-if=\"configuration.items[idx].image.raw\" :src=\"configuration.items[idx].image.raw\" class=\"cc-hero-carousel-preview__thumb\">\n                                <div class=\"cc-hero-carousel-preview__thumb-placeholder-wrapper\" v-show=\"!configuration.items[idx].image.raw\">\n                                    <svg class=\"cc-hero-carousel-preview__thumb-placeholder\">\n                                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                                    </svg>\n                                </div>\n                            </template>\n                        </div>\n                        <div class=\"cc-hero-carousel-preview__slide-content-info\">\n                            <h2 class=\"cc-hero-carousel-preview__headline\" v-if=\"configuration.items[$index].slogan\">{{ configuration.items[$index].slogan }}</h2>\n                            <p class=\"cc-hero-carousel-preview__paragraph\" v-if=\"configuration.items[$index].description\">{{ configuration.items[$index].description }}</p>\n                            <template v-if=\"configuration.items[$index].cta.href\">\n                                <button type=\"button\" class=\"cc-hero-carousel-preview__button\" v-if=\"configuration.items[$index].cta.label\">{{ configuration.items[$index].cta.label }}</button>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n            </template>\n        </div>\n    </div>",
     props: {
         configuration: {
             type: Object,
@@ -2436,364 +2436,6 @@ var headlineConfigurator = {
     },
 };
 
-// Pattern for teaser Item
-var heroItemDataPattern = {
-    image: '',
-    decodedImage: '',
-    displayVariant: 'variant-1',
-    colorScheme: 'light',
-    headline: '',
-    subheadline: '',
-    paragraph: '',
-    ctaLabel: $t('Check offer'),
-    href: '',
-    sizeInfo: '',
-    aspectRatio: '',
-};
-/**
- * Hero carousel configurator component.
- * This component is responsible for displaying image teaser's configuration form
- * @type {vuejs.ComponentOption} Vue component object.
- */
-var heroCarouselConfigurator = {
-    mixins: [componentConfigurator],
-    /**
-     * Get dependencies
-     */
-    components: {
-        'action-button': actionButton,
-        'component-adder': componentAdder,
-        'component-actions': componentActions,
-    },
-    template: "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n        <section class=\"cc-hero-carousel-configurator__section\">\n            <h3 class=\"cc-hero-carousel-configurator__subtitle\">Mobile Devices Scenario</h3>\n            <div class=\"cc-hero-carousel-configurator__scenario-options\">\n                <ul class=\"cc-hero-carousel-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-hero-carousel-configurator__option--selected': configuration.mobileDisplayVariant.id == optionId,\n                        }\"\n                        class=\"cc-hero-carousel-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileDisplayVariant\"\n                        @click=\"setOption('mobileDisplayVariant', optionId)\">\n                        <div class=\"cc-hero-carousel-configurator__option-wrapper\">\n                            <svg class=\"cc-hero-carousel-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-hero-carousel-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <h3 class=\"cc-hero-carousel-configurator__title\">Content</h3>\n\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.items\">\n            <div class=\"cc-hero-carousel-configurator__item\" id=\"cc-hero-carousel-item-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <div class=\"cc-hero-carousel-configurator__item-content\">\n                    <div v-bind:class=\"[ 'cc-hero-carousel-configurator__item-col-left', configuration.items[$index].image ? 'cc-hero-carousel-configurator__item-col-left--look-image-uploaded' : '' ]\">\n                        <div class=\"cc-hero-carousel-configurator__item-image-wrapper\">\n                            <img :src=\"configuration.items[$index].image\" class=\"cc-hero-carousel-configurator__item-image\" v-show=\"configuration.items[$index].image\">\n                            <input type=\"hidden\" v-model=\"configuration.items[$index].image\">\n                            <input type=\"hidden\" class=\"cc-hero-carousel-configurator__image-url\" id=\"hero-img-{{$index}}\">\n                            <svg class=\"cc-hero-carousel-configurator__item-image-placeholder\" v-show=\"!configuration.items[$index].image\">\n                                <use xlink:href=\"#icon_image-placeholder\"></use>\n                            </svg>\n\n                            <div class=\"cc-hero-carousel-configurator__item-actions\">\n                                <component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | cc-hero-carousel-configurator__item-action-button\" @click=\"moveHeroItemUp( $index )\" :class=\"[ isFirstHeroItem( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstHeroItem( $index )\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | cc-hero-carousel-configurator__item-action-button\" @click=\"moveHeroItemDown( $index )\" :class=\"[ isLastHeroItem( $index ) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastHeroItem( $index )\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-hero-carousel-configurator__item-action-button\" @click=\"getImageUploader( $index )\">\n                                                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                    <use xlink:href=\"#icon_upload-image\"></use>\n                                                </svg>\n                                                {{ configuration.items[$index].image ? imageUploadedText : noImageUploadedText }}\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | cc-hero-carousel-configurator__item-action-button\" @click=\"deleteHeroItem( $index )\">\n                                            <svg class=\"cc-action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </component-actions>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"cc-hero-carousel-configurator__item-col-right\">\n                        <div class=\"cc-input cc-input--group\">\n                            <div class=\"cc-input | cc-hero-carousel-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-variant\" class=\"cc-input__label\">" + $t('Display variant') + ":</label>\n                                <select name=\"cfg-hc-item{{ $index }}-variant\" class=\"cc-input__select | cc-hero-carousel-configurator__select\" id=\"cfg-hc-item{{ $index }}-variant\" v-model=\"configuration.items[$index].displayVariant\"\">\n                                    <template v-for=\"(idx, scenario) in imageTeasersContentPositions\">\n                                        <option value=\"variant-{{ idx + 1 }}\">" + $t('{{ scenario }}') + "</option>\n                                    </template>\n                                </select>\n                            </div>\n                            <div class=\"cc-input | cc-hero-carousel-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-color-scheme\" class=\"cc-input__label\">" + $t('Text color scheme') + ":</label>\n                                <select name=\"cfg-hc-item{{ $index }}-color-scheme\" class=\"cc-input__select | cc-hero-carousel-configurator__select\" id=\"cfg-hc-item{{ $index }}-color-scheme\" v-model=\"configuration.items[$index].colorScheme\">\n                                    <option value=\"light\">" + $t('Light') + "</option>\n                                    <option value=\"dark\">" + $t('Dark') + "</option>\n                                </select>\n                            </div>\n                        </div>\n                        <div class=\"cc-input | cc-hero-carousel-configurator__item-form-element\">\n                            <label for=\"cfg-hc-item{{ $index }}-headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n                            <input type=\"text\" v-model=\"configuration.items[$index].headline\" id=\"cfg-hc-item{{ $index }}-headline\" class=\"cc-input__input\">\n                        </div>\n                        <div class=\"cc-input | cc-hero-carousel-configurator__item-form-element\">\n                            <label for=\"cfg-hc-item{{ $index }}-subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n                            <input type=\"text\" v-model=\"configuration.items[$index].subheadline\" id=\"cfg-hc-item{{ $index }}-subheadline\" class=\"cc-input__input\">\n                        </div>\n                        <div class=\"cc-input | cc-hero-carousel-configurator__item-form-element\">\n                            <label for=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cc-input__label\">" + $t('Paragraph') + ":</label>\n                            <textarea type=\"text\" v-model=\"configuration.items[$index].paragraph\" id=\"cfg-hc-item{{ $index }}-paragraph\" class=\"cc-input__textarea\"></textarea>\n                        </div>\n                        <div class=\"cc-input cc-input--group\">\n                            <div class=\"cc-input | cc-hero-carousel-configurator__item-form-element\">\n                                <label for=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cc-input__label\">" + $t('CTA label') + ":</label>\n                                <input type=\"text\" v-model=\"configuration.items[$index].ctaLabel\" id=\"cfg-hc-item{{ $index }}-cta-label\" class=\"cc-input__input\">\n                            </div>\n                            <div class=\"cc-input cc-input--type-addon | cc-hero-carousel-configurator__item-form-element\">\n                                <label for=\"hero-ctatarget-output-{{ $index }}\" class=\"cc-input__label\">" + $t('CTA target link') + ":</label>\n                                <input type=\"text\" class=\"cc-input__input | cc-hero-carousel-configurator__cta-target-link\" v-model=\"configuration.items[$index].href\" id=\"hero-ctatarget-output-{{ $index }}\">\n                                <span class=\"cc-input__addon | cc-hero-carousel-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal( $index )\">\n                                    <svg class=\"cc-input__addon-icon\">\n                                        <use xlink:href=\"#icon_link\"></use>\n                                    </svg>\n                                </span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-hero-carousel-configurator__modal\" v-el:error-modal></div>\n    </div>",
-    props: {
-        /*
-         * Single's component configuration
-         */
-        configuration: {
-            type: Object,
-            default: function () {
-                return {
-                    mobileDisplayVariant: {},
-                    items: [JSON.parse(JSON.stringify(heroItemDataPattern))],
-                };
-            },
-        },
-        /* get assets for displaying component images */
-        assetsSrc: {
-            type: String,
-            default: '',
-        },
-        /* Obtain base-url for the image uploader */
-        uploaderBaseUrl: {
-            type: String,
-            default: '',
-        },
-        /* Obtain image endpoint to place permanent url for uploaded images */
-        imageEndpoint: {
-            type: String,
-            default: '',
-        },
-        /* Obtain admin url */
-        adminPrefix: {
-            type: String,
-            default: 'admin',
-        },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-    },
-    computed: {
-        imageTeasersContentPositions: function () {
-            var data = this.ccConfig.image_teasers_content_positions;
-            return Object.keys(data).map(function (key) { return data[key]; });
-        },
-    },
-    data: function () {
-        return {
-            imageUploadedText: $t('Change'),
-            noImageUploadedText: $t('Upload'),
-            scenarioOptions: {
-                // Mobile layout scenario elements.
-                mobileDisplayVariant: {
-                    list: {
-                        name: 'Large teaser',
-                        iconId: 'ml_col',
-                    },
-                    slider: {
-                        name: 'Slider',
-                        iconId: 'ml_slider',
-                    },
-                    hidden: {
-                        name: 'Hidden',
-                        iconId: 'ml_hidden',
-                    },
-                },
-            },
-        };
-    },
-    events: {
-        /**
-         * Listen on save event from Content Configurator component.
-         */
-        'component-configurator__save': function () {
-            //this.cleanupConfiguration();
-            this.onSave();
-        },
-    },
-    methods: {
-        setOption: function (optionCategory, optionId) {
-            this.configuration[optionCategory] = this.scenarioOptions[optionCategory][optionId];
-            this.configuration[optionCategory].id = optionId;
-        },
-        /* Opens M2's built-in image manager modal
-         * Manages all images: image upload from hdd, select image that was already uploaded to server
-         * @param index {number} - index of image of hero item
-         */
-        getImageUploader: function (index) {
-            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/hero-img-" + index + "/", 'auto', 'auto', $t('Insert File...'), {
-                closed: true,
-            });
-        },
-        /* Listener for image uploader
-         * Since Magento does not provide any callback after image has been chosen
-         * we have to watch for target where decoded url is placed
-         */
-        imageUploadListener: function () {
-            var component = this;
-            var isAlreadyCalled = false;
-            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.cc-hero-carousel-configurator__image-url', function (event) {
-                if (!isAlreadyCalled) {
-                    isAlreadyCalled = true;
-                    component.onImageUploaded(event.target);
-                    setTimeout(function () {
-                        isAlreadyCalled = false;
-                    }, 100);
-                }
-            });
-        },
-        /* Action after image was uploaded
-         * URL is encoded, so strip it and decode Base64 to get {{ media url="..."}} format
-         * which will go to the items.image and will be used to display image on front end
-         * @param input { object } - input with raw image path which is used in admin panel
-         */
-        onImageUploaded: function (input) {
-            var _this = this;
-            var itemIndex = input.id.substr(input.id.lastIndexOf('-') + 1);
-            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
-            var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
-            this.configuration.items[itemIndex].decodedImage = Base64
-                ? Base64.decode(encodedImage)
-                : window.atob(encodedImage);
-            var img = new Image();
-            img.onload = function () {
-                var ar = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
-                _this.configuration.items[itemIndex].image = img.getAttribute('src');
-                _this.configuration.items[itemIndex].sizeInfo = img.naturalWidth + "x" + img.naturalHeight + "px (" + ar + ")";
-                _this.configuration.items[itemIndex].aspectRatio = ar;
-                setTimeout(function () {
-                    _this.checkImageSizes();
-                    _this.onChange();
-                }, 400);
-            };
-            img.src = imgEndpoint;
-        },
-        /* Opens modal with M2 built-in widget chooser
-         * @param index {number} - index of teaser item to know where to place output of widget chooser
-         */
-        openCtaTargetModal: function (index) {
-            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/hero-ctatarget-output-" + index + "/");
-            this.wWidgetListener(index);
-        },
-        /* Sets listener for widget chooser
-         * It triggers component.onChange to update component's configuration
-         * after value of item.href is changed
-         */
-        widgetSetListener: function () {
-            var _this = this;
-            $('.cc-hero-carousel-configurator__cta-target-link').on('change', function () {
-                _this.onChange();
-            });
-        },
-        /*
-         * Check if widget chooser is loaded. If not, wait for it, if yes:
-         * Override default onClick for "Insert Widget" button in widget's modal window
-         * to clear input's value before inserting new one
-         * @param {number} index Hero item's index in array.
-         */
-        wWidgetListener: function (itemIndex) {
-            var _this = this;
-            if (typeof wWidget !== 'undefined' &&
-                widgetTools.dialogWindow[0].innerHTML !== '') {
-                var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
-                button.onclick = null;
-                button.addEventListener('click', function () {
-                    _this.configuration.items[itemIndex].href = '';
-                    wWidget.insertWidget();
-                });
-            }
-            else {
-                window.setTimeout(function () {
-                    _this.wWidgetListener(itemIndex);
-                }, 300);
-            }
-        },
-        /**
-         * Creates new hero item and adds it to a specified index.
-         * @param {number} index New component's index in components array.
-         */
-        createNewHeroItem: function (index) {
-            this.configuration.items.splice(index, 0, JSON.parse(JSON.stringify(heroItemDataPattern)));
-            this.onChange();
-        },
-        /**
-         * Moves hero item under given index up by swaping it with previous element.
-         * @param {number} index Hero item's index in array.
-         */
-        moveHeroItemUp: function (index) {
-            var _this = this;
-            if (index > 0) {
-                var $thisItem_1 = $("#m2c-hero-carousel-item-" + index);
-                var $prevItem_1 = $("#m2c-hero-carousel-item-" + (index - 1));
-                $thisItem_1
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY( " + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
-                $prevItem_1
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
-                setTimeout(function () {
-                    _this.configuration.items.splice(index - 1, 0, _this.configuration.items.splice(index, 1)[0]);
-                    _this.onChange();
-                    $thisItem_1
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                    $prevItem_1
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                }, 400);
-            }
-        },
-        /**
-         * Moves hero item under given index down by swaping it with next element.
-         * @param {number} index Hero item's index in array.
-         */
-        moveHeroItemDown: function (index) {
-            var _this = this;
-            if (index < this.configuration.items.length - 1) {
-                var $thisItem_2 = $("#cc-hero-carousel-item-" + index);
-                var $nextItem_1 = $("#cc-hero-carousel-item-" + (index + 1));
-                $thisItem_2
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
-                $nextItem_1
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
-                setTimeout(function () {
-                    _this.configuration.items.splice(index + 1, 0, _this.configuration.items.splice(index, 1)[0]);
-                    _this.onChange();
-                    $thisItem_2
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                    $nextItem_1
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                }, 400);
-            }
-        },
-        /**
-         * Tells if item with given index is the first hero item.
-         * @param  {number}  index Index of the hero item.
-         * @return {boolean}       If hero item is first in array.
-         */
-        isFirstHeroItem: function (index) {
-            return index === 0;
-        },
-        /**
-         * Tells if hero item with given index is the last hero item.
-         * @param  {number}  index Index of the hero item.
-         * @return {boolean}       If hero item is last in array.
-         */
-        isLastHeroItem: function (index) {
-            return index === this.configuration.items.length - 1;
-        },
-        /* Removes hero item after Delete button is clicked
-         * and triggers hero item's onChange to update it's configuration
-         * @param index {number} - index of hero item to remove
-         */
-        deleteHeroItem: function (index) {
-            var component = this;
-            confirm({
-                content: $t('Are you sure you want to delete this item?'),
-                actions: {
-                    confirm: function () {
-                        component.configuration.items.splice(index, 1);
-                        component.onChange();
-                    },
-                },
-            });
-        },
-        /* Cleans configuration for M2C content constructor after Saving component
-         * All empty hero items has to be removed to not get into configuration object
-         */
-        cleanupConfiguration: function () {
-            var filteredArray = this.configuration.items.filter(function (item) { return item.image !== ''; });
-            this.configuration.items = filteredArray;
-            this.onChange();
-        },
-        /* Checks if images are all the same size
-         * If not - displays error by firing up this.displayImageSizeMismatchError()
-         * @param images {array} - array of all uploaded images
-         */
-        checkImageSizes: function () {
-            var itemsToCheck = JSON.parse(JSON.stringify(this.configuration.items)).filter(function (item) {
-                return Boolean(item.aspectRatio); // Filter out items without aspect ratio set yet.
-            });
-            for (var i = 0; i < itemsToCheck.length; i++) {
-                if (itemsToCheck[i].aspectRatio !== itemsToCheck[0].aspectRatio) {
-                    alert({
-                        title: $t('Warning'),
-                        content: $t('Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'),
-                    });
-                    return false;
-                }
-            }
-            return true;
-        },
-        /* Returns greatest common divisor for 2 numbers
-         * @param a {number}
-         * @param b {number}
-         * @return {number} - greatest common divisor
-         */
-        getGreatestCommonDivisor: function (a, b) {
-            if (!b) {
-                return a;
-            }
-            return this.getGreatestCommonDivisor(b, a % b);
-        },
-        /* Returns Aspect ratio for 2 numbers based on GDC algoritm (greatest common divisor)
-         * @param a {number}
-         * @param b {number}
-         * @return {number} - greatest common divisor
-         */
-        getAspectRatio: function (a, b) {
-            var c = this.getGreatestCommonDivisor(a, b);
-            return a / c + ":" + b / c;
-        },
-    },
-    ready: function () {
-        this.imageUploadListener();
-        this.widgetSetListener();
-        if (!this.configuration.mobileDisplayVariant.id) {
-            $('.cc-hero-carousel-configurator__option:first-child').click();
-        }
-    },
-};
-
 var customElementTextInput = {
     template: "<div class=\"cc-input cc-input--type-text\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <input type=\"text\" class=\"cc-input__input\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
     props: {
@@ -3641,6 +3283,358 @@ var teaserConfigurator = {
             this.configuration.teaserType = this.teaserType;
         }
         $("#cc-image-teaser-item-" + this.teaserIndex + " .cc-teaser-configurator").toggleClass('cc-teaser-configurator--text-only', this.configuration.teaserType === 'text-only');
+    },
+};
+
+/**
+ * Hero carousel configurator component.
+ * This component is responsible for displaying image teaser's configuration form
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var heroCarouselConfigurator = {
+    mixins: [componentConfigurator],
+    /**
+     * Get dependencies
+     */
+    components: {
+        'action-button': actionButton,
+        'component-adder': componentAdder,
+        'component-actions': componentActions,
+        'teaser-configurator': teaserConfigurator
+    },
+    template: "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n        <section class=\"cc-hero-carousel-configurator__section\">\n            <h3 class=\"cc-hero-carousel-configurator__subtitle\">Mobile Devices Scenario</h3>\n            <div class=\"cc-hero-carousel-configurator__scenario-options\">\n                <ul class=\"cc-hero-carousel-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-hero-carousel-configurator__option--selected': configuration.mobileDisplayVariant.id == optionId,\n                        }\"\n                        class=\"cc-hero-carousel-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileDisplayVariant\"\n                        @click=\"setOption('mobileDisplayVariant', optionId)\">\n                        <div class=\"cc-hero-carousel-configurator__option-wrapper\">\n                            <svg class=\"cc-hero-carousel-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-hero-carousel-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <h3 class=\"cc-hero-carousel-configurator__title\">Content</h3>\n\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.items\">\n            <div class=\"cc-hero-carousel-configurator__item\" id=\"cc-hero-carousel-item-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n                \n                <teaser-configurator \n                    :class=\"cc-teaser-configurator--image-teaser\"\n                    :teaser-index=\"$index\" \n                    :configuration=\"items[$index]\" \n                    :parent-configuration=\"configuration\" \n                    :uploader-base-url=\"uploaderBaseUrl\" \n                    :image-endpoint=\"imageEndpoint\" \n                    :admin-prefix=\"adminPrefix\" \n                    :cc-config=\"ccConfig\" \n                    :caller-component-type=\"hero-carousel\"  \n                ></teaser-configurator>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-hero-carousel-configurator__modal\" v-el:error-modal></div>\n    </div>",
+    props: {
+        /*
+         * Single's component configuration
+         */
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    mobileDisplayVariant: {},
+                    items: [JSON.parse(JSON.stringify(teaserPrototype))],
+                    ignoredItems: [],
+                    scenario: {
+                        teaserWidth: {},
+                        desktopLayout: {},
+                        contentPlacement: {},
+                        mobileLayout: {},
+                    }
+                };
+            },
+        },
+        /* get assets for displaying component images */
+        assetsSrc: {
+            type: String,
+            default: '',
+        },
+        /* Obtain base-url for the image uploader */
+        uploaderBaseUrl: {
+            type: String,
+            default: '',
+        },
+        /* Obtain image endpoint to place permanent url for uploaded images */
+        imageEndpoint: {
+            type: String,
+            default: '',
+        },
+        /* Obtain admin url */
+        adminPrefix: {
+            type: String,
+            default: 'admin',
+        },
+        /* Obtain content-constructor's config file */
+        ccConfig: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+    },
+    computed: {
+        imageTeasersContentPositions: function () {
+            var data = this.ccConfig.image_teasers_content_positions;
+            return Object.keys(data).map(function (key) { return data[key]; });
+        },
+    },
+    data: function () {
+        return {
+            imageUploadedText: $t('Change'),
+            noImageUploadedText: $t('Upload'),
+            scenarioOptions: {
+                // Mobile layout scenario elements.
+                mobileDisplayVariant: {
+                    list: {
+                        name: 'Large teaser',
+                        iconId: 'ml_col',
+                    },
+                    slider: {
+                        name: 'Slider',
+                        iconId: 'ml_slider',
+                    },
+                    hidden: {
+                        name: 'Hidden',
+                        iconId: 'ml_hidden',
+                    },
+                },
+            },
+        };
+    },
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         */
+        'component-configurator__save': function () {
+            //this.cleanupConfiguration();
+            this.onSave();
+        },
+    },
+    methods: {
+        setOption: function (optionCategory, optionId) {
+            this.configuration[optionCategory] = this.scenarioOptions[optionCategory][optionId];
+            this.configuration[optionCategory].id = optionId;
+        },
+        /* Opens M2's built-in image manager modal
+         * Manages all images: image upload from hdd, select image that was already uploaded to server
+         * @param index {number} - index of image of hero item
+         */
+        getImageUploader: function (index) {
+            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/hero-img-" + index + "/", 'auto', 'auto', $t('Insert File...'), {
+                closed: true,
+            });
+        },
+        /* Listener for image uploader
+         * Since Magento does not provide any callback after image has been chosen
+         * we have to watch for target where decoded url is placed
+         */
+        imageUploadListener: function () {
+            var component = this;
+            var isAlreadyCalled = false;
+            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
+            $(document).on('change', '.cc-hero-carousel-configurator__image-url', function (event) {
+                if (!isAlreadyCalled) {
+                    isAlreadyCalled = true;
+                    component.onImageUploaded(event.target);
+                    setTimeout(function () {
+                        isAlreadyCalled = false;
+                    }, 100);
+                }
+            });
+        },
+        /* Action after image was uploaded
+         * URL is encoded, so strip it and decode Base64 to get {{ media url="..."}} format
+         * which will go to the items.image and will be used to display image on front end
+         * @param input { object } - input with raw image path which is used in admin panel
+         */
+        onImageUploaded: function (input) {
+            var _this = this;
+            var itemIndex = input.id.substr(input.id.lastIndexOf('-') + 1);
+            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
+            var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
+            this.configuration.items[itemIndex].decodedImage = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
+            var img = new Image();
+            img.onload = function () {
+                var ar = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
+                _this.configuration.items[itemIndex].image = img.getAttribute('src');
+                _this.configuration.items[itemIndex].sizeInfo = img.naturalWidth + "x" + img.naturalHeight + "px (" + ar + ")";
+                _this.configuration.items[itemIndex].aspectRatio = ar;
+                setTimeout(function () {
+                    _this.checkImageSizes();
+                    _this.onChange();
+                }, 400);
+            };
+            img.src = imgEndpoint;
+        },
+        /* Opens modal with M2 built-in widget chooser
+         * @param index {number} - index of teaser item to know where to place output of widget chooser
+         */
+        openCtaTargetModal: function (index) {
+            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/hero-ctatarget-output-" + index + "/");
+            this.wWidgetListener(index);
+        },
+        /* Sets listener for widget chooser
+         * It triggers component.onChange to update component's configuration
+         * after value of item.href is changed
+         */
+        widgetSetListener: function () {
+            var _this = this;
+            $('.cc-hero-carousel-configurator__cta-target-link').on('change', function () {
+                _this.onChange();
+            });
+        },
+        /*
+         * Check if widget chooser is loaded. If not, wait for it, if yes:
+         * Override default onClick for "Insert Widget" button in widget's modal window
+         * to clear input's value before inserting new one
+         * @param {number} index Hero item's index in array.
+         */
+        wWidgetListener: function (itemIndex) {
+            var _this = this;
+            if (typeof wWidget !== 'undefined' &&
+                widgetTools.dialogWindow[0].innerHTML !== '') {
+                var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
+                button.onclick = null;
+                button.addEventListener('click', function () {
+                    _this.configuration.items[itemIndex].href = '';
+                    wWidget.insertWidget();
+                });
+            }
+            else {
+                window.setTimeout(function () {
+                    _this.wWidgetListener(itemIndex);
+                }, 300);
+            }
+        },
+        /**
+         * Creates new hero item and adds it to a specified index.
+         * @param {number} index New component's index in components array.
+         */
+        createNewHeroItem: function (index) {
+            this.configuration.items.splice(index, 0, JSON.parse(JSON.stringify(teaserPrototype)));
+            this.onChange();
+        },
+        /**
+         * Moves hero item under given index up by swaping it with previous element.
+         * @param {number} index Hero item's index in array.
+         */
+        moveHeroItemUp: function (index) {
+            var _this = this;
+            if (index > 0) {
+                var $thisItem_1 = $("#m2c-hero-carousel-item-" + index);
+                var $prevItem_1 = $("#m2c-hero-carousel-item-" + (index - 1));
+                $thisItem_1
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY( " + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
+                $prevItem_1
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
+                setTimeout(function () {
+                    _this.configuration.items.splice(index - 1, 0, _this.configuration.items.splice(index, 1)[0]);
+                    _this.onChange();
+                    $thisItem_1
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
+                    $prevItem_1
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
+                }, 400);
+            }
+        },
+        /**
+         * Moves hero item under given index down by swaping it with next element.
+         * @param {number} index Hero item's index in array.
+         */
+        moveHeroItemDown: function (index) {
+            var _this = this;
+            if (index < this.configuration.items.length - 1) {
+                var $thisItem_2 = $("#cc-hero-carousel-item-" + index);
+                var $nextItem_1 = $("#cc-hero-carousel-item-" + (index + 1));
+                $thisItem_2
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
+                $nextItem_1
+                    .addClass('cc-hero-carousel-configurator__item--animating')
+                    .css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
+                setTimeout(function () {
+                    _this.configuration.items.splice(index + 1, 0, _this.configuration.items.splice(index, 1)[0]);
+                    _this.onChange();
+                    $thisItem_2
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
+                    $nextItem_1
+                        .removeClass('cc-hero-carousel-configurator__item--animating')
+                        .css('transform', '');
+                }, 400);
+            }
+        },
+        /**
+         * Tells if item with given index is the first hero item.
+         * @param  {number}  index Index of the hero item.
+         * @return {boolean}       If hero item is first in array.
+         */
+        isFirstHeroItem: function (index) {
+            return index === 0;
+        },
+        /**
+         * Tells if hero item with given index is the last hero item.
+         * @param  {number}  index Index of the hero item.
+         * @return {boolean}       If hero item is last in array.
+         */
+        isLastHeroItem: function (index) {
+            return index === this.configuration.items.length - 1;
+        },
+        /* Removes hero item after Delete button is clicked
+         * and triggers hero item's onChange to update it's configuration
+         * @param index {number} - index of hero item to remove
+         */
+        deleteHeroItem: function (index) {
+            var component = this;
+            confirm({
+                content: $t('Are you sure you want to delete this item?'),
+                actions: {
+                    confirm: function () {
+                        component.configuration.items.splice(index, 1);
+                        component.onChange();
+                    },
+                },
+            });
+        },
+        /* Cleans configuration for M2C content constructor after Saving component
+         * All empty hero items has to be removed to not get into configuration object
+         */
+        cleanupConfiguration: function () {
+            var filteredArray = this.configuration.items.filter(function (item) { return item.image !== ''; });
+            this.configuration.items = filteredArray;
+            this.onChange();
+        },
+        /* Checks if images are all the same size
+         * If not - displays error by firing up this.displayImageSizeMismatchError()
+         * @param images {array} - array of all uploaded images
+         */
+        checkImageSizes: function () {
+            var itemsToCheck = JSON.parse(JSON.stringify(this.configuration.items)).filter(function (item) {
+                return Boolean(item.aspectRatio); // Filter out items without aspect ratio set yet.
+            });
+            for (var i = 0; i < itemsToCheck.length; i++) {
+                if (itemsToCheck[i].aspectRatio !== itemsToCheck[0].aspectRatio) {
+                    alert({
+                        title: $t('Warning'),
+                        content: $t('Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'),
+                    });
+                    return false;
+                }
+            }
+            return true;
+        },
+        /* Returns greatest common divisor for 2 numbers
+         * @param a {number}
+         * @param b {number}
+         * @return {number} - greatest common divisor
+         */
+        getGreatestCommonDivisor: function (a, b) {
+            if (!b) {
+                return a;
+            }
+            return this.getGreatestCommonDivisor(b, a % b);
+        },
+        /* Returns Aspect ratio for 2 numbers based on GDC algoritm (greatest common divisor)
+         * @param a {number}
+         * @param b {number}
+         * @return {number} - greatest common divisor
+         */
+        getAspectRatio: function (a, b) {
+            var c = this.getGreatestCommonDivisor(a, b);
+            return a / c + ":" + b / c;
+        },
+    },
+    ready: function () {
+        this.imageUploadListener();
+        this.widgetSetListener();
+        if (!this.configuration.mobileDisplayVariant.id) {
+            $('.cc-hero-carousel-configurator__option:first-child').click();
+        }
     },
 };
 
