@@ -2,23 +2,6 @@ import $ from 'jquery';
 import $t from 'mage/translate';
 
 /**
- * Single component information interface.
- */
-interface IComponentInformation {
-    items: [
-        {
-            image: string,
-            headline: string,
-            subheadline: string,
-            paragraph: string,
-            ctaLabel: string,
-            ctaTarget: string,
-            displayVariant: string
-        },
-    ];
-};
-
-/**
  * Image teaser preview component.
  * This component is responsible for displaying preview of image teaser component in Layout Builder (admin panel)
  * @type {vuejs.ComponentOption} Vue component object.
@@ -32,8 +15,8 @@ const heroCarouselPreview: vuejs.ComponentOption = {
     <div class="cc-hero-carousel-preview" v-show="!isLoading">
         <div v-bind:class="sceneClass" v-el:scene>
             <div class="cc-hero-carousel-preview__slide" v-if="configuration.items.length > 1">
-                <img v-if="configuration.items[configuration.items.length - 1].image" :src="configuration.items[configuration.items.length - 1].image" class="cc-hero-carousel-preview__image">
-                <div class="cc-hero-carousel-preview__slide-placeholder-wrapper" v-show="!configuration.items[configuration.items.length - 1].image">
+                <img v-if="configuration.items[configuration.items.length - 1].image.raw" :src="configuration.items[configuration.items.length - 1].image.raw" class="cc-hero-carousel-preview__image">
+                <div class="cc-hero-carousel-preview__slide-placeholder-wrapper" v-show="!configuration.items[configuration.items.length - 1].image.raw">
                     <svg class="cc-hero-carousel-preview__slide-placeholder">
                         <use xlink:href="#icon_image-placeholder"></use>
                     </svg>
@@ -42,8 +25,8 @@ const heroCarouselPreview: vuejs.ComponentOption = {
 
             <template v-for="(index, item) in configuration.items">
                 <div class="cc-hero-carousel-preview__slide" v-if="index < 2">
-                    <img v-if="configuration.items[$index].image" :src="configuration.items[$index].image" class="cc-hero-carousel-preview__image">
-                    <div class="cc-hero-carousel-preview__slide-placeholder-wrapper" v-show="!configuration.items[$index].image">
+                    <img v-if="configuration.items[$index].image.raw" :src="configuration.items[$index].image.raw" class="cc-hero-carousel-preview__image">
+                    <div class="cc-hero-carousel-preview__slide-placeholder-wrapper" v-show="!configuration.items[$index].image.raw">
                         <svg class="cc-hero-carousel-preview__slide-placeholder">
                             <use xlink:href="#icon_image-placeholder"></use>
                         </svg>
@@ -51,8 +34,8 @@ const heroCarouselPreview: vuejs.ComponentOption = {
                     <div class="cc-hero-carousel-preview__slide-content" v-if="index == 0 || configuration.items.length == 1">
                         <div class="cc-hero-carousel-preview__thumbs">
                             <template v-for="(idx, slide) in configuration.items">
-                                <img v-if="configuration.items[idx].image" :src="configuration.items[idx].image" class="cc-hero-carousel-preview__thumb">
-                                <div class="cc-hero-carousel-preview__thumb-placeholder-wrapper" v-show="!configuration.items[idx].image">
+                                <img v-if="configuration.items[idx].image.raw" :src="configuration.items[idx].image.raw" class="cc-hero-carousel-preview__thumb">
+                                <div class="cc-hero-carousel-preview__thumb-placeholder-wrapper" v-show="!configuration.items[idx].image.raw">
                                     <svg class="cc-hero-carousel-preview__thumb-placeholder">
                                         <use xlink:href="#icon_image-placeholder"></use>
                                     </svg>
@@ -60,11 +43,10 @@ const heroCarouselPreview: vuejs.ComponentOption = {
                             </template>
                         </div>
                         <div class="cc-hero-carousel-preview__slide-content-info">
-                            <h2 class="cc-hero-carousel-preview__headline" v-if="configuration.items[$index].headline">{{ configuration.items[$index].headline }}</h2>
-                            <h3 class="cc-hero-carousel-preview__subheadline" v-if="configuration.items[$index].subheadline">{{ configuration.items[$index].subheadline }}</h3>
-                            <p class="cc-hero-carousel-preview__paragraph" v-if="configuration.items[$index].paragraph">{{ configuration.items[$index].paragraph }}</p>
-                            <template v-if="configuration.items[$index].href">
-                                <button type="button" class="cc-hero-carousel-preview__button" v-if="configuration.items[$index].ctaLabel">{{ configuration.items[$index].ctaLabel }}</button>
+                            <h2 class="cc-hero-carousel-preview__headline" v-if="configuration.items[$index].slogan">{{ configuration.items[$index].slogan }}</h2>
+                            <p class="cc-hero-carousel-preview__paragraph" v-if="configuration.items[$index].description">{{ configuration.items[$index].description }}</p>
+                            <template v-if="configuration.items[$index].cta.href">
+                                <button type="button" class="cc-hero-carousel-preview__button" v-if="configuration.items[$index].cta.label">{{ configuration.items[$index].cta.label }}</button>
                             </template>
                         </div>
                     </div>
@@ -127,8 +109,8 @@ const heroCarouselPreview: vuejs.ComponentOption = {
                                 .css('min-height', $(_this.$els.scene).outerHeight());
                         }, 150);
                     }
-                }).filter(function(): boolean { 
-                    return this.complete; 
+                }).filter(function(): boolean {
+                    return this.complete;
                 }).load();
             } else {
                 _this.isLoading = false;

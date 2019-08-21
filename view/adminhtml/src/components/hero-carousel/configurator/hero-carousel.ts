@@ -9,20 +9,10 @@ import componentAdder from '../../../utils/component-adder/component-adder';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
-// Pattern for teaser Item
-const heroItemDataPattern: any = {
-    image: '',
-    decodedImage: '',
-    displayVariant: 'variant-1',
-    colorScheme: 'light',
-    headline: '',
-    subheadline: '',
-    paragraph: '',
-    ctaLabel: $t('Check offer'),
-    href: '',
-    sizeInfo: '',
-    aspectRatio: '',
-};
+import {
+    default as teaserConfigurator,
+    teaserPrototype as teaserItemPrototype,
+} from '../../_teaser/configurator/teaser';
 
 /**
  * Hero carousel configurator component.
@@ -38,6 +28,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
         'action-button': actionButton,
         'component-adder': componentAdder,
         'component-actions': componentActions,
+        'teaser-configurator': teaserConfigurator
     },
     template: `<div class="cc-hero-carousel-configurator | {{ class }}">
         <section class="cc-hero-carousel-configurator__section">
@@ -83,111 +74,18 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                         </svg>
                     </button>
                 </component-adder>
-
-                <div class="cc-hero-carousel-configurator__item-content">
-                    <div v-bind:class="[ 'cc-hero-carousel-configurator__item-col-left', configuration.items[$index].image ? 'cc-hero-carousel-configurator__item-col-left--look-image-uploaded' : '' ]">
-                        <div class="cc-hero-carousel-configurator__item-image-wrapper">
-                            <img :src="configuration.items[$index].image" class="cc-hero-carousel-configurator__item-image" v-show="configuration.items[$index].image">
-                            <input type="hidden" v-model="configuration.items[$index].image">
-                            <input type="hidden" class="cc-hero-carousel-configurator__image-url" id="hero-img-{{$index}}">
-                            <svg class="cc-hero-carousel-configurator__item-image-placeholder" v-show="!configuration.items[$index].image">
-                                <use xlink:href="#icon_image-placeholder"></use>
-                            </svg>
-
-                            <div class="cc-hero-carousel-configurator__item-actions">
-                                <component-actions>
-                                    <template slot="cc-component-actions__buttons">
-                                        <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | cc-hero-carousel-configurator__item-action-button" @click="moveHeroItemUp( $index )" :class="[ isFirstHeroItem( $index ) ? 'cc-action-button--look_disabled' : '' ]" :disabled="isFirstHeroItem( $index )">
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_arrow-up"></use>
-                                            </svg>
-                                        </button>
-                                        <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | cc-hero-carousel-configurator__item-action-button" @click="moveHeroItemDown( $index )" :class="[ isLastHeroItem( $index ) ? 'cc-action-button--look_disabled' : '' ]" :disabled="isLastHeroItem( $index )">
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_arrow-down"></use>
-                                            </svg>
-                                        </button>
-                                        <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon | cc-component-actions__button cc-component-actions__button--upload-image | cc-hero-carousel-configurator__item-action-button" @click="getImageUploader( $index )">
-                                                <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                    <use xlink:href="#icon_upload-image"></use>
-                                                </svg>
-                                                {{ configuration.items[$index].image ? imageUploadedText : noImageUploadedText }}
-                                        </button>
-                                        <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | cc-hero-carousel-configurator__item-action-button" @click="deleteHeroItem( $index )">
-                                            <svg class="cc-action-button__icon">
-                                                <use xlink:href="#icon_trash-can"></use>
-                                            </svg>
-                                        </button>
-                                    </template>
-                                </component-actions>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cc-hero-carousel-configurator__item-col-right">
-                        <div class="cc-input cc-input--group">
-                            <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                                <label for="cfg-hc-item{{ $index }}-variant" class="cc-input__label">${$t(
-                                    'Display variant'
-                                )}:</label>
-                                <select name="cfg-hc-item{{ $index }}-variant" class="cc-input__select | cc-hero-carousel-configurator__select" id="cfg-hc-item{{ $index }}-variant" v-model="configuration.items[$index].displayVariant"">
-                                    <template v-for="(idx, scenario) in imageTeasersContentPositions">
-                                        <option value="variant-{{ idx + 1 }}">${$t(
-                                            '{{ scenario }}'
-                                        )}</option>
-                                    </template>
-                                </select>
-                            </div>
-                            <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                                <label for="cfg-hc-item{{ $index }}-color-scheme" class="cc-input__label">${$t(
-                                    'Text color scheme'
-                                )}:</label>
-                                <select name="cfg-hc-item{{ $index }}-color-scheme" class="cc-input__select | cc-hero-carousel-configurator__select" id="cfg-hc-item{{ $index }}-color-scheme" v-model="configuration.items[$index].colorScheme">
-                                    <option value="light">${$t(
-                                        'Light'
-                                    )}</option>
-                                    <option value="dark">${$t('Dark')}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                            <label for="cfg-hc-item{{ $index }}-headline" class="cc-input__label">${$t(
-                                'Headline'
-                            )}:</label>
-                            <input type="text" v-model="configuration.items[$index].headline" id="cfg-hc-item{{ $index }}-headline" class="cc-input__input">
-                        </div>
-                        <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                            <label for="cfg-hc-item{{ $index }}-subheadline" class="cc-input__label">${$t(
-                                'Subheadline'
-                            )}:</label>
-                            <input type="text" v-model="configuration.items[$index].subheadline" id="cfg-hc-item{{ $index }}-subheadline" class="cc-input__input">
-                        </div>
-                        <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                            <label for="cfg-hc-item{{ $index }}-paragraph" class="cc-input__label">${$t(
-                                'Paragraph'
-                            )}:</label>
-                            <textarea type="text" v-model="configuration.items[$index].paragraph" id="cfg-hc-item{{ $index }}-paragraph" class="cc-input__textarea"></textarea>
-                        </div>
-                        <div class="cc-input cc-input--group">
-                            <div class="cc-input | cc-hero-carousel-configurator__item-form-element">
-                                <label for="cfg-hc-item{{ $index }}-cta-label" class="cc-input__label">${$t(
-                                    'CTA label'
-                                )}:</label>
-                                <input type="text" v-model="configuration.items[$index].ctaLabel" id="cfg-hc-item{{ $index }}-cta-label" class="cc-input__input">
-                            </div>
-                            <div class="cc-input cc-input--type-addon | cc-hero-carousel-configurator__item-form-element">
-                                <label for="hero-ctatarget-output-{{ $index }}" class="cc-input__label">${$t(
-                                    'CTA target link'
-                                )}:</label>
-                                <input type="text" class="cc-input__input | cc-hero-carousel-configurator__cta-target-link" v-model="configuration.items[$index].href" id="hero-ctatarget-output-{{ $index }}">
-                                <span class="cc-input__addon | cc-hero-carousel-configurator__widget-chooser-trigger" @click="openCtaTargetModal( $index )">
-                                    <svg class="cc-input__addon-icon">
-                                        <use xlink:href="#icon_link"></use>
-                                    </svg>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
+                <teaser-configurator 
+                    :class="cc-teaser-configurator--image-teaser"
+                    :teaser-index="$index" 
+                    :configuration="items[$index]" 
+                    :parent-configuration="configuration" 
+                    :uploader-base-url="uploaderBaseUrl" 
+                    :image-endpoint="imageEndpoint" 
+                    :admin-prefix="adminPrefix" 
+                    :cc-config="ccConfig" 
+                    :caller-component-type="hero-carousel"  
+                ></teaser-configurator>
 
                 <component-adder class="cc-component-adder cc-component-adder--last">
                     <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button" @click="createNewHeroItem( $index + 1 )">
@@ -210,7 +108,14 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             default(): any {
                 return {
                     mobileDisplayVariant: {},
-                    items: [JSON.parse(JSON.stringify(heroItemDataPattern))],
+                    items: [JSON.parse(JSON.stringify(teaserItemPrototype))],
+                    ignoredItems: [],
+                    scenario: {
+                        teaserWidth: {},
+                        desktopLayout: {},
+                        contentPlacement: {},
+                        mobileLayout: {},
+                    }
                 };
             },
         },
@@ -429,7 +334,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             this.configuration.items.splice(
                 index,
                 0,
-                JSON.parse(JSON.stringify(heroItemDataPattern))
+                JSON.parse(JSON.stringify(teaserItemPrototype))
             );
             this.onChange();
         },
