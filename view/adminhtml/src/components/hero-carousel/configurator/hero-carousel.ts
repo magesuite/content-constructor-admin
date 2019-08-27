@@ -167,11 +167,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                     slider: {
                         name: 'Slider',
                         iconId: 'ml_slider',
-                    },
-                    hidden: {
-                        name: 'Hidden',
-                        iconId: 'ml_hidden',
-                    },
+                    }
                 },
             },
         };
