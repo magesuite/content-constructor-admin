@@ -3371,11 +3371,7 @@ var heroCarouselConfigurator = {
                     slider: {
                         name: 'Slider',
                         iconId: 'ml_slider',
-                    },
-                    hidden: {
-                        name: 'Hidden',
-                        iconId: 'ml_hidden',
-                    },
+                    }
                 },
             },
         };
