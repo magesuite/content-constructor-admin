@@ -12,6 +12,7 @@ const heroCarouselPreview: vuejs.ComponentOption = {
             <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
         </div>
     </div>
+    <div v-if="configuration.items[0].headline" style="padding-bottom: 1rem">This component has been updated, please configure it.</div>
     <div class="cc-hero-carousel-preview" v-show="!isLoading">
         <div v-bind:class="sceneClass" v-el:scene>
             <div class="cc-hero-carousel-preview__slide" v-if="configuration.items.length > 1">

@@ -379,7 +379,7 @@ var headlinePreview = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var heroCarouselPreview = {
-    template: "<div data-role=\"spinner\" class=\"cc-component-placeholder__loading\" v-show=\"isLoading\">\n        <div class=\"spinner\">\n            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>\n        </div>\n    </div>\n    <div class=\"cc-hero-carousel-preview\" v-show=\"!isLoading\">\n        <div v-bind:class=\"sceneClass\" v-el:scene>\n            <div class=\"cc-hero-carousel-preview__slide\" v-if=\"configuration.items.length > 1\">\n                <img v-if=\"configuration.items[configuration.items.length - 1].image.raw\" :src=\"configuration.items[configuration.items.length - 1].image.raw\" class=\"cc-hero-carousel-preview__image\">\n                <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[configuration.items.length - 1].image.raw\">\n                    <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <template v-for=\"(index, item) in configuration.items\">\n                <div class=\"cc-hero-carousel-preview__slide\" v-if=\"index < 2\">\n                    <img v-if=\"configuration.items[$index].image.raw\" :src=\"configuration.items[$index].image.raw\" class=\"cc-hero-carousel-preview__image\">\n                    <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[$index].image.raw\">\n                        <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                            <use xlink:href=\"#icon_image-placeholder\"></use>\n                        </svg>\n                    </div>\n                    <div class=\"cc-hero-carousel-preview__slide-content\" v-if=\"index == 0 || configuration.items.length == 1\">\n                        <div class=\"cc-hero-carousel-preview__thumbs\">\n                            <template v-for=\"(idx, slide) in configuration.items\">\n                                <img v-if=\"configuration.items[idx].image.raw\" :src=\"configuration.items[idx].image.raw\" class=\"cc-hero-carousel-preview__thumb\">\n                                <div class=\"cc-hero-carousel-preview__thumb-placeholder-wrapper\" v-show=\"!configuration.items[idx].image.raw\">\n                                    <svg class=\"cc-hero-carousel-preview__thumb-placeholder\">\n                                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                                    </svg>\n                                </div>\n                            </template>\n                        </div>\n                        <div class=\"cc-hero-carousel-preview__slide-content-info\">\n                            <h2 class=\"cc-hero-carousel-preview__headline\" v-if=\"configuration.items[$index].slogan\">{{ configuration.items[$index].slogan }}</h2>\n                            <p class=\"cc-hero-carousel-preview__paragraph\" v-if=\"configuration.items[$index].description\">{{ configuration.items[$index].description }}</p>\n                            <template v-if=\"configuration.items[$index].cta.href\">\n                                <button type=\"button\" class=\"cc-hero-carousel-preview__button\" v-if=\"configuration.items[$index].cta.label\">{{ configuration.items[$index].cta.label }}</button>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n            </template>\n        </div>\n    </div>",
+    template: "<div data-role=\"spinner\" class=\"cc-component-placeholder__loading\" v-show=\"isLoading\">\n        <div class=\"spinner\">\n            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>\n        </div>\n    </div>\n    <div v-if=\"configuration.items[0].headline\" style=\"padding-bottom: 1rem\">This component has been updated, please configure it.</div>\n    <div class=\"cc-hero-carousel-preview\" v-show=\"!isLoading\">\n        <div v-bind:class=\"sceneClass\" v-el:scene>\n            <div class=\"cc-hero-carousel-preview__slide\" v-if=\"configuration.items.length > 1\">\n                <img v-if=\"configuration.items[configuration.items.length - 1].image.raw\" :src=\"configuration.items[configuration.items.length - 1].image.raw\" class=\"cc-hero-carousel-preview__image\">\n                <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[configuration.items.length - 1].image.raw\">\n                    <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <template v-for=\"(index, item) in configuration.items\">\n                <div class=\"cc-hero-carousel-preview__slide\" v-if=\"index < 2\">\n                    <img v-if=\"configuration.items[$index].image.raw\" :src=\"configuration.items[$index].image.raw\" class=\"cc-hero-carousel-preview__image\">\n                    <div class=\"cc-hero-carousel-preview__slide-placeholder-wrapper\" v-show=\"!configuration.items[$index].image.raw\">\n                        <svg class=\"cc-hero-carousel-preview__slide-placeholder\">\n                            <use xlink:href=\"#icon_image-placeholder\"></use>\n                        </svg>\n                    </div>\n                    <div class=\"cc-hero-carousel-preview__slide-content\" v-if=\"index == 0 || configuration.items.length == 1\">\n                        <div class=\"cc-hero-carousel-preview__thumbs\">\n                            <template v-for=\"(idx, slide) in configuration.items\">\n                                <img v-if=\"configuration.items[idx].image.raw\" :src=\"configuration.items[idx].image.raw\" class=\"cc-hero-carousel-preview__thumb\">\n                                <div class=\"cc-hero-carousel-preview__thumb-placeholder-wrapper\" v-show=\"!configuration.items[idx].image.raw\">\n                                    <svg class=\"cc-hero-carousel-preview__thumb-placeholder\">\n                                        <use xlink:href=\"#icon_image-placeholder\"></use>\n                                    </svg>\n                                </div>\n                            </template>\n                        </div>\n                        <div class=\"cc-hero-carousel-preview__slide-content-info\">\n                            <h2 class=\"cc-hero-carousel-preview__headline\" v-if=\"configuration.items[$index].slogan\">{{ configuration.items[$index].slogan }}</h2>\n                            <p class=\"cc-hero-carousel-preview__paragraph\" v-if=\"configuration.items[$index].description\">{{ configuration.items[$index].description }}</p>\n                            <template v-if=\"configuration.items[$index].cta.href\">\n                                <button type=\"button\" class=\"cc-hero-carousel-preview__button\" v-if=\"configuration.items[$index].cta.label\">{{ configuration.items[$index].cta.label }}</button>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n            </template>\n        </div>\n    </div>",
     props: {
         configuration: {
             type: Object,
@@ -3624,6 +3624,50 @@ var heroCarouselConfigurator = {
             var c = this.getGreatestCommonDivisor(a, b);
             return a / c + ":" + b / c;
         },
+        /**
+         * If there are some legacy teasers saved, maps their configuration to
+         * Image Teaser 2.0 interface and updates hero configuration
+         */
+        mapLegacyConfiguration: function () {
+            var _this = this;
+            if (this.configuration.items[0].headline) {
+                this.configuration.items.forEach(function (item, index) {
+                    var newItem = JSON.parse(JSON.stringify(teaserPrototype));
+                    newItem.image = {
+                        raw: item.image,
+                        decoded: item.decodedImage,
+                        aspect_ratio: item.aspectRatio,
+                        image: item.image
+                    };
+                    newItem.slogan = item.headline;
+                    newItem.description = item.subheadline + item.paragraph;
+                    newItem.cta = {
+                        label: item.ctaLabel,
+                        href: item.href
+                    };
+                    newItem.content_align = {
+                        x: 1,
+                        y: 2
+                    };
+                    newItem.optimizers.color_scheme = item.colorScheme;
+                    _this.$set("configuration.items[" + index + "]", newItem);
+                });
+                this.configuration.scenario = {
+                    contentPlacement: {
+                        id: 'over'
+                    },
+                    teaserWidth: {
+                        id: 'window-slider'
+                    },
+                    mobileLayout: {
+                        id: 'mobile-slider'
+                    },
+                    desktopLayout: {
+                        id: '1'
+                    }
+                };
+            }
+        }
     },
     ready: function () {
         this.imageUploadListener();
@@ -3632,6 +3676,9 @@ var heroCarouselConfigurator = {
             $('.cc-hero-carousel-configurator__option:first-child').click();
         }
     },
+    created: function () {
+        this.mapLegacyConfiguration();
+    }
 };
 
 /**
