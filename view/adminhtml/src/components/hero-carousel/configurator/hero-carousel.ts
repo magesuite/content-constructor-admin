@@ -517,6 +517,49 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
 
             return `${a / c}:${b / c}`;
         },
+        /**
+         * If there are some legacy teasers saved, maps their configuration to
+         * Image Teaser 2.0 interface and updates hero configuration
+         */
+        mapLegacyConfiguration(): void {
+            if (this.configuration.items[0].headline) {
+                this.configuration.items.forEach((item: any, index: any) => {
+                    let newItem: any = JSON.parse(JSON.stringify(teaserItemPrototype));
+                    newItem.image = {
+                        raw: item.image,
+                        decoded: item.decodedImage,
+                        aspect_ratio: item.aspectRatio,
+                        image: item.image
+                    };
+                    newItem.slogan = item.headline;
+                    newItem.description = item.subheadline + item.paragraph;
+                    newItem.cta = {
+                        label: item.ctaLabel,
+                        href: item.href
+                    };
+                    newItem.content_align = {
+                        x: 1,
+                        y: 2
+                    }
+                    newItem.optimizers.color_scheme = item.colorScheme;
+                    this.$set(`configuration.items[${index}]`, newItem);
+                });
+                this.configuration.scenario = {
+                    contentPlacement: {
+                        id: 'over'
+                    },
+                    teaserWidth: {
+                        id: 'window-slider'
+                    },
+                    mobileLayout: {
+                        id: 'mobile-slider'
+                    },
+                    desktopLayout: {
+                        id: '1'
+                    }
+                };
+            }
+        }
     },
     ready(): void {
         this.imageUploadListener();
@@ -526,6 +569,9 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             $('.cc-hero-carousel-configurator__option:first-child').click();
         }
     },
+    created(): void {
+        this.mapLegacyConfiguration();
+    }
 };
 
 export default heroCarouselConfigurator;

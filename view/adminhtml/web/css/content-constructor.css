@@ -3249,29 +3249,24 @@
       background: #d6d6d6; }
   .cc-hero-carousel-configurator__item {
     position: relative;
-    margin: 3rem 0 0;
+    margin: 0;
     padding: 1.5rem;
     background: #fff;
     border-radius: 2px;
-    -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
-            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
     -webkit-transition: -webkit-box-shadow 0.15s ease-in-out;
     transition: -webkit-box-shadow 0.15s ease-in-out;
     transition: box-shadow 0.15s ease-in-out;
     transition: box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out; }
     .cc-hero-carousel-configurator__item--animating {
       pointer-events: none;
-      -webkit-transition: -webkit-box-shadow 0.15s ease-in-out, -webkit-transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
-      transition: -webkit-box-shadow 0.15s ease-in-out, -webkit-transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
-      transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
-      transition: box-shadow 0.15s ease-in-out, transform 0.4s cubic-bezier(0, 0.7, 0.32, 1), -webkit-box-shadow 0.15s ease-in-out, -webkit-transform 0.4s cubic-bezier(0, 0.7, 0.32, 1); }
-    .cc-hero-carousel-configurator__item:hover {
-      -webkit-box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.22);
-              box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.22); }
-      .cc-hero-carousel-configurator__item:hover .cc-component-adder {
-        opacity: 1;
-        -webkit-transform: translate3d(0, 0, 0);
-                transform: translate3d(0, 0, 0); }
+      -webkit-transition: -webkit-transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+      transition: -webkit-transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+      transition: transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+      transition: transform 0.4s cubic-bezier(0, 0.7, 0.32, 1), -webkit-transform 0.4s cubic-bezier(0, 0.7, 0.32, 1); }
+    .cc-hero-carousel-configurator__item:hover .cc-component-adder {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0);
+              transform: translate3d(0, 0, 0); }
     .cc-hero-carousel-configurator__item-action-button {
       font-size: 1.45rem; }
     .cc-hero-carousel-configurator__item-content {
@@ -3358,6 +3353,8 @@
               transform: translate3d(0, 0, 0); }
   .cc-hero-carousel-configurator__select {
     width: 100%; }
+  .cc-hero-carousel-configurator .cc-teaser-configurator {
+    margin-top: 0; }
 
 .cc-image-teaser-legacy-configurator__teaser {
   display: -webkit-box;
