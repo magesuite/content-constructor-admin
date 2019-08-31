@@ -150,10 +150,12 @@
       background-size: 60%;
       -webkit-transition: opacity 0.1s linear;
       transition: opacity 0.1s linear; }
-    .cc-input__checkbox-label:hover:before, .cc-input__checkbox-label--checked:before {
+    .cc-input__checkbox-label:hover:not(.cc-input__checkbox-label--disabled):before, .cc-input__checkbox-label--checked:not(.cc-input__checkbox-label--disabled):before {
       border-color: #007bdb; }
     .cc-input__checkbox-label--checked:after {
       opacity: 1; }
+    .cc-input__checkbox-label--disabled {
+      color: #ccc; }
   .cc-input__checkbox {
     opacity: 0; }
   .cc-input__addon-wrapper {
@@ -1933,11 +1935,22 @@
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   min-height: 12rem; }
+  .cc-image-teaser-preview--mosaic .cc-image-teaser-preview__scene {
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap; }
+  .cc-image-teaser-preview__scene--asymmetric-1 .cc-image-teaser-preview__item:first-child {
+    width: calc((100% / 3) * 2 - 1.3rem); }
+  .cc-image-teaser-preview__scene--asymmetric-1 .cc-image-teaser-preview__item:last-child {
+    width: calc(100% / 3 - 1.3rem); }
+  .cc-image-teaser-preview__scene--asymmetric-2 .cc-image-teaser-preview__item:first-child {
+    width: calc(100% / 3 - 1.3rem); }
+  .cc-image-teaser-preview__scene--asymmetric-2 .cc-image-teaser-preview__item:last-child {
+    width: calc((100% / 3) * 2 - 1.3rem); }
 
 .cc-image-teaser-preview__item {
   width: calc(100% - 0.65rem);
   position: relative;
-  margin: 0 0.65rem 1.3rem; }
+  margin: 0 0.65rem; }
   .cc-image-teaser-preview__scene--2-in-row .cc-image-teaser-preview__item {
     width: calc( 50% - 1.3rem); }
   .cc-image-teaser-preview__scene--3-in-row .cc-image-teaser-preview__item {
@@ -3651,6 +3664,31 @@
     margin: 0;
     padding: 0;
     border: 0; }
+
+.cc-image-teaser-configurator__section-error {
+  margin: 0 0 1.3em;
+  border: 1px dashed #ff0000;
+  background: #ffebeb;
+  padding: 0.75em 1.2em;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  line-height: 1; }
+  .cc-image-teaser-configurator__section-error:before {
+    content: '!';
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-right: 0.65em;
+    border-radius: 0.8rem;
+    line-height: 1.36;
+    background: #ff0000;
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: bold; }
 
 .cc-image-teaser-configurator__item {
   position: relative; }

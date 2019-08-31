@@ -138,6 +138,11 @@
                         <item name="name" xsi:type="string">Instagram Feed</item>
                         <item name="description" xsi:type="string">This component allows you to display instagram images as carousel with 4/8/12 visible.</item>
                     </item>
+                    <item name="mosaic" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Mosaic</item>
+                        <item name="name" xsi:type="string">Mosaic</item>
+                        <item name="description" xsi:type="string">This component allows to introduce image teasers in asymmetric proportion.</item>
+                    </item>
                 </item>
             </argument>
         </arguments>

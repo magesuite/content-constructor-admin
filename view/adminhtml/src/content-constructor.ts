@@ -38,6 +38,7 @@ import productsGridConfigurator from './components/products-grid/configurator/pr
 import staticBlockConfigurator from './components/static-block/configurator/static-block';
 import teaserAndTextConfigurator from './components/teaser-and-text/configurator/teaser-and-text';
 import instagramFeedConfigurator from './components/instagram-feed/configurator/instagram-feed';
+import mosaicConfigurator from './components/mosaic/configurator/mosaic';
 
 // Use Vue resource
 Vue.use(vr);
@@ -130,6 +131,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'icon-configurator': iconConfigurator,
         'teaser-and-text-configurator': teaserAndTextConfigurator,
         'instagram-feed-configurator': instagramFeedConfigurator,
+        'mosaic-configurator': mosaicConfigurator,
     },
     props: {
         configuration: {

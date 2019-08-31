@@ -965,8 +965,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
          */
         checkImageSizes(): boolean {
 
-            // Do not open alert if there is another alert shown
-            if($('.modal-popup.confirm._show').length) {
+            // Do not open alert if there is another alert shown or Mosaic component is a caller one
+            if($('.modal-popup.confirm._show').length || this.callerComponentType === 'mosaic') {
                 return;
             }
 
