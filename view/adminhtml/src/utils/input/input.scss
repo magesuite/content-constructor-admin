@@ -204,8 +204,8 @@
             transition: opacity 0.1s linear;
         }
 
-        &:hover:before,
-        &--checked:before {
+        &:hover:not(&--disabled):before,
+        &--checked:not(&--disabled):before {
             border-color: #007bdb;
         }
 
@@ -213,6 +213,10 @@
             &:after {
                 opacity: 1;
             }
+        }
+
+        &--disabled {
+            color: #ccc;
         }
     }
 

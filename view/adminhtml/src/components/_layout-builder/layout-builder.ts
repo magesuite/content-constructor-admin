@@ -28,6 +28,7 @@ import separatorPreview from '../separator/preview/separator';
 import staticBlockPreview from '../static-block/preview/static-block';
 import teaserAndTextPreview from '../teaser-and-text/preview/teaser-and-text';
 import instagramFeedPreview from '../instagram-feed/preview/instagram-feed';
+import mosaicPreview from '../mosaic/preview/mosaic';
 
 /**
  * Single component information interface.
@@ -126,9 +127,12 @@ const layoutBuilder: vuejs.ComponentOption = {
                                 <svg class="cc-component-display-controller__icon">
                                     <use xlink:href="#icon_eye"></use>
                                 </svg>
-                                <div class="cc-component-display-controller__control">
-                                    <label :class="[ component.data.componentVisibility.mobile ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]">
-                                        <input type="checkbox" v-model="component.data.componentVisibility.mobile" class="cc-input__checkbox" @change="updateLayout()">
+                                <div class="cc-component-display-controller__control" :class="[ isMobileVisibilityToggleable(component.type) ? '' : 'cc-component-display-controller__control--disabled' ]">
+                                    <label class="cc-input__checkbox-label" :class="{
+                                        'cc-input__checkbox-label--checked': component.data.componentVisibility.mobile,
+                                        'cc-input__checkbox-label--disabled': !isMobileVisibilityToggleable(component.type)
+                                    }">
+                                        <input type="checkbox" v-model="component.data.componentVisibility.mobile" class="cc-input__checkbox" @change="updateLayout()" :disabled="!isMobileVisibilityToggleable(component.type)">
                                         {{ getTranslatedText('Mobile') }}
                                     </label>
                                 </div>
@@ -213,6 +217,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         'icon-preview': iconPreview,
         'teaser-and-text-preview': teaserAndTextPreview,
         'instagram-feed-preview': instagramFeedPreview,
+        'mosaic-preview': mosaicPreview,
     },
     props: {
         /**
@@ -339,7 +344,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                     !this.getIsSpecialComponent(componentInfo.type)
                 ) {
                     componentInfo.data.componentVisibility = {
-                        mobile: true,
+                        mobile: this.isMobileVisibilityToggleable(componentInfo.type),
                         desktop: true,
                     };
                 }
@@ -692,6 +697,15 @@ const layoutBuilder: vuejs.ComponentOption = {
                 !this.getIsSpecialComponent(componentType) &&
                 componentType !== 'custom-html'
             );
+        },
+
+        /**
+         * Checks if specific component can be actually displayed on mobile devices
+         * @param  {string}  componentType type of component.
+         * @return {boolean}
+         */
+        isMobileVisibilityToggleable(componentType: string): boolean {
+            return componentType !== 'mosaic';
         },
 
         /**

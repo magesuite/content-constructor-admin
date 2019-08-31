@@ -41,6 +41,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
     template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Teaser Width</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -64,6 +65,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         </section>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Desktop and Tablet Layout</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.desktopLayout.error">{{configuration.scenario.desktopLayout.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -86,6 +88,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         </section>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Mobile Layout</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.mobileLayout.error">{{configuration.scenario.mobileLayout.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -108,6 +111,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         </section>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Text Positioning</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.contentPlacement.error">{{configuration.scenario.contentPlacement.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -382,6 +386,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
+            this._validateOptionsSet();
             this._collectTeasersCssClasses();
             this._collectComponentCssClasses();
             this.onSave();
@@ -562,6 +567,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                 this.configuration.scenario[optionCategory].id = optionId;
             }
 
+            this.$delete(`configuration.scenario.${optionCategory}`, 'error');
             this.togglePossibleOptions();
         },
 
@@ -686,7 +692,20 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         updateConfigurationProp(): void {
             const propDefaults: Object = this.$options.props.configuration.default();
             this.configuration = $.extend({}, propDefaults, this.configuration, true);
-        }
+        },
+
+        _validateOptionsSet(): void {
+            this.configuration.isError = false;
+
+            for (let scenario of Object.keys(this.configuration.scenario)) {
+                this.$delete(`configuration.scenario.${scenario}`, 'error');
+
+                if (!this.configuration.scenario[scenario].id || this.configuration.scenario[scenario].id === '') {
+                    this.$set(`configuration.scenario.${scenario}.error`, 'Please choose one of available options');
+                    this.configuration.isError = true;
+                }
+            }
+        },
     },
     ready(): void {
         this.togglePossibleOptions();

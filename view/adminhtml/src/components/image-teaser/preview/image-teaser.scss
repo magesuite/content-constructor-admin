@@ -15,12 +15,38 @@ $image-teaser-preview-item-gap: 1.3rem;
         margin: 0 #{-$image-teaser-preview-item-gap / 2};
         flex-wrap: wrap;
         min-height: 12rem;
+
+        #{$root}--mosaic & {
+            flex-wrap: nowrap;
+        }
+
+        &--asymmetric {
+            &-1 {
+                #{$root}__item:first-child {
+                    width: calc((100% / 3) * 2 - 1.3rem);
+                }
+
+                #{$root}__item:last-child {
+                    width: calc(100% / 3 - 1.3rem);
+                }
+            }
+
+            &-2 {
+                #{$root}__item:first-child {
+                    width: calc(100% / 3 - 1.3rem);
+                }
+
+                #{$root}__item:last-child {
+                    width: calc((100% / 3) * 2 - 1.3rem);
+                }
+            }
+        }
     }
 
     &__item {
         width: calc(100% - #{$image-teaser-preview-item-gap / 2});
         position: relative;
-        margin: 0 #{$image-teaser-preview-item-gap / 2} #{$image-teaser-preview-item-gap};
+        margin: 0 #{$image-teaser-preview-item-gap / 2};
 
         @for $in-row from 2 to 8 {
             #{$root}__scene--#{$in-row}-in-row & {
