@@ -2,7 +2,6 @@
  * Single component information interface.
  */
 interface IComponentInformation {
-    blockId: string;
     title: string;
 }
 

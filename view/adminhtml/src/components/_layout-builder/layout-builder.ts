@@ -118,7 +118,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                                     <use xlink:href="#icon_edit"></use>
                                 </svg>
                             </button>
-                            <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--duplicate" :class="[ isPossibleToDuplicate( component.type ) ? '' : 'cc-action-button--look_disabled' ]" :disabled="!isPossibleToDuplicate( component.type )" @click="duplicateComponent( $index )" title="{{ getTranslatedText('Duplicate component') }}">
+                            <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--duplicate" :class="[ isPossibleToDuplicate( component ) ? '' : 'cc-action-button--look_disabled' ]" :disabled="!isPossibleToDuplicate( component )" @click="duplicateComponent( $index )" title="{{ getTranslatedText('Duplicate component') }}">
                                 <svg class="cc-action-button__icon">
                                     <use xlink:href="#icon_duplicate"></use>
                                 </svg>
@@ -680,10 +680,10 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @param  {string}  componentType type of component.
          * @return {boolean}
          */
-        isPossibleToDuplicate(componentType: string): boolean {
+        isPossibleToDuplicate(component: any): boolean {
             return (
-                !this.getIsSpecialComponent(componentType) &&
-                componentType !== 'paragraph'
+                !this.getIsSpecialComponent(component.type) &&
+                (component.type !== 'paragraph' || (component.type === 'paragraph' && component.data.hasOwnProperty('migrated')))
             );
         },
 
@@ -786,7 +786,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                         const component: any = builder.components[index];
                         builder.components.splice(index, 1);
 
-                        if (component.type === 'paragraph') {
+                        if (component.type === 'paragraph' && component.data.blockId && component.data.blockId !== '') {
                             builder.deleteStaticBlock(component.data.blockId);
                         }
 

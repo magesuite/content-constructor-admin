@@ -42,16 +42,10 @@ const paragraphConfigurator: vuejs.ComponentOption = {
 
         <section class="cc-paragraph-configurator__section">
             <div class="cc-input">
-                <label for="input-cfg-id" class="cc-input__label">${$t(
-                    'Identifier'
-                )}:</label>
-                <input type="text" name="cfg-id" v-model="tempConfiguration.identifier" id="input-cfg-id" class="cc-input__input cc-input__input--limited-width" @blur="stripSpaces( tempConfiguration.identifier )" maxlength="30">
-            </div>
-            <div class="cc-input">
                 <label for="input-cfg-title" class="cc-input__label">${$t(
                     'Title'
                 )}:</label>
-                <input type="text" name="cfg-title" v-model="tempConfiguration.title" id="input-cfg-title" class="cc-input__input cc-input__input--limited-width" maxlength="100">
+                <input type="text" name="cfg-title" v-model="configuration.title" id="input-cfg-title" class="cc-input__input cc-input__input--limited-width" maxlength="100">
             </div>
             <div class="cc-input" v-if="isColumnsConfigAvailable()">
                 <label for="input-cfg-columns" class="cc-input__label">${$t(
@@ -97,7 +91,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     )}...</button>
                 </div>
 
-                <textarea name="cfg-paragraph" v-model="tempConfiguration.content" id="textarea-cfg-paragraph" class="cc-input__textarea | cc-paragraph-configurator__textarea"></textarea>
+                <textarea name="cfg-paragraph" v-model="configuration.content" id="textarea-cfg-paragraph" class="cc-input__textarea | cc-paragraph-configurator__textarea"></textarea>
             </div>
         </section>
     </form>`,
@@ -109,7 +103,6 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
-                    blockId: '',
                     title: '',
                     columns: 'none',
                     scenarios: {
@@ -192,7 +185,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             .trigger('hideLoadingPopup');
 
         // If ID is already provided (means we're in edit mode)
-        if (this.configuration.blockId) {
+        if (this.configuration.blockId && !this.configuration.migrated) {
             // Show loader before request
             $('body').trigger('showLoadingPopup');
 
@@ -215,11 +208,9 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     // Hide loader
                     $('body').trigger('hideLoadingPopup');
 
-                    // Update components tempConfiguration
-                    this.tempConfiguration.identifier = responseData.identifier;
-                    this.tempConfiguration.title = responseData.title;
-                    this.tempConfiguration.content = responseData.content;
-                    this.configuration.title = responseData.title;
+
+                    this.$set('configuration.content', responseData.content);
+                    this.$set('configuration.title', responseData.title);
 
                     // initialize customized WYSIWYG
                     if (this.wysiwygCfg) {
@@ -244,90 +235,13 @@ const paragraphConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
-            // Construct data for REST API
-            const dataConstruct: any = {
-                block: {
-                    identifier: this.tempConfiguration.identifier,
-                    title: this.tempConfiguration.title,
-                    content: this.tempConfiguration.content,
-                    active: true,
-                },
-            };
+            this.$set('configuration.migrated', true);
 
-            // Show loader before request
-            $('body').trigger('showLoadingPopup');
+            if (this.configuration.blockId) {
+                delete this.configuration.blockId;
+            }
 
-            // Send request to REST API
-            this.$http({
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: this.restToken,
-                },
-                method: this.configuration.blockId ? 'put' : 'post',
-                url: this.configuration.blockId
-                    ? `${window.location.origin}/rest/all/V1/cmsBlock/${
-                          this.configuration.blockId
-                      }`
-                    : `${window.location.origin}/rest/all/V1/cmsBlock`,
-                body: dataConstruct,
-            }).then(
-                (response: any): void => {
-                    // If status is OK update component's configuration and run Save to save component data
-                    if (response.ok) {
-                        const responseData: any =
-                            typeof response.data === 'string'
-                                ? JSON.parse(response.data)
-                                : response.data;
-                        this.configuration.blockId = responseData.id;
-                        this.configuration.title = responseData.title;
-
-                        // Hide loader
-                        $('body').trigger('hideLoadingPopup');
-
-                        // Set headers back
-                        Vue.http.headers.custom.Accept = 'text/html';
-
-                        this.onSave();
-                    }
-                },
-                (response: any): void => {
-                    // if failed and response returned any message, put it into error div, else put default text
-                    let responseData: any = {};
-                    try {
-                        responseData = JSON.parse(response.data);
-
-                        this.tempConfiguration.errorMessage = responseData.message
-                            ? responseData.message
-                            : $t(
-                                  'An unknown error occured. Please try again later.'
-                              );
-
-                        // Scroll modal to top to make message visible
-                        const $configuratorModal: any = $(
-                            '.content-constructor__modal--configurator'
-                        ).closest('.modal-content');
-
-                        if ($configuratorModal.length) {
-                            $configuratorModal.animate(
-                                {
-                                    scrollTop: 0,
-                                },
-                                150
-                            );
-                        }
-                    } catch (err) {
-                        console.warn(
-                            `Could not parse response as JSON: ${err}`
-                        );
-                    }
-
-                    // Set headers back
-                    Vue.http.headers.custom.Accept = 'text/html';
-
-                    // Hide loader
-                    $('body').trigger('hideLoadingPopup');
-                }
-            );
+            this.onSave();
         },
     },
     methods: {
@@ -415,9 +329,11 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             ][optionId];
             this.configuration.scenarios[optionCategory].id = optionId;
         },
+
         isColumnsConfigAvailable(): boolean {
             return this.configuration.scenarios.reading.id !== 'optimal';
         },
+
         /*
          * Backward compatibility enhancement.
          * When new props are added to the 'configuration' prop, none of already saved component has it.
