@@ -2,42 +2,46 @@
 
 namespace MageSuite\ContentConstructorAdmin\Controller\Adminhtml\Token;
 
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\ResponseInterface;
-
 class Generator extends \Magento\Backend\App\Action
 {
     /**
-     * @var Context
+     * @var \Magento\Backend\App\Action\Context
      */
-    private $context;
+    protected $context;
+
     /**
      * @var \Magento\Framework\Controller\Result\RawFactory
      */
-    private $resultRawFactory;
+    protected $resultRawFactory;
 
     /**
      * @var \Magento\Framework\View\Result\PageFactory
      */
-    private $pageFactory;
+    protected $pageFactory;
+
     /**
      * @var Magento\Integration\Model\Oauth\TokenFactory
      */
-    private $tokenFactory;
+    protected $tokenFactory;
+
     /**
      * @var \Magento\Backend\Model\Auth\Session
      */
-    private $authSession;
+    protected $authSession;
+
+    /**
+     * @var \MageSuite\ContentConstructorAdmin\Service\TokenValidator
+     */
+    protected $tokenValidator;
 
     public function __construct(
-        Context $context,
+        \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         \Magento\Integration\Model\Oauth\TokenFactory $tokenFactory,
-        \Magento\Backend\Model\Auth\Session $authSession
-    )
-    {
+        \Magento\Backend\Model\Auth\Session $authSession,
+        \MageSuite\ContentConstructorAdmin\Service\TokenValidator $tokenValidator
+    ) {
         parent::__construct($context);
 
         $this->context = $context;
@@ -45,12 +49,13 @@ class Generator extends \Magento\Backend\App\Action
         $this->pageFactory = $pageFactory;
         $this->tokenFactory = $tokenFactory;
         $this->authSession = $authSession;
+        $this->tokenValidator = $tokenValidator;
     }
 
     /**
      * Dispatch request
      *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @return \Magento\Framework\Controller\ResultInterface|\Magento\Framework\App\ResponseInterface
      * @throws \Magento\Framework\Exception\NotFoundException
      */
     public function execute()
@@ -61,16 +66,19 @@ class Generator extends \Magento\Backend\App\Action
 
         $token = $this->tokenFactory
             ->create()
-            ->loadByAdminId($currentUserId)
-            ->getToken();
+            ->loadByAdminId($currentUserId);
 
-        if($token === null) {
-            $token = $this->tokenFactory
-                ->create()
-                ->createAdminToken($currentUserId)
-                ->getToken();
+        if ($this->tokenValidator->isTokenExpired($token)) {
+            $token->delete();
+            $token = null;
         }
 
-        return $resultRaw->setContents($token);
+        if ($token === null) {
+            $token = $this->tokenFactory
+                ->create()
+                ->createAdminToken($currentUserId);
+        }
+
+        return $resultRaw->setContents($token->getToken());
     }
 }
