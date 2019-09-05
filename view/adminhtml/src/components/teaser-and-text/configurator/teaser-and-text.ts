@@ -136,6 +136,11 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
             return true;
         }
     },
+    methods: {
+        _validateOptionsSet(): void {
+            return;
+        },
+    },
 };
 
 export default teaserAndTextConfigurator;
