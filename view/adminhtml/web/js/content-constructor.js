@@ -6104,6 +6104,11 @@ var teaserAndTextConfigurator = {
             return true;
         };
     },
+    methods: {
+        _validateOptionsSet: function () {
+            return;
+        },
+    },
 };
 
 /**
