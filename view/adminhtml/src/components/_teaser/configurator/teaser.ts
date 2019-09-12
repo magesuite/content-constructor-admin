@@ -941,22 +941,26 @@ const teaserConfigurator: vuejs.ComponentOption = {
         deleteTeaserItem(index: number): void {
             const component: any = this;
 
-            confirm({
-                content: $.mage.__(
-                    'Are you sure you want to delete this item?'
-                ),
-                actions: {
-                    confirm(): void {
-                        if(component.callerComponentType === 'magento-product-grid-teasers') {
-                            component.parentConfiguration.teasers.splice(index, 1);
-                            component.getCurrentFErowsCount();
-                            component.fixOverflowedRowsSetup();
-                        } else {
-                            component.parentConfiguration.items.splice(index, 1);
-                        }
+            if (this.callerComponentType === 'mosaic') {
+                this.$dispatch('teaser__deleteItem', index);
+            } else {
+                confirm({
+                    content: $.mage.__(
+                        'Are you sure you want to delete this item?'
+                    ),
+                    actions: {
+                        confirm(): void {
+                            if(component.callerComponentType === 'magento-product-grid-teasers') {
+                                component.parentConfiguration.teasers.splice(index, 1);
+                                component.getCurrentFErowsCount();
+                                component.fixOverflowedRowsSetup();
+                            } else {
+                                component.parentConfiguration.items.splice(index, 1);
+                            }
+                        },
                     },
-                },
-            });
+                });
+            }
         },
 
         /* Checks if images are all the same size

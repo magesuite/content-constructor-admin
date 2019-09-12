@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import confirm from 'Magento_Ui/js/modal/confirm';
+
 import imageTeaserConfigurator from '../../image-teaser/configurator/image-teaser';
 import {
     default as teaserConfigurator,
@@ -105,7 +108,10 @@ const mosaicConfigurator: vuejs.ComponentOption = {
             default(): object {
                 return {
                     customCssClass: '',
-                    items: [JSON.parse(JSON.stringify(teaserItemPrototype)), JSON.parse(JSON.stringify(teaserItemPrototype))],
+                    items: [
+                        JSON.parse(JSON.stringify(teaserItemPrototype)), 
+                        JSON.parse(JSON.stringify(teaserItemPrototype))
+                    ],
                     ignoredItems: [],
                     scenario: {
                         teaserWidth: {
@@ -179,6 +185,34 @@ const mosaicConfigurator: vuejs.ComponentOption = {
             return true;
         }
     },
+    events: {
+        'teaser__deleteItem'(index: number): void {
+            this.deleteTeaserItem(index);
+        },
+    },
+    methods: {
+        /* Teaser component removes teaser item after Delete button is clicked
+         * In this case we only reset configuration.item props to defaults because we need 2 items in this component. Not more, not less. 
+         * @param index {number} - index of teaser item to remove
+         */
+        deleteTeaserItem(index: number): void {
+            const component: any = this;
+
+            confirm({
+                content: $.mage.__(
+                    'Are you sure you want to delete this item?'
+                ),
+                actions: {
+                    confirm(): void {
+                        component.$set(
+                            `configuration.items[${index}]`, 
+                            JSON.parse(JSON.stringify(teaserItemPrototype))
+                        );
+                    },
+                },
+            });
+        },
+    }
 };
 
 export default mosaicConfigurator;
