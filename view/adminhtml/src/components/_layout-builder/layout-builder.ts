@@ -503,6 +503,20 @@ const layoutBuilder: vuejs.ComponentOption = {
             }
         },
         /**
+         * gererates new ID for duplicated component
+         * @param {string} oldId Original component's ID (current).
+         * @return {string} New ID.
+         */
+        generateNewComponentId(oldId: string): string {
+            let newId: string = oldId;
+
+            if (newId.split('_').length - 1) {
+                newId = newId.substring(0, newId.indexOf('_'));
+            }
+
+            return `${newId}_duplicate${Math.floor(Math.random() * (99999 - 2 + 1) + 2)}`;
+        },
+        /**
          * Duplicates component under given index and place it below the original one.
          * @param {number} index Original component's index in array.
          */
@@ -510,7 +524,8 @@ const layoutBuilder: vuejs.ComponentOption = {
             let duplicate: IComponentInformation = JSON.parse(
                 JSON.stringify(this.components[index])
             );
-            duplicate.id = `${duplicate.id}_duplicate`;
+            
+            duplicate.id = this.generateNewComponentId(duplicate.id);
             this.addComponentInformation(index + 1, duplicate);
 
             this.$nextTick(

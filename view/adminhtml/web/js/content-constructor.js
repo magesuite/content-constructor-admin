@@ -1252,13 +1252,25 @@ var layoutBuilder = {
             }
         },
         /**
+         * gererates new ID for duplicated component
+         * @param {string} oldId Original component's ID (current).
+         * @return {string} New ID.
+         */
+        generateNewComponentId: function (oldId) {
+            var newId = oldId;
+            if (newId.split('_').length - 1) {
+                newId = newId.substring(0, newId.indexOf('_'));
+            }
+            return newId + "_duplicate" + Math.floor(Math.random() * (99999 - 2 + 1) + 2);
+        },
+        /**
          * Duplicates component under given index and place it below the original one.
          * @param {number} index Original component's index in array.
          */
         duplicateComponent: function (index) {
             var _this = this;
             var duplicate = JSON.parse(JSON.stringify(this.components[index]));
-            duplicate.id = duplicate.id + "_duplicate";
+            duplicate.id = this.generateNewComponentId(duplicate.id);
             this.addComponentInformation(index + 1, duplicate);
             this.$nextTick(function () {
                 var $origin = $("#" + _this.components[index].id);
@@ -3218,21 +3230,26 @@ var teaserConfigurator = {
          */
         deleteTeaserItem: function (index) {
             var component = this;
-            confirm({
-                content: $.mage.__('Are you sure you want to delete this item?'),
-                actions: {
-                    confirm: function () {
-                        if (component.callerComponentType === 'magento-product-grid-teasers') {
-                            component.parentConfiguration.teasers.splice(index, 1);
-                            component.getCurrentFErowsCount();
-                            component.fixOverflowedRowsSetup();
-                        }
-                        else {
-                            component.parentConfiguration.items.splice(index, 1);
-                        }
+            if (this.callerComponentType === 'mosaic') {
+                this.$dispatch('teaser__deleteItem', index);
+            }
+            else {
+                confirm({
+                    content: $.mage.__('Are you sure you want to delete this item?'),
+                    actions: {
+                        confirm: function () {
+                            if (component.callerComponentType === 'magento-product-grid-teasers') {
+                                component.parentConfiguration.teasers.splice(index, 1);
+                                component.getCurrentFErowsCount();
+                                component.fixOverflowedRowsSetup();
+                            }
+                            else {
+                                component.parentConfiguration.items.splice(index, 1);
+                            }
+                        },
                     },
-                },
-            });
+                });
+            }
         },
         /* Checks if images are all the same size
          * If not - displays error by firing up this.displayImageSizeMismatchError()
@@ -3849,6 +3866,7 @@ var imageTeaserConfigurator = {
                 ['window-slider', '4', 'over', ['mobile-slider']],
                 ['window-slider', '4', 'under', ['mobile-slider']],
                 ['container-slider', '1', 'over', ['mobile-slider']],
+                ['container-slider', '1', 'under', ['mobile-slider']],
                 ['container-slider', '2', 'over', ['mobile-slider']],
                 ['container-slider', '2', 'under', ['mobile-slider']],
                 ['container-slider', '3', 'over', ['mobile-slider']],
@@ -6216,7 +6234,10 @@ var mosaicConfigurator = {
             default: function () {
                 return {
                     customCssClass: '',
-                    items: [JSON.parse(JSON.stringify(teaserPrototype)), JSON.parse(JSON.stringify(teaserPrototype))],
+                    items: [
+                        JSON.parse(JSON.stringify(teaserPrototype)),
+                        JSON.parse(JSON.stringify(teaserPrototype))
+                    ],
                     ignoredItems: [],
                     scenario: {
                         teaserWidth: {
@@ -6287,6 +6308,29 @@ var mosaicConfigurator = {
             return true;
         };
     },
+    events: {
+        'teaser__deleteItem': function (index) {
+            this.deleteTeaserItem(index);
+        },
+    },
+    methods: {
+        /* Teaser component removes teaser item after Delete button is clicked
+         * In this case we only reset configuration.item props to defaults because we need 2 items in this component. Not more, not less.
+         * @param index {number} - index of teaser item to remove
+         */
+        deleteTeaserItem: function (index) {
+            console.log('in override');
+            var component = this;
+            confirm({
+                content: $.mage.__('Are you sure you want to delete this item?'),
+                actions: {
+                    confirm: function () {
+                        component.$set("configuration.items[" + index + "]", JSON.parse(JSON.stringify(teaserPrototype)));
+                    },
+                },
+            });
+        },
+    }
 };
 
 /* tslint:disable:no-console */

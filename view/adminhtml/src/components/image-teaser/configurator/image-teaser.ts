@@ -320,6 +320,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                 ['window-slider', '4', 'under', ['mobile-slider']],
 
                 ['container-slider', '1', 'over', ['mobile-slider']],
+                ['container-slider', '1', 'under', ['mobile-slider']],
 
                 ['container-slider', '2', 'over', ['mobile-slider']],
                 ['container-slider', '2', 'under', ['mobile-slider']],
