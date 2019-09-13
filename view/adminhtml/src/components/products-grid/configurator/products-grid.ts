@@ -363,6 +363,8 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             }
 
             this.setProductsLimit();
+            this._collectTeasersCssClasses();
+            this._collectComponentCssClasses();
             this.onSave();
         },
     },
@@ -530,6 +532,70 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             return this.configuration[layoutOption] > 5
                 ? this.configuration[layoutOption]
                 : 5;
+        },
+        _getCustomCssFields(source: object): Array<any> {
+            const cssClassFields: Array<any> = [];
+
+            Object.keys(source).forEach(
+                (tabKey: string) => {
+                    if (
+                        typeof source[tabKey].content !== 'string' &&
+                        source[tabKey].content.fields != null
+                    ) {
+                        Object.keys(source[tabKey].content.fields).forEach(
+                            (fieldKey: string) => {
+                                if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
+                                    cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+
+            return cssClassFields;
+        },
+
+        _collectTeasersCssClasses(): void {
+            if (this.configuration.items != null) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+
+                this.configuration.items.forEach(
+                    (teaser: any, index: number) => {
+                        const cssClasses: Array<string> = [];
+
+                        cssClassFields.forEach(
+                            (model: string) => {
+                                if (teaser[model] && typeof teaser[model] === 'string') {
+                                    cssClasses.push(teaser[model]);
+                                }
+                            }
+                        );
+
+                        teaser.cc_css_classes = cssClasses.join(' ');
+                    }
+                );
+            }
+        },
+
+        _collectComponentCssClasses(): void {
+            if (
+                this.ccConfig.image_teaser != null &&
+                this.ccConfig.image_teaser.custom_sections != null
+            ) {
+                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
+                const cssClasses: Array<string> = [];
+
+                cssClassFields.forEach(
+                    (model: string) => {
+                        if (this.configuration[model] && typeof this.configuration[model] === 'string') {
+                            cssClasses.push(this.configuration[model]);
+                        }
+                    }
+                );
+
+                this.configuration.cc_css_classes = cssClasses.join(' ');
+            }
         },
     },
     ready(): void {
