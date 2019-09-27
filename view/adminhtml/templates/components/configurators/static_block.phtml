@@ -5,8 +5,16 @@ $blocks = $block->getBlocks();
 <template id="cc-static-block-template">
     <form class="cc-static-block-configurator" @submit.prevent="onSave">
         <div class="cc-input cc-input--type-inline">
-            <label for="cfg-static-block" class="cc-input__label">Static Block:</label>
-            <select name="select" class="cc-input__select" id="cfg-static-block" v-model="configuration.identifier"  v-el:cms-blocks-select @change="onChange">
+            <label for="cfg-static-block" class="cc-input__label">
+                Static Block:
+            </label>
+            <select
+                name="select"
+                class="cc-input__select"
+                id="cfg-static-block"
+                v-model="configuration.identifier"
+                v-el:cms-blocks-select @change="onChange"
+            >
                 <option value="">-- <?=__('Select CMS Block')?> --</option>
                 <?php foreach($blocks as $block): ?>
                     <option value="<?=$block['identifier']?>"><?=$block['title']?></option>
@@ -14,16 +22,31 @@ $blocks = $block->getBlocks();
             </select>
         </div>
         <div class="cc-input cc-input--type-inline">
-            <label for="cfg-resetstyles" class="cc-input__label"><?=__('Reset default styles of CMS Static Block')?></label>
+            <label for="cfg-resetstyles" class="cc-input__label">
+                <?=__('Reset default styles of CMS Static Block')?>
+            </label>
             <div class="admin__actions-switch" data-role="switcher">
-                <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-resetstyles" name="reset_default_styles_of_cms" v-model="configuration.resetstyles" @change="onChange">
+                <input
+                    type="checkbox"
+                    class="admin__actions-switch-checkbox"
+                    id="cfg-resetstyles"
+                    name="reset_default_styles_of_cms"
+                    v-model="configuration.resetstyles"
+                    @change="onChange"
+                >
                 <label class="admin__actions-switch-label" for="cfg-resetstyles">
-                    <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+                    <span
+                        class="admin__actions-switch-text"
+                        data-text-on="Yes"
+                        data-text-off="No"
+                    ></span>
                 </label>
             </div>
         </div>
     </form>
 </template>
 
-<static-block-configurator class="cc-static-block-configurator" :configuration="initialComponentConfiguration"></static-block-configurator>
-
+<static-block-configurator
+    class="cc-static-block-configurator"
+    :configuration="initialComponentConfiguration"
+></static-block-configurator>
