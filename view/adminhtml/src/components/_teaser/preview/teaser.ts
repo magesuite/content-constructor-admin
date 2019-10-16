@@ -1,6 +1,16 @@
 import $ from 'jquery';
 
 /**
+ * Breakpoint-dedicated image interface
+ */
+interface IComponentInformationDeviceImage {
+    raw: string;
+    decoded: string;
+    endpoint: string;
+    aspect_ratio: string;
+}
+
+ /**
  * Image interface
  */
 interface IComponentInformationImage {
@@ -8,6 +18,8 @@ interface IComponentInformationImage {
     decoded: string;
     endpoint: string;
     aspect_ratio: string;
+    mobile: IComponentInformationDeviceImage;
+    tablet: IComponentInformationDeviceImage;
 }
 
 /**
@@ -75,17 +87,60 @@ interface IComponentInformation {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const teaserPreview: vuejs.ComponentOption = {
-    template: `<div class="cc-teaser-preview cc-teaser-preview--content-{{ parentConfiguration.scenario.contentPlacement.id ? parentConfiguration.scenario.contentPlacement.id : 'over' }}{{configuration.image.image || configuration.image.raw ? '' : ' cc-teaser-preview--no-image'}}">
+    template: `<div class="cc-teaser-preview cc-teaser-preview--content-{{ parentConfiguration.scenario.contentPlacement.id ? parentConfiguration.scenario.contentPlacement.id : 'over' }}{{configuration.image.image || configuration.image.raw ? '' : ' cc-teaser-preview--no-image'}}" :class="{'cc-teaser-preview--breakpoint-images-support': supportBreakpointDedicatedImages}">
         <div class="cc-teaser-preview__slide cc-teaser-preview__slide--scheme-{{configuration.optimizers.color_scheme}}" v-el:scale-relation>
-            <div class="cc-teaser-preview__aspect-ratio" v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" :style="{paddingTop: aspectRatio}"></div>
+            <div 
+                class="cc-teaser-preview__aspect-ratio" 
+                v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" 
+                :style="{paddingTop: aspectRatio}" 
+                v-show="!supportBreakpointDedicatedImages || (supportBreakpointDedicatedImages && deviceType === 'desktop')"></div>
+            <div 
+                class="cc-teaser-preview__aspect-ratio" 
+                v-if="configuration.image.mobile.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" && supportBreakpointDedicatedImages && aspectRatioMobile
+                :style="{paddingTop: aspectRatioMobile}" 
+                v-show="deviceType === 'mobile'"></div>
+            <div 
+                class="cc-teaser-preview__aspect-ratio" 
+                v-if="configuration.image.tablet.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" && supportBreakpointDedicatedImages && aspectRatioTablet
+                :style="{paddingTop: aspectRatioTablet}" 
+                v-show="deviceType === 'tablet'"></div>
             <div class="cc-teaser-preview__slide-wrapper">
-                <div class="cc-teaser-preview__aspect-ratio" v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id === 'under'" :style="{paddingTop: aspectRatio}"></div>
+                <div 
+                    class="cc-teaser-preview__aspect-ratio" 
+                    v-if="configuration.image.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" 
+                    :style="{paddingTop: aspectRatio}" 
+                    v-show="!supportBreakpointDedicatedImages || (supportBreakpointDedicatedImages && deviceType === 'desktop')"></div>
+                <div 
+                    class="cc-teaser-preview__aspect-ratio" 
+                    v-if="configuration.image.mobile.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" && supportBreakpointDedicatedImages && aspectRatioMobile
+                    :style="{paddingTop: aspectRatioMobile}" 
+                    v-show="deviceType === 'mobile'"></div>
+                <div 
+                    class="cc-teaser-preview__aspect-ratio" 
+                    v-if="configuration.image.tablet.aspect_ratio && parentConfiguration.scenario.contentPlacement.id !== 'under'" && supportBreakpointDedicatedImages && aspectRatioTablet 
+                    :style="{paddingTop: aspectRatioTablet}" 
+                    v-show="deviceType === 'tablet'"></div>
                 <figure class="cc-teaser-preview__figure">
                     <img
                         :src="configuration.image.image || configuration.image.raw"
-                        class="cc-teaser-preview__image"
+                        class="cc-teaser-preview__image cc-teaser-preview__image--desktop"
                         :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
                         v-if="configuration.image.image || configuration.image.raw"
+                        v-show="!supportBreakpointDedicatedImages || (supportBreakpointDedicatedImages && deviceType === 'desktop')"
+                    >
+                    <img
+                        :src="configuration.image.mobile.image || configuration.image.mobile.raw"
+                        class="cc-teaser-preview__image cc-teaser-preview__image--mobile"
+                        :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
+                        v-if="supportBreakpointDedicatedImages && (configuration.image.mobile.image || configuration.image.mobile.raw)"
+                        v-show="deviceType === 'mobile'"
+                    >
+                    <img
+                        :src="configuration.image.tablet.image || configuration.image.tablet.raw"
+                        class="cc-teaser-preview__image cc-teaser-preview__image--tablet"
+                        :class="{'cc-teaser-preview__image--mirror': configuration.optimizers.mirror_image}"
+                        v-if="supportBreakpointDedicatedImages && (configuration.image.tablet.image || configuration.image.tablet.raw)"
+                        v-show="deviceType === 'tablet'"
                     >
                     <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
                         <use xlink:href="#icon_image-placeholder"></use>
@@ -154,12 +209,40 @@ const teaserPreview: vuejs.ComponentOption = {
         teaserType: {
             type: String,
             default: 'full',
-        }
+        },
+        /* Only for mosaic with etc/view.xml entry enabled */
+        supportBreakpointDedicatedImages: {
+            type: Boolean,
+            default: false,
+        },
+        /* Device type set currently - used only when supportBreakpointDedicatedImages is true */
+        deviceType: {
+            type: String,
+            default: 'desktop',
+        },
     },
     computed: {
         aspectRatio: function (): string {
             if (this.configuration.image.aspect_ratio.length) {
                 const rawArr: any[] = this.configuration.image.aspect_ratio.split(
+                    ':'
+                );
+                return `${(rawArr[1] / rawArr[0]) * 100}%`;
+            }
+            return '0';
+        },
+        aspectRatioMobile: function (): string {
+            if (this.configuration.image.mobile.aspect_ratio.length) {
+                const rawArr: any[] = this.configuration.image.mobile.aspect_ratio.split(
+                    ':'
+                );
+                return `${(rawArr[1] / rawArr[0]) * 100}%`;
+            }
+            return '0';
+        },
+        aspectRatioTablet: function (): string {
+            if (this.configuration.image.tablet.aspect_ratio.length) {
+                const rawArr: any[] = this.configuration.image.tablet.aspect_ratio.split(
                     ':'
                 );
                 return `${(rawArr[1] / rawArr[0]) * 100}%`;
