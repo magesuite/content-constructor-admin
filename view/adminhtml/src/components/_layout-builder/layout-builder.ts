@@ -720,7 +720,11 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         isMobileVisibilityToggleable(componentType: string): boolean {
-            return componentType !== 'mosaic';
+            return componentType !== 'mosaic' || 
+                   (
+                       componentType === 'mosaic' && 
+                       this.ccConfig.mosaic.support_breakpoint_dedicated_images
+                   );
         },
 
         /**

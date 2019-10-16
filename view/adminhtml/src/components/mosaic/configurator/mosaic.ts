@@ -57,7 +57,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
-        <section class="cc-image-teaser-configurator__section">
+        <section class="cc-image-teaser-configurator__section" v-show="!ccConfig.mosaic.support_breakpoint_dedicated_images">
             <h3 class="cc-image-teaser-configurator__subtitle">Text Positioning</h3>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
@@ -131,6 +131,13 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                         },
                     },
                 };
+            },
+        },
+        /* Obtain content-constructor's config file */
+        ccConfig: {
+            type: Object,
+            default(): any {
+                return {};
             },
         },
     },

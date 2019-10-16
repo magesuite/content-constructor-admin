@@ -68,6 +68,7 @@
 
     &__col {
         width: calc(50% - 0.75rem);
+        transition: width 0.35s cubic-bezier(0, 0.77, 0.23, 1);
 
         &--preview {
             border: 1px dashed #cac3b3;
@@ -89,6 +90,26 @@
 
         #{$root}--column & {
             width: 100%;
+        }
+
+        #{$root}__content--mobile & {
+            &--preview {
+                width: 35.25rem;
+            }
+
+            &--configurator {
+                width: calc(100% - 34.5rem);
+            }
+        }
+
+        #{$root}__content--tablet & {
+            &--preview {
+                width: calc(38% - 0.75rem);
+            }
+
+            &--configurator {
+                width: calc(62% - 0.75rem);
+            }
         }
     }
 
@@ -217,7 +238,8 @@
         text-align: right;
     }
 
-    &__actions {
+    &__actions,
+    &__device-tabs {
         position: absolute;
         opacity: 0;
         transform: translate3d(0, -25%, 0);
@@ -225,6 +247,10 @@
         backface-visibility: hidden;
         will-change: unset, transform;
         transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    }
+
+    &__device-tabs {
+        top: 1.5rem;
     }
 
     &__image {
@@ -267,7 +293,8 @@
                 opacity: 1;
             }
 
-            #{$root}__actions {
+            #{$root}__actions,
+            #{$root}__device-tabs {
                 opacity: 1;
                 transform: translate3d(0, 0, 0);
             }

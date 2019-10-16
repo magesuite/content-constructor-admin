@@ -124,4 +124,9 @@
             }
         }
     }
+
+    &--selected {
+        border-color: #007bdb;
+        color: #007bdb;
+    }
 }

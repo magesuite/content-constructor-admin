@@ -21,6 +21,16 @@ export const teaserPrototype: any = {
         raw: '',
         decoded: '',
         aspect_ratio: '',
+        mobile: {
+            raw: '',
+            decoded: '',
+            aspect_ratio: '',
+        },
+        tablet: {
+            raw: '',
+            decoded: '',
+            aspect_ratio: '',
+        },
     },
     slogan: '',
     description: '',
@@ -117,13 +127,40 @@ const teaserConfigurator: vuejs.ComponentOption = {
     },
     template: `<div class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}} cc-teaser-configurator--{{teaserType}}">
         <section class="cc-teaser-configurator__section">
-            <div class="cc-teaser-configurator__content" id="cc-teaser-{{teaserIndex}}">
+            <div class="cc-teaser-configurator__content cc-teaser-configurator__content--{{currentImageUploader}}" id="cc-teaser-{{teaserIndex}}">
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--preview" :class="{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}">
                     <div class="cc-teaser-configurator__image-wrapper">
 
-                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType"></teaser-preview>
+                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType" :support-breakpoint-dedicated-images="supportBreakpointDedicatedImages" :device-type="currentImageUploader"></teaser-preview>
 
-                        <input type="hidden" class="cc-teaser-configurator__image-url" id="teaser-img-{{teaserIndex}}">
+                        <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--mobile" id="teaser-img-mobile-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
+                        <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--tablet" id="teaser-img-tablet-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
+                        <input type="hidden" class="cc-teaser-configurator__image-url" id="teaser-img-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}">
+
+                        <div class="cc-teaser-configurator__device-tabs" v-if="supportBreakpointDedicatedImages">
+                            <component-actions>
+                                <template slot="cc-component-actions__buttons">
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-component-actions__button cc-component-actions__button--device cc-teaser-configurator__action-button"
+                                        :class="{'cc-action-button--selected': currentImageUploader === 'mobile'}"
+                                        @click="switchUploaderBreakpoint('mobile')">
+                                        {{ 'Mobile' | translate }}
+                                    </button>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-component-actions__button cc-component-actions__button--device cc-teaser-configurator__action-button"
+                                        :class="{'cc-action-button--selected': currentImageUploader === 'tablet'}"
+                                        @click="switchUploaderBreakpoint('tablet')">
+                                        {{ 'Tablet' | translate }}
+                                    </button>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-component-actions__button cc-component-actions__button--device cc-teaser-configurator__action-button"
+                                        :class="{'cc-action-button--selected': currentImageUploader === 'desktop'}"
+                                        @click="switchUploaderBreakpoint('desktop')">
+                                        {{ 'Desktop' | translate }}
+                                    </button>
+                                </template>
+                            </component-actions>
+                        </div>
 
                         <div class="cc-teaser-configurator__actions">
                             <component-actions>
@@ -502,7 +539,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
             return this.parentConfiguration.items[this.teaserIndex];
         },
         imageActionText: function (): string {
-            return this.configuration.image.raw ? 'Change' : 'Upload';
+            if (this.currentImageUploader === 'mobile') {
+                return this.configuration.image.mobile.raw ? 'Change' : 'Upload';
+            } else if (this.currentImageUploader === 'tablet') {
+                return this.configuration.image.tablet.raw ? 'Change' : 'Upload';
+            } else {
+                return this.configuration.image.raw ? 'Change' : 'Upload';
+            }
         },
         mirrorImageTextOutput: function (): string {
             return this.configuration.optimizers.mirror_image ? 'Yes' : 'No';
@@ -532,10 +575,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 return null;
             }
         },
+
+        supportBreakpointDedicatedImages: function(): boolean { 
+            return this.callerComponentType === 'mosaic' && this.ccConfig.mosaic.support_breakpoint_dedicated_images;
+        },
     },
     data(): any {
         return {
             currentTab: 0,
+            currentImageUploader: 'desktop',
         };
     },
     filters: {
@@ -711,8 +759,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * @param index {number} - index of image of image teaser.
          */
         getImageUploader(index: number): void {
+            const url: string = this.currentImageUploader === 'desktop' ?
+                                `${this.uploaderBaseUrl}target_element_id/teaser-img-${index}/` :
+                                `${this.uploaderBaseUrl}target_element_id/teaser-img-${this.currentImageUploader}-${index}/`;
+
             MediabrowserUtility.openDialog(
-                `${this.uploaderBaseUrl}target_element_id/teaser-img-${index}/`,
+                url,
                 'auto',
                 'auto',
                 $.mage.__('Insert File...'),
@@ -723,29 +775,74 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
 
         onRawImageUrlChange(event: $.Event): void {
-            this.configuration.image.raw = event.target.value;
-
-            const encodedImage: string = this.configuration.image.raw.match(
+            const rawValue: string = event.target.value;
+            const encodedImage: string = rawValue.match(
                 '___directive/([a-zA-Z0-9]*)'
             )[1];
-
-            this.configuration.image.decoded = Base64
+            const decoded: string = Base64
                 ? Base64.decode(encodedImage)
                 : window.atob(encodedImage);
+
+            if (this.currentImageUploader !== 'desktop') {
+                this.$set(`configuration.image.${this.currentImageUploader}.raw`, rawValue);
+                this.$set(`configuration.image.${this.currentImageUploader}.decoded`, decoded);
+            } else {
+                this.$set('configuration.image.raw', rawValue);
+                this.$set('configuration.image.decoded', decoded);
+            }
 
             const img: any = new Image();
 
             img.onload = (): void => {
-                if (this.configuration.image && this.configuration.image.image) {
-                    this.configuration.image.image = img.getAttribute('src');
-                } else {
-                    this.configuration.image.raw = img.getAttribute('src');
-                }
-
-                this.configuration.image.aspect_ratio = this.getAspectRatio(
+                const aspectRatio: string = this.getAspectRatio(
                     img.naturalWidth,
                     img.naturalHeight
                 );
+                const imgPath: string = img.getAttribute('src');
+
+                if (this.currentImageUploader !== 'desktop') {
+                    if (this.configuration.image[this.currentImageUploader] && this.configuration.image[this.currentImageUploader].image) {
+                        this.$set(`configuration.image.${this.currentImageUploader}.image`, imgPath);
+                    } else {
+                        this.$set(`configuration.image.${this.currentImageUploader}.raw`, imgPath);
+                    }
+
+                    this.$set(`configuration.image.${this.currentImageUploader}.aspect_ratio`, aspectRatio);
+                } else {
+                    if (this.configuration.image && this.configuration.image.image) {
+                        this.$set('configuration.image.image', imgPath);
+                    } else {
+                        this.$set('configuration.image.raw', imgPath);
+                    }
+
+                    this.$set('configuration.image.aspect_ratio', aspectRatio);
+                }
+
+                /** 
+                 * If Mosaic component has support for breakpoint-dedicated pics and image is uploaded to any of breakpoint and 
+                 * image was not uploaded either for other breakpoints, fill missing breakpoints with just uploaded image data.
+                 **/
+                if (this.supportBreakpointDedicatedImages) {
+                    ['mobile', 'tablet', 'desktop'].forEach((item: string): void => {
+                        if (item === 'desktop') {
+                            if (this.configuration.image.aspect_ratio === '') {
+                                this.$set('configuration.image.image', imgPath);
+                                this.$set('configuration.image.raw', imgPath);
+                                this.$set('configuration.image.aspect_ratio', aspectRatio);
+                                this.$set('configuration.image.decoded', decoded);
+                            }
+                        } else {
+                            if (this.configuration.image[item].aspect_ratio === '') {
+                                this.$set(`configuration.image.${item}.image`, imgPath);
+                                this.$set(`configuration.image.${item}.raw`, imgPath);
+                                this.$set(`configuration.image.${item}.aspect_ratio`, aspectRatio);
+                                this.$set(`configuration.image.${item}.decoded`, decoded);
+                            }
+                        }
+                    });
+                }
+
+                console.log(this.configuration.image);
 
                 setTimeout((): void => {
                     this.checkImageSizes();
@@ -766,7 +863,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
             if (index > 0) {
                 const $thisItem: any = $(`#cc-image-teaser-item-${index}`);
                 const $prevItem: any = $(`#cc-image-teaser-item-${index - 1}`);
-
 
                 $thisItem
                     .addClass('cc-teaser-configurator--animating')
@@ -1022,10 +1118,16 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
 
         handleJqEvents(): void {
-            $(`#teaser-img-${this.teaserIndex}`).on(
-                'change',
-                this.onRawImageUrlChange
-            );
+            $(`.cc-teaser-configurator__image-url[data-teaser-index="${this.teaserIndex}"]`)
+                .off('change')
+                .on(
+                    'change', 
+                    this.onRawImageUrlChange,
+                );
+        },
+
+        switchUploaderBreakpoint(deviceType: string): void {
+            this.currentImageUploader = deviceType;
         },
     },
     ready(): void {
@@ -1054,7 +1156,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
         }
 
         $(`#cc-image-teaser-item-${this.teaserIndex} .cc-teaser-configurator`).toggleClass('cc-teaser-configurator--text-only', this.configuration.teaserType === 'text-only');
-
     },
 };
 

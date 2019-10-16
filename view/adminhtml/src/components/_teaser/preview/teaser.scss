@@ -28,6 +28,7 @@
 
     &__aspect-ratio {
         width: 100%;
+        transition: padding 0.35s cubic-bezier(0, 0.77, 0.23, 1);
 
         + #{$root}__slide-wrapper,
         + #{$root}__figure {
