@@ -4259,10 +4259,12 @@ var imageTeaserConfigurator = {
             this.configuration.isError = false;
             for (var _i = 0, _a = Object.keys(this.configuration.scenario); _i < _a.length; _i++) {
                 var scenario = _a[_i];
-                this.$delete("configuration.scenario." + scenario, 'error');
-                if (!this.configuration.scenario[scenario].id || this.configuration.scenario[scenario].id === '') {
-                    this.$set("configuration.scenario." + scenario + ".error", 'Please choose one of available options');
-                    this.configuration.isError = true;
+                if (scenario !== 'numberOfSlides') {
+                    this.$delete("configuration.scenario." + scenario, 'error');
+                    if (!this.configuration.scenario[scenario].id || this.configuration.scenario[scenario].id === '') {
+                        this.$set("configuration.scenario." + scenario + ".error", 'Please choose one of available options');
+                        this.configuration.isError = true;
+                    }
                 }
             }
         },

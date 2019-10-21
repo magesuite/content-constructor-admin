@@ -699,11 +699,13 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             this.configuration.isError = false;
 
             for (let scenario of Object.keys(this.configuration.scenario)) {
-                this.$delete(`configuration.scenario.${scenario}`, 'error');
+                if (scenario !== 'numberOfSlides') {
+                    this.$delete(`configuration.scenario.${scenario}`, 'error');
 
-                if (!this.configuration.scenario[scenario].id || this.configuration.scenario[scenario].id === '') {
-                    this.$set(`configuration.scenario.${scenario}.error`, 'Please choose one of available options');
-                    this.configuration.isError = true;
+                    if (!this.configuration.scenario[scenario].id || this.configuration.scenario[scenario].id === '') {
+                        this.$set(`configuration.scenario.${scenario}.error`, 'Please choose one of available options');
+                        this.configuration.isError = true;
+                    }
                 }
             }
         },
