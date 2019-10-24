@@ -196,6 +196,14 @@ const contentConstructor: vuejs.ComponentOption = {
         };
     },
     ready(): void {
+        const targetComponentMatch = $(this.$el)
+            .closest('.entry-edit.form-inline')
+            .attr('data-bind')
+            .match(/scope: '([^']+)'/);
+        if (targetComponentMatch && !targetComponentMatch[1]) {
+            this.pageType = targetComponentMatch[1];
+        }
+
         this.dumpConfiguration();
         this._isPickerLoaded = false;
         this._cleanupConfiguratorModal = '';
@@ -268,7 +276,7 @@ const contentConstructor: vuejs.ComponentOption = {
             // Save adding callback for async use.
             this._addComponentInformation = addComponentInformation;
 
-            pickerModalOptions.opened = function (): void {
+            pickerModalOptions.opened = function(): void {
                 if (!component._isPickerLoaded) {
                     // Show ajax loader
                     $('body').trigger('showLoadingPopup');
@@ -276,16 +284,14 @@ const contentConstructor: vuejs.ComponentOption = {
                     // Get picker via AJAX
                     component.$http
                         .get(`${component.configuratorEndpoint}picker`)
-                        .then(
-                            (response: any): void => {
-                                component.$els.pickerModal.innerHTML =
-                                    response.body;
-                                component.$compile(component.$els.pickerModal);
-                                component._isPickerLoaded = true;
-                                // Hide loader
-                                $('body').trigger('hideLoadingPopup');
-                            }
-                        );
+                        .then((response: any): void => {
+                            component.$els.pickerModal.innerHTML =
+                                response.body;
+                            component.$compile(component.$els.pickerModal);
+                            component._isPickerLoaded = true;
+                            // Hide loader
+                            $('body').trigger('hideLoadingPopup');
+                        });
                 }
             };
             // Create or Show picker modal depending if exists
@@ -379,7 +385,7 @@ const contentConstructor: vuejs.ComponentOption = {
             const component: any = this;
             let cleanupConfiguratorModal = (): undefined => undefined;
 
-            configuratorModalOptions.buttons[1].click = function (): void {
+            configuratorModalOptions.buttons[1].click = function(): void {
                 component.$broadcast('component-configurator__save');
             };
             configuratorModalOptions.title = `${$t(
@@ -389,7 +395,7 @@ const contentConstructor: vuejs.ComponentOption = {
             )}</span>`;
 
             // Configurator modal opened callback
-            configuratorModalOptions.opened = function (): void {
+            configuratorModalOptions.opened = function(): void {
                 // Show ajax loader
                 $('body').trigger('showLoadingPopup');
 
@@ -397,29 +403,27 @@ const contentConstructor: vuejs.ComponentOption = {
                 component.$http
                     .get(
                         component.configuratorEndpoint +
-                        componentInformation.type
+                            componentInformation.type
                     )
-                    .then(
-                        (response: any): void => {
-                            component.$els.configuratorModal.innerHTML =
-                                response.body;
+                    .then((response: any): void => {
+                        component.$els.configuratorModal.innerHTML =
+                            response.body;
 
-                            // Set current component configuration data
-                            component.initialComponentConfiguration =
-                                componentInformation.data;
+                        // Set current component configuration data
+                        component.initialComponentConfiguration =
+                            componentInformation.data;
 
-                            // compile fetched component
-                            cleanupConfiguratorModal = component.$compile(
-                                component.$els.configuratorModal
-                            );
+                        // compile fetched component
+                        cleanupConfiguratorModal = component.$compile(
+                            component.$els.configuratorModal
+                        );
 
-                            // Hide loader
-                            $('body').trigger('hideLoadingPopup');
-                        }
-                    );
+                        // Hide loader
+                        $('body').trigger('hideLoadingPopup');
+                    });
             };
 
-            configuratorModalOptions.closed = function (): void {
+            configuratorModalOptions.closed = function(): void {
                 // Cleanup configurator component and then remove modal
                 cleanupConfiguratorModal();
                 component.$els.configuratorModal.innerHTML = '';
@@ -450,11 +454,11 @@ const contentConstructor: vuejs.ComponentOption = {
             const component: any = this;
 
             // send request for token
-            this.$http.get(this.restTokenEndpoint).then(
-                (response: any): void => {
+            this.$http
+                .get(this.restTokenEndpoint)
+                .then((response: any): void => {
                     component.restToken = `Bearer ${response.body}`;
-                }
-            );
+                });
         },
 
         deleteStaticBlock(cmsBlockId: string): void {
@@ -468,15 +472,13 @@ const contentConstructor: vuejs.ComponentOption = {
                 },
                 method: 'delete',
                 url: `${window.location.origin}/rest/V1/cmsBlock/${cmsBlockId}`,
-            }).then(
-                (response: any): void => {
-                    if (response.body !== 'true') {
-                        console.warn(
-                            `Something went wrong, CMS block wasn\'t removed, please check if block with ID: ${cmsBlockId} exists in database`
-                        );
-                    }
+            }).then((response: any): void => {
+                if (response.body !== 'true') {
+                    console.warn(
+                        `Something went wrong, CMS block wasn\'t removed, please check if block with ID: ${cmsBlockId} exists in database`
+                    );
                 }
-            );
+            });
         },
 
         transformComponentTypeToText(componentType: string): string {

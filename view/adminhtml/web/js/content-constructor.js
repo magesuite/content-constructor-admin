@@ -6657,6 +6657,15 @@ var contentConstructor = {
         };
     },
     ready: function () {
+        var targetComponentMatch = $(this.$el)
+            .closest('.entry-edit.form-inline')
+            .attr('data-bind')
+            .match(/scope: '([^']+)'/);
+        if (!targetComponentMatch || !targetComponentMatch[1]) {
+            throw new Error('Could not find target component to save content constructor configuration. This is most probably not your fault, please consult the developers.');
+        }
+        this.pageType = targetComponentMatch[1];
+        debugger;
         this.dumpConfiguration();
         this._isPickerLoaded = false;
         this._cleanupConfiguratorModal = '';
@@ -6846,7 +6855,9 @@ var contentConstructor = {
         setRestToken: function () {
             var component = this;
             // send request for token
-            this.$http.get(this.restTokenEndpoint).then(function (response) {
+            this.$http
+                .get(this.restTokenEndpoint)
+                .then(function (response) {
                 component.restToken = "Bearer " + response.body;
             });
         },
