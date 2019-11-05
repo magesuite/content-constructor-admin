@@ -204,6 +204,7 @@ const contentConstructor: vuejs.ComponentOption = {
             this.pageType = targetComponentMatch[1];
         }
 
+        this.disableDesignInheritance();
         this.dumpConfiguration();
         this._isPickerLoaded = false;
         this._cleanupConfiguratorModal = '';
@@ -437,6 +438,16 @@ const contentConstructor: vuejs.ComponentOption = {
                 configuratorModalOptions,
                 $(this.$els.configuratorModal)
             );
+        },
+
+        /**
+         * Makes sure that certain CMS page, product or category won't inherit
+         * design update contents which prevents content constructor to show any changes.
+         */
+        disableDesignInheritance(): void {
+            uiRegistry
+                .get(this.pageType)
+                .source.set('data.use_default.custom_layout_update', 0);
         },
 
         dumpConfiguration(): void {
