@@ -143,6 +143,11 @@
                         <item name="name" xsi:type="string">Mosaic</item>
                         <item name="description" xsi:type="string">This component allows to introduce image teasers in asymmetric proportion.</item>
                     </item>
+                    <item name="accordion" xsi:type="array">
+                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Accordion</item>
+                        <item name="name" xsi:type="string">Faq</item>
+                        <item name="description" xsi:type="string">This component allows to add accordion component.</item>
+                    </item>
                 </item>
             </argument>
         </arguments>
