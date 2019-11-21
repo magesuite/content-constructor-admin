@@ -6723,6 +6723,7 @@ var contentConstructor = {
          */
         getComponentPicker: function (addComponentInformation) {
             var component = this;
+            var modalId = "content-constructor-picker-" + this.pageType;
             // Save adding callback for async use.
             this._addComponentInformation = addComponentInformation;
             pickerModalOptions.opened = function () {
@@ -6743,11 +6744,12 @@ var contentConstructor = {
                 }
             };
             // Create or Show picker modal depending if exists
-            if ($pickerModal) {
+            if ($pickerModal && $pickerModal.modal.attr('id') === modalId) {
                 $pickerModal.openModal();
             }
             else {
                 $pickerModal = modal(pickerModalOptions, $(this.$els.pickerModal));
+                $pickerModal.modal.attr('id', modalId);
             }
         },
         /**

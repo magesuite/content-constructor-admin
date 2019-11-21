@@ -273,6 +273,7 @@ const contentConstructor: vuejs.ComponentOption = {
             ) => void
         ): void {
             const component: any = this;
+            const modalId: string = `content-constructor-picker-${this.pageType}`;
 
             // Save adding callback for async use.
             this._addComponentInformation = addComponentInformation;
@@ -296,13 +297,14 @@ const contentConstructor: vuejs.ComponentOption = {
                 }
             };
             // Create or Show picker modal depending if exists
-            if ($pickerModal) {
+            if ($pickerModal && $pickerModal.modal.attr('id') === modalId) {
                 $pickerModal.openModal();
             } else {
                 $pickerModal = modal(
                     pickerModalOptions,
                     $(this.$els.pickerModal)
                 );
+                $pickerModal.modal.attr('id', modalId);
             }
         },
 
