@@ -1,0 +1,194 @@
+// Version 0.0.1
+.cc-accordion-configurator {
+    $root: &;
+
+    &__section {
+        position: relative;
+        margin: 3rem 0 0;
+        padding: 1.5rem;
+        background: #fff;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+        transition: box-shadow 0.15s ease-in-out;
+
+        &:hover {
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.18);
+
+            .cc-component-adder {
+                z-index: 7;
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        &--animating {
+            pointer-events: none;
+            transition: box-shadow 0.15s ease-in-out,
+                transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+        }
+    }
+
+    &__option:not(:last-child) {
+        margin-bottom: 1.5rem;
+    }
+
+    &__group--animating {
+        pointer-events: none;
+        transition: box-shadow 0.15s ease-in-out,
+            transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+    }
+
+    &__group-content {
+        overflow: hidden;
+    }
+
+    &__group-headline {
+        width: calc(100% - 15rem);
+        margin: 0 0 1.5rem;
+        position: relative;
+    }
+
+    &__group-headline-input {
+        font-size: 1.95rem !important;
+    }
+
+    &__group-tools {
+        position: absolute;
+        top: 0;
+        left: calc(100% + 1rem);
+
+        #{$root}__group:hover & {
+            transform: translate3d(0, 0, 0);
+            opacity: 1;
+        }
+    }
+
+    &__group-action-button {
+        width: 4rem !important;
+        height: 4rem !important;
+        padding: 0.5rem !important;
+    }
+
+    &__item {
+        margin: 0 0 1.5rem;
+        padding: 1rem;
+        background: #fcfcfc !important;
+        border: 1px dashed #cac3b3;
+        overflow: hidden;
+        transition: border-color 0.25s,
+            background-color 0.25s;
+
+        &:hover {
+            border-color: #0072ff;
+            background-color: rgba(#e4f7fe, 0.5) !important;
+        }
+
+        &--animating {
+            transition: border-color 0.25s,
+                background-color 0.25s,
+                transform 0.4s cubic-bezier(0, 0.7, 0.32, 1);
+        }
+    }
+
+    &__item-headline {
+        position: relative;
+        width: calc(100% - 13.9rem);
+    }
+
+    &__item-headline-input {
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
+        line-height: 1.3;
+    }
+
+    &__wysiwyg-buttons {
+        margin: 1rem 0 0.4rem;
+
+        button {
+            font-weight: 400;
+            background-color: #f0f0f0;
+            border-color: rgba(0,0,0,0.2);
+
+            &:hover,
+            &:focus,
+            &:active {
+                background-color: #e3e3e3;
+            }
+        }
+    }
+
+    &__textarea {
+        vertical-align: top;
+        width: 100%;
+        max-width: none;
+        min-height: 20.6rem;
+    }
+
+    &__item-tools {
+        position: absolute;
+        top: 0;
+        left: calc(100% + 1rem);
+
+        #{$root}__item:hover & {
+            transform: translate3d(0, 0, 0);
+            opacity: 1;
+        }
+
+        .cc-component-actions__button[disabled] {
+            background-color: transparent !important;
+        }
+    }
+
+    &__group-tools,
+    &__item-tools {
+        transform: translate3d(6rem, 0, 0);
+        opacity: 0;
+        transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1),
+                opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
+    }
+
+    &__add-item-button {
+        margin: 0;
+        font-size: 1.45rem !important;
+        border-style: dashed !important;
+        border-color: #cac3b3;
+    }
+
+    .cc-component-actions {
+        padding: 0;
+        box-shadow: none;
+        background-color: transparent;
+
+        &__button:not(.cc-component-actions__button--add) {
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 3.6rem;
+            height: 3.6rem;
+            padding: 0.3rem;
+
+            &:first-child {
+                margin-left: 0;
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    .cc-input__input,
+    .cc-input__textarea {
+        &::placeholder {
+            color: #e3e3e3;
+        }
+    }
+
+    .cc-input__input {
+        max-width: none;
+    }
+
+    .cc-input__textarea {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
