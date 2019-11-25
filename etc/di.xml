@@ -145,8 +145,8 @@
                     </item>
                     <item name="accordion" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Accordion</item>
-                        <item name="name" xsi:type="string">Faq</item>
-                        <item name="description" xsi:type="string">This component allows to add accordion component.</item>
+                        <item name="name" xsi:type="string">Accordion</item>
+                        <item name="description" xsi:type="string">Allows to create collapsible sections. Handy for FAQ and not only</item>
                     </item>
                 </item>
             </argument>

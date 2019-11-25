@@ -39,6 +39,7 @@ import staticBlockConfigurator from './components/static-block/configurator/stat
 import teaserAndTextConfigurator from './components/teaser-and-text/configurator/teaser-and-text';
 import instagramFeedConfigurator from './components/instagram-feed/configurator/instagram-feed';
 import mosaicConfigurator from './components/mosaic/configurator/mosaic';
+import accordionConfigurator from './components/accordion/configurator/accordion';
 
 // Use Vue resource
 Vue.use(vr);
@@ -132,6 +133,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'teaser-and-text-configurator': teaserAndTextConfigurator,
         'instagram-feed-configurator': instagramFeedConfigurator,
         'mosaic-configurator': mosaicConfigurator,
+        'accordion-configurator': accordionConfigurator,
     },
     props: {
         configuration: {
@@ -273,6 +275,7 @@ const contentConstructor: vuejs.ComponentOption = {
             ) => void
         ): void {
             const component: any = this;
+            const modalId: string = `content-constructor-picker-${this.pageType}`;
 
             // Save adding callback for async use.
             this._addComponentInformation = addComponentInformation;
@@ -296,13 +299,14 @@ const contentConstructor: vuejs.ComponentOption = {
                 }
             };
             // Create or Show picker modal depending if exists
-            if ($pickerModal) {
+            if ($pickerModal && $pickerModal.modal.attr('id') === modalId) {
                 $pickerModal.openModal();
             } else {
                 $pickerModal = modal(
                     pickerModalOptions,
                     $(this.$els.pickerModal)
                 );
+                $pickerModal.modal.attr('id', modalId);
             }
         },
 
