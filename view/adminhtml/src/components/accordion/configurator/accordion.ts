@@ -64,15 +64,15 @@ const accordionConfigurator: vuejs.ComponentOption = {
             </div>
         </div>
 
-        <div class="cc-accordion-configurator__section cc-accordion-configurator__group" v-for="(groupIndex, group) in configuration.groups" id="cc-accordion-group-{{ groupIndex }}" v-if="supportGroups">
-            <component-adder class="cc-component-adder cc-component-adder--first">
+        <div class="cc-accordion-configurator__section cc-accordion-configurator__group" v-for="(groupIndex, group) in configuration.groups" id="cc-accordion-group-{{ groupIndex }}">
+            <component-adder class="cc-component-adder cc-component-adder--first" v-if="supportGroups">
                 <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-accordion-configurator__item-action-button" @click="createGroup(groupIndex)">
                     <svg class="cc-action-button__icon cc-action-button__icon--size_300"><use xlink:href="#icon_plus"></use></svg>
                 </button>
             </component-adder>
 
             <div class="cc-accordion-configurator__group-content">
-                <div class="cc-accordion-configurator__group-headline">
+                <div class="cc-accordion-configurator__group-headline" v-if="supportGroups">
                     <div class="cc-input cc-input cc-accordion-configurator__group-headline-input-wrapper">
                         <input type="text" v-model="group.headline" class="cc-input__input cc-accordion-configurator__group-headline-input" placeholder="{{ 'Group title' | translate }}">
                     </div>
@@ -205,109 +205,11 @@ const accordionConfigurator: vuejs.ComponentOption = {
                 </div>
             </div>
 
-            <component-adder class="cc-component-adder cc-component-adder--last" v-if="configuration.groups.length">
+            <component-adder class="cc-component-adder cc-component-adder--last" v-if="supportGroups && configuration.groups.length">
                 <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-accordion-configurator__item-action-button" @click="createGroup(groupIndex + 1)">
                     <svg class="cc-action-button__icon cc-action-button__icon--size_300"><use xlink:href="#icon_plus"></use></svg>
                 </button>
             </component-adder>
-        </div>
-
-        <div class="cc-accordion-configurator__section cc-accordion-configurator__group" v-if="!supportGroups">
-            <div class="cc-accordion-configurator__group-content">
-                <div class="cc-accordion-configurator__items">
-                    <div class="cc-accordion-configurator__item" v-for="item in configuration.groups[0].items" id="cc-accordion-item-0-{{ $index }}">
-                        <div class="cc-input cc-accordion-configurator__item-headline">
-                            <div class="cc-accordion-configurator__item-headline-input-wrapper">
-                                <input type="text" v-model="item.headline" class="cc-input__input cc-accordion-configurator__input cc-accordion-configurator__item-headline-input" placeholder="{{ 'Headline' | translate }}">
-                            </div>
-                            <div class="cc-accordion-configurator__item-tools">
-                                <component-actions>
-                                    <template slot="cc-component-actions__buttons">
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-accordion-configurator__action-button"
-                                            :class="{'cc-action-button--look_disabled': isFirstItem($index)}"
-                                            @click="moveItemUp(0, $index)"
-                                            :disabled="isFirstItem($index)"
-                                        >
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_arrow-up"></use>
-                                            </svg>
-                                        </button>
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-accordion-configurator__action-button"
-                                            :class="{'cc-action-button--look_disabled': groups[0].items.length < 2}"
-                                            @click="deleteItem(0, $index)"
-                                            :disabled="groups[0].items.length < 2"
-                                        >
-                                            <svg class="cc-action-button__icon">
-                                                <use xlink:href="#icon_trash-can"></use>
-                                            </svg>
-                                        </button>
-                                        <button
-                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-accordion-configurator__action-button"
-                                            :class="{'cc-action-button--look_disabled': isLastItem(0, $index)}"
-                                            :disabled="isLastItem(0, $index)"
-                                            @click="moveItemDown(0, $index)"
-                                        >
-                                            <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                                                <use xlink:href="#icon_arrow-down"></use>
-                                            </svg>
-                                        </button>
-                                    </template>
-                                </component-actions>
-                            </div>
-                        </div>
-                        <div class="cc-input cc-accordion-configurator__item-content">
-                            <div class="cc-accordion-configurator__item-editor">
-                                <div class="buttons-set | cc-accordion-configurator__wysiwyg-buttons">
-                                    <button 
-                                        type="button" 
-                                        class="scalable action-show-hide" 
-                                        @click="toggleEditor(item.editorId, 0, $index)"
-                                    >
-                                        {{ item.isEditorOpened ? 'Hide Editor' : 'Show Editor' | translate }}
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        class="scalable action-add-widget plugin" 
-                                        @click="openWidgetModal(item.editorId)" 
-                                        v-show="!item.isEditorOpened"
-                                    >
-                                        {{ 'Insert Widget' | translate }}...
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        class="scalable action-add-image plugin" 
-                                        @click="openMediaModal(item.editorId)" 
-                                        v-show="!item.isEditorOpened"
-                                    >
-                                        {{ 'Insert Image' | translate }}...
-                                    </button>
-                                    <button 
-                                        type="button" 
-                                        class="scalable add-variable plugin" 
-                                        @click="openMagentoVariablesModal(item.editorId)" 
-                                        v-show="!item.isEditorOpened"
-                                    >
-                                        {{ 'Insert Variable' | translate }}...
-                                    </button>
-                                </div>
-                                <textarea v-model="item.content" class="cc-input__textarea cc-accordion-configurator__textarea cc-accordion-configurator__item-content-textarea" placeholder="{{ 'Content (including HTML)' | translate }}" data-item-index="0-{{ $index }}" id="{{ item.editorId }}"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button 
-                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--add cc-accordion-configurator__add-item-button" 
-                        @click="createItem(0)"
-                    >
-                        <svg class="cc-action-button__icon cc-action-button__icon--size_100">
-                            <use xlink:href="#icon_plus"></use>
-                        </svg>
-                        {{ 'Add' | translate }}
-                    </button>
-                </div>
-            </div>
         </div>
     </div>`,
     props: {
