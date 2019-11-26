@@ -1,6 +1,7 @@
-<?php 
-/** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Accordion */ 
-$wysiwygConfig = $block->getWysiwygConfig()->toArray(); 
+<?php
+/** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Accordion */
+$wysiwygConfig = $block->getWysiwygConfig()->toArray();
 ?>
 <accordion-configurator class="cc-accordion-configurator <?=$block->getClasses()?>" :configuration="initialComponentConfiguration" :cc-config="ccConfig" wysiwyg-config='<?=str_replace("'", "&#39;", json_encode($wysiwygConfig))?>' :uploader-base-url="uploaderUrl" :admin-prefix="adminPrefix"></accordion-configurator>
+
 
