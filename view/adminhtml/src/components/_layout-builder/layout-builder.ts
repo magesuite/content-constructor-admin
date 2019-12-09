@@ -29,6 +29,7 @@ import staticBlockPreview from '../static-block/preview/static-block';
 import teaserAndTextPreview from '../teaser-and-text/preview/teaser-and-text';
 import instagramFeedPreview from '../instagram-feed/preview/instagram-feed';
 import mosaicPreview from '../mosaic/preview/mosaic';
+import accordionPreview from '../accordion/preview/accordion';
 
 /**
  * Single component information interface.
@@ -218,6 +219,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         'teaser-and-text-preview': teaserAndTextPreview,
         'instagram-feed-preview': instagramFeedPreview,
         'mosaic-preview': mosaicPreview,
+        'accordion-preview': accordionPreview,
     },
     props: {
         /**
