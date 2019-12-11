@@ -3557,7 +3557,6 @@ var heroCarouselConfigurator = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save': function () {
-            //this.cleanupConfiguration();
             this.onSave();
         },
     },
@@ -3566,99 +3565,6 @@ var heroCarouselConfigurator = {
             this.configuration[optionCategory] = this.scenarioOptions[optionCategory][optionId];
             this.configuration[optionCategory].id = optionId;
         },
-        /* Opens M2's built-in image manager modal
-         * Manages all images: image upload from hdd, select image that was already uploaded to server
-         * @param index {number} - index of image of hero item
-         */
-        getImageUploader: function (index) {
-            MediabrowserUtility.openDialog(this.uploaderBaseUrl + "target_element_id/hero-img-" + index + "/", 'auto', 'auto', $t('Insert File...'), {
-                closed: true,
-            });
-        },
-        /* Listener for image uploader
-         * Since Magento does not provide any callback after image has been chosen
-         * we have to watch for target where decoded url is placed
-         */
-        imageUploadListener: function () {
-            var component = this;
-            var isAlreadyCalled = false;
-            // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
-            $(document).on('change', '.cc-hero-carousel-configurator__image-url', function (event) {
-                if (!isAlreadyCalled) {
-                    isAlreadyCalled = true;
-                    component.onImageUploaded(event.target);
-                    setTimeout(function () {
-                        isAlreadyCalled = false;
-                    }, 100);
-                }
-            });
-        },
-        /* Action after image was uploaded
-         * URL is encoded, so strip it and decode Base64 to get {{ media url="..."}} format
-         * which will go to the items.image and will be used to display image on front end
-         * @param input { object } - input with raw image path which is used in admin panel
-         */
-        onImageUploaded: function (input) {
-            var _this = this;
-            var itemIndex = input.id.substr(input.id.lastIndexOf('-') + 1);
-            var encodedImage = input.value.match('___directive/([a-zA-Z0-9]*)')[1];
-            var imgEndpoint = this.imageEndpoint.replace('{/encoded_image}', encodedImage);
-            this.configuration.items[itemIndex].decodedImage = Base64
-                ? Base64.decode(encodedImage)
-                : window.atob(encodedImage);
-            var img = new Image();
-            img.onload = function () {
-                var ar = _this.getAspectRatio(img.naturalWidth, img.naturalHeight);
-                _this.configuration.items[itemIndex].image = img.getAttribute('src');
-                _this.configuration.items[itemIndex].sizeInfo = img.naturalWidth + "x" + img.naturalHeight + "px (" + ar + ")";
-                _this.configuration.items[itemIndex].aspectRatio = ar;
-                setTimeout(function () {
-                    _this.checkImageSizes();
-                    _this.onChange();
-                }, 400);
-            };
-            img.src = imgEndpoint;
-        },
-        /* Opens modal with M2 built-in widget chooser
-         * @param index {number} - index of teaser item to know where to place output of widget chooser
-         */
-        openCtaTargetModal: function (index) {
-            widgetTools.openDialog(window.location.origin + "/" + this.adminPrefix + "/admin/widget/index/filter_widgets/Link/widget_target_id/hero-ctatarget-output-" + index + "/");
-            this.wWidgetListener(index);
-        },
-        /* Sets listener for widget chooser
-         * It triggers component.onChange to update component's configuration
-         * after value of item.href is changed
-         */
-        widgetSetListener: function () {
-            var _this = this;
-            $('.cc-hero-carousel-configurator__cta-target-link').on('change', function () {
-                _this.onChange();
-            });
-        },
-        /*
-         * Check if widget chooser is loaded. If not, wait for it, if yes:
-         * Override default onClick for "Insert Widget" button in widget's modal window
-         * to clear input's value before inserting new one
-         * @param {number} index Hero item's index in array.
-         */
-        wWidgetListener: function (itemIndex) {
-            var _this = this;
-            if (typeof wWidget !== 'undefined' &&
-                widgetTools.dialogWindow[0].innerHTML !== '') {
-                var button = widgetTools.dialogWindow[0].querySelector('#insert_button');
-                button.onclick = null;
-                button.addEventListener('click', function () {
-                    _this.configuration.items[itemIndex].href = '';
-                    wWidget.insertWidget();
-                });
-            }
-            else {
-                window.setTimeout(function () {
-                    _this.wWidgetListener(itemIndex);
-                }, 300);
-            }
-        },
         /**
          * Creates new hero item and adds it to a specified index.
          * @param {number} index New component's index in components array.
@@ -3666,139 +3572,6 @@ var heroCarouselConfigurator = {
         createNewHeroItem: function (index) {
             this.configuration.items.splice(index, 0, JSON.parse(JSON.stringify(teaserPrototype)));
             this.onChange();
-        },
-        /**
-         * Moves hero item under given index up by swaping it with previous element.
-         * @param {number} index Hero item's index in array.
-         */
-        moveHeroItemUp: function (index) {
-            var _this = this;
-            if (index > 0) {
-                var $thisItem_1 = $("#m2c-hero-carousel-item-" + index);
-                var $prevItem_1 = $("#m2c-hero-carousel-item-" + (index - 1));
-                $thisItem_1
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY( " + -Math.abs($prevItem_1.outerHeight(true)) + "px)");
-                $prevItem_1
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY(" + $thisItem_1.outerHeight(true) + "px)");
-                setTimeout(function () {
-                    _this.configuration.items.splice(index - 1, 0, _this.configuration.items.splice(index, 1)[0]);
-                    _this.onChange();
-                    $thisItem_1
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                    $prevItem_1
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                }, 400);
-            }
-        },
-        /**
-         * Moves hero item under given index down by swaping it with next element.
-         * @param {number} index Hero item's index in array.
-         */
-        moveHeroItemDown: function (index) {
-            var _this = this;
-            if (index < this.configuration.items.length - 1) {
-                var $thisItem_2 = $("#cc-hero-carousel-item-" + index);
-                var $nextItem_1 = $("#cc-hero-carousel-item-" + (index + 1));
-                $thisItem_2
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY(" + $nextItem_1.outerHeight(true) + "px)");
-                $nextItem_1
-                    .addClass('cc-hero-carousel-configurator__item--animating')
-                    .css('transform', "translateY(" + -Math.abs($thisItem_2.outerHeight(true)) + "px)");
-                setTimeout(function () {
-                    _this.configuration.items.splice(index + 1, 0, _this.configuration.items.splice(index, 1)[0]);
-                    _this.onChange();
-                    $thisItem_2
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                    $nextItem_1
-                        .removeClass('cc-hero-carousel-configurator__item--animating')
-                        .css('transform', '');
-                }, 400);
-            }
-        },
-        /**
-         * Tells if item with given index is the first hero item.
-         * @param  {number}  index Index of the hero item.
-         * @return {boolean}       If hero item is first in array.
-         */
-        isFirstHeroItem: function (index) {
-            return index === 0;
-        },
-        /**
-         * Tells if hero item with given index is the last hero item.
-         * @param  {number}  index Index of the hero item.
-         * @return {boolean}       If hero item is last in array.
-         */
-        isLastHeroItem: function (index) {
-            return index === this.configuration.items.length - 1;
-        },
-        /* Removes hero item after Delete button is clicked
-         * and triggers hero item's onChange to update it's configuration
-         * @param index {number} - index of hero item to remove
-         */
-        deleteHeroItem: function (index) {
-            var component = this;
-            confirm({
-                content: $t('Are you sure you want to delete this item?'),
-                actions: {
-                    confirm: function () {
-                        component.configuration.items.splice(index, 1);
-                        component.onChange();
-                    },
-                },
-            });
-        },
-        /* Cleans configuration for M2C content constructor after Saving component
-         * All empty hero items has to be removed to not get into configuration object
-         */
-        cleanupConfiguration: function () {
-            var filteredArray = this.configuration.items.filter(function (item) { return item.image !== ''; });
-            this.configuration.items = filteredArray;
-            this.onChange();
-        },
-        /* Checks if images are all the same size
-         * If not - displays error by firing up this.displayImageSizeMismatchError()
-         * @param images {array} - array of all uploaded images
-         */
-        checkImageSizes: function () {
-            var itemsToCheck = JSON.parse(JSON.stringify(this.configuration.items)).filter(function (item) {
-                return Boolean(item.aspectRatio); // Filter out items without aspect ratio set yet.
-            });
-            for (var i = 0; i < itemsToCheck.length; i++) {
-                if (itemsToCheck[i].aspectRatio !== itemsToCheck[0].aspectRatio) {
-                    alert({
-                        title: $t('Warning'),
-                        content: $t('Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'),
-                    });
-                    return false;
-                }
-            }
-            return true;
-        },
-        /* Returns greatest common divisor for 2 numbers
-         * @param a {number}
-         * @param b {number}
-         * @return {number} - greatest common divisor
-         */
-        getGreatestCommonDivisor: function (a, b) {
-            if (!b) {
-                return a;
-            }
-            return this.getGreatestCommonDivisor(b, a % b);
-        },
-        /* Returns Aspect ratio for 2 numbers based on GDC algoritm (greatest common divisor)
-         * @param a {number}
-         * @param b {number}
-         * @return {number} - greatest common divisor
-         */
-        getAspectRatio: function (a, b) {
-            var c = this.getGreatestCommonDivisor(a, b);
-            return a / c + ":" + b / c;
         },
         /**
          * If there are some legacy teasers saved, maps their configuration to
@@ -3846,8 +3619,6 @@ var heroCarouselConfigurator = {
         }
     },
     ready: function () {
-        this.imageUploadListener();
-        this.widgetSetListener();
         if (!this.configuration.mobileDisplayVariant.id) {
             $('.cc-hero-carousel-configurator__option:first-child').click();
         }
