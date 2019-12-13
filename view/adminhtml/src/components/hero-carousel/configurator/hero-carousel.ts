@@ -1,7 +1,5 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
-import alert from 'Magento_Ui/js/modal/alert';
-import confirm from 'Magento_Ui/js/modal/confirm';
 
 import actionButton from '../../../utils/action-button/action-button';
 import componentActions from '../../../utils/component-actions/component-actions';
