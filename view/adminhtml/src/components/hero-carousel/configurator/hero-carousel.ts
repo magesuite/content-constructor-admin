@@ -72,17 +72,17 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                         </svg>
                     </button>
                 </component-adder>
-                
-                <teaser-configurator 
+
+                <teaser-configurator
                     :class="cc-teaser-configurator--image-teaser"
-                    :teaser-index="$index" 
-                    :configuration="items[$index]" 
-                    :parent-configuration="configuration" 
-                    :uploader-base-url="uploaderBaseUrl" 
-                    :image-endpoint="imageEndpoint" 
-                    :admin-prefix="adminPrefix" 
-                    :cc-config="ccConfig" 
-                    :caller-component-type="hero-carousel"  
+                    :teaser-index="$index"
+                    :configuration="items[$index]"
+                    :parent-configuration="configuration"
+                    :uploader-base-url="uploaderBaseUrl"
+                    :image-endpoint="imageEndpoint"
+                    :admin-prefix="adminPrefix"
+                    :cc-config="ccConfig"
+                    :caller-component-type="hero-carousel"
                 ></teaser-configurator>
 
                 <component-adder class="cc-component-adder cc-component-adder--last">
@@ -203,7 +203,12 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * Image Teaser 2.0 interface and updates hero configuration
          */
         mapLegacyConfiguration(): void {
-            if (this.configuration.items[0].headline) {
+            const isLegacyTeaserConfiguration: boolean = Object.keys(this.configuration.items[0]).some(
+                (key: String) => {
+                    return key === 'headline' || 'subheadline' || 'paragraph' || 'ctaLabel' || 'href' || 'colorScheme' || 'aspectRatio' || 'decodedImage' || 'displayVariant'
+            });
+
+            if (isLegacyTeaserConfiguration) {
                 this.configuration.items.forEach((item: any, index: any) => {
                     let newItem: any = JSON.parse(JSON.stringify(teaserItemPrototype));
                     newItem.image = {
@@ -218,9 +223,37 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                         label: item.ctaLabel,
                         href: item.href
                     };
-                    newItem.content_align = {
-                        x: 1,
-                        y: 2
+                    switch(item.displayVariant) {
+                        case ('variant-1'):
+                            newItem.content_align = {
+                                x: 1,
+                                y: 2
+                            }
+                            break;
+                        case ('variant-2'):
+                            newItem.content_align = {
+                                x: 1,
+                                y: 3
+                            }
+                            break;
+                        case ('variant-3'):
+                            newItem.content_align = {
+                                x: 2,
+                                y: 2
+                            }
+                            break;
+                        case ('variant-4'):
+                            newItem.content_align = {
+                                x: 2,
+                                y: 3
+                            }
+                            break;
+                        default:
+                            newItem.content_align = {
+                                x: 1,
+                                y: 1
+                            }
+                            break;
                     }
                     newItem.optimizers.color_scheme = item.colorScheme;
                     this.$set(`configuration.items[${index}]`, newItem);

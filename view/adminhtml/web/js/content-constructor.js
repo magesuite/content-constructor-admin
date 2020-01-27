@@ -3479,7 +3479,7 @@ var heroCarouselConfigurator = {
         'component-actions': componentActions,
         'teaser-configurator': teaserConfigurator
     },
-    template: "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n        <section class=\"cc-hero-carousel-configurator__section\">\n            <h3 class=\"cc-hero-carousel-configurator__subtitle\">Mobile Devices Scenario</h3>\n            <div class=\"cc-hero-carousel-configurator__scenario-options\">\n                <ul class=\"cc-hero-carousel-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-hero-carousel-configurator__option--selected': configuration.mobileDisplayVariant.id == optionId,\n                        }\"\n                        class=\"cc-hero-carousel-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileDisplayVariant\"\n                        @click=\"setOption('mobileDisplayVariant', optionId)\">\n                        <div class=\"cc-hero-carousel-configurator__option-wrapper\">\n                            <svg class=\"cc-hero-carousel-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-hero-carousel-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <h3 class=\"cc-hero-carousel-configurator__title\">Content</h3>\n\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.items\">\n            <div class=\"cc-hero-carousel-configurator__item\" id=\"cc-hero-carousel-item-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n                \n                <teaser-configurator \n                    :class=\"cc-teaser-configurator--image-teaser\"\n                    :teaser-index=\"$index\" \n                    :configuration=\"items[$index]\" \n                    :parent-configuration=\"configuration\" \n                    :uploader-base-url=\"uploaderBaseUrl\" \n                    :image-endpoint=\"imageEndpoint\" \n                    :admin-prefix=\"adminPrefix\" \n                    :cc-config=\"ccConfig\" \n                    :caller-component-type=\"hero-carousel\"  \n                ></teaser-configurator>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-hero-carousel-configurator__modal\" v-el:error-modal></div>\n    </div>",
+    template: "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n        <section class=\"cc-hero-carousel-configurator__section\">\n            <h3 class=\"cc-hero-carousel-configurator__subtitle\">Mobile Devices Scenario</h3>\n            <div class=\"cc-hero-carousel-configurator__scenario-options\">\n                <ul class=\"cc-hero-carousel-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-hero-carousel-configurator__option--selected': configuration.mobileDisplayVariant.id == optionId,\n                        }\"\n                        class=\"cc-hero-carousel-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileDisplayVariant\"\n                        @click=\"setOption('mobileDisplayVariant', optionId)\">\n                        <div class=\"cc-hero-carousel-configurator__option-wrapper\">\n                            <svg class=\"cc-hero-carousel-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-hero-carousel-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <h3 class=\"cc-hero-carousel-configurator__title\">Content</h3>\n\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.items\">\n            <div class=\"cc-hero-carousel-configurator__item\" id=\"cc-hero-carousel-item-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <teaser-configurator\n                    :class=\"cc-teaser-configurator--image-teaser\"\n                    :teaser-index=\"$index\"\n                    :configuration=\"items[$index]\"\n                    :parent-configuration=\"configuration\"\n                    :uploader-base-url=\"uploaderBaseUrl\"\n                    :image-endpoint=\"imageEndpoint\"\n                    :admin-prefix=\"adminPrefix\"\n                    :cc-config=\"ccConfig\"\n                    :caller-component-type=\"hero-carousel\"\n                ></teaser-configurator>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-hero-carousel-configurator__modal\" v-el:error-modal></div>\n    </div>",
     props: {
         /*
          * Single's component configuration
@@ -3580,7 +3580,10 @@ var heroCarouselConfigurator = {
          */
         mapLegacyConfiguration: function () {
             var _this = this;
-            if (this.configuration.items[0].headline) {
+            var isLegacyTeaserConfiguration = Object.keys(this.configuration.items[0]).some(function (key) {
+                return key === 'headline' || 'subheadline' || 'paragraph' || 'ctaLabel' || 'href' || 'colorScheme' || 'aspectRatio' || 'decodedImage' || 'displayVariant';
+            });
+            if (isLegacyTeaserConfiguration) {
                 this.configuration.items.forEach(function (item, index) {
                     var newItem = JSON.parse(JSON.stringify(teaserPrototype));
                     newItem.image = {
@@ -3595,10 +3598,38 @@ var heroCarouselConfigurator = {
                         label: item.ctaLabel,
                         href: item.href
                     };
-                    newItem.content_align = {
-                        x: 1,
-                        y: 2
-                    };
+                    switch (item.displayVariant) {
+                        case ('variant-1'):
+                            newItem.content_align = {
+                                x: 1,
+                                y: 2
+                            };
+                            break;
+                        case ('variant-2'):
+                            newItem.content_align = {
+                                x: 1,
+                                y: 3
+                            };
+                            break;
+                        case ('variant-3'):
+                            newItem.content_align = {
+                                x: 2,
+                                y: 2
+                            };
+                            break;
+                        case ('variant-4'):
+                            newItem.content_align = {
+                                x: 2,
+                                y: 3
+                            };
+                            break;
+                        default:
+                            newItem.content_align = {
+                                x: 1,
+                                y: 1
+                            };
+                            break;
+                    }
                     newItem.optimizers.color_scheme = item.colorScheme;
                     _this.$set("configuration.items[" + index + "]", newItem);
                 });
