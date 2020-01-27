@@ -3580,9 +3580,7 @@ var heroCarouselConfigurator = {
          */
         mapLegacyConfiguration: function () {
             var _this = this;
-            var isLegacyTeaserConfiguration = Object.keys(this.configuration.items[0]).some(function (key) {
-                return key === 'headline' || 'subheadline' || 'paragraph' || 'ctaLabel' || 'href' || 'colorScheme' || 'aspectRatio' || 'decodedImage' || 'displayVariant';
-            });
+            var isLegacyTeaserConfiguration = Object.keys(this.configuration.items[0]).some(function (key) { return ['headline', 'subheadline', 'paragraph', 'ctaLabel', 'href', 'colorScheme', 'aspectRatio', 'decodedImage', 'displayVariant'].indexOf(key) !== -1; });
             if (isLegacyTeaserConfiguration) {
                 this.configuration.items.forEach(function (item, index) {
                     var newItem = JSON.parse(JSON.stringify(teaserPrototype));

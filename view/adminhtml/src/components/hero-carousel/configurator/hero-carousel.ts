@@ -204,9 +204,8 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          */
         mapLegacyConfiguration(): void {
             const isLegacyTeaserConfiguration: boolean = Object.keys(this.configuration.items[0]).some(
-                (key: String) => {
-                    return key === 'headline' || 'subheadline' || 'paragraph' || 'ctaLabel' || 'href' || 'colorScheme' || 'aspectRatio' || 'decodedImage' || 'displayVariant'
-            });
+                (key: string) => ['headline', 'subheadline', 'paragraph', 'ctaLabel', 'href', 'colorScheme', 'aspectRatio', 'decodedImage', 'displayVariant'].indexOf(key) !== -1
+            );
 
             if (isLegacyTeaserConfiguration) {
                 this.configuration.items.forEach((item: any, index: any) => {
