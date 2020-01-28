@@ -31,10 +31,10 @@ class Product implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Cont
         $configuration = [];
 
         if ($product !== null) {
-            $configuration = $this->xmlToComponentConfiguration->map($product->getCustomLayoutUpdate());
+            $configuration = $product->getContentConstructorContent();
         }
 
-        return json_encode($configuration);
+        return $configuration;
     }
 
     public function getPageType()

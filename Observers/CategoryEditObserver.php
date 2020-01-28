@@ -36,14 +36,8 @@ class CategoryEditObserver implements ObserverInterface
         $data = $request->getPostValue();
 
         if(isset($data['components']) AND !empty($data['components'])) {
-            $components = json_decode($data['components'], true);
-
-            $layoutUpdateXml = $this->configurationToXmlMapper->map($components, $category->getCustomLayoutUpdate());
-
-            $category->setCustomLayoutUpdate($layoutUpdateXml);
+            $category->setContentConstructorContent($data['components']);
         }
-
-        $this->clearLayoutCache();
     }
 
     private function clearLayoutCache()

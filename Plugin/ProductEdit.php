@@ -45,12 +45,8 @@ class ProductEdit
 
         $data = $this->request->getPostValue();
 
-        if(isset($data['components']) AND !empty($data['components'])) {
-            $components = json_decode($data['components'], true);
-
-            $layoutUpdateXml = $this->configurationToXmlMapper->map($components, $product->getCustomLayoutUpdate());
-
-            $product->setCustomLayoutUpdate($layoutUpdateXml);
+        if (isset($data['components']) && !empty($data['components'])) {
+            $product->setContentConstructorContent($data['components']);
         }
 
         $this->clearLayoutCache();

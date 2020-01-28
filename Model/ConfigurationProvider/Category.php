@@ -38,14 +38,14 @@ class Category implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Con
         $configuration = [];
 
         if ($category !== null) {
-            $configuration = $this->xmlToComponentConfiguration->map($category->getCustomLayoutUpdate());
+            $configuration = $category->getContentConstructorContent();
         }
 
         if (empty($configuration)) {
             $configuration = [self::CATEGORY_GRID_COMPONENT_DEFAULT_CONFIGURATION];
         }
 
-        return json_encode($configuration);
+        return $configuration;
     }
 
     public function getPageType()

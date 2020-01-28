@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="cms_page_render">
+        <observer name="add_content_constructor_content_to_layout" instance="MageSuite\ContentConstructorAdmin\Observers\AddConstructorContentToLayout"/>
+    </event>
+</config>

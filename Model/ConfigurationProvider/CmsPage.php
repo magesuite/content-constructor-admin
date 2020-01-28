@@ -31,10 +31,10 @@ class CmsPage implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Cont
         $configuration = [];
 
         if ($page !== null) {
-            $configuration = $this->xmlToComponentConfiguration->map($page->getLayoutUpdateXml());
+            $configuration = $page->getContentConstructorContent();
         }
 
-        return json_encode($configuration);
+        return $configuration;
     }
 
     public function getPageType()
