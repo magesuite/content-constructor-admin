@@ -6472,10 +6472,10 @@ var accordionConfigurator = {
                 content: $.mage.__('Are you sure you want to delete this group?'),
                 actions: {
                     confirm: function () {
-                        component.configuration.groups.splice(index, 1);
                         Object.keys(component.configuration.groups[index].items).forEach(function (itemIndex) {
                             delete component.editorInstances[("editor_" + index + "_" + itemIndex)];
                         });
+                        component.configuration.groups.splice(index, 1);
                     },
                 },
             });

@@ -355,13 +355,12 @@ const accordionConfigurator: vuejs.ComponentOption = {
                 ),
                 actions: {
                     confirm(): void {
-                        component.configuration.groups.splice(index, 1);
-
                         Object.keys(component.configuration.groups[index].items).forEach(
                             (itemIndex: string) => {
                                 delete component.editorInstances[`editor_${index}_${itemIndex}`];
                             }
                         );
+                        component.configuration.groups.splice(index, 1);
                     },
                 },
             });
@@ -392,8 +391,8 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    const thisGroupItems: object = this.configuration.groups[index].items;
-                    const prevGroupItems: object = this.configuration.groups[index - 1].items;
+                    const thisGroupItems: any = this.configuration.groups[index].items;
+                    const prevGroupItems: any = this.configuration.groups[index - 1].items;
 
                     Object.keys(thisGroupItems).forEach(
                         (itemIndex: string) => {
@@ -467,8 +466,8 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    const thisGroupItems: object = this.configuration.groups[index].items;
-                    const nextGroupItems: object = this.configuration.groups[index + 1].items;
+                    const thisGroupItems: any = this.configuration.groups[index].items;
+                    const nextGroupItems: any = this.configuration.groups[index + 1].items;
 
                     // Due to TinyMCE bug we need to disable editor before if changes its DOM position (if turned on)
                     Object.keys(thisGroupItems).forEach(
@@ -594,8 +593,8 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    const thisItem: object = this.configuration.groups[groupIndex].items[index];
-                    const prevItem: object = this.configuration.groups[groupIndex].items[index - 1];
+                    const thisItem: any = this.configuration.groups[groupIndex].items[index];
+                    const prevItem: any = this.configuration.groups[groupIndex].items[index - 1];
 
                     // Due to TinyMCE bug we need to disable editor before if changes its DOM position (if turned on)
                     if (thisItem.isEditorOpened) {
@@ -622,7 +621,6 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     if (thisItem.isEditorOpened) {
                         this.editorInstances[thisItem.editorId].toggle();
                     }
-                    
                     if (prevItem.isEditorOpened) {
                         this.editorInstances[prevItem.editorId].toggle();
                     }
@@ -658,13 +656,12 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     );
 
                 setTimeout((): void => {
-                    const thisItem: object = this.configuration.groups[groupIndex].items[index];
-                    const nextItem: object = this.configuration.groups[groupIndex].items[index + 1];
+                    const thisItem: any = this.configuration.groups[groupIndex].items[index];
+                    const nextItem: any = this.configuration.groups[groupIndex].items[index + 1];
 
                     if (thisItem.isEditorOpened) {
                         this.editorInstances[thisItem.editorId].toggle();
                     }
-                    
                     if (nextItem.isEditorOpened) {
                         this.editorInstances[nextItem.editorId].toggle();
                     }
@@ -684,7 +681,6 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     if (thisItem.isEditorOpened) {
                         this.editorInstances[thisItem.editorId].toggle();
                     }
-                    
                     if (nextItem.isEditorOpened) {
                         this.editorInstances[nextItem.editorId].toggle();
                     }
