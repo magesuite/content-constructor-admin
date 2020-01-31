@@ -42,7 +42,7 @@ class Category implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Con
         }
 
         if (empty($configuration)) {
-            $configuration = [self::CATEGORY_GRID_COMPONENT_DEFAULT_CONFIGURATION];
+            $configuration = json_encode([self::CATEGORY_GRID_COMPONENT_DEFAULT_CONFIGURATION]);
         }
 
         return $configuration;

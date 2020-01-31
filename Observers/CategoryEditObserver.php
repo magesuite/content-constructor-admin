@@ -38,6 +38,8 @@ class CategoryEditObserver implements ObserverInterface
         if(isset($data['components']) AND !empty($data['components'])) {
             $category->setContentConstructorContent($data['components']);
         }
+
+        $this->clearLayoutCache();
     }
 
     private function clearLayoutCache()

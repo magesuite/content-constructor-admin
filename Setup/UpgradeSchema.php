@@ -9,11 +9,15 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
 
     protected $eavSetupFactory;
 
+    protected $migration;
+
     public function __construct(
         \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory,
-        \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetup
+        \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetup,
+        \MageSuite\ContentConstructorAdmin\Service\Upgrade\Migration $migration
     ) {
         $this->eavSetupFactory = $eavSetupFactory->create(['setup' => $moduleDataSetup]);
+        $this->migration = $migration;
     }
 
     public function upgrade(\Magento\Framework\Setup\SchemaSetupInterface $setup, \Magento\Framework\Setup\ModuleContextInterface $context)
@@ -30,6 +34,8 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
                 'type' => 'text',
                 'label' => 'Content Constructor Content',
                 'input' => 'text',
+                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+                'default' => '[]',
                 'visible' => 0,
             ]);
 
@@ -37,8 +43,12 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
                 'type' => 'text',
                 'label' => 'Content Constructor Content',
                 'input' => 'text',
+                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+                'default' => '[]',
                 'visible' => 0,
             ]);
+
+            $this->migration->transferOldXmlValuesToNewJsonFields();
         }
         $setup->endSetup();
     }

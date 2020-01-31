@@ -18,7 +18,7 @@ class AddConstructorContentToLayout implements \Magento\Framework\Event\Observer
     {
         /** @var \Magento\Cms\Model\Page $page */
         $page = $observer->getData()["page"];
-        $updateContentJson = $page->getContentConstructorContent();
+        $updateContentJson = $page->getContentConstructorContent() ?: "[]";
         $updateContentXml = $this->configurationToXmlMapper->map(json_decode($updateContentJson, true), $page->getLayoutUpdateXml());
 
         $page->setLayoutUpdateXml($updateContentXml);
