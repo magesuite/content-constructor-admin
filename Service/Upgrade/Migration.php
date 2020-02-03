@@ -46,7 +46,7 @@ class Migration
     public function transferOldXmlValuesToNewJsonFields()
     {
         $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
-        $stores = $this->storeManager->getStores();
+        $storesIds = $this->getStoresIds();
 
         foreach ($this->collectionsToMigrate as $collection) {
             $this->addWithLayoutUpdateXmlOnlyFilter($collection);
@@ -56,10 +56,10 @@ class Migration
                 continue;
             }
 
-            foreach ($stores as $store) {
-                $this->storeManager->setCurrentStore($store->getId());
+            foreach ($storesIds as $storeId) {
+                $this->storeManager->setCurrentStore($storeId);
                 $collectionWithFilters = clone $collection;
-                $collectionWithFilters->addAttributeToSelect('*')->setStore($store);
+                $collectionWithFilters->addAttributeToSelect('*')->setStoreId($storeId);
                 $this->setJsonValueForItemsInCollation($collectionWithFilters);
             }
         }
@@ -113,5 +113,17 @@ class Migration
         }
 
         $collection->addAttributeToFilter("custom_layout_update", ["notnull" => true]);
+    }
+
+    protected function getStoresIds()
+    {
+        $result = [0];
+
+        $stores = $this->storeManager->getStores();
+        foreach ($stores as $store) {
+            $result[] = $store->getId();
+        }
+
+        return $result;
     }
 }
