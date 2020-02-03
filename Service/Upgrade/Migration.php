@@ -45,18 +45,31 @@ class Migration
 
     public function transferOldXmlValuesToNewJsonFields()
     {
+        $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
         $stores = $this->storeManager->getStores();
 
         foreach ($this->collectionsToMigrate as $collection) {
-            $portionNumber = 0;
-            while ($items = $this->getItemsPortion($collection, ++$portionNumber)) {
-                if ($collection instanceof \Magento\Cms\Model\ResourceModel\Page\Collection) {
-                    $this->transferXmlContentToJson($items);
-                    continue;
-                }
+            $this->addWithLayoutUpdateXmlOnlyFilter($collection);
 
-                $this->transferXmlContentToJsonForAllStores($items, $stores);
+            if ($collection instanceof \Magento\Cms\Model\ResourceModel\Page\Collection) {
+                $this->setJsonValueForItemsInCollation($collection);
+                continue;
             }
+
+            foreach ($stores as $store) {
+                $this->storeManager->setCurrentStore($store->getId());
+                $collectionWithFilters = clone $collection;
+                $collectionWithFilters->addAttributeToSelect('*')->setStore($store);
+                $this->setJsonValueForItemsInCollation($collectionWithFilters);
+            }
+        }
+    }
+
+    protected function setJsonValueForItemsInCollation($collection)
+    {
+        $portionNumber = 0;
+        while ($items = $this->getItemsPortion($collection, ++$portionNumber)) {
+            $this->transferXmlContentToJson($items);
         }
     }
 
@@ -76,24 +89,29 @@ class Migration
     protected function transferXmlContentToJson($items)
     {
         foreach ($items as $item) {
-            if (empty($item->getLayoutUpdateXml())) {
-                continue;
-            }
-
-            $configuration = $this->xmlToComponentConfigurationMapper->map($item->getLayoutUpdateXml());
+            $layoutUpdateXml = $this->getLayoutUpdateContent($item);
+            $configuration = $this->xmlToComponentConfigurationMapper->map($layoutUpdateXml);
             $item->setContentConstructorContent(json_encode($configuration));
             $item->save();
         }
     }
 
-    protected function transferXmlContentToJsonForAllStores($items, $stores)
+    protected function getLayoutUpdateContent($item)
     {
-        foreach ($stores as $store) {
-            foreach ($items as $item) {
-                $item->setStore($store->getId());
-            }
-
-            $this->transferXmlContentToJson($items);
+        if ($item instanceof \Magento\Cms\Model\Page) {
+            return $item->getLayoutUpdateXml();
         }
+
+        return $item->getCustomLayoutUpdate();
+    }
+
+    protected function addWithLayoutUpdateXmlOnlyFilter(&$collection)
+    {
+        if ($collection instanceof \Magento\Cms\Model\ResourceModel\Page\Collection) {
+            $collection->addFieldToFilter("layout_update_xml", ["notnull" => true]);
+            return;
+        }
+
+        $collection->addAttributeToFilter("custom_layout_update", ["notnull" => true]);
     }
 }
