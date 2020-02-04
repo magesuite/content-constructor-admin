@@ -49,17 +49,20 @@ class Migration
         $storesIds = $this->getStoresIds();
 
         foreach ($this->collectionsToMigrate as $collection) {
-            $this->addWithLayoutUpdateXmlOnlyFilter($collection);
-
             if ($collection instanceof \Magento\Cms\Model\ResourceModel\Page\Collection) {
+                $collection->addFieldToFilter("layout_update_xml", ["notnull" => true]);
                 $this->setJsonValueForItemsInCollation($collection);
                 continue;
             }
 
             foreach ($storesIds as $storeId) {
                 $this->storeManager->setCurrentStore($storeId);
+
                 $collectionWithFilters = clone $collection;
                 $collectionWithFilters->addAttributeToSelect('*')->setStoreId($storeId);
+                $collectionWithFilters->addAttributeToFilter("custom_layout_update", ["notnull" => true]);
+
+                $this->addWhereCustomLayoutUpdateIsNoNull($collectionWithFilters);
                 $this->setJsonValueForItemsInCollation($collectionWithFilters);
             }
         }
@@ -105,16 +108,6 @@ class Migration
         return $item->getCustomLayoutUpdate();
     }
 
-    protected function addWithLayoutUpdateXmlOnlyFilter(&$collection)
-    {
-        if ($collection instanceof \Magento\Cms\Model\ResourceModel\Page\Collection) {
-            $collection->addFieldToFilter("layout_update_xml", ["notnull" => true]);
-            return;
-        }
-
-        $collection->addAttributeToFilter("custom_layout_update", ["notnull" => true]);
-    }
-
     protected function getStoresIds()
     {
         $result = [0];
@@ -125,5 +118,11 @@ class Migration
         }
 
         return $result;
+    }
+
+    protected function addWhereCustomLayoutUpdateIsNoNull(&$collection)
+    {
+        $expr = new \Zend_Db_Expr("at_custom_layout_update.value IS NOT NULL");
+        $collection->getSelect()->reset(\Magento\Framework\DB\Select::WHERE)->where($expr);
     }
 }
