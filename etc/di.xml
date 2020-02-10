@@ -25,6 +25,10 @@
         <plugin name="add_cc_layout_xml_on_product_save" type="MageSuite\ContentConstructorAdmin\Plugin\ProductEdit" sortOrder="1" />
     </type>
 
+    <type name="Magento\Cms\Model\Block">
+        <plugin name="add_content_constructor_content_on_block_save" type="MageSuite\ContentConstructorAdmin\Plugin\Cms\Model\Block\AddContentConstructorOnBlockSave" sortOrder="10" />
+    </type>
+
     <type name="\MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
         <plugin name="remap_sorting_fields" type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields" sortOrder="1" />
     </type>
@@ -174,6 +178,12 @@
     <virtualType name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Brand" type="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
         <arguments>
             <argument name="configurationProvider" xsi:type="object">MageSuite\ContentConstructorAdmin\Model\ConfigurationProvider\Brand</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\CmsBlock" type="MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor">
+        <arguments>
+            <argument name="configurationProvider" xsi:type="object">MageSuite\ContentConstructorAdmin\Model\ConfigurationProvider\CmsBlock</argument>
         </arguments>
     </virtualType>
 </config>
