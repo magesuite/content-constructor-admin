@@ -29,6 +29,13 @@
         <plugin name="remap_sorting_fields" type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields" sortOrder="1" />
     </type>
 
+    <type name="Magento\Cms\Helper\Page">
+        <plugin name="add_xml_layout_update" type="MageSuite\ContentConstructorAdmin\Plugin\Cms\Helper\AddConstructorContentToLayout" sortOrder="1" />
+    </type>
+    <type name="Magento\Catalog\Helper\Product\View">
+        <plugin name="add_xml_layout_update" type="MageSuite\ContentConstructorAdmin\Plugin\Catalog\Helper\Product\AddConstructorContentToLayout" sortOrder="1" />
+    </type>
+
     <type name="MageSuite\ContentConstructorAdmin\Model\ComponentsPool">
         <arguments>
             <argument name="data" xsi:type="array">

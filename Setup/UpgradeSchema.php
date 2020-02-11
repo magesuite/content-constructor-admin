@@ -35,7 +35,6 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
                 'label' => 'Content Constructor Content',
                 'input' => 'text',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
-                'default' => '[]',
                 'visible' => 0,
             ]);
 
@@ -44,7 +43,6 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
                 'label' => 'Content Constructor Content',
                 'input' => 'text',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
-                'default' => '[]',
                 'visible' => 0,
             ]);
 
