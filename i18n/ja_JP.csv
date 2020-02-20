@@ -1,0 +1,167 @@
+"Components List","コンポーネントリスト"
+Preview,プレビュー
+"Select CMS Block","CMSブロックを選択"
+"Reset default styles of CMS Static Block","CMSブロックのデフォルトスタイルにリセット"
+Label,ラベル
+Target,ターゲット
+Select...,選択してください...
+Done,官僚
+"Type category name to search...","検索するカテゴリ名を入力..."
+"There are no categories matching your selection","一致するカテゴリがありませんでした"
+"Remove this category","このカテゴリを削除"
+Result,結果
+Results,結果
+Category,カテゴリ
+Subcategories,サブカテゴリ
+"Show products count","商品点数を表示"
+Yes,Yes
+No,No
+"Data source","データソース"
+"CMS Tags","CMSタグ"
+"CMS Pages IDs","CMSページID"
+"Multiple, comma-separated.","複数, カンマ区切り。"
+"Providing list of comma separated IDs will result in ignoring any CMS tags (if specified). Only pages with specified IDs will be displayed in exactly the same order as they are provided in the field.","IDがカンマ区切りで指定されている場合、CMSタグを除外した結果を表示します。 フィールドに入力されたIDの順番に結果を表示します。"
+"Teasers limit","ティーザー数"
+"4 teasers","4件"
+"8 teasers","8件"
+"16 teasers","16件"
+"All available teasers (no limit)","利用可能な全て(制限なし)"
+"Display variant","変数を表示"
+"{{ scenario }}","{{ scenario }}"
+"{{ option.name }}","{{ option.name }}"
+"Select tags...","タグを選択..."
+"Type tag-name to search...","検索するタグ名を入力..."
+"There are no tags matching your selection","一致するタグがありませんでした"
+"Remove this tag","このタグを削除"
+Headline,ヘッドライン
+Subheadline,サブヘッドライン
+"Advanced settings","拡張設定"
+"Level of Heading tag","Hタグのレベル"
+"Check offer","チェックオファー"
+"Text color scheme","テキストカラー"
+Light,ライト
+Dark,ダーク
+Paragraph,段落
+"CTA label","CTAラベル"
+"CTA target link","CTAターゲットリンク"
+Change,変更
+Upload,アップロード
+"Insert File...","ファイルを挿入..."
+"Are you sure you want to delete this item?","このアイテムを削除してもよろしいですか?"
+Warning,警告
+"Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.","アップロードされた画像の縦横比が異なっています。コンポーネントの表示内容がご期待通りにならない可能性があります。他の画像と同じ縦横比の画像をアップロードいただくことをおすすめします。"
+More,もっと
+"Teaser size","ティーザーサイズ"
+1x1,1x1
+1x2,1x2
+2x1,2x1
+2x2,2x2
+Position,位置
+Left,左
+Center,中央
+Right,右
+Row,行
+"as last","最低"
+"Show in mobiles","モバイルで表示"
+"Paragraph width","段落の幅"
+Identifier,識別子
+Title,タイトル
+"Number of columns","列数"
+"Don't split content - display full width","コンテンツを分割しない - 全幅で表示する"
+"Split content into 2 columns","2列に分割する"
+"Split content into 3 columns","3列に分割する"
+"Split content into 4 columns","4列に分割する"
+"Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.","コンテンツの表示方式を定義します。 コンテンツは定義した数の列に分割されます。この設定はスマートフォンのような小さい画面サイズには適用されません。スマートフォンの場合は1列で表示されます。"
+HTML,HTML
+"Show / Hide Editor","エディタの表示 / 非表示"
+"Insert Widget","ウィジェット挿入"
+"Insert Image","画像挿入"
+"Insert Variable","変数挿入"
+"An error occured. Please try again later.","エラーが発生しました。やり直してください。"
+Categories,カテゴリ
+SKUs,SKU
+"Multiple, comma-separated","複数, カンマ区切り"
+"Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.","カンマ区切りのSKUが指定された場合、このコンポーネントに対するフィルターや並べ替えの設定は無視されます。 カテゴリが指定されている場合も同様です。 指定されたSKUを持つ商品だけがSKUフィールドに指定した順に表示されます。"
+"Custom Data Provider","カスタムデータプロバイダー"
+Filter,フィルターなし
+"No filter","フィルターなし"
+"Order by","並び順"
+"Not specified","未指定"
+Ascending,昇順
+Descending,降順
+"Show ","表示 "
+"products ","商品 "
+"Category ID","カテゴリID"
+"Mobile Layout","モバイルレイアウト"
+"Tablet Layout","タブレットレイアウト"
+"Desktop Layout","デスクトップレイアウト"
+"Hero Teaser","ヒーローティーザー"
+"Button label","ボタンラベル"
+Url,URL
+"1 row of products","1列で表示"
+"2 rows of products","2列で表示"
+"3 rows of products","3列で表示"
+"4 rows of products","4列で表示"
+" rows of products","列で表示"
+"No Hero Teaser","ヒーローティーザーなし"
+"Hero Teaser on the left","ヒーローティーザーを左に配置"
+"Hero Teaser on the right","ヒーローティーザーを右に配置"
+"Are you sure you want to delete this step?","このステップを削除してもよろしいですか?"
+"All products","全ての商品"
+Tags,タグ
+"Desktop layout","デスクトップレイアウト"
+"teasers per row","1行あたりのティーザー"
+"Mobile layout","モバイルレイアウト"
+teasers,ティーザー
+"Would you like to delete CMS Block related to this component (CMS Block ID: %s) ?","このコンポーネントに関連しているCMSブロックを削除してもよろしいですか? (CMSブロックID: %s)"
+"Please select type of component","コンポーネントを選択してください"
+Cancel,キャンセル
+"Configure your component","コンポーネントを調整"
+Save,保存
+"Hey,","こんにちは、"
+"Something is wrong with configuration of your component. Please fix all errors before saving.","コンポーネント設定に誤りがあります。全てのエラーを保存前に修正してください。"
+teaser,ティーザー
+"This component is meant to be used only by developers due to high risk of breaking shop layout.","このコンポーネントは開発者向けです。ページレイアウトが崩れる恐れがあります。"
+"HTML markup","HTMLマークアップ"
+"Image Teaser","ティーザー画像"
+"No image teaser","ティーザー画像なし"
+"With image teaser","ティーザー画像つき"
+"Are you sure you want to delete this group?","このグループを削除してもよろしいですか?"
+"Page Information","ページ情報"
+"Allowed file types: png, gif, jpg, jpeg, svg.","許可されている拡張子: png, gif, jpg, jpeg, svg."
+"Logo Image","ロゴ画像"
+"Content Constructor","コンテンツコンストラクター"
+"You can add headlines and subheadlines to your CMS page.","CMSページにヘッドラインとサブヘッドラインを追加できます。"
+"You can place a button on your CMS page. Define the button text and the target link with this component.","CMSページにボタンを設置できます。ボタンのテキストとリンク先の指定も可能です。"
+"Choose this component if you want to include a text block to you CMS page.","CMSページにテキストブロックを追加できます。"
+"Choose this component to include an existing static block to your CMS page.","CMSページに既存の静的ブロックを追加できます。"
+"This component allows you to add several Hero images in a Slider. You can define Headlines, Subheadlines, Text and Buttons on each image.","バナースライダーを設置できます。ヘッドライン、サブヘッドライン、各画像にボタンやテキストの設置も可能です。"
+"This component allows you to add 1-6 image teasers with or without text in a row.","1行に1〜6枚のティーザー画像をテキスト無しで設置できます。"
+"This carousel will display products from a specific category on your CMS page.","指定したカテゴリの商品をスライダーで表示します。"
+"This horizontal line is used to visualize separation of two components.","2つのコンポーネントの間に水平線を挿入します。"
+"Highlight some brands and show them in a carousel by using this component.","ブランドのハイライトとカルーセルでの表示ができます。"
+"Include category links with this component.","カテゴリへのリンクを設置できます。"
+"This component will display products grid from a specific category.","指定したカテゴリの商品グリッドを表示します。"
+"This component displays any custom HTML without formatting.","任意のHTMLを設置できます。"
+"This component lists CMS pages by tag.","指定したタグのCMSページリストを表示できます。"
+"Product Finder.","商品検索"
+"Daily Deal Teaser.","本日のオススメティーザー"
+"Image Teaser Legacy","レガシーティーザー画像"
+"This component allows you to add 1-6 image teasers with or without text in a row. This component is deprecated and will be removed in the future.","1〜6枚のティーザー画像をテキスト無しで表示します。このコンポーネントは非推奨です。将来的に廃止されます。"
+"Button","ボタン"
+"Product Carousel","商品カルーセル"
+"Static Block","静的ブロック"
+"Hero Carousel","ヒーローカルーセル"
+"Separator","セパレーター"
+"Category Links","カテゴリリンク"
+"Brand Carousel","ブランドカルーセル"
+"Products Grid","商品グリッド"
+"CMS Pages Teaser","CMSページティーザー"
+"Product Finder","商品ファインダー"
+"Custom HTML","カスタムHTML"
+"Daily Deal Teaser","デイリーディールティーザー"
+"Icon","アイコン"
+"Teaser and text","ティーザーとテキスト"
+"Instagram Feed","Instagramフィード"
+"Mosaic","モザイク"
+"Accordion","アコーディオン"
