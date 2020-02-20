@@ -1,0 +1,133 @@
+"Components List","Components List"
+Preview,Preview
+"Select CMS Block","Select CMS Block"
+"Reset default styles of CMS Static Block","Reset default styles of CMS Static Block"
+Label,Label
+Target,Target
+Select...,Select...
+Done,Done
+"Type category name to search...","Type category name to search..."
+"There are no categories matching your selection","There are no categories matching your selection"
+"Remove this category","Remove this category"
+Result,Result
+Results,Results
+Category,Category
+Subcategories,Subcategories
+"Show products count","Show products count"
+Yes,Yes
+No,No
+"Data source","Data source"
+"CMS Tags","CMS Tags"
+"CMS Pages IDs","CMS Pages IDs"
+"Multiple, comma-separated.","Multiple, comma-separated."
+"Providing list of comma separated IDs will result in ignoring any CMS tags (if specified). Only pages with specified IDs will be displayed in exactly the same order as they are provided in the field.","Providing list of comma separated IDs will result in ignoring any CMS tags (if specified). Only pages with specified IDs will be displayed in exactly the same order as they are provided in the field."
+"Teasers limit","Teasers limit"
+"4 teasers","4 teasers"
+"8 teasers","8 teasers"
+"16 teasers","16 teasers"
+"All available teasers (no limit)","All available teasers (no limit)"
+"Display variant","Display variant"
+"{{ scenario }}","{{ scenario }}"
+"{{ option.name }}","{{ option.name }}"
+"Select tags...","Select tags..."
+"Type tag-name to search...","Type tag-name to search..."
+"There are no tags matching your selection","There are no tags matching your selection"
+"Remove this tag","Remove this tag"
+Headline,Headline
+Subheadline,Subheadline
+"Advanced settings","Advanced settings"
+"Level of Heading tag","Level of Heading tag"
+"Check offer","Check offer"
+"Text color scheme","Text color scheme"
+Light,Light
+Dark,Dark
+Paragraph,Paragraph
+"CTA label","CTA label"
+"CTA target link","CTA target link"
+Change,Change
+Upload,Upload
+"Insert File...","Insert File..."
+"Are you sure you want to delete this item?","Are you sure you want to delete this item?"
+Warning,Warning
+"Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.","Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images."
+More,More
+"Teaser size","Teaser size"
+1x1,1x1
+1x2,1x2
+2x1,2x1
+2x2,2x2
+Position,Position
+Left,Left
+Center,Center
+Right,Right
+Row,Row
+"as last","as last"
+"Show in mobiles","Show in mobiles"
+"Paragraph width","Paragraph width"
+Identifier,Identifier
+Title,Title
+"Number of columns","Number of columns"
+"Don't split content - display full width","Don't split content - display full width"
+"Split content into 2 columns","Split content into 2 columns"
+"Split content into 3 columns","Split content into 3 columns"
+"Split content into 4 columns","Split content into 4 columns"
+"Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.","Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column."
+HTML,HTML
+"Show / Hide Editor","Show / Hide Editor"
+"Insert Widget","Insert Widget"
+"Insert Image","Insert Image"
+"Insert Variable","Insert Variable"
+"An error occured. Please try again later.","An error occured. Please try again later."
+Categories,Categories
+SKUs,SKUs
+"Multiple, comma-separated","Multiple, comma-separated"
+"Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.","Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field."
+"Custom Data Provider","Custom Data Provider"
+Filter,Filter
+"No filter","No filter"
+"Order by","Order by"
+"Not specified","Not specified"
+Ascending,Ascending
+Descending,Descending
+"Show ","Show "
+"products ","products "
+"Category ID","Category ID"
+"Mobile Layout","Mobile Layout"
+"Tablet Layout","Tablet Layout"
+"Desktop Layout","Desktop Layout"
+"Hero Teaser","Hero Teaser"
+"Button label","Button label"
+Url,Url
+"1 row of products","1 row of products"
+"2 rows of products","2 rows of products"
+"3 rows of products","3 rows of products"
+"4 rows of products","4 rows of products"
+" rows of products"," rows of products"
+"No Hero Teaser","No Hero Teaser"
+"Hero Teaser on the left","Hero Teaser on the left"
+"Hero Teaser on the right","Hero Teaser on the right"
+"Are you sure you want to delete this step?","Are you sure you want to delete this step?"
+"All products","All products"
+Tags,Tags
+"Desktop layout","Desktop layout"
+"teasers per row","teasers per row"
+"Mobile layout","Mobile layout"
+teasers,teasers
+"Would you like to delete CMS Block related to this component (CMS Block ID: %s) ?","Would you like to delete CMS Block related to this component (CMS Block ID: %s) ?"
+"Please select type of component","Please select type of component"
+Cancel,Cancel
+"Configure your component","Configure your component"
+Save,Save
+"Hey,","Hey,"
+"Something is wrong with configuration of your component. Please fix all errors before saving.","Something is wrong with configuration of your component. Please fix all errors before saving."
+teaser,teaser
+"This component is meant to be used only by developers due to high risk of breaking shop layout.","This component is meant to be used only by developers due to high risk of breaking shop layout."
+"HTML markup","HTML markup"
+"Image Teaser","Image Teaser"
+"No image teaser","No image teaser"
+"With image teaser","With image teaser"
+"Are you sure you want to delete this group?","Are you sure you want to delete this group?"
+"Page Information","Page Information"
+"Allowed file types: png, gif, jpg, jpeg, svg.","Allowed file types: png, gif, jpg, jpeg, svg."
+"Logo Image","Logo Image"
+"Content Constructor","Content Constructor"
