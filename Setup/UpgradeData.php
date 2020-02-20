@@ -2,13 +2,19 @@
 
 namespace MageSuite\ContentConstructorAdmin\Setup;
 
-class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
+class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
 {
     const DB_CMS_PAGE_TABLE = "cms_page";
     const DB_ATTRIBUTE_NAME = "content_constructor_content";
 
+    /**
+     * @var \Magento\Eav\Setup\EavSetupFactory
+     */
     protected $eavSetupFactory;
 
+    /**
+     * @var \MageSuite\ContentConstructorAdmin\Service\Upgrade\MigrationFactory
+     */
     protected $migration;
 
     public function __construct(
@@ -20,9 +26,8 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
         $this->migration = $migration;
     }
 
-    public function upgrade(\Magento\Framework\Setup\SchemaSetupInterface $setup, \Magento\Framework\Setup\ModuleContextInterface $context)
+    public function upgrade(\Magento\Framework\Setup\ModuleDataSetupInterface $setup, \Magento\Framework\Setup\ModuleContextInterface $context)
     {
-        $setup->startSetup();
         if (version_compare($context->getVersion(), "1.0.1", "<")) {
             $connection = $setup->getConnection();
             $connection->addColumn(self::DB_CMS_PAGE_TABLE, self::DB_ATTRIBUTE_NAME, [
@@ -48,6 +53,5 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
 
             $this->migration->transferOldXmlValuesToNewJsonFields();
         }
-        $setup->endSetup();
     }
 }

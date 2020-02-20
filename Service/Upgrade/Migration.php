@@ -45,7 +45,6 @@ class Migration
 
     public function transferOldXmlValuesToNewJsonFields()
     {
-        $this->state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
         $storesIds = $this->getStoresIds();
 
         foreach ($this->collectionsToMigrate as $collection) {
@@ -55,16 +54,17 @@ class Migration
                 continue;
             }
 
-            foreach ($storesIds as $storeId) {
-                $this->storeManager->setCurrentStore($storeId);
+            $this->state->emulateAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML, function () use ($storesIds, $collection) {
+                foreach ($storesIds as $storeId) {
+                    $this->storeManager->setCurrentStore($storeId);
 
-                $collectionWithFilters = clone $collection;
-                $collectionWithFilters->addAttributeToSelect('*')->setStoreId($storeId);
-                $collectionWithFilters->addAttributeToFilter("custom_layout_update", ["notnull" => true]);
+                    $collectionWithFilters = clone $collection;
+                    $collectionWithFilters->addAttributeToSelect('*')->setStoreId($storeId);
+                    $collectionWithFilters->addAttributeToFilter("custom_layout_update", ["notnull" => true], "left");
 
-                $this->addWhereCustomLayoutUpdateIsNoNull($collectionWithFilters);
-                $this->setJsonValueForItemsInCollation($collectionWithFilters);
-            }
+                    $this->setJsonValueForItemsInCollation($collectionWithFilters);
+                }
+            });
         }
     }
 
@@ -118,11 +118,5 @@ class Migration
         }
 
         return $result;
-    }
-
-    protected function addWhereCustomLayoutUpdateIsNoNull(&$collection)
-    {
-        $expr = new \Zend_Db_Expr("at_custom_layout_update.value IS NOT NULL");
-        $collection->getSelect()->reset(\Magento\Framework\DB\Select::WHERE)->where($expr);
     }
 }
