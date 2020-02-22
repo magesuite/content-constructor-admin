@@ -54,6 +54,7 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoDbIsolation enabled
+     * @magentoAppIsolation enabled
      *
      * @magentoDataFixture loadPagesFixture
      * @magentoDataFixture loadWebsiteAndStoresFixture
@@ -64,16 +65,16 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
         $store2 = $this->storeRepository->get("store_for_us_website");
         $pagesAndStores =
         [
-            0 => 1,
-            $store1->getId() => 2,
-            $store2->getId() => 3
+            0 => 101,
+            $store1->getId() => 102,
+            $store2->getId() => 103
         ];
 
         $button = "<referenceContainer name=\"cc-content\"><block class=\"MageSuite\ContentConstructorFrontend\Block\Component\" name=\"componentebe5\"><arguments><argument xsi:type=\"string\" name=\"type\">button</argument><argument xsi:type=\"string\" name=\"name\">__STOREID__</argument><argument xsi:type=\"string\" name=\"section\">cc-content</argument><argument xsi:type=\"array\" name=\"data\"><item name=\"label\" xsi:type=\"string\">Button</item><item name=\"target\" xsi:type=\"string\"></item><item name=\"componentVisibility\" xsi:type=\"array\"><item name=\"mobile\" xsi:type=\"string\">1</item><item name=\"desktop\" xsi:type=\"string\">1</item></item></argument></arguments></block></referenceContainer>";
         foreach ($pagesAndStores as $storeId => $pageId) {
             $layoutUpdate = str_replace("__STOREID__", "button_store_{$storeId}", $button);
 
-            $page = $this->pageRepository->getById("page_test_tag{$pageId}");
+            $page = $this->pageRepository->getById($pageId);
             $page->setStoreId($storeId);
             $page->setLayoutUpdateXml($layoutUpdate);
             $page->save();
@@ -91,6 +92,7 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoDbIsolation disabled
+     * @magentoAppIsolation enabled
      *
      * @magentoDataFixture loadWebsiteAndStoresFixture
      * @magentoDataFixture loadProductsFixture
@@ -123,6 +125,7 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoDbIsolation enabled
+     * @magentoAppIsolation enabled
      *
      * @magentoDataFixture loadCategoriesFixture
      * @magentoDataFixture loadWebsiteAndStoresFixture
@@ -133,9 +136,9 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
         $store2 = $this->storeRepository->get("store_for_us_website");
         $categoriesAndStores =
             [
-                0 => [1, 2],
-                $store1->getId() => [2],
-                $store2->getId() => [1, 3]
+                0 => [101, 102],
+                $store1->getId() => [102],
+                $store2->getId() => [101, 103]
             ];
 
         $button = "<referenceContainer name=\"cc-content\"><block class=\"MageSuite\ContentConstructorFrontend\Block\Component\" name=\"componentebe5\"><arguments><argument xsi:type=\"string\" name=\"type\">button</argument><argument xsi:type=\"string\" name=\"name\">__STOREID__</argument><argument xsi:type=\"string\" name=\"section\">cc-content</argument><argument xsi:type=\"array\" name=\"data\"><item name=\"label\" xsi:type=\"string\">Button</item><item name=\"target\" xsi:type=\"string\"></item><item name=\"componentVisibility\" xsi:type=\"array\"><item name=\"mobile\" xsi:type=\"string\">1</item><item name=\"desktop\" xsi:type=\"string\">1</item></item></argument></arguments></block></referenceContainer>";
@@ -149,13 +152,13 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
         }
 
         $this->migration->transferOldXmlValuesToNewJsonFields();
-        $this->runAssertions($categoriesAndStores, $this->categoryRepository);
+        $this->runAssertions($categoriesAndStores, $this->categoryRepository, 100);
     }
 
-    protected function runAssertions(array $input, $repository)
+    protected function runAssertions(array $input, $repository, $idOffset = 0)
     {
         foreach ($input as $storeId => $items) {
-            for ($i = 1; $i <= 3; $i++) {
+            for ($i = 1 + $idOffset; $i <= 3 + $idOffset; $i++) {
                 $item = $this->getItemFromRepository($repository, $i, $storeId);
                 $content = $item->getContentConstructorContent();
 
@@ -188,12 +191,12 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
 
     public static function loadPagesFixture()
     {
-        include __DIR__ . "/../../../../magesuite-cms-tag-manager/Test/_files/pages.php";
+        include __DIR__ . "/../../../../magesuite-frontend/Test/Integration/_files/pages.php";
     }
 
     public static function loadProductsFixture()
     {
-        include __DIR__ . "/_files/products.php";
+        include __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/products.php";
     }
 
     public static function loadCategoriesFixture()
@@ -203,7 +206,7 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
 
     public static function loadWebsiteAndStoresFixture()
     {
-        include __DIR__ . "/_files/websites_with_stores.php";
+        include __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
     }
 
     public static function loadReindexInventoryFixture()
@@ -211,13 +214,23 @@ class MigrationTest extends \PHPUnit\Framework\TestCase
         include __DIR__ . "/../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
     }
 
+    public static function loadPagesFixtureRollback()
+    {
+        include __DIR__ . "/../../../../magesuite-frontend/Test/Integration/_files/pages_rollback.php";
+    }
+
     public static function loadProductsFixtureRollback()
     {
-        include __DIR__ . "/_files/products_rollback.php";
+        include __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/products_rollback.php";
+    }
+
+    public static function loadCategoriesFixtureRollback()
+    {
+        include __DIR__ . "/_files/categories_rollback.php";
     }
 
     public static function loadReindexInventoryFixtureRollback()
     {
-        include __DIR__ . "/_files/websites_with_stores_rollback.php";
+        include __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores_rollback.php";
     }
 }

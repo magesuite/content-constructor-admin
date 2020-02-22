@@ -34,16 +34,18 @@ class ComponentConfigurationToXmlMapper
             $xmlRootNode = $this->createXmlRootNode();
         }
 
-        foreach ($components as $component) {
-            $component['section'] = isset($component['section']) ? $component['section'] : 'content';
+        if ($components) {
+            foreach ($components as $component) {
+                $component['section'] = isset($component['section']) ? $component['section'] : 'content';
 
-            $container = $this->getContainerReference($xmlRootNode, $component['section']);
+                $container = $this->getContainerReference($xmlRootNode, $component['section']);
 
-            if($container == null) {
-                $container = $this->createContainerReference($xmlRootNode, $component['section']);
+                if ($container == null) {
+                    $container = $this->createContainerReference($xmlRootNode, $component['section']);
+                }
+
+                $this->addComponentToXml($component, $container);
             }
-
-            $this->addComponentToXml($component, $container);
         }
 
         return $this->removeXmlTags($xmlRootNode->asXML());
@@ -165,6 +167,7 @@ class ComponentConfigurationToXmlMapper
     {
         $xml = str_replace('<?xml version="1.0"?>', '', $xml);
         $xml = str_replace('<xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">', '', $xml);
+        $xml = str_replace('<xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>', '', $xml);
         $xml = str_replace('</xml>', '', $xml);
 
         return $xml;

@@ -4,6 +4,8 @@ namespace MageSuite\ContentConstructorAdmin\Service\Upgrade;
 
 class Migration
 {
+    const COLLECTION_PAGE_SIZE = 1000;
+
     /**
      * @var \Magento\Framework\App\State
      */
@@ -27,9 +29,9 @@ class Migration
     public function __construct(
         \Magento\Framework\App\State $state,
         \Magento\Store\Model\StoreManager $storeManager,
-        \Magento\Cms\Model\ResourceModel\Page\Collection $pageCollection,
-        \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection,
-        \Magento\Catalog\Model\ResourceModel\Category\Collection $categoryCollection,
+        \Magento\Cms\Model\ResourceModel\Page\CollectionFactory $pageCollection,
+        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollection,
+        \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollection,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfigurationMapper
     ) {
         $this->state = $state;
@@ -37,9 +39,9 @@ class Migration
         $this->xmlToComponentConfigurationMapper = $xmlToComponentConfigurationMapper;
 
         $this->collectionsToMigrate = [
-            $pageCollection,
-            $productCollection,
-            $categoryCollection
+            $pageCollection->create([]),
+            $productCollection->create([]),
+            $categoryCollection->create([]),
         ];
     }
 
@@ -59,9 +61,10 @@ class Migration
                     $this->storeManager->setCurrentStore($storeId);
 
                     $collectionWithFilters = clone $collection;
-                    $collectionWithFilters->addAttributeToSelect('*')->setStoreId($storeId);
+                    $collectionWithFilters->setStoreId($storeId)->addAttributeToSelect('*');
                     $collectionWithFilters->addAttributeToFilter("custom_layout_update", ["notnull" => true], "left");
 
+                    $this->doNotAllowDefaultValue($collectionWithFilters);
                     $this->setJsonValueForItemsInCollation($collectionWithFilters);
                 }
             });
@@ -78,15 +81,14 @@ class Migration
 
     protected function getItemsPortion(
         $collection,
-        int $currentPage,
-        int $pageSize = 1000
+        int $currentPage
     ) {
         //Check whether the next page will contain new items
-        if ($currentPage > ceil($collection->getSize() / $pageSize)) {
+        if ($currentPage > ceil($collection->getSize() / self::COLLECTION_PAGE_SIZE)) {
             return [];
         }
 
-        return $collection->setPageSize($pageSize)->setCurPage($currentPage)->getItems();
+        return $collection->setPageSize(self::COLLECTION_PAGE_SIZE)->setCurPage($currentPage)->getItems();
     }
 
     protected function transferXmlContentToJson($items)
@@ -118,5 +120,11 @@ class Migration
         }
 
         return $result;
+    }
+
+    protected function doNotAllowDefaultValue(&$collection)
+    {
+        $expr = new \Zend_Db_Expr("at_custom_layout_update.value IS NOT NULL");
+        $collection->getSelect()->reset(\Magento\Framework\DB\Select::WHERE)->where($expr);
     }
 }

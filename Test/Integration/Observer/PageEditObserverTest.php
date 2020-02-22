@@ -46,9 +46,10 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
         $page = $this->pageRepository->getById($identifier);
 
         if($expected === null){
-            $this->assertNull($page->getLayoutUpdateXml());
+            $this->assertNull($page->getContentConstructorContent());
         }else{
-            $this->assertContains($expected, $page->getLayoutUpdateXml());
+            $this->assertNull($page->getLayoutUpdateXml());
+            $this->assertContains($expected, $page->getContentConstructorContent());
         }
     }
 
@@ -61,7 +62,7 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
                 'Page with components',
                 '[{"type":"headline","id":"component2f8c","section":"content","data":{"title":"test","subtitle":"test","componentVisibility":{"mobile":true,"desktop":true}}}]',
                 'page-with-components',
-                '<argument xsi:type="string" name="type">headline</argument>'
+                '[{"type":"headline","id":"component2f8c","section":"content","data":{"title":"test","subtitle":"test","componentVisibility":{"mobile":true,"desktop":true}}}]'
             ]
         ];
     }

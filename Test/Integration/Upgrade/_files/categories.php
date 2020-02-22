@@ -1,6 +1,6 @@
 <?php
 
-for ($i = 1; $i <= 3; $i++) {
+for ($i = 101; $i <= 103; $i++) {
     $category = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(\Magento\Catalog\Model\Category::class);
     $category->isObjectNew(true);
     $category->setId($i)
