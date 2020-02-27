@@ -52,7 +52,7 @@ class Migration
         foreach ($this->collectionsToMigrate as $collection) {
             if ($collection instanceof \Magento\Cms\Model\ResourceModel\Page\Collection) {
                 $collection->addFieldToFilter("layout_update_xml", ["notnull" => true]);
-                $this->setJsonValueForItemsInCollation($collection);
+                $this->setJsonValueForItemsInCollection($collection);
                 continue;
             }
 
@@ -65,13 +65,13 @@ class Migration
                     $collectionWithFilters->addAttributeToFilter("custom_layout_update", ["notnull" => true], "left");
 
                     $this->doNotAllowDefaultValue($collectionWithFilters);
-                    $this->setJsonValueForItemsInCollation($collectionWithFilters);
+                    $this->setJsonValueForItemsInCollection($collectionWithFilters);
                 }
             });
         }
     }
 
-    protected function setJsonValueForItemsInCollation($collection)
+    protected function setJsonValueForItemsInCollection($collection)
     {
         $portionNumber = 0;
         while ($items = $this->getItemsPortion($collection, ++$portionNumber)) {
