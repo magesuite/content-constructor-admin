@@ -60,9 +60,4 @@ class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integra
     {
         include __DIR__ . "/../../../../magesuite-frontend/Test/Integration/_files/pages_rollback.php";
     }
-
-    public static function loadReindexInventoryFixture()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
-    }
 }

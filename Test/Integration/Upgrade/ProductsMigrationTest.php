@@ -61,4 +61,9 @@ class ProductsMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Inte
     {
         include __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/products_rollback.php";
     }
+
+    public static function loadReindexInventoryFixture()
+    {
+        include __DIR__ . "/../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
+    }
 }
