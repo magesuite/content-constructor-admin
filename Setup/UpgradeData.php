@@ -17,41 +17,47 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
      */
     protected $migration;
 
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $state;
+
     public function __construct(
         \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory,
         \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetup,
+        \Magento\Framework\App\State $state,
         \MageSuite\ContentConstructorAdmin\Service\Upgrade\Migration $migration
-    ) {
+    )
+    {
         $this->eavSetupFactory = $eavSetupFactory->create(['setup' => $moduleDataSetup]);
         $this->migration = $migration;
+        $this->state = $state;
     }
 
     public function upgrade(\Magento\Framework\Setup\ModuleDataSetupInterface $setup, \Magento\Framework\Setup\ModuleContextInterface $context)
     {
         if (version_compare($context->getVersion(), "1.0.1", "<")) {
-            $connection = $setup->getConnection();
-            $connection->addColumn(self::DB_CMS_PAGE_TABLE, self::DB_ATTRIBUTE_NAME, [
-                "type" => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                "comment" => "Layout Update JSON"
-            ]);
+            $this->state->emulateAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML, function () use ($setup) {
+                $connection = $setup->getConnection();
 
-            $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Product::ENTITY, self::DB_ATTRIBUTE_NAME, [
-                'type' => 'text',
-                'label' => 'Content Constructor Content',
-                'input' => 'text',
-                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
-                'visible' => 0,
-            ]);
+                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Product::ENTITY, self::DB_ATTRIBUTE_NAME, [
+                    'type' => 'text',
+                    'label' => 'Content Constructor Content',
+                    'input' => 'text',
+                    'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+                    'visible' => 0,
+                ]);
 
-            $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Category::ENTITY, self::DB_ATTRIBUTE_NAME, [
-                'type' => 'text',
-                'label' => 'Content Constructor Content',
-                'input' => 'text',
-                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
-                'visible' => 0,
-            ]);
+                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Category::ENTITY, self::DB_ATTRIBUTE_NAME, [
+                    'type' => 'text',
+                    'label' => 'Content Constructor Content',
+                    'input' => 'text',
+                    'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+                    'visible' => 0,
+                ]);
 
-            $this->migration->transferOldXmlValuesToNewJsonFields();
+                $this->migration->transferOldXmlValuesToNewJsonFields();
+            });
         }
     }
 }
