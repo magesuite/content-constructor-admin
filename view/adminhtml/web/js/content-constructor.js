@@ -4110,6 +4110,11 @@ var iconConfigurator = {
                     iconId: 'tw_content-width',
                     disabled: false,
                 },
+                'container-slider': {
+                    name: 'Content width Slider',
+                    iconId: 'tw_content-slider',
+                    disabled: false,
+                },
             },
             // Desktop layout scenario elements.
             desktopLayout: {
@@ -4136,7 +4141,7 @@ var iconConfigurator = {
                     iconId: 'dl_8',
                     disabled: false,
                     teasersNum: 8,
-                },
+                }
             },
             // Text positioning scenario elements.
             contentPlacement: {
@@ -4158,10 +4163,15 @@ var iconConfigurator = {
         };
         this.availableScenarios = [
             ['container', '4', 'under', ['mobile-slider']],
+            ['container-slider', '4', 'under', ['mobile-slider']],
             ['container', '5', 'under', ['mobile-slider']],
+            ['container-slider', '5', 'under', ['mobile-slider']],
             ['container', '6', 'under', ['mobile-slider']],
+            ['container-slider', '6', 'under', ['mobile-slider']],
             ['container', '7', 'under', ['mobile-slider']],
+            ['container-slider', '7', 'under', ['mobile-slider']],
             ['container', '8', 'under', ['mobile-slider']],
+            ['container-slider', '8', 'under', ['mobile-slider']],
         ];
         if (this.configuration.teaserWidth &&
             !this.configuration.teaserWidth.name) {

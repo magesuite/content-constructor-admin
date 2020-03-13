@@ -16,6 +16,11 @@ const iconConfigurator: vuejs.ComponentOption = {
                     iconId: 'tw_content-width',
                     disabled: false,
                 },
+                'container-slider': {
+                    name: 'Content width Slider',
+                    iconId: 'tw_content-slider',
+                    disabled: false,
+                },
             },
             // Desktop layout scenario elements.
             desktopLayout: {
@@ -65,10 +70,15 @@ const iconConfigurator: vuejs.ComponentOption = {
         };
         this.availableScenarios = [
             ['container', '4', 'under', ['mobile-slider']],
+            ['container-slider', '4', 'under',['mobile-slider']],
             ['container', '5', 'under', ['mobile-slider']],
+            ['container-slider', '5', 'under',['mobile-slider']],
             ['container', '6', 'under', ['mobile-slider']],
+            ['container-slider', '6', 'under',['mobile-slider']],
             ['container', '7', 'under', ['mobile-slider']],
+            ['container-slider', '7', 'under',['mobile-slider']],
             ['container', '8', 'under', ['mobile-slider']],
+            ['container-slider', '8', 'under',['mobile-slider']],
         ];
 
         if (
