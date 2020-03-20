@@ -38,6 +38,8 @@ class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integra
         $page = $this->pageRepository->getById($pageId);
         $content = $page->getContentConstructorContent();
         $this->assertJson($content);
+        $this->assertNoComponentsInXml($page->getLayoutUpdateXml());
+        $this->assertEquals($layoutUpdate, $page->getLayoutUpdateXmlBackup());
         $this->assertEquals($this->getExpectedJson($storeId), $content);
     }
 
