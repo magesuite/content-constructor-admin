@@ -4,8 +4,8 @@ namespace MageSuite\ContentConstructorAdmin\Setup;
 
 class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
 {
-    const DB_CMS_PAGE_TABLE = "cms_page";
-    const DB_ATTRIBUTE_NAME = "content_constructor_content";
+    const CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME = "content_constructor_content";
+    const LAYOUT_UPDATE_XML_BACKUP_ATTRIBUTE_NAME = "layout_update_xml_backup";
 
     /**
      * @var \Magento\Eav\Setup\EavSetupFactory
@@ -40,7 +40,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
             $this->state->emulateAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML, function () use ($setup) {
                 $connection = $setup->getConnection();
 
-                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Product::ENTITY, self::DB_ATTRIBUTE_NAME, [
+                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Product::ENTITY, self::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, [
                     'type' => 'text',
                     'label' => 'Content Constructor Content',
                     'input' => 'text',
@@ -48,9 +48,25 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
                     'visible' => 0,
                 ]);
 
-                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Category::ENTITY, self::DB_ATTRIBUTE_NAME, [
+                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Product::ENTITY, self::LAYOUT_UPDATE_XML_BACKUP_ATTRIBUTE_NAME, [
+                    'type' => 'text',
+                    'label' => 'Layout Update XML Backup',
+                    'input' => 'text',
+                    'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+                    'visible' => 0,
+                ]);
+
+                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Category::ENTITY, self::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, [
                     'type' => 'text',
                     'label' => 'Content Constructor Content',
+                    'input' => 'text',
+                    'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+                    'visible' => 0,
+                ]);
+
+                $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Category::ENTITY, self::LAYOUT_UPDATE_XML_BACKUP_ATTRIBUTE_NAME, [
+                    'type' => 'text',
+                    'label' => 'Layout Update XML Backup',
                     'input' => 'text',
                     'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
                     'visible' => 0,

@@ -6,10 +6,33 @@ class ComponentConfigurationToXmlMapper
 {
     private $componentClass = 'MageSuite\ContentConstructorFrontend\Block\Component';
 
-    private $componentClasses = [
+    const COMPONENT_CLASSES = [
         'Creativestyle\ContentConstructorFrontendExtension\Block\Component',
         'MageSuite\ContentConstructorFrontend\Block\Component'
     ];
+
+    /**
+     * Cleans existing XML from all components
+     * @param $existingXml
+     */
+    public function cleanXml($existingXml)
+    {
+        $existingXml = trim($existingXml);
+
+        if (!empty($existingXml)) {
+            $xmlRootNode = $this->getXmlRootNodeFromExistingXml($existingXml);
+
+            $containerReferences = $this->getContainerReferences($xmlRootNode);
+
+            foreach ($containerReferences as $containerReference) {
+                $this->removeAllComponentsBlocks($containerReference);
+            }
+
+            return $this->removeXmlTags($xmlRootNode->asXML());
+        }
+
+        return $existingXml;
+    }
 
     /**
      * Maps components configuration to corresponding XML Layout format
@@ -108,7 +131,7 @@ class ComponentConfigurationToXmlMapper
         $nodesToDelete = [];
 
         foreach ($childrens->block as $block) {
-            if (in_array($block->attributes()->class, $this->componentClasses)) {
+            if (in_array($block->attributes()->class, self::COMPONENT_CLASSES)) {
                 $nodesToDelete[] = $block;
             }
         }

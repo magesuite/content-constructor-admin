@@ -26,17 +26,24 @@ class Migration
      */
     protected $collectionsToMigrate;
 
+    /**
+     * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper
+     */
+    protected $componentConfigurationToXmlMapper;
+
     public function __construct(
         \Magento\Framework\App\State $state,
         \Magento\Store\Model\StoreManager $storeManager,
         \Magento\Cms\Model\ResourceModel\Page\CollectionFactory $pageCollection,
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollection,
         \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollection,
-        \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfigurationMapper
+        \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfigurationMapper,
+        \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $componentConfigurationToXmlMapper
     ) {
         $this->state = $state;
         $this->storeManager = $storeManager;
         $this->xmlToComponentConfigurationMapper = $xmlToComponentConfigurationMapper;
+        $this->componentConfigurationToXmlMapper = $componentConfigurationToXmlMapper;
 
         $this->collectionsToMigrate = [
             $pageCollection->create([]),
@@ -83,7 +90,6 @@ class Migration
         $collection,
         int $currentPage
     ) {
-        //Check whether the next page will contain new items
         if ($currentPage > ceil($collection->getSize() / self::COLLECTION_PAGE_SIZE)) {
             return [];
         }
@@ -94,20 +100,35 @@ class Migration
     protected function transferXmlContentToJson($items)
     {
         foreach ($items as $item) {
-            $layoutUpdateXml = $this->getLayoutUpdateContent($item);
-            $configuration = $this->xmlToComponentConfigurationMapper->map($layoutUpdateXml);
-            $item->setContentConstructorContent(json_encode($configuration));
+            $layoutUpdateXml = $this->getLayoutUpdateXml($item);
+
+            $item->setLayoutUpdateXmlBackup($layoutUpdateXml);
+
+            $cleanedXml = $this->componentConfigurationToXmlMapper->cleanXml($layoutUpdateXml);
+            $components = $this->xmlToComponentConfigurationMapper->map($layoutUpdateXml);
+
+            $this->setLayoutUpdateXml($item, $cleanedXml);
+            $item->setContentConstructorContent(json_encode($components));
             $item->save();
         }
     }
 
-    protected function getLayoutUpdateContent($item)
+    protected function getLayoutUpdateXml($item)
     {
         if ($item instanceof \Magento\Cms\Model\Page) {
             return $item->getLayoutUpdateXml();
         }
 
         return $item->getCustomLayoutUpdate();
+    }
+
+    protected function setLayoutUpdateXml($item, $xml)
+    {
+        if ($item instanceof \Magento\Cms\Model\Page) {
+            return $item->setLayoutUpdateXml($xml);
+        }
+
+        return $item->setCustomLayoutUpdate($xml);
     }
 
     protected function getStoresIds()
@@ -125,6 +146,8 @@ class Migration
     protected function doNotAllowDefaultValue(&$collection)
     {
         $expr = new \Zend_Db_Expr("at_custom_layout_update.value IS NOT NULL");
-        $collection->getSelect()->reset(\Magento\Framework\DB\Select::WHERE)->where($expr);
+        $collection->getSelect()
+            ->reset(\Magento\Framework\DB\Select::WHERE)
+            ->where($expr);
     }
 }

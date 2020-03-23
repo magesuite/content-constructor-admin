@@ -41,17 +41,29 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
                 $item = $this->getItemFromRepository($repository, $i, $storeId);
                 $content = $item->getContentConstructorContent();
 
+                $this->assertNoComponentsInXml($item->getCustomLayoutUpdate());
+
                 if (in_array($i, $items)) {
                     $this->assertJson($content);
                     $this->assertEquals($this->getExpectedJson($storeId), $content);
+                    $this->assertEquals($this->getXmlInputStringForStoreId($storeId), $item->getLayoutUpdateXmlBackup());
                 } elseif (in_array($i, $input[0])) {
                     $this->assertJson($content);
                     $this->assertEquals($this->getExpectedJson(self::ALL_STORE_VIEWS), $content);
+                    $this->assertEquals($this->getXmlInputStringForStoreId(self::ALL_STORE_VIEWS), $item->getLayoutUpdateXmlBackup());
                 } else {
                     $this->assertNull($content);
                 }
             }
         }
+    }
+
+    protected function assertNoComponentsInXml($xml) {
+        $xml = '<?xml version="1.0"?><xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' . $xml . '</xml>';
+        $xml = simplexml_load_string($xml);
+
+        $this->assertCount(0, $xml->xpath('//block[@class="MageSuite\ContentConstructorFrontend\Block\Component"]'));
+        $this->assertCount(0, $xml->xpath('//block[@class="Creativestyle\ContentConstructorFrontendExtension\Block\Component"]'));
     }
 
     protected function getXmlInputStringForStoreId($storeId)
@@ -74,6 +86,17 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
         </arguments>
     </block>
 </referenceContainer>
+XML;
+    }
+
+    protected function getCleanedXml()
+    {
+        return <<<XML
+
+<referenceContainer name="cc-content">
+
+</referenceContainer>
+
 XML;
     }
 
