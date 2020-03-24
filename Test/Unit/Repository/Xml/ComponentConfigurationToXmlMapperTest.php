@@ -134,7 +134,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testWorksWithEmptyComponentsArray()
     {
-        $rootXml = "\n<xml xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/>\n";
+        $rootXml = "\n\n";
         $expectedWith = "\n<referenceContainer name=\"sidebar\"/>\n";
 
         $this->assertEquals($rootXml, $this->mapper->map(null));

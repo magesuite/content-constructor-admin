@@ -89,17 +89,6 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
 XML;
     }
 
-    protected function getCleanedXml()
-    {
-        return <<<XML
-
-<referenceContainer name="cc-content">
-
-</referenceContainer>
-
-XML;
-    }
-
     protected function getExpectedJson($storeId)
     {
         $expected = [
