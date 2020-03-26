@@ -35,9 +35,9 @@ class Category implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Con
         /** @var \Magento\Catalog\Model\Category $category */
         $category = $this->registry->registry('current_category');
 
-        $configuration = [];
+        $configuration = json_encode([]);
 
-        if ($category !== null) {
+        if ($category !== null and !empty($category->getContentConstructorContent())) {
             $configuration = $category->getContentConstructorContent();
         }
 

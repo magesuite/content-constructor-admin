@@ -28,9 +28,9 @@ class CmsPage implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Cont
         /** @var \Magento\Cms\Model\Page $page */
         $page = $this->registry->registry('cms_page');
 
-        $configuration = [];
+        $configuration = json_encode([]);
 
-        if ($page !== null) {
+        if ($page !== null && !empty($page->getContentConstructorContent())) {
             $configuration = $page->getContentConstructorContent();
         }
 

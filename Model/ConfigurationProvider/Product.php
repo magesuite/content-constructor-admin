@@ -28,9 +28,9 @@ class Product implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Cont
         /** @var \Magento\Catalog\Model\Product $category */
         $product = $this->registry->registry('current_product');
 
-        $configuration = [];
+        $configuration = json_encode([]);
 
-        if ($product !== null) {
+        if ($product !== null && !empty($product->getContentConstructorContent())) {
             $configuration = $product->getContentConstructorContent();
         }
 
