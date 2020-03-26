@@ -35,17 +35,17 @@ class Category implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Con
         /** @var \Magento\Catalog\Model\Category $category */
         $category = $this->registry->registry('current_category');
 
-        $configuration = json_encode([]);
+        $configuration = [];
 
         if ($category !== null and !empty($category->getContentConstructorContent())) {
-            $configuration = $category->getContentConstructorContent();
+            $configuration = json_decode($category->getContentConstructorContent(), true);
         }
 
         if (empty($configuration)) {
-            $configuration = json_encode([self::CATEGORY_GRID_COMPONENT_DEFAULT_CONFIGURATION]);
+            $configuration = [self::CATEGORY_GRID_COMPONENT_DEFAULT_CONFIGURATION];
         }
 
-        return $configuration;
+        return json_encode($configuration);
     }
 
     public function getPageType()
