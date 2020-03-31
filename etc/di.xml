@@ -170,9 +170,4 @@
             <argument name="configurationProvider" xsi:type="object">MageSuite\ContentConstructorAdmin\Model\ConfigurationProvider\Brand</argument>
         </arguments>
     </virtualType>
-    <type name="Magento\Catalog\Model\Attribute\Backend\Customlayoutupdate">
-        <plugin sortOrder="1"
-                name="disable_custom_layout_update_save_validation"
-                type="MageSuite\ContentConstructorAdmin\Plugin\Catalog\Model\Attribute\Backend\Customlayoutupdate\DisableValidation"/>
-    </type>
 </config>
