@@ -6,10 +6,33 @@ class ComponentConfigurationToXmlMapper
 {
     private $componentClass = 'MageSuite\ContentConstructorFrontend\Block\Component';
 
-    private $componentClasses = [
+    const COMPONENT_CLASSES = [
         'Creativestyle\ContentConstructorFrontendExtension\Block\Component',
         'MageSuite\ContentConstructorFrontend\Block\Component'
     ];
+
+    /**
+     * Cleans existing XML from all components
+     * @param $existingXml
+     */
+    public function cleanXml($existingXml)
+    {
+        $existingXml = trim($existingXml);
+
+        if (!empty($existingXml)) {
+            $xmlRootNode = $this->getXmlRootNodeFromExistingXml($existingXml);
+
+            $containerReferences = $this->getContainerReferences($xmlRootNode);
+
+            foreach ($containerReferences as $containerReference) {
+                $this->removeAllComponentsBlocks($containerReference);
+            }
+
+            return $this->removeXmlTags($xmlRootNode->asXML());
+        }
+
+        return $existingXml;
+    }
 
     /**
      * Maps components configuration to corresponding XML Layout format
@@ -34,16 +57,18 @@ class ComponentConfigurationToXmlMapper
             $xmlRootNode = $this->createXmlRootNode();
         }
 
-        foreach ($components as $component) {
-            $component['section'] = isset($component['section']) ? $component['section'] : 'content';
+        if ($components) {
+            foreach ($components as $component) {
+                $component['section'] = isset($component['section']) ? $component['section'] : 'content';
 
-            $container = $this->getContainerReference($xmlRootNode, $component['section']);
+                $container = $this->getContainerReference($xmlRootNode, $component['section']);
 
-            if($container == null) {
-                $container = $this->createContainerReference($xmlRootNode, $component['section']);
+                if ($container == null) {
+                    $container = $this->createContainerReference($xmlRootNode, $component['section']);
+                }
+
+                $this->addComponentToXml($component, $container);
             }
-
-            $this->addComponentToXml($component, $container);
         }
 
         return $this->removeXmlTags($xmlRootNode->asXML());
@@ -106,7 +131,7 @@ class ComponentConfigurationToXmlMapper
         $nodesToDelete = [];
 
         foreach ($childrens->block as $block) {
-            if (in_array($block->attributes()->class, $this->componentClasses)) {
+            if (in_array($block->attributes()->class, self::COMPONENT_CLASSES)) {
                 $nodesToDelete[] = $block;
             }
         }
@@ -165,6 +190,7 @@ class ComponentConfigurationToXmlMapper
     {
         $xml = str_replace('<?xml version="1.0"?>', '', $xml);
         $xml = str_replace('<xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">', '', $xml);
+        $xml = str_replace('<xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>', '', $xml);
         $xml = str_replace('</xml>', '', $xml);
 
         return $xml;

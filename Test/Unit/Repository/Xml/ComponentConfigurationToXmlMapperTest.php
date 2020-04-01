@@ -129,6 +129,18 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
     }
 
+    /**
+     * @dataProvider
+     */
+    public function testWorksWithEmptyComponentsArray()
+    {
+        $rootXml = "\n\n";
+        $expectedWith = "\n<referenceContainer name=\"sidebar\"/>\n";
+
+        $this->assertEquals($rootXml, $this->mapper->map(null));
+        $this->assertEquals($expectedWith, $this->mapper->map(null, '<referenceContainer name="sidebar"></referenceContainer>'));
+    }
+
     public static function getForbiddenStrings()
     {
         return [

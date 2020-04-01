@@ -56,8 +56,4 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('category_form.category_form', $this->block->getPageType());
     }
-
-    public function testItReturnsCorrectProductsPerPageValue() {
-        $this->assertEquals(9, $this->block->getProductsPerPage());
-    }
 }

@@ -37,8 +37,8 @@ class Category implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Con
 
         $configuration = [];
 
-        if ($category !== null) {
-            $configuration = $this->xmlToComponentConfiguration->map($category->getCustomLayoutUpdate());
+        if ($category !== null and !empty($category->getContentConstructorContent())) {
+            $configuration = json_decode($category->getContentConstructorContent(), true);
         }
 
         if (empty($configuration)) {
