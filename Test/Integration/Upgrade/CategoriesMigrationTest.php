@@ -37,6 +37,8 @@ class CategoriesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\In
             $layoutUpdate = $this->getXmlInputStringForStoreId($storeId);
             foreach ($categories as $id) {
                 $category = $this->categoryRepository->get($id, $storeId);
+                $category->setLayoutUpdateXmlBackup('');
+                $category->setContentConstructorContent('');
                 $category->setCustomLayoutUpdate($layoutUpdate);
                 $category->save();
             }

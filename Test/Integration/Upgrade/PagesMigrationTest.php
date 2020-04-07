@@ -31,6 +31,8 @@ class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integra
         $page = $this->pageRepository->getById($pageId);
         $page->setStoreId($storeId);
         $page->setLayoutUpdateXml($layoutUpdate);
+        $page->setLayoutUpdateXmlBackup('');
+        $page->setContentConstructorContent('');
         $page->save();
 
         $this->migration->transferOldXmlValuesToNewJsonFields();
