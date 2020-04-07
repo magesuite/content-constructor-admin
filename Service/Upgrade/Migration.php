@@ -31,6 +31,11 @@ class Migration
      */
     protected $componentConfigurationToXmlMapper;
 
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         \Magento\Framework\App\State $state,
         \Magento\Store\Model\StoreManager $storeManager,
@@ -38,12 +43,14 @@ class Migration
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollection,
         \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollection,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfigurationMapper,
-        \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $componentConfigurationToXmlMapper
+        \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $componentConfigurationToXmlMapper,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->state = $state;
         $this->storeManager = $storeManager;
         $this->xmlToComponentConfigurationMapper = $xmlToComponentConfigurationMapper;
         $this->componentConfigurationToXmlMapper = $componentConfigurationToXmlMapper;
+        $this->logger = $logger;
 
         $this->collectionsToMigrate = [
             $pageCollection->create([]),
@@ -102,6 +109,10 @@ class Migration
         foreach ($items as $item) {
             $layoutUpdateXml = $this->getLayoutUpdateXml($item);
 
+            if($this->isAlreadyMigrated($item)) {
+                continue;
+            }
+
             $item->setLayoutUpdateXmlBackup($layoutUpdateXml);
 
             $cleanedXml = $this->componentConfigurationToXmlMapper->cleanXml($layoutUpdateXml);
@@ -109,7 +120,12 @@ class Migration
 
             $this->setLayoutUpdateXml($item, $cleanedXml);
             $item->setContentConstructorContent(json_encode($components));
-            $item->save();
+
+            try {
+                $item->save();
+            } catch (\Exception $e) {
+                $this->logger->error('Failed migration of '.get_class($item).', id: '.$item->getId().', error: '.$e->getMessage());
+            }
         }
     }
 
@@ -149,5 +165,10 @@ class Migration
         $collection->getSelect()
             ->reset(\Magento\Framework\DB\Select::WHERE)
             ->where($expr);
+    }
+
+    protected function isAlreadyMigrated($item)
+    {
+        return !empty($item->getLayoutUpdateXmlBackup());
     }
 }

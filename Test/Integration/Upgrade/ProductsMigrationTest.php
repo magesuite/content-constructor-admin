@@ -38,6 +38,8 @@ class ProductsMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Inte
             $layoutUpdate = $this->getXmlInputStringForStoreId($storeId);
             foreach ($products as $id) {
                 $product = $this->productRepository->get("SKU-{$id}", false, $storeId);
+                $product->setLayoutUpdateXmlBackup('');
+                $product->setContentConstructorContent('');
                 $product->setCustomLayoutUpdate($layoutUpdate);
                 $product->save();
             }
