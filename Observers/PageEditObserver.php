@@ -47,6 +47,8 @@ class PageEditObserver implements ObserverInterface
             $components = json_decode($data['components'], true);
             $existingComponents = $page->getContentConstructorContent();
 
+            $page->setContent('');
+
             if (!empty($components) || !empty($existingComponents)) {
                 $page->setContentConstructorContent(json_encode($components));
             }
