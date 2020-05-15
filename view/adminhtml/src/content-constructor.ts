@@ -89,6 +89,11 @@ const configuratorModalOptions: any = {
 let $configuratorModal: any;
 
 /**
+ * Make sure Vue is not trying to parse Magento directives inside WYSIWYG editor.
+ */
+$('.admin__control-wysiwig').attr('v-pre', true);
+
+/**
  * M2C Content Constructor component.
  * This is the final layer that is responsible for collecting and tying up all
  * of the M2C admin panel logic.
