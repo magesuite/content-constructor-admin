@@ -49,7 +49,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
      * @var \MageSuite\ContentConstructorFrontend\Model\Sort\Pool
      */
     protected $sortersPool;
-    
+
     /**
      * @var \MageSuite\ContentConstructorFrontend\Model\Filter\Pool
      */
@@ -61,11 +61,17 @@ class Constructor extends \Magento\Framework\View\Element\Template
     protected $configurationProvider;
 
     /**
+     * @var \Magento\Framework\Data\Form\FormKey
+     */
+    protected $formKey;
+
+    /**
      * Constructor constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration
      * @param \Magento\Framework\App\DeploymentConfig\Reader $configReader
      * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param array $data
      */
     public function __construct(
@@ -81,6 +87,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         \MageSuite\ContentConstructorFrontend\Model\Sort\Pool $sortersPool,
         \MageSuite\ContentConstructorFrontend\Model\Filter\Pool $filtersPool,
         \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
+        \Magento\Framework\Data\Form\FormKey $formKey,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -96,6 +103,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         $this->sortersPool = $sortersPool;
         $this->filtersPool = $filtersPool;
         $this->configurationProvider = $configurationProvider;
+        $this->formKey = $formKey;
 
         $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
     }
@@ -115,7 +123,8 @@ class Constructor extends \Magento\Framework\View\Element\Template
         return $this->getUrl('contentconstructor/image/show') . 'image/{/encoded_image}';
     }
 
-    public function getCategoryDataProviderEndpoint() {
+    public function getCategoryDataProviderEndpoint()
+    {
         return $this->getUrl('contentconstructor/category/provider');
     }
 
@@ -129,7 +138,8 @@ class Constructor extends \Magento\Framework\View\Element\Template
         return $this->backendUrl->getUrl('cms/wysiwyg_images/index');
     }
 
-    public function getContentConstructorConfig() {
+    public function getContentConstructorConfig()
+    {
         $config = $this->contentConstructorConfigDataProvider->getConfig();
 
         return $config;
@@ -143,7 +153,8 @@ class Constructor extends \Magento\Framework\View\Element\Template
         );
     }
 
-    public function resolveConfigurationMedia($configuration) {
+    public function resolveConfigurationMedia($configuration)
+    {
         $configuration = json_decode($configuration, true);
 
         $configuration = $this->configurationMediaResolver->resolveMedia($configuration);
@@ -158,16 +169,17 @@ class Constructor extends \Magento\Framework\View\Element\Template
         return $config['backend']['frontName'];
     }
 
-    public function getSorters() {
+    public function getSorters()
+    {
         $sorters = $this->sortersPool->getSorters();
 
-        if(empty($sorters)) {
+        if (empty($sorters)) {
             return [];
         }
 
         $result = [];
 
-        foreach($sorters as $sorter) {
+        foreach ($sorters as $sorter) {
             $result[] = [
                 'label' => $sorter['label'],
                 'value' => $sorter['value'],
@@ -177,16 +189,17 @@ class Constructor extends \Magento\Framework\View\Element\Template
         return json_encode($result);
     }
 
-    public function getFilters() {
+    public function getFilters()
+    {
         $filters = $this->filtersPool->getFilters();
 
-        if(empty($filters)) {
+        if (empty($filters)) {
             return [];
         }
 
         $result = [];
 
-        foreach($filters as $filter) {
+        foreach ($filters as $filter) {
             $result[] = [
                 'label' => $filter['label'],
                 'value' => $filter['value'],
@@ -196,11 +209,18 @@ class Constructor extends \Magento\Framework\View\Element\Template
         return json_encode($result);
     }
 
-    public function getExistingComponentsConfiguration() {
+    public function getExistingComponentsConfiguration()
+    {
         return $this->configurationProvider->getExistingComponentsConfiguration();
     }
 
-    public function getPageType() {
+    public function getPageType()
+    {
         return $this->configurationProvider->getPageType();
+    }
+
+    public function getFormKey()
+    {
+        return $this->formKey->getFormKey();
     }
 }

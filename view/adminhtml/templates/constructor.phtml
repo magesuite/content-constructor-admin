@@ -1,4 +1,4 @@
-<?php /** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\AbstractConstructor */ ?>
+<?php /** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\Constructor */ ?>
 <content-constructor
     configurator-endpoint="<?= $block->getConfiguratorEndpointUrl() ?>"
     configuration='<?= str_replace("'", "&#39;", $block->resolveConfigurationMedia($block->getExistingComponentsConfiguration())) ?>'
@@ -63,6 +63,11 @@
             }).append($('<input>', {
                 'name': 'configuration',
                 'value': json,
+                'type': 'hidden'
+            }));
+            $newForm.append($('<input>', {
+                'name': 'form_key',
+                'value': '<?= $block->getFormKey();?>',
                 'type': 'hidden'
             }));
 
