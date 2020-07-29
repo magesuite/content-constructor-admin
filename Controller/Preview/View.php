@@ -24,12 +24,23 @@ class View extends \Magento\Framework\App\Action\Action implements \Magento\Fram
      * @var \Magento\Framework\App\Cache\TypeListInterface
      */
     private $cacheTypeList;
+    /**
+     * @var \MageSuite\ContentConstructorAdmin\Service\PreviewSecretProvider
+     */
+    protected $previewSecretProvider;
+    /**
+     * @var \Magento\Framework\Controller\Result\ForwardFactory
+     */
+    protected $resultForwardFactory;
+
 
     public function __construct(
         Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $componentConfigurationToXmlMapper,
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList
+        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
+        \MageSuite\ContentConstructorAdmin\Service\PreviewSecretProvider $previewSecretProvider,
+        \Magento\Framework\Controller\Result\ForwardFactory $resultForwardFactory
     )
     {
         parent::__construct($context);
@@ -38,6 +49,8 @@ class View extends \Magento\Framework\App\Action\Action implements \Magento\Fram
         $this->resultPageFactory = $resultPageFactory;
         $this->componentConfigurationToXmlMapper = $componentConfigurationToXmlMapper;
         $this->cacheTypeList = $cacheTypeList;
+        $this->previewSecretProvider = $previewSecretProvider;
+        $this->resultForwardFactory = $resultForwardFactory;
     }
 
     /**
@@ -48,9 +61,15 @@ class View extends \Magento\Framework\App\Action\Action implements \Magento\Fram
      */
     public function execute()
     {
-        $this->cacheTypeList->cleanType('layout');
-
         $resultPage = $this->resultPageFactory->create();
+
+        if (!$this->validatePreviewSecret()) {
+            $resultForward = $this->resultForwardFactory->create([\Magento\Framework\Controller\ResultFactory::TYPE_FORWARD]);
+            $resultForward->forward('noroute');
+            return $resultForward;
+        }
+
+        $this->cacheTypeList->cleanType('layout');
 
         $configuration = urldecode($this->getRequest()->getParam('configuration'));
 
@@ -90,5 +109,12 @@ class View extends \Magento\Framework\App\Action\Action implements \Magento\Fram
     public function validateForCsrf(\Magento\Framework\App\RequestInterface $request): ?bool
     {
         return true;
+    }
+
+    protected function validatePreviewSecret()
+    {
+        $requestSecret = $this->getRequest()->getParam('secret_preview_token');
+
+        return $this->previewSecretProvider->execute($this->getRequest()->getParam('configuration')) === $requestSecret;
     }
 }

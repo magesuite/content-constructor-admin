@@ -61,9 +61,14 @@ class Constructor extends \Magento\Framework\View\Element\Template
     protected $configurationProvider;
 
     /**
-     * @var \Magento\Framework\Data\Form\FormKey
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
-    protected $formKey;
+    protected $storeManager;
+
+    /**
+	 * @var \MageSuite\ContentConstructorAdmin\Helper\Configuration
+	 */
+	 protected $configurationHelper;
 
     /**
      * Constructor constructor.
@@ -71,7 +76,8 @@ class Constructor extends \Magento\Framework\View\Element\Template
      * @param \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration
      * @param \Magento\Framework\App\DeploymentConfig\Reader $configReader
      * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Data\Form\FormKey $formKey
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper
      * @param array $data
      */
     public function __construct(
@@ -87,7 +93,9 @@ class Constructor extends \Magento\Framework\View\Element\Template
         \MageSuite\ContentConstructorFrontend\Model\Sort\Pool $sortersPool,
         \MageSuite\ContentConstructorFrontend\Model\Filter\Pool $filtersPool,
         \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
-        \Magento\Framework\Data\Form\FormKey $formKey,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper,
+
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -103,7 +111,8 @@ class Constructor extends \Magento\Framework\View\Element\Template
         $this->sortersPool = $sortersPool;
         $this->filtersPool = $filtersPool;
         $this->configurationProvider = $configurationProvider;
-        $this->formKey = $formKey;
+        $this->storeManager = $storeManager;
+        $this->configurationHelper = $configurationHelper;
 
         $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
     }
@@ -116,6 +125,11 @@ class Constructor extends \Magento\Framework\View\Element\Template
     public function getRestTokenEndpoint()
     {
         return $this->getUrl('contentconstructor/token/generator');
+    }
+
+    public function getPreviewTokenUrl()
+    {
+        return $this->getUrl('contentconstructor/token/previewsecret');
     }
 
     public function getImageEndpoint()
@@ -219,8 +233,13 @@ class Constructor extends \Magento\Framework\View\Element\Template
         return $this->configurationProvider->getPageType();
     }
 
-    public function getFormKey()
+    public function getBaseUrl()
     {
-        return $this->formKey->getFormKey();
+        return $this->storeManager->getStore()->getBaseUrl();
+    }
+
+    public function getSecretPreviewToken()
+    {
+        return $this->configurationHelper->getSecretPreviewToken();
     }
 }

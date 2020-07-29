@@ -56,8 +56,10 @@
 <script>
     function previewContentConstructor(json) {
         requirejs(['jquery'], function ($) {
+            var url = "<?= $block->getBaseUrl() ?>content-constructor/preview/view";
+            var getTokenUrl = "<?= $block->getPreviewTokenUrl() ?>";
             var $newForm = $('<form>', {
-                'action': '/content-constructor/preview/view',
+                'action': url,
                 'target': '_blank',
                 'method': 'POST'
             }).append($('<input>', {
@@ -67,14 +69,24 @@
             }));
             $newForm.append($('<input>', {
                 'name': 'form_key',
-                'value': '<?= $block->getFormKey();?>',
+                'value': window.FORM_KEY,
                 'type': 'hidden'
             }));
-
             $(document.body).append($newForm);
-
-            $newForm.submit();
-        })
+            jQuery.ajax({
+                url: getTokenUrl,
+                type: "POST",
+                data: {configuration: json},
+                success: function (token) {
+                    $newForm.append($('<input>', {
+                        'name': 'secret_preview_token',
+                        'value': token,
+                        'type': 'hidden'
+                    }));
+                    $newForm.submit();
+                },
+            });
+        });
     }
 
     csWysiwygEditor = undefined;
