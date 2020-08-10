@@ -2,11 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\Observers;
 
-use Magento\Cms\Model\Page;
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Event\ObserverInterface;
-
-class PageEditObserver implements ObserverInterface
+class PageEditObserver implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper
@@ -14,31 +10,23 @@ class PageEditObserver implements ObserverInterface
     protected $xmlToComponentConfigurationMapper;
 
     /**
-     * @var \Magento\Framework\App\Cache\TypeListInterface
-     */
-    protected $cacheTypeList;
-
-    /**
      * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper
      */
     protected $configurationToXmlMapper;
 
     public function __construct(
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $configurationToXmlMapper,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfigurationMapper
-    )
-    {
-        $this->cacheTypeList = $cacheTypeList;
+    ) {
         $this->configurationToXmlMapper = $configurationToXmlMapper;
         $this->xmlToComponentConfigurationMapper = $xmlToComponentConfigurationMapper;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        /** @var RequestInterface $request */
+        /** @var \Magento\Framework\App\RequestInterface $request */
         $request = $observer->getData('request');
-        /** @var Page $page */
+        /** @var \Magento\Cms\Model\Page $page */
         $page = $observer->getData('page');
 
         $data = $request->getPostValue();

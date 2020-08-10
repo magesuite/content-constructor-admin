@@ -69,8 +69,6 @@ class View extends \Magento\Framework\App\Action\Action implements \Magento\Fram
             return $resultForward;
         }
 
-        $this->cacheTypeList->cleanType('layout');
-
         $configuration = urldecode($this->getRequest()->getParam('configuration'));
 
         $configuration = json_decode($configuration, true);

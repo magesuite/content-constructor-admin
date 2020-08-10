@@ -2,48 +2,29 @@
 
 namespace MageSuite\ContentConstructorAdmin\Observers;
 
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Event\ObserverInterface;
-
-class CategoryEditObserver implements ObserverInterface
+class CategoryEditObserver implements \Magento\Framework\Event\ObserverInterface
 {
-    /**
-     * @var \Magento\Framework\App\Cache\TypeListInterface
-     */
-    private $cacheTypeList;
-
     /**
      * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper
      */
-    private $configurationToXmlMapper;
+    protected $configurationToXmlMapper;
 
-    public function __construct(
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
-        \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $configurationToXmlMapper
-    )
+    public function __construct(\MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $configurationToXmlMapper)
     {
-        $this->cacheTypeList = $cacheTypeList;
         $this->configurationToXmlMapper = $configurationToXmlMapper;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        /** @var RequestInterface $request */
+        /** @var \Magento\Framework\App\RequestInterface $request */
         $request = $observer->getData('request');
         /** @var \Magento\Catalog\Model\Category $page */
         $category = $observer->getData('category');
 
         $data = $request->getPostValue();
 
-        if(isset($data['components']) AND !empty($data['components'])) {
+        if (isset($data['components']) && !empty($data['components'])) {
             $category->setContentConstructorContent($data['components']);
         }
-
-        $this->clearLayoutCache();
-    }
-
-    private function clearLayoutCache()
-    {
-        $this->cacheTypeList->cleanType('layout');
     }
 }
