@@ -26,7 +26,7 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
      */
     protected $migration;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->storeRepository = $this->objectManager->get(\Magento\Store\Model\StoreRepository::class);

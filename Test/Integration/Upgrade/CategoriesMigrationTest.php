@@ -9,7 +9,7 @@ class CategoriesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\In
      */
     protected $categoryRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->categoryRepository = $this->objectManager->get(\Magento\Catalog\Model\CategoryRepository::class);

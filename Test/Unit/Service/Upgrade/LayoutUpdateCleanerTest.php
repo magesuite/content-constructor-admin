@@ -34,7 +34,7 @@ class LayoutUpdateCleanerTest extends \PHPUnit\Framework\TestCase
 XML;
 
 
-    public function setUp() {
+    public function setUp(): void {
         $this->cleaner = new \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper;
     }
     public function testItRemovesAllComponentClasses() {

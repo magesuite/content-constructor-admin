@@ -9,7 +9,7 @@ class ProductsMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Inte
      */
     protected $productRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->productRepository = $this->objectManager->get(\Magento\Catalog\Model\ProductRepository::class);

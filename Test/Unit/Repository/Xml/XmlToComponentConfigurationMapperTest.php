@@ -61,7 +61,7 @@ class XmlToComponentConfigurationMapperTest extends \PHPUnit\Framework\TestCase
      */
     private $reader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->reader = new \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper();
 

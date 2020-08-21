@@ -19,7 +19,7 @@ class CategoryPickerProviderTest extends \PHPUnit\Framework\TestCase
      */
     private $uiComponentRendererMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
 
@@ -52,6 +52,10 @@ class CategoryPickerProviderTest extends \PHPUnit\Framework\TestCase
             ->with('categories_picker')
             ->willReturn('rendered_ui_component');
 
-        $this->assertContains('rendered_ui_component', $this->pickerProvider->renderPicker());
+        if(method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString('rendered_ui_component', $this->pickerProvider->renderPicker());
+        } else {
+            $this->assertContains('rendered_ui_component', $this->pickerProvider->renderPicker());
+        }
     }
 }

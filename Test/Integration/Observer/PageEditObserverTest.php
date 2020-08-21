@@ -14,7 +14,7 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
      */
     protected $pageRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->pageRepository = $this->objectManager->get(\Magento\Cms\Api\PageRepositoryInterface::class);

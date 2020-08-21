@@ -9,7 +9,7 @@ class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integra
      */
     protected $pageRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->pageRepository = $this->objectManager->get(\Magento\Cms\Model\PageRepository::class);

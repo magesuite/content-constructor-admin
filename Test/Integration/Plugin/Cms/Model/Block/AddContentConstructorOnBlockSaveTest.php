@@ -14,7 +14,7 @@ class AddContentConstructorOnBlockSaveTest extends \Magento\TestFramework\TestCa
      */
     protected $blockRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->blockRepository = $this->objectManager->get(\Magento\Cms\Api\BlockRepositoryInterface::class);

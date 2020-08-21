@@ -14,7 +14,7 @@ class ContentConstructorConfigDataProviderTest extends \PHPUnit\Framework\TestCa
      */
     protected $configDataProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $scopeConfigDummy = $this->getMockBuilder(\Magento\Framework\App\Config\ScopeConfigInterface::class)
             ->disableOriginalConstructor()
