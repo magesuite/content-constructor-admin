@@ -45,10 +45,12 @@ class AddContentConstructorOnBlockSaveTest extends \Magento\TestFramework\TestCa
 
         $block = $this->blockRepository->getById($identifier);
 
+        $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
+
         if($expected === null){
             $this->assertNull($block->getContentConstructorContent());
         }else{
-            $this->assertContains($expected, $block->getContentConstructorContent());
+            $this->$assertContains($expected, $block->getContentConstructorContent());
         }
     }
 
