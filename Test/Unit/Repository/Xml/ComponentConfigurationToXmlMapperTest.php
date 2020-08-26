@@ -125,14 +125,10 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testXmlRootNodeDoesNotExists($forbiddenString)
     {
-        if(method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringNotContainsString($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration, $this->existingXml)));
-            $this->assertStringNotContainsString($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
-        }
-        else {
-            $this->assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration, $this->existingXml)));
-            $this->assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
-        }
+        $assertNotContains = method_exists($this, 'assertStringNotContainsString') ? 'assertStringNotContainsString' : 'assertNotContains';
+
+        $this->$assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration, $this->existingXml)));
+        $this->$assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
     }
 
     /**

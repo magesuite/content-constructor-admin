@@ -52,10 +52,8 @@ class CategoryPickerProviderTest extends \PHPUnit\Framework\TestCase
             ->with('categories_picker')
             ->willReturn('rendered_ui_component');
 
-        if(method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString('rendered_ui_component', $this->pickerProvider->renderPicker());
-        } else {
-            $this->assertContains('rendered_ui_component', $this->pickerProvider->renderPicker());
-        }
+        $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
+
+        $this->$assertContains('rendered_ui_component', $this->pickerProvider->renderPicker());
     }
 }
