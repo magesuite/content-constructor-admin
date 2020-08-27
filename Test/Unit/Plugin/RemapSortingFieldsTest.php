@@ -9,7 +9,7 @@ class RemapSortingFieldsTest extends \PHPUnit\Framework\TestCase
      */
     protected $remapper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->remapper = new \MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields();
     }

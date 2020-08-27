@@ -14,7 +14,7 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
      */
     protected $pageRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->pageRepository = $this->objectManager->get(\Magento\Cms\Api\PageRepositoryInterface::class);
@@ -45,11 +45,13 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
 
         $page = $this->pageRepository->getById($identifier);
 
+        $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
+
         if($expected === null){
             $this->assertNull($page->getContentConstructorContent());
         }else{
             $this->assertNull($page->getLayoutUpdateXml());
-            $this->assertContains($expected, $page->getContentConstructorContent());
+            $this->$assertContains($expected, $page->getContentConstructorContent());
         }
     }
 

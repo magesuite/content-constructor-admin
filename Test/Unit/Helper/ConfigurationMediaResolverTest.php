@@ -14,7 +14,7 @@ class ConfigurationMediaResolverTest extends \PHPUnit\Framework\TestCase
      */
     protected $configurationMediaResolver;
 
-    public function setUp() {
+    public function setUp(): void {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->configurationMediaResolver = $this->objectManager
             ->get(\MageSuite\ContentConstructorAdmin\Helper\ConfigurationMediaResolver::class);

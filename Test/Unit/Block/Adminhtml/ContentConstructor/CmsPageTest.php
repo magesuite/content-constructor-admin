@@ -13,7 +13,7 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
      * @var \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\CmsPage
      */
     protected $block;
-    
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -24,7 +24,7 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
      */
     protected $configurationProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
 
@@ -76,14 +76,18 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
     {
        $url = $this->block->getUploaderUrl();
 
-       $this->assertContains('http://localhost/index.php/backend/cms/wysiwyg_images/index/key/', $url);
+       $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
+
+       $this->$assertContains('http://localhost/index.php/backend/cms/wysiwyg_images/index/key/', $url);
     }
 
     public function testItReturnsCorrectAdminPrefix()
     {
         $url = $this->block->getAdminPrefix();
 
-        $this->assertContains('backend', $url);
+        $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
+
+        $this->$assertContains('backend', $url);
     }
 
     public function testItReturnsCorrectJsonRepresentationOfConfiguration()

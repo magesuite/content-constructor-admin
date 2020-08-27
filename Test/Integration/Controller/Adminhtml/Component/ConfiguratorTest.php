@@ -13,6 +13,8 @@ class ConfiguratorTest extends \Magento\TestFramework\TestCase\AbstractBackendCo
 
         $content = $this->getResponse()->getBody();
 
-        $this->assertContains('<headline-configurator', $content);
+        $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
+
+        $this->$assertContains('<headline-configurator', $content);
     }
 }

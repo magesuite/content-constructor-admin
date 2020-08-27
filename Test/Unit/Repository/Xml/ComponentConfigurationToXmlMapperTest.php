@@ -64,7 +64,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
      */
     private $dom;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mapper = new \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper();
     }
@@ -125,8 +125,10 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testXmlRootNodeDoesNotExists($forbiddenString)
     {
-        $this->assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration, $this->existingXml)));
-        $this->assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
+        $assertNotContains = method_exists($this, 'assertStringNotContainsString') ? 'assertStringNotContainsString' : 'assertNotContains';
+
+        $this->$assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration, $this->existingXml)));
+        $this->$assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
     }
 
     /**
