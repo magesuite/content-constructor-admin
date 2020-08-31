@@ -14,7 +14,7 @@ interface IComponentInformation {
 
 /**
  * Brand carousel preview component.
- * This component is responsible for displaying preview of brand carousel component in Layout Builder (admin panel)
+ * This component is responsible for displaying preview of category links component in Layout Builder (admin panel)
  * @type {vuejs.ComponentOption} Vue component object.
  */
 const categoryLinksPreview: vuejs.ComponentOption = {
@@ -30,7 +30,7 @@ const categoryLinksPreview: vuejs.ComponentOption = {
                     </template>
                 </ul>
 
-                <div class="cc-category-links-preview__all-button">
+                <div v-if="!configuration.hide_link_to_all_products" class="cc-category-links-preview__all-button">
                     <span class="cc-category-links-preview__all-button-text">${ $t('All products') }</span>
                 </div>
             </div>

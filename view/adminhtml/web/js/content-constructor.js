@@ -258,11 +258,11 @@ var buttonPreview = {
 
 /**
  * Brand carousel preview component.
- * This component is responsible for displaying preview of brand carousel component in Layout Builder (admin panel)
+ * This component is responsible for displaying preview of category links component in Layout Builder (admin panel)
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var categoryLinksPreview = {
-    template: "<div class=\"cc-category-links-preview\">\n        <div class=\"cc-category-links-preview__wrapper\">\n            <h1 class=\"cc-category-links-preview__headline\">{{ configuration.main_category_labels[0] }}</h1>\n            <div class=\"cc-category-links-preview__content\">\n                <ul class=\"cc-category-links-preview__subcats\">\n                    <template v-for=\"(index, label) in configuration.sub_categories_labels\">\n                        <li class=\"cc-category-links-preview__subcat\" v-if=\"index < configuration.sub_categories_labels.length\">\n                            <span class=\"cc-category-links-preview__subcat-label\">{{ label }}</span>\n                        </li>\n                    </template>\n                </ul>\n\n                <div class=\"cc-category-links-preview__all-button\">\n                    <span class=\"cc-category-links-preview__all-button-text\">" + $t('All products') + "</span>\n                </div>\n            </div>\n        </div>\n    </div>",
+    template: "<div class=\"cc-category-links-preview\">\n        <div class=\"cc-category-links-preview__wrapper\">\n            <h1 class=\"cc-category-links-preview__headline\">{{ configuration.main_category_labels[0] }}</h1>\n            <div class=\"cc-category-links-preview__content\">\n                <ul class=\"cc-category-links-preview__subcats\">\n                    <template v-for=\"(index, label) in configuration.sub_categories_labels\">\n                        <li class=\"cc-category-links-preview__subcat\" v-if=\"index < configuration.sub_categories_labels.length\">\n                            <span class=\"cc-category-links-preview__subcat-label\">{{ label }}</span>\n                        </li>\n                    </template>\n                </ul>\n\n                <div v-if=\"!configuration.hide_link_to_all_products\" class=\"cc-category-links-preview__all-button\">\n                    <span class=\"cc-category-links-preview__all-button-text\">" + $t('All products') + "</span>\n                </div>\n            </div>\n        </div>\n    </div>",
     props: {
         configuration: {
             type: Object,
@@ -1876,6 +1876,7 @@ var categoryPicker = (function () {
         this._$output[0].value = '';
         this._$wrapper.find("." + this._options.classes.input.base).html(this._options.placeholders.select);
         this._orderedCheckboxes = [];
+        this._categoriesLabels = [];
     };
     /**
      * Renders picker component markup and initial setup
@@ -1925,7 +1926,7 @@ var categoryPicker = (function () {
                 else {
                     result += "<div class=\"cc-input cc-input--type-radio\">\n                        <input class=\"cc-input__radio | " + c.dropdown.radio + "\" type=\"radio\" value=\"" + data[i].value + "\" name=\"cp-sr-" + this._prefix + "[]\" id=\"cp-sr-" + this._prefix + "-" + data[i].value + "\" tabindex=\"-1\" " + checked + " " + disabled + ">";
                 }
-                result += "<label for=\"cp-sr-" + this._prefix + "-" + data[i].value + "\" class=\"cc-input__label | " + c.search.label + "\">\n                    " + data[i].label + " \n                    <span class=\"" + c.search.resultsPath + "\">" + path + "</span>\n                </label></div>\n                </li>";
+                result += "<label for=\"cp-sr-" + this._prefix + "-" + data[i].value + "\" class=\"cc-input__label | " + c.search.label + "\">\n                    " + data[i].label + "\n                    <span class=\"" + c.search.resultsPath + "\">" + path + "</span>\n                </label></div>\n                </li>";
             }
             result += '</ul>';
         }
@@ -2164,7 +2165,7 @@ var categoryLinksConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    template: "<form class=\"cc-category-links-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Category') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.main_category_id\" id=\"cp-main\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Subcategories') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.sub_categories_ids\" id=\"cp-sub\">\n        </div>\n        \n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-shownumbers\" class=\"cc-input__label\">" + $t('Show products count') + "</label>\n            <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"cfg-shownumbers\" name=\"use_name_in_product_search\" v-model=\"configuration.shownumbers\" @change=\"onChange\">\n                <label class=\"admin__actions-switch-label\" for=\"cfg-shownumbers\">\n                    <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                </label>\n            </div>\n        </div>\n    </form>",
+    template: "<form class=\"cc-category-links-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Category') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.main_category_id\" id=\"cp-main\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Subcategories') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.sub_categories_ids\" id=\"cp-sub\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-shownumbers\" class=\"cc-input__label\">" + $t('Show products count') + "</label>\n            <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"cfg-shownumbers\" name=\"use_name_in_product_search\" v-model=\"configuration.shownumbers\" @change=\"onChange\">\n                <label class=\"admin__actions-switch-label\" for=\"cfg-shownumbers\">\n                    <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                </label>\n            </div>\n        </div>\n\n        <div\n            class=\"cc-input cc-input--type-inline\"\n            v-bind:class=\"{ '_disabled': !subCategoriesPicker._categoriesLabels.length}\"\n        >\n            <label for=\"hide_link_to_all_products\" class=\"cc-input__label\">" + $t('Hide link to all products') + "</label>\n            <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                <input\n                    type=\"checkbox\"\n                    class=\"admin__actions-switch-checkbox\"\n                    id=\"cfg-hidelinktoall\"\n                    name=\"hide_link_to_all_products\"\n                    v-model=\"configuration.hide_link_to_all_products\"\n                    @change=\"onChange\"\n                    :checked=\"subCategoriesPicker._categoriesLabels.length && configuration.hide_link_to_all_products\"\n                    :disabled=\"!subCategoriesPicker._categoriesLabels.length\">\n                <label class=\"admin__actions-switch-label\" for=\"cfg-hidelinktoall\">\n                    <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                </label>\n            </div>\n        </div>\n    </form>",
     events: {
         /**
          * Listen on save event from Content Configurator component.
@@ -2172,6 +2173,11 @@ var categoryLinksConfigurator = {
         'component-configurator__save': function () {
             this.configuration.main_category_labels = this.categoryPicker._categoriesLabels;
             this.configuration.sub_categories_labels = this.subCategoriesPicker._categoriesLabels;
+            /**
+             * Link to all products can only be hidden when there are any subcategories selected.
+             * When only main category is selected - "All products" link is the only link displayed by the component.
+             */
+            this.configuration.hide_link_to_all_products = this.subCategoriesPicker._categoriesLabels.length ? this.configuration.hide_link_to_all_products : false;
             this.onSave();
         },
     },
@@ -2183,6 +2189,7 @@ var categoryLinksConfigurator = {
                     main_category_id: '',
                     sub_categories_ids: '',
                     shownumbers: false,
+                    hide_link_to_all_products: false,
                 };
             },
         },
@@ -2222,6 +2229,8 @@ var categoryLinksConfigurator = {
                 this.subCategoriesPicker.showChildrenOnly(this.configuration.main_category_id);
             }
             $('#cp-main').on('change', function () {
+                // Reset the hide link to all products config because the subcategory list is being cleared
+                _this.configuration.hide_link_to_all_products = false;
                 _this.updateSubcategoriesPicker(_this.configuration.main_category_id);
             });
         },
@@ -2234,7 +2243,7 @@ var categoryLinksConfigurator = {
             else {
                 this.subCategoriesPicker.disable();
             }
-        }
+        },
     },
 };
 
