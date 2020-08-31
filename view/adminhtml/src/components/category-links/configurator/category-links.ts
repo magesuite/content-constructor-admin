@@ -22,12 +22,33 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
             <label class="cc-input__label">${$t( 'Subcategories' )}</label>
             <input type="hidden" v-model="configuration.sub_categories_ids" id="cp-sub">
         </div>
-        
+
         <div class="cc-input cc-input--type-inline">
             <label for="cfg-shownumbers" class="cc-input__label">${$t( 'Show products count' )}</label>
             <div class="admin__actions-switch" data-role="switcher">
                 <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-shownumbers" name="use_name_in_product_search" v-model="configuration.shownumbers" @change="onChange">
                 <label class="admin__actions-switch-label" for="cfg-shownumbers">
+                    <span class="admin__actions-switch-text" data-text-on="${$t( 'Yes' )}" data-text-off="${$t( 'No' )}"></span>
+                </label>
+            </div>
+        </div>
+
+        <div
+            class="cc-input cc-input--type-inline"
+            v-bind:class="{ '_disabled': !subCategoriesPicker._categoriesLabels.length}"
+        >
+            <label for="hide_link_to_all_products" class="cc-input__label">${$t( 'Hide link to all products' )}</label>
+            <div class="admin__actions-switch" data-role="switcher">
+                <input
+                    type="checkbox"
+                    class="admin__actions-switch-checkbox"
+                    id="cfg-hidelinktoall"
+                    name="hide_link_to_all_products"
+                    v-model="configuration.hide_link_to_all_products"
+                    @change="onChange"
+                    :checked="subCategoriesPicker._categoriesLabels.length && configuration.hide_link_to_all_products"
+                    :disabled="!subCategoriesPicker._categoriesLabels.length">
+                <label class="admin__actions-switch-label" for="cfg-hidelinktoall">
                     <span class="admin__actions-switch-text" data-text-on="${$t( 'Yes' )}" data-text-off="${$t( 'No' )}"></span>
                 </label>
             </div>
@@ -40,6 +61,11 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
         'component-configurator__save'(): void {
             this.configuration.main_category_labels = this.categoryPicker._categoriesLabels;
             this.configuration.sub_categories_labels = this.subCategoriesPicker._categoriesLabels;
+            /**
+             * Link to all products can only be hidden when there are any subcategories selected.
+             * When only main category is selected - "All products" link is the only link displayed by the component.
+             */
+            this.configuration.hide_link_to_all_products = this.subCategoriesPicker._categoriesLabels.length ? this.configuration.hide_link_to_all_products : false;
             this.onSave();
         },
     },
@@ -51,6 +77,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
                     main_category_id: '',
                     sub_categories_ids: '',
                     shownumbers: false,
+                    hide_link_to_all_products: false,
                 };
             },
         },
@@ -72,7 +99,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
 
         this.$http.get(this.categoriesDataUrl).then((response: any): void => {
             this.initializePickers(JSON.parse(response.body));
-            
+
             // Hide loader
             $('body').trigger('hideLoadingPopup');
         } );
@@ -93,6 +120,8 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
             }
 
             $('#cp-main').on('change', (): void => {
+                // Reset the hide link to all products config because the subcategory list is being cleared
+                this.configuration.hide_link_to_all_products = false;
                 this.updateSubcategoriesPicker(this.configuration.main_category_id);
             });
         },
@@ -106,7 +135,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
             } else {
                 this.subCategoriesPicker.disable();
             }
-        }
+        },
     },
 };
 
