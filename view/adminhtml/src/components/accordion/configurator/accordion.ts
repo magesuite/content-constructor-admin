@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import $t from 'mage/translate';
 import confirm from 'Magento_Ui/js/modal/confirm';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
@@ -33,6 +34,29 @@ const accordionConfigurator: vuejs.ComponentOption = {
         'component-actions': componentActions,
     },
     template: `<div :class="componentCssClasses">
+        <div class="cc-accordion-configurator__section">
+            <h3 class="cc-accordion-configurator__subtitle">${$t(
+                'Accordion width'
+            )}</h3>
+            <div class="cc-accordion-configurator__scenario-options">
+                <div
+                    :class="{
+                        'cc-accordion-configurator__scenario-option--selected': configuration.scenarios.reading.id == optionId,
+                    }"
+                    class="cc-accordion-configurator__scenario-option"
+                    v-for="(optionId, option) in scenarioOptions.reading"
+                    @click="toggleOption('reading', optionId)">
+                    <div class="cc-accordion-configurator__scenario-option-wrapper">
+                        <svg class="cc-accordion-configurator__scenario-option-icon">
+                            <use v-bind="{ 'xlink:href': '#' + option.iconId }"></use>
+                        </svg>
+                    </div>
+                    <p class="cc-accordion-configurator__scenario-option-name">
+                        ${$t('{{ option.name }}')}
+                    </p>
+                </div>
+            </div>
+        </div>
         <div class="cc-accordion-configurator__section">
             <h3 class="cc-accordion-configurator__subtitle">Global options</h3>
             <div class="cc-accordion-configurator__option">
@@ -242,6 +266,9 @@ const accordionConfigurator: vuejs.ComponentOption = {
                             ],
                         }))
                     ],
+                    scenarios: {
+                        reading: {},
+                    },
                 };
             },
         },
@@ -282,6 +309,22 @@ const accordionConfigurator: vuejs.ComponentOption = {
              * Object in which we keep all WYSIWYG instances 
              */
             editorInstances: {},
+
+            /**
+             * Reading scenario options.
+             */
+            scenarioOptions: {
+                reading: {
+                    full: {
+                        name: 'Container width',
+                        iconId: 'tw_content-width-text',
+                    },
+                    optimal: {
+                        name: 'Optimal reading width',
+                        iconId: 'tw_optimal-reading',
+                    },
+                },
+            },
         };
     },
     events: {
@@ -816,6 +859,27 @@ const accordionConfigurator: vuejs.ComponentOption = {
         fixMarkup(markup: string): string {
             return markup.replace(/\/>/g, '>').replace(/&quot;/g, "'");
         },
+
+        /*
+         * Set the proper option after variant click
+         */
+        toggleOption(optionCategory: string, optionId: string): void {
+            this.configuration.scenarios[optionCategory] = this.scenarioOptions[
+                optionCategory
+            ][optionId];
+            this.configuration.scenarios[optionCategory].id = optionId;
+        },
+
+        /*
+         * Backward compatibility enhancement.
+         * When new props are added to the 'configuration' prop, none of already saved component has it.
+         * This leads to backward compatibility issues and JS errors for existing components
+         * This method takes defaults of 'configuration' and merges is with exising configuration object
+         */
+        updateConfigurationProp(): void {
+            const propDefaults: Object = this.$options.props.configuration.default();
+            this.configuration = $.extend({}, propDefaults, this.configuration, true);
+        },
     },
     ready(): void {
         if (this.wysiwygConfig !== '') {
@@ -824,6 +888,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
         }
 
         this.initAllWysiwygEditors();
+        this.updateConfigurationProp();
     }
 };
 
