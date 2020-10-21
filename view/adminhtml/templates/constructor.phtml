@@ -56,36 +56,28 @@
 <script>
     function previewContentConstructor(json) {
         requirejs(['jquery'], function ($) {
+            debugger;
             var url = "<?= $block->getBaseUrl() ?>content-constructor/preview/view";
             var getTokenUrl = "<?= $block->getPreviewTokenUrl() ?>";
-            var $newForm = $('<form>', {
-                'action': url,
-                'target': '_blank',
-                'method': 'POST'
-            }).append($('<input>', {
-                'name': 'configuration',
-                'value': json,
-                'type': 'hidden'
-            }));
-            $newForm.append($('<input>', {
-                'name': 'form_key',
-                'value': window.FORM_KEY,
-                'type': 'hidden'
-            }));
-            $(document.body).append($newForm);
             jQuery.ajax({
                 url: getTokenUrl,
                 type: "POST",
                 data: {configuration: json},
-                success: function (token) {
-                    $newForm.append($('<input>', {
-                        'name': 'secret_preview_token',
-                        'value': token,
-                        'type': 'hidden'
-                    }));
-                    $newForm.submit();
+                success: function (secret_preview_token) {
+                    var newTab = window.open();
+                    jQuery.ajax({
+                        url: url,
+                        type: "POST",
+                        data: {form_key: window.FORM_KEY, configuration:  json, secret_preview_token: secret_preview_token},
+                        success: function(response){
+                            newTab.document.open();
+                            newTab.document.write(response);
+                            newTab.document.close();
+                        },
+                    });
                 },
             });
+
         });
     }
 
