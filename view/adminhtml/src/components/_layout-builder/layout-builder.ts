@@ -30,6 +30,7 @@ import teaserAndTextPreview from '../teaser-and-text/preview/teaser-and-text';
 import instagramFeedPreview from '../instagram-feed/preview/instagram-feed';
 import mosaicPreview from '../mosaic/preview/mosaic';
 import accordionPreview from '../accordion/preview/accordion';
+import productTeaser from '../product-teaser/preview/product-teaser';
 
 /**
  * Single component information interface.
@@ -220,6 +221,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         'instagram-feed-preview': instagramFeedPreview,
         'mosaic-preview': mosaicPreview,
         'accordion-preview': accordionPreview,
+        'product-teaser-preview': productTeaser,
     },
     props: {
         /**

@@ -1014,6 +1014,27 @@ var accordionPreview = {
 };
 
 /**
+ * Product teaser preview component.
+ * This component is responsible for displaying preview of product teaser component in Layout Builder (admin panel)
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var productTeaserPreview = {
+    template: "<div class=\"cc-product-teaser-preview\">\n        <div class=\"cc-product-teaser-preview__icon-wrapper\">\n            <svg class=\"cc-product-teaser-preview__icon\">\n                <use xlink:href=\"#icon_component-product-teaser-preview\"></use>\n            </svg>\n        </div>\n    </div>",
+    props: {
+        configuration: {
+            type: Object,
+        },
+        /**
+         * Class property support to enable BEM mixes.
+         */
+        class: {
+            type: [String, Object, Array],
+            default: '',
+        },
+    },
+};
+
+/**
  * Layout builder component.
  * This component is responsible for displaying and handling user interactions of
  * entire Content Constructor
@@ -1052,6 +1073,7 @@ var layoutBuilder = {
         'instagram-feed-preview': instagramFeedPreview,
         'mosaic-preview': mosaicPreview,
         'accordion-preview': accordionPreview,
+        'product-teaser-preview': productTeaserPreview,
     },
     props: {
         /**
@@ -6823,6 +6845,31 @@ var accordionConfigurator = {
     }
 };
 
+/**
+ * Product teaser configurator component.
+ * This component is responsible for displaying product teaser configuration modal
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var productTeaserConfigurator = {
+    mixins: [
+        componentConfigurator,
+    ],
+    /**
+     * Get dependencies
+     */
+    template: "\n    <form class=\"cc-product-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-sku\">" + $t('SKU') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-sku\" class=\"cc-input__input\" id=\"cfg-pc-sku\" v-model=\"configuration.sku\" @change=\"onChange\">\n        </div>\n    </form>\n    ",
+    props: {
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    sku: '',
+                };
+            },
+        },
+    },
+};
+
 /* tslint:disable:no-console */
 // Use Vue resource
 Vue.use(vr);
@@ -6903,6 +6950,7 @@ var contentConstructor = {
         'instagram-feed-configurator': instagramFeedConfigurator,
         'mosaic-configurator': mosaicConfigurator,
         'accordion-configurator': accordionConfigurator,
+        'product-teaser-configurator': productTeaserConfigurator,
     },
     props: {
         configuration: {

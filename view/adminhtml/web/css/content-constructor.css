@@ -2467,6 +2467,21 @@
     -webkit-transform: translateY(-50%);
             transform: translateY(-50%); }
 
+.cc-product-teaser-preview__icon-wrapper {
+  position: relative; }
+  .cc-product-teaser-preview__icon-wrapper:before {
+    display: block;
+    content: '';
+    width: 100%;
+    padding-top: 23.3%; }
+
+.cc-product-teaser-preview__icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
 .cc-layout-builder__filters {
   margin-bottom: 30px; }
 
