@@ -1,11 +1,9 @@
 <?php
 
-namespace MageSuite\ContentConstructorAdmin\Test\Integration\Controller\Adminhtml\Component;
+namespace MageSuite\ContentConstructorAdmin\Test\Integration\Controller\Component;
 
 class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    const EXISTING_COMPONENT_TYPE_URL = '/backend/content-constructor/component/configurator/type/%s';
-
     /**
      * @var \Magento\TestFramework\ObjectManager
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace MageSuite\ContentConstructorAdmin\Controller\Adminhtml\Component;
+namespace MageSuite\ContentConstructorAdmin\Controller\Component;
 
 class ProductTeaserData extends \Magento\Framework\App\Action\Action implements \Magento\Framework\App\Action\HttpGetActionInterface
 {
