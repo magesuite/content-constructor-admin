@@ -8,6 +8,6 @@ class ProductTeaser extends \Magento\Framework\View\Element\Template
 
     public function getProductTeaserDataEndpoint()
     {
-        $this->getUrl('content-constructor/component/productteaserdata');
+        return $this->getUrl('content-constructor/component/productteaserdata');
     }
 }
