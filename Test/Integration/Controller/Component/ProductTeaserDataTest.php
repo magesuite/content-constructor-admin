@@ -41,7 +41,7 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
 
         $this->assertEquals('Simple Product', $productData['product']['name']);
         $this->assertEquals('simple', $productData['product']['sku']);
-        $this->assertContains('adminhtml/Magento/backend/en_US/Magento_Catalog/images/product/placeholder/small_image.jpg', $productData['product']['image']);
+        $this->assertContains('frontend/Magento/luma/en_US/Magento_Catalog/images/product/placeholder/small_image.jpg', $productData['product']['image']);
         $this->assertEquals('Short description', $productData['product']['shortDescription']);
     }
 
