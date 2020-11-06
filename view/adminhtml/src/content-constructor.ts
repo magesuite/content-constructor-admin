@@ -40,6 +40,7 @@ import teaserAndTextConfigurator from './components/teaser-and-text/configurator
 import instagramFeedConfigurator from './components/instagram-feed/configurator/instagram-feed';
 import mosaicConfigurator from './components/mosaic/configurator/mosaic';
 import accordionConfigurator from './components/accordion/configurator/accordion';
+import productTeaserConfigurator from './components/product-teaser/configurator/product-teaser';
 
 // Use Vue resource
 Vue.use(vr);
@@ -139,6 +140,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'instagram-feed-configurator': instagramFeedConfigurator,
         'mosaic-configurator': mosaicConfigurator,
         'accordion-configurator': accordionConfigurator,
+        'product-teaser-configurator': productTeaserConfigurator,
     },
     props: {
         configuration: {
