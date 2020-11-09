@@ -85,7 +85,7 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
          * @param response full AJAX response
          */
         handleUpdate(response: vuejs.HttpResponse): void {
-            if (response.ok && response.data && response.body.length) {
+            if (response.ok && response.body && response.body.length) {
                 const productData: any = JSON.parse(response.body);
 
                 if (productData.product && productData.product.name) {
