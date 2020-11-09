@@ -6897,6 +6897,8 @@ var productTeaserConfigurator = {
     events: {
         /**
          * Listen on save event from Content Configurator component.
+         * Reset all errors at first and make sure error alert won't popup as validation error is visible instantly (alert appears for Product Finder so this flag is needed)
+         * Checks if SKU is provided. If it is, runs AJAX request by running getProductData method. If not, sets error state and message.
          */
         'component-configurator__save': function () {
             this.$set('configuration.isError', false);
@@ -6932,12 +6934,22 @@ var productTeaserConfigurator = {
         };
     },
     methods: {
+        /**
+         * Saves product's name to configuration object for preview to display in Layout Builder
+         * @param productName - Product's name from the AJAX response object.
+         */
         setProductData: function (productName) {
             this.$set('configuration.product', {});
             this.$set('configuration.product.name', productName);
         },
+        /**
+         * Handles AJAX Success.
+         * Checks if product data are available and passes product's name to setProductData method for further processing.
+         * Then Hides loader
+         * @param response full AJAX response
+         */
         handleUpdate: function (response) {
-            if (response.ok && response.data && response.body.length) {
+            if (response.ok && response.body && response.body.length) {
                 var productData = JSON.parse(response.body);
                 if (productData.product && productData.product.name) {
                     this.setProductData(productData.product.name);
@@ -6948,6 +6960,9 @@ var productTeaserConfigurator = {
         },
         /**
          * Sends AJAX request to fetch product data
+         * Starts loader at first, then:
+         * On Success passes response to handeUpdate for further processing
+         * On Error runs validate method and hide the loader
          */
         getProductData: function () {
             var _this = this;
@@ -6959,6 +6974,9 @@ var productTeaserConfigurator = {
                 $('body').trigger('hideLoadingPopup');
             });
         },
+        /**
+         * Validates product data and set up error message if product data is not available.
+         */
         validate: function () {
             if (!this.configuration.product || this.configuration.product.name === '') {
                 this.$set('configuration.isError', true);
