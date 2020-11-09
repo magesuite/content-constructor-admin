@@ -195,6 +195,10 @@ const contentConstructor: vuejs.ComponentOption = {
             type: [String, Array],
             default: '',
         },
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
     },
     data(): object {
         return {
@@ -249,12 +253,14 @@ const contentConstructor: vuejs.ComponentOption = {
                     $pickerModal.closeModal();
                 }
             } else {
-                alert({
-                    title: $t('Hey,'),
-                    content: $.mage.__(
-                        'Something is wrong with configuration of your component. Please fix all errors before saving.'
-                    ),
-                });
+                if (data.hasOwnProperty('showErrorAlert') && data.showErrorAlert) {
+                    alert({
+                        title: $t('Hey,'),
+                        content: $.mage.__(
+                            'Something is wrong with configuration of your component. Please fix all errors before saving.'
+                        ),
+                    });
+                }
             }
         },
         'layout-builder__cmsblock-delete-request'(cmsBlockId: string): void {

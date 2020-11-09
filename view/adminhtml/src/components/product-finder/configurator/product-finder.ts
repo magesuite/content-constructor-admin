@@ -167,6 +167,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
+            this.$set('configuration.showErrorAlert', true);
             this.configuration.isError = false;
 
             for (let entry of this.componentConfigurationErrors) {

@@ -17,6 +17,9 @@ const productTeaserPreview: vuejs.ComponentOption = {
                 <use xlink:href="#icon_component-product-teaser-preview"></use>
             </svg>
         </div>
+        <div class="cc-product-teaser-preview__data">
+            <span>{{configuration.product.name}} (SKU: {{configuration.sku}})</span>
+        </div>
     </div>`,
     props: {
         configuration: {

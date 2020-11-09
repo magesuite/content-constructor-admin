@@ -1019,7 +1019,7 @@ var accordionPreview = {
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var productTeaserPreview = {
-    template: "<div class=\"cc-product-teaser-preview\">\n        <div class=\"cc-product-teaser-preview__icon-wrapper\">\n            <svg class=\"cc-product-teaser-preview__icon\">\n                <use xlink:href=\"#icon_component-product-teaser-preview\"></use>\n            </svg>\n        </div>\n    </div>",
+    template: "<div class=\"cc-product-teaser-preview\">\n        <div class=\"cc-product-teaser-preview__icon-wrapper\">\n            <svg class=\"cc-product-teaser-preview__icon\">\n                <use xlink:href=\"#icon_component-product-teaser-preview\"></use>\n            </svg>\n        </div>\n        <div class=\"cc-product-teaser-preview__data\">\n            <span>{{configuration.product.name}} (SKU: {{configuration.sku}})</span>\n        </div>\n    </div>",
     props: {
         configuration: {
             type: Object,
@@ -3258,7 +3258,6 @@ var teaserConfigurator = {
                         }
                     });
                 }
-                console.log(_this.configuration.image);
                 setTimeout(function () {
                     _this.checkImageSizes();
                     _this.onChange();
@@ -5434,6 +5433,7 @@ var ccProductFinderConfigurator = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save': function () {
+            this.$set('configuration.showErrorAlert', true);
             this.configuration.isError = false;
             for (var _i = 0, _a = this.componentConfigurationErrors; _i < _a.length; _i++) {
                 var entry = _a[_i];
@@ -6857,7 +6857,24 @@ var productTeaserConfigurator = {
     /**
      * Get dependencies
      */
-    template: "\n    <form class=\"cc-product-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-sku\">" + $t('SKU') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-sku\" class=\"cc-input__input\" id=\"cfg-pc-sku\" v-model=\"configuration.sku\" @change=\"onChange\">\n        </div>\n    </form>\n    ",
+    template: "\n    <form class=\"cc-product-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-sku\">" + $t('SKU') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-sku\" class=\"cc-input__input\" id=\"cfg-pc-sku\" v-model=\"configuration.sku\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-product-teaser-configurator__input-hint\">\n            <div class=\"cc-input__hint\">" + $t('Provide only one SKU per component instance.') + "</div>\n        </div>\n        <div class=\"cc-product-teaser-configurator__error-wrapper\" v-if=\"errorMessage.length\">\n            <span class=\"cc-product-teaser-configurator__error\">{{ errorMessage }}</span>\n        </div>\n    </form>\n    ",
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         */
+        'component-configurator__save': function () {
+            this.$set('configuration.isError', false);
+            this.$set('configuration.showErrorAlert', false);
+            if (this.configuration.sku !== '') {
+                this.getProductData();
+            }
+            else {
+                this.$set('configuration.isError', true);
+                this.$set('errorMessage', $t('SKU is required.'));
+                this.onSave();
+            }
+        },
+    },
     props: {
         configuration: {
             type: Object,
@@ -6866,6 +6883,52 @@ var productTeaserConfigurator = {
                     sku: '',
                 };
             },
+        },
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
+    },
+    data: function () {
+        return {
+            errorMessage: '',
+            product: null,
+        };
+    },
+    methods: {
+        setProductData: function (productName) {
+            this.$set('configuration.product', {});
+            this.$set('configuration.product.name', productName);
+        },
+        handleUpdate: function (response) {
+            if (response.ok && response.data && response.body.length) {
+                var productData = JSON.parse(response.body);
+                if (productData.product && productData.product.name) {
+                    this.setProductData(productData.product.name);
+                }
+            }
+            this.validate();
+            $('body').trigger('hideLoadingPopup');
+        },
+        /**
+         * Sends AJAX request to fetch product data
+         */
+        getProductData: function () {
+            var _this = this;
+            $('body').trigger('showLoadingPopup');
+            this.$http
+                .get(this.productDataEndpoint + "?sku=" + this.configuration.sku)
+                .then(function (response) { return _this.handleUpdate(response); }, function () {
+                _this.validate();
+                $('body').trigger('hideLoadingPopup');
+            });
+        },
+        validate: function () {
+            if (!this.configuration.product || this.configuration.product.name === '') {
+                this.$set('configuration.isError', true);
+                this.$set('errorMessage', $t('Can\'t find product with given SKU. Please verify SKU and try again.'));
+            }
+            this.onSave();
         },
     },
 };
@@ -7005,6 +7068,10 @@ var contentConstructor = {
             type: [String, Array],
             default: '',
         },
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
     },
     data: function () {
         return {
@@ -7055,10 +7122,12 @@ var contentConstructor = {
                 }
             }
             else {
-                alert({
-                    title: $t('Hey,'),
-                    content: $.mage.__('Something is wrong with configuration of your component. Please fix all errors before saving.'),
-                });
+                if (data.hasOwnProperty('showErrorAlert') && data.showErrorAlert) {
+                    alert({
+                        title: $t('Hey,'),
+                        content: $.mage.__('Something is wrong with configuration of your component. Please fix all errors before saving.'),
+                    });
+                }
             }
         },
         'layout-builder__cmsblock-delete-request': function (cmsBlockId) {

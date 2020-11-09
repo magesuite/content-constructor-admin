@@ -842,8 +842,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     });
                 }
 
-                console.log(this.configuration.image);
-
                 setTimeout((): void => {
                     this.checkImageSizes();
                     this.onChange();
