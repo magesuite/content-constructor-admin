@@ -1014,6 +1014,27 @@ var accordionPreview = {
 };
 
 /**
+ * Product teaser preview component.
+ * This component is responsible for displaying preview of product teaser component in Layout Builder (admin panel)
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var productTeaserPreview = {
+    template: "<div class=\"cc-product-teaser-preview\">\n        <div class=\"cc-product-teaser-preview__icon-wrapper\">\n            <svg class=\"cc-product-teaser-preview__icon\">\n                <use xlink:href=\"#icon_component-product-teaser-preview\"></use>\n            </svg>\n        </div>\n        <div class=\"cc-product-teaser-preview__data\">\n            <span>{{configuration.product.name}} (SKU: {{configuration.sku}})</span>\n        </div>\n    </div>",
+    props: {
+        configuration: {
+            type: Object,
+        },
+        /**
+         * Class property support to enable BEM mixes.
+         */
+        class: {
+            type: [String, Object, Array],
+            default: '',
+        },
+    },
+};
+
+/**
  * Layout builder component.
  * This component is responsible for displaying and handling user interactions of
  * entire Content Constructor
@@ -1052,6 +1073,7 @@ var layoutBuilder = {
         'instagram-feed-preview': instagramFeedPreview,
         'mosaic-preview': mosaicPreview,
         'accordion-preview': accordionPreview,
+        'product-teaser-preview': productTeaserPreview,
     },
     props: {
         /**
@@ -3236,7 +3258,6 @@ var teaserConfigurator = {
                         }
                     });
                 }
-                console.log(_this.configuration.image);
                 setTimeout(function () {
                     _this.checkImageSizes();
                     _this.onChange();
@@ -5412,6 +5433,7 @@ var ccProductFinderConfigurator = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save': function () {
+            this.$set('configuration.showErrorAlert', true);
             this.configuration.isError = false;
             for (var _i = 0, _a = this.componentConfigurationErrors; _i < _a.length; _i++) {
                 var entry = _a[_i];
@@ -6859,6 +6881,112 @@ var accordionConfigurator = {
     }
 };
 
+/**
+ * Product teaser configurator component.
+ * This component is responsible for displaying product teaser configuration modal
+ * @type {vuejs.ComponentOption} Vue component object.
+ */
+var productTeaserConfigurator = {
+    mixins: [
+        componentConfigurator,
+    ],
+    /**
+     * Get dependencies
+     */
+    template: "\n    <form class=\"cc-product-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-sku\">" + $t('SKU') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-sku\" class=\"cc-input__input\" id=\"cfg-pc-sku\" v-model=\"configuration.sku\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-product-teaser-configurator__input-hint\">\n            <div class=\"cc-input__hint\">" + $t('Provide only one SKU per component instance.') + "</div>\n        </div>\n        <div class=\"cc-product-teaser-configurator__error-wrapper\" v-if=\"errorMessage.length\">\n            <span class=\"cc-product-teaser-configurator__error\">{{ errorMessage }}</span>\n        </div>\n    </form>\n    ",
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         * Reset all errors at first and make sure error alert won't popup as validation error is visible instantly (alert appears for Product Finder so this flag is needed)
+         * Checks if SKU is provided. If it is, runs AJAX request by running getProductData method. If not, sets error state and message.
+         */
+        'component-configurator__save': function () {
+            this.$set('configuration.isError', false);
+            this.$set('configuration.showErrorAlert', false);
+            if (this.configuration.sku !== '') {
+                this.getProductData();
+            }
+            else {
+                this.$set('configuration.isError', true);
+                this.$set('errorMessage', $t('SKU is required.'));
+                this.onSave();
+            }
+        },
+    },
+    props: {
+        configuration: {
+            type: Object,
+            default: function () {
+                return {
+                    sku: '',
+                };
+            },
+        },
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
+    },
+    data: function () {
+        return {
+            errorMessage: '',
+            product: null,
+        };
+    },
+    methods: {
+        /**
+         * Saves product's name to configuration object for preview to display in Layout Builder
+         * @param productName - Product's name from the AJAX response object.
+         */
+        setProductData: function (productName) {
+            this.$set('configuration.product', {});
+            this.$set('configuration.product.name', productName);
+        },
+        /**
+         * Handles AJAX Success.
+         * Checks if product data are available and passes product's name to setProductData method for further processing.
+         * Then Hides loader
+         * @param response full AJAX response
+         */
+        handleUpdate: function (response) {
+            if (response.ok && response.body && response.body.length) {
+                var productData = JSON.parse(response.body);
+                if (productData.product && productData.product.name) {
+                    this.setProductData(productData.product.name);
+                }
+            }
+            this.validate();
+            $('body').trigger('hideLoadingPopup');
+        },
+        /**
+         * Sends AJAX request to fetch product data
+         * Starts loader at first, then:
+         * On Success passes response to handeUpdate for further processing
+         * On Error runs validate method and hide the loader
+         */
+        getProductData: function () {
+            var _this = this;
+            $('body').trigger('showLoadingPopup');
+            this.$http
+                .get(this.productDataEndpoint + "?sku=" + this.configuration.sku)
+                .then(function (response) { return _this.handleUpdate(response); }, function () {
+                _this.validate();
+                $('body').trigger('hideLoadingPopup');
+            });
+        },
+        /**
+         * Validates product data and set up error message if product data is not available.
+         */
+        validate: function () {
+            if (!this.configuration.product || this.configuration.product.name === '') {
+                this.$set('configuration.isError', true);
+                this.$set('errorMessage', $t('Can\'t find product with given SKU. Please verify SKU and try again.'));
+            }
+            this.onSave();
+        },
+    },
+};
+
 /* tslint:disable:no-console */
 // Use Vue resource
 Vue.use(vr);
@@ -6939,6 +7067,7 @@ var contentConstructor = {
         'instagram-feed-configurator': instagramFeedConfigurator,
         'mosaic-configurator': mosaicConfigurator,
         'accordion-configurator': accordionConfigurator,
+        'product-teaser-configurator': productTeaserConfigurator,
     },
     props: {
         configuration: {
@@ -6993,6 +7122,10 @@ var contentConstructor = {
             type: [String, Array],
             default: '',
         },
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
     },
     data: function () {
         return {
@@ -7043,10 +7176,12 @@ var contentConstructor = {
                 }
             }
             else {
-                alert({
-                    title: $t('Hey,'),
-                    content: $.mage.__('Something is wrong with configuration of your component. Please fix all errors before saving.'),
-                });
+                if (data.hasOwnProperty('showErrorAlert') && data.showErrorAlert) {
+                    alert({
+                        title: $t('Hey,'),
+                        content: $.mage.__('Something is wrong with configuration of your component. Please fix all errors before saving.'),
+                    });
+                }
             }
         },
         'layout-builder__cmsblock-delete-request': function (cmsBlockId) {

@@ -40,6 +40,7 @@ import teaserAndTextConfigurator from './components/teaser-and-text/configurator
 import instagramFeedConfigurator from './components/instagram-feed/configurator/instagram-feed';
 import mosaicConfigurator from './components/mosaic/configurator/mosaic';
 import accordionConfigurator from './components/accordion/configurator/accordion';
+import productTeaserConfigurator from './components/product-teaser/configurator/product-teaser';
 
 // Use Vue resource
 Vue.use(vr);
@@ -139,6 +140,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'instagram-feed-configurator': instagramFeedConfigurator,
         'mosaic-configurator': mosaicConfigurator,
         'accordion-configurator': accordionConfigurator,
+        'product-teaser-configurator': productTeaserConfigurator,
     },
     props: {
         configuration: {
@@ -191,6 +193,10 @@ const contentConstructor: vuejs.ComponentOption = {
         },
         filters: {
             type: [String, Array],
+            default: '',
+        },
+        productDataEndpoint: {
+            type: String,
             default: '',
         },
     },
@@ -247,12 +253,14 @@ const contentConstructor: vuejs.ComponentOption = {
                     $pickerModal.closeModal();
                 }
             } else {
-                alert({
-                    title: $t('Hey,'),
-                    content: $.mage.__(
-                        'Something is wrong with configuration of your component. Please fix all errors before saving.'
-                    ),
-                });
+                if (data.hasOwnProperty('showErrorAlert') && data.showErrorAlert) {
+                    alert({
+                        title: $t('Hey,'),
+                        content: $.mage.__(
+                            'Something is wrong with configuration of your component. Please fix all errors before saving.'
+                        ),
+                    });
+                }
             }
         },
         'layout-builder__cmsblock-delete-request'(cmsBlockId: string): void {
