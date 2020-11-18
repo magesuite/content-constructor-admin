@@ -14,7 +14,7 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
      */
     protected $productRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
