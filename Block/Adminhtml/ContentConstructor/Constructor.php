@@ -69,11 +69,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
 	 * @var \MageSuite\ContentConstructorAdmin\Helper\Configuration
 	 */
      protected $configurationHelper;
-     
-     /**
-     * @var \Magento\Framework\Url
-     */
-    protected $urlHelper;
 
     /**
      * Constructor constructor.
@@ -100,8 +95,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
         \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper,
-        \Magento\Framework\Url $urlHelper,
-
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -119,7 +112,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
         $this->configurationProvider = $configurationProvider;
         $this->storeManager = $storeManager;
         $this->configurationHelper = $configurationHelper;
-        $this->urlHelper = $urlHelper;
 
         $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
     }
@@ -252,6 +244,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
 
     public function getProductDataEndpoint()
     {
-        return $this->urlHelper->getUrl('content-constructor/component/productteaserdata');
+        return $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB) . 'content-constructor/component/productteaserdata';
     }
 }
