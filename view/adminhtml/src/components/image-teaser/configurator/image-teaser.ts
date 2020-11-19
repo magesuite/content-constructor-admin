@@ -281,7 +281,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                     'over',
                     ['mobile-in-columns', 'mobile-in-row', 'mobile-slider'],
                 ],
-                ['container', '2', 'under', ['mobile-in-columns']],
+                ['container', '2', 'under', ['mobile-in-columns', 'mobile-in-row', 'mobile-slider']],
 
                 [
                     'container',
@@ -289,7 +289,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                     'over',
                     ['mobile-in-columns', 'mobile-slider'],
                 ],
-                ['container', '3', 'under', ['mobile-in-columns']],
+                ['container', '3', 'under', ['mobile-in-columns', 'mobile-slider']],
 
                 ['container', '4', 'over', ['mobile-slider']],
                 ['container', '4', 'under', ['mobile-in-columns']],
