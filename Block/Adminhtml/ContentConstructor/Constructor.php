@@ -244,6 +244,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
 
     public function getProductDataEndpoint()
     {
-        return $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB) . 'content-constructor/component/productteaserdata';
+        return str_replace('admin/', '', $this->getBaseUrl()) . 'content-constructor/component/productteaserdata';
     }
 }
