@@ -44,13 +44,13 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
 
         $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
         $this->$assertContains('frontend/Magento/luma/en_US/Magento_Catalog/images/product/placeholder/small_image.jpg', $productData['product']['image']);
-        
+
         $this->assertEquals('Short description', $productData['product']['shortDescription']);
     }
 
     public function testItReturnEmptyArrayForNotExistingProduct()
     {
-        $this->dispatch('/backend/content-constructor/component/productteaserdata?sku=not-existing-product');
+        $this->dispatch('/content-constructor/component/productteaserdata?sku=not-existing-product');
 
         $content = $this->getResponse()->getBody();
 
