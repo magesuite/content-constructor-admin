@@ -6,6 +6,7 @@
             <module name="MageSuite_Frontend" />
             <module name="MageSuite_ContentConstructorFrontend" />
             <module name="Magento_Catalog" />
+            <module name="Smile_ElasticsuiteVirtualCategory"/>
         </sequence>
     </module>
 </config>
