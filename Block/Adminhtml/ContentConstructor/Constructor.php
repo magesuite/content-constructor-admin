@@ -169,7 +169,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
 
     public function getAdminPrefix()
     {
-        return $this->configurationHelper->getAdminPrefix();
+        return $this->configurationHelper->getAdminPath();
     }
 
     public function getSorters()

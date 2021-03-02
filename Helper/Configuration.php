@@ -26,7 +26,7 @@ class Configuration
         $this->configReader = $configReader;
     }
 
-    public function getAdminPrefix()
+    public function getAdminPath()
     {
         $adminPath = $this->scopeConfig->getValue(self::CUSTOM_ADMIN_PATH);
         if (!$adminPath) {
