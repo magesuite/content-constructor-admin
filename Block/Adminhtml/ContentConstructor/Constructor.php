@@ -10,11 +10,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
     protected $xmlToComponentConfiguration;
 
     /**
-     * @var \Magento\Framework\App\DeploymentConfig\Reader
-     */
-    protected $configReader;
-
-    /**
      * @var \Magento\Framework\Registry
      */
     protected $registry;
@@ -74,7 +69,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
      * Constructor constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration
-     * @param \Magento\Framework\App\DeploymentConfig\Reader $configReader
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper
@@ -83,7 +77,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration,
-        \Magento\Framework\App\DeploymentConfig\Reader $configReader,
         \Magento\Framework\Registry $registry,
         \MageSuite\ContentConstructorAsset\Service\AssetLocator $assetLocator,
         \Magento\Backend\Model\UrlInterface $backendUrl,
@@ -100,7 +93,6 @@ class Constructor extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
 
         $this->xmlToComponentConfiguration = $xmlToComponentConfiguration;
-        $this->configReader = $configReader;
         $this->registry = $registry;
         $this->assetLocator = $assetLocator;
         $this->backendUrl = $backendUrl;
@@ -177,9 +169,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
 
     public function getAdminPrefix()
     {
-        $config = $this->configReader->load();
-
-        return $config['backend']['frontName'];
+        return $this->configurationHelper->getAdminPath();
     }
 
     public function getSorters()
