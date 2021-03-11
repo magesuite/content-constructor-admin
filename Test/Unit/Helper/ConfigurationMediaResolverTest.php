@@ -40,8 +40,11 @@ class ConfigurationMediaResolverTest extends \PHPUnit\Framework\TestCase
 
         $result = $this->configurationMediaResolver->resolveMedia($configuration);
 
-        $this->assertEquals('http://localhost/pub/media/wysiwyg/dr_1.png', $result[0]['teasers'][0]['image']);
-        $this->assertEquals('http://localhost/pub/media/wysiwyg/dr_2.png', $result[0]['teasers'][1]['image']);
+        $url = str_replace('pub/', '', $result[0]['teasers'][0]['image']);
+        $this->assertEquals('http://localhost/media/wysiwyg/dr_1.png', $url);
+
+        $url = str_replace('pub/', '', $result[0]['teasers'][1]['image']);
+        $this->assertEquals('http://localhost/media/wysiwyg/dr_2.png', $url);
 
         $this->assertFalse(isset($result[0]['teasers'][2]['image']));
     }
