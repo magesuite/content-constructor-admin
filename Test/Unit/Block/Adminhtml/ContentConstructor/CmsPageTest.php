@@ -78,7 +78,7 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
 
        $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
 
-       $this->$assertContains('http://localhost/index.php/backend/cms/wysiwyg_images/index/key/', $url);
+       $this->$assertContains('http://localhost/index.php/backend/cms/wysiwyg_images/index/current_tree_path/d3lzaXd5Zw--/key/', $url);
     }
 
     public function testItReturnsCorrectAdminPrefix()
