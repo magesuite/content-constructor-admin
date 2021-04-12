@@ -66,6 +66,11 @@ class Constructor extends \Magento\Framework\View\Element\Template
      protected $configurationHelper;
 
     /**
+     * @var \Magento\Cms\Helper\Wysiwyg\Images
+     */
+    protected $imagesHelper;
+
+    /**
      * Constructor constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration
@@ -88,6 +93,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper,
+        \Magento\Cms\Helper\Wysiwyg\Images $imagesHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -104,6 +110,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         $this->configurationProvider = $configurationProvider;
         $this->storeManager = $storeManager;
         $this->configurationHelper = $configurationHelper;
+        $this->imagesHelper = $imagesHelper;
 
         $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
     }
@@ -140,7 +147,10 @@ class Constructor extends \Magento\Framework\View\Element\Template
 
     public function getUploaderUrl()
     {
-        return $this->backendUrl->getUrl('cms/wysiwyg_images/index');
+        return $this->backendUrl->getUrl(
+            'cms/wysiwyg_images/index',
+            ['current_tree_path' => $this->imagesHelper->idEncode('wysiwyg')]
+        );
     }
 
     public function getContentConstructorConfig()
