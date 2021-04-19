@@ -310,6 +310,8 @@ const contentConstructor: vuejs.ComponentOption = {
                             $('body').trigger('hideLoadingPopup');
                         });
                 }
+                
+                component.$broadcast('component-picker__opened');
             };
             // Create or Show picker modal depending if exists
             if ($pickerModal && $pickerModal.modal.attr('id') === modalId) {
