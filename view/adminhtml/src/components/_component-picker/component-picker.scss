@@ -6,6 +6,56 @@
 .cc-component-picker {
     $root: &;
 
+    &__search {
+        max-width: 60rem;
+        position: relative;
+        margin: 3rem auto;
+        text-align: center;
+
+        &:after {
+            content: '\e60c';
+            
+        }
+
+        &-input {
+            padding: 1.2rem 4.4rem 1.2rem 1.6rem;
+        }
+
+        &:after,
+        &-clear:after {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Admin Icons';
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+            speak: none;
+            font-size: 2rem;
+            color: #41362f;
+        }
+
+        &-clear {
+            display: none;
+
+            &:after {
+                content: '\e62f';
+            }
+        }
+
+        &--clearable {
+            &:after {
+                display: none;
+            }
+
+            #{$root}__search-clear {
+                display: block;
+            }
+        }
+    }
+
     &__list {
         display: flex;
         flex-wrap: wrap;
@@ -97,4 +147,16 @@
             width: calc((100% / 4) - 20px);
         }
     }
+}
+
+.visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
 }

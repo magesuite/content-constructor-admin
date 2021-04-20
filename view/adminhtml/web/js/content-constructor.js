@@ -19,7 +19,7 @@ confirm = confirm && confirm.hasOwnProperty('default') ? confirm['default'] : co
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var componentPicker = {
-    template: "<section class=\"cc-component-picker | {{ class }}\">\n        <ul class=\"cc-component-picker__list\" v-if=\"availableComponents.length\">\n            <li class=\"cc-component-picker__list-item cc-component-picker__list-item--{{component.type}}\" v-for=\"component in availableComponents\">\n                <a class=\"cc-component-picker__component-link\" href=\"#\" @click.prevent=\"onPickComponent( component.type, component.name )\">\n                    <span class=\"cc-component-picker__component-figure\">\n                        <svg class=\"cc-component-picker__component-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#icon_component-' + component.type }\"></use>\n                        </svg>\n                    </span>\n                    <span class=\"cc-component-picker__component-name\">{{ component.name }}</span>\n                    <span class=\"cc-component-picker__component-description\">{{ component.description }}</span>\n                </a>\n            </li>\n        </ul>\n        <p class=\"cc-component-picker__no-components\" v-if=\"!availableComponents.length\">\n            No components available.\n        </p>\n    </section>",
+    template: "<section class=\"cc-component-picker | {{ class }}\">\n        <div class=\"cc-component-picker__search\" :class=\"{ 'cc-component-picker__search--clearable': search.length > 0 }\">\n            <input \n                type=\"text\" \n                class=\"cc-input__input cc-component-picker__search-input\" \n                placeholder=\"{{ 'Search components...' | translate }}\" \n                v-model=\"search\" \n                @keyup.esc=\"clearSearch\"\n                v-el:search-input\n            >\n            <a href=\"#\" class=\"cc-component-picker__search-clear\" @click=\"clearSearch\">\n                <span class=\"visually-hidden\">{{ Clear | translate }}</span>\n            </a>\n        </div>\n        <ul class=\"cc-component-picker__list\" v-if=\"filteredComponents.length\">\n            <li class=\"cc-component-picker__list-item cc-component-picker__list-item--{{component.type}}\" v-for=\"component in filteredComponents\">\n                <a class=\"cc-component-picker__component-link\" href=\"#\" @click.prevent=\"onPickComponent( component.type, component.name )\">\n                    <span class=\"cc-component-picker__component-figure\">\n                        <svg class=\"cc-component-picker__component-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#icon_component-' + component.type }\"></use>\n                        </svg>\n                    </span>\n                    <span class=\"cc-component-picker__component-name\">{{ component.name }}</span>\n                    <span class=\"cc-component-picker__component-description\">{{ component.description }}</span>\n                </a>\n            </li>\n        </ul>\n        <p class=\"cc-component-picker__no-components\" v-if=\"!filteredComponents.length\">\n            No components available.\n        </p>\n    </section>",
     props: {
         /**
          * Class property support to enable BEM mixes.
@@ -59,9 +59,18 @@ var componentPicker = {
             default: '',
         },
     },
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         */
+        'component-picker__opened': function () {
+            this.focusSearch();
+        },
+    },
     data: function () {
         return {
             availableComponents: [],
+            search: '',
         };
     },
     ready: function () {
@@ -77,8 +86,25 @@ var componentPicker = {
                 this.availableComponents = response.json();
             });
         }
+        this.focusSearch();
+    },
+    computed: {
+        filteredComponents: function () {
+            var _this = this;
+            return this.availableComponents.filter(function (item) {
+                return String(item.name).toLowerCase().includes(_this.search.toLowerCase());
+            });
+        },
     },
     methods: {
+        /**
+         * Translates given string
+         * @param txt {string} - original, english string to be translated
+         * @return {string} - translated string
+         */
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
         /**
          * Component pick click handler.
          * This handler triggers "cc-component-picker__pick" event up the DOM chain when called.
@@ -90,6 +116,14 @@ var componentPicker = {
                 this.pickComponent(componentType, componentName);
             }
         },
+        clearSearch: function (a1, a2) {
+            console.log(a1);
+            console.log(a2);
+            this.search = '';
+        },
+        focusSearch: function () {
+            this.$els.searchInput.focus();
+        }
     },
 };
 
@@ -7223,6 +7257,7 @@ var contentConstructor = {
                         $('body').trigger('hideLoadingPopup');
                     });
                 }
+                component.$broadcast('component-picker__opened');
             };
             // Create or Show picker modal depending if exists
             if ($pickerModal && $pickerModal.modal.attr('id') === modalId) {
