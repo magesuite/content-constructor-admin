@@ -3,9 +3,6 @@
     "description": "Magento2 Content Constructor package",
     "homepage": "https://creativestyle.de",
     "license": "OSL-3.0",
-    "require": {
-        "creativestyle/creative-patterns": "^2.29.0"
-    },
     "autoload": {
         "files": [ "registration.php" ],
         "psr-4": {
