@@ -46,6 +46,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
                     'input' => 'text',
                     'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
                     'visible' => 0,
+                    'required' => 0
                 ]);
 
                 $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Product::ENTITY, self::LAYOUT_UPDATE_XML_BACKUP_ATTRIBUTE_NAME, [
@@ -54,6 +55,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
                     'input' => 'text',
                     'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
                     'visible' => 0,
+                    'required' => 0
                 ]);
 
                 $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Category::ENTITY, self::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, [
@@ -62,6 +64,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
                     'input' => 'text',
                     'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
                     'visible' => 0,
+                    'required' => 0
                 ]);
 
                 $this->eavSetupFactory->addAttribute(\Magento\Catalog\Model\Category::ENTITY, self::LAYOUT_UPDATE_XML_BACKUP_ATTRIBUTE_NAME, [
@@ -70,6 +73,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
                     'input' => 'text',
                     'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
                     'visible' => 0,
+                    'required' => 0
                 ]);
 
                 $this->migration->transferOldXmlValuesToNewJsonFields();
