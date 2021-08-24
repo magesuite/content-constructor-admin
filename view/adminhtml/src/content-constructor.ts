@@ -428,7 +428,7 @@ const contentConstructor: vuejs.ComponentOption = {
                     .then((response: any): void => {
                         component.$els.configuratorModal.innerHTML =
                             response.body;
-
+                        
                         // Set current component configuration data
                         component.initialComponentConfiguration =
                             componentInformation.data;

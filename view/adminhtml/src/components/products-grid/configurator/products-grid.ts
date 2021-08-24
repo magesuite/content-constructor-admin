@@ -19,7 +19,27 @@ import {
  */
 const productsGridConfigurator: vuejs.ComponentOption = {
     mixins: [componentConfigurator],
+    components: {
+        'action-button': actionButton,
+        'component-actions': componentActions,
+        'teaser-configurator': teaserConfigurator,
+    },
     template: `<div class="cc-products-grid-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+        <section class="cc-products-grid-configurator__section" v-if="ccConfig.products_grid != null && ccConfig.products_grid.custom_sections != null" v-for="section in ccConfig.products_grid.custom_sections">
+            <h3 class="cc-products-grid-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-hero-carousel-configurator__custom-sections">
+                <div class="cc-custom-fields">
+                    <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                        <component
+                            :is="'custom-element-' + field.type"
+                            :configuration="configuration"
+                            :field-configuration="field"
+                        ></component>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="cc-products-grid-configurator__section">
             <h3 class="cc-products-grid-configurator__subtitle">${$t(
                 'Data source'
@@ -193,19 +213,12 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         <teaser-configurator :configuration="configuration.items" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'products-grid'" :products-per-page="productsPerPage" v-show="configuration.useTeaser"></teaser-configurator>
 
     </div>`,
-    /**
-     * Get dependencies
-     */
-    components: {
-        'action-button': actionButton,
-        'component-actions': componentActions,
-        'teaser-configurator': teaserConfigurator,
-    },
     props: {
         configuration: {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     category_id: '',
                     filter: '',
                     order_by: 'creation_date',
@@ -248,13 +261,6 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'admin',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default(): any {
-                return {};
-            },
-        },
         productCollectionsSorters: {
             type: [String, Array],
             default: '',
@@ -262,6 +268,13 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         productCollectionsFilters: {
             type: [String, Array],
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'products_grid',
         },
     },
     data(): Object {
@@ -364,7 +377,6 @@ const productsGridConfigurator: vuejs.ComponentOption = {
 
             this.setProductsLimit();
             this._collectTeasersCssClasses();
-            this._collectComponentCssClasses();
             this.onSave();
         },
     },
@@ -533,28 +545,6 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                 ? this.configuration[layoutOption]
                 : 5;
         },
-        _getCustomCssFields(source: object): Array<any> {
-            const cssClassFields: Array<any> = [];
-
-            Object.keys(source).forEach(
-                (tabKey: string) => {
-                    if (
-                        typeof source[tabKey].content !== 'string' &&
-                        source[tabKey].content.fields != null
-                    ) {
-                        Object.keys(source[tabKey].content.fields).forEach(
-                            (fieldKey: string) => {
-                                if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
-                                    cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
-                                }
-                            }
-                        );
-                    }
-                }
-            );
-
-            return cssClassFields;
-        },
 
         _collectTeasersCssClasses(): void {
             if (this.configuration.items != null) {
@@ -575,26 +565,6 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                         teaser.cc_css_classes = cssClasses.join(' ');
                     }
                 );
-            }
-        },
-
-        _collectComponentCssClasses(): void {
-            if (
-                this.ccConfig.image_teaser != null &&
-                this.ccConfig.image_teaser.custom_sections != null
-            ) {
-                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
-                const cssClasses: Array<string> = [];
-
-                cssClassFields.forEach(
-                    (model: string) => {
-                        if (this.configuration[model] && typeof this.configuration[model] === 'string') {
-                            cssClasses.push(this.configuration[model]);
-                        }
-                    }
-                );
-
-                this.configuration.cc_css_classes = cssClasses.join(' ');
             }
         },
     },

@@ -4,5 +4,10 @@
 // See http://warpspire.com/kss/ for documentation guidelines.
 // Version 0.0.1
 .cc-daily-deal-teaser-configurator {
-
+    &__section {
+        margin: 20px 0 20px 0;
+        padding: 20px 0 20px 200px;
+        border-top: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+    }
 }

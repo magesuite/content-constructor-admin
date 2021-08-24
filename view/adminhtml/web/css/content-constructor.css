@@ -3125,6 +3125,18 @@
   .cc-button-configurator__widget-chooser-trigger:hover {
     background: #d6d6d6; }
 
+.cc-button-configurator__section {
+  margin: 20px 0 20px 0;
+  padding: 20px 0 20px 200px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5; }
+
+.cc-category-links-configurator__section {
+  margin: 20px 0 20px 0;
+  padding: 20px 0 20px 200px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5; }
+
 .cc-cms-pages-teaser-configurator__section {
   margin: 0 0 3rem; }
   .cc-cms-pages-teaser-configurator__section-option {
@@ -3226,6 +3238,18 @@
 .cc-cms-pages-teaser-configurator__select {
   width: 100%; }
 
+.cc-daily-deal-teaser-configurator__section {
+  margin: 20px 0 20px 0;
+  padding: 20px 0 20px 200px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5; }
+
+.cc-headline-configurator__section {
+  margin: 20px 0 20px 0;
+  padding: 20px 0 20px 200px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5; }
+
 .cc-headline-configurator__advanced-trigger {
   position: relative;
   margin: 0 0 2rem;
@@ -3261,12 +3285,12 @@
     display: none; }
   .cc-hero-carousel-configurator__section {
     margin: 0 0 3rem; }
-  .cc-hero-carousel-configurator__scenario-options {
+  .cc-hero-carousel-configurator__scenario-options, .cc-hero-carousel-configurator__custom-sections {
     padding: 1.5rem 1.5rem 1.25rem;
     border-radius: 2px;
     -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
             box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12); }
-    .cc-hero-carousel-configurator__scenario-options-list {
+    .cc-hero-carousel-configurator__scenario-options-list, .cc-hero-carousel-configurator__custom-sections-list {
       margin: 0 -0.75rem;
       padding: 0;
       list-style: none;
@@ -3983,13 +4007,22 @@
 .cc-paragraph-configurator__select {
   width: 450px !important; }
 
-.cc-product-finder-configurator__section--styled {
+.cc-product-carousel-configurator__section {
+  margin: 20px 0 20px 0;
+  padding: 20px 0 20px 200px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5; }
+
+.cc-product-finder-configurator__section--styled, .cc-product-finder-configurator__section--custom-section {
   margin: 0.5em 0 0;
   padding: 1.5rem;
   background: #fff;
   border-radius: 2px;
   -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
           box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12); }
+
+.cc-product-finder-configurator__section--custom-section {
+  margin-bottom: 3rem; }
 
 .cc-product-finder-configurator__global-options {
   display: -webkit-box;
@@ -4166,19 +4199,19 @@
     .cc-products-grid-configurator__section-option .cc-input__input, .cc-products-grid-configurator__section-option .cc-input__textarea, .cc-products-grid-configurator__section-option .cc-input__select, .cc-products-grid-configurator__section-option .cc-input__fake-select {
       max-width: 25em; }
 
-.cc-products-grid-configurator__scenario-options {
+.cc-products-grid-configurator__scenario-options, .cc-products-grid-configurator__custom-sections {
   padding: 1.5rem 1.5rem 1.25rem;
   border-radius: 2px;
   -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
           box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12); }
-  .cc-products-grid-configurator__scenario-options-list {
+  .cc-products-grid-configurator__scenario-options-list, .cc-products-grid-configurator__custom-sections-list {
     margin: 0 -0.75rem;
     padding: 0;
     list-style: none;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex; }
-  .cc-products-grid-configurator__scenario-options--inputs {
+  .cc-products-grid-configurator__scenario-options--inputs, .cc-products-grid-configurator__custom-sections--inputs {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -4466,6 +4499,12 @@
   min-width: 100%;
   max-width: 100%; }
 
+.cc-product-teaser-configurator__section {
+  margin: 20px 0 20px 0;
+  padding: 20px 0 20px 200px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5; }
+
 .cc-product-teaser-configurator__input-hint, .cc-product-teaser-configurator__error-wrapper {
   max-width: 800px; }
 
@@ -4492,6 +4531,9 @@
 
 .cc-product-teaser-configurator .cc-input__hint {
   padding-left: 25%; }
+
+.cc-product-teaser-configurator__custom-sections .cc-input__hint {
+  padding-left: 0; }
 
 .content-constructor {
   max-width: 1280px;

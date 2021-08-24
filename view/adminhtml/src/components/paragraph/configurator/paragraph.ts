@@ -16,6 +16,19 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         <div class="cc-paragraph-configurator__error" v-text="tempConfiguration.errorMessage" v-show="tempConfiguration.errorMessage">
         </div>
 
+        <section class="cc-paragraph-configurator__section" v-if="ccConfig.paragraph != null && ccConfig.paragraph.custom_sections != null" v-for="section in ccConfig.paragraph.custom_sections">
+            <h3 class="cc-paragraph-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </section>
+
         <section class="cc-paragraph-configurator__section">
             <h3 class="cc-paragraph-configurator__subtitle">${$t(
                 'Paragraph width'
@@ -103,6 +116,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     title: '',
                     columns: 'none',
                     content: '',
@@ -134,6 +148,13 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         assetsUrl: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'paragraph',
         },
     },
     data(): any {

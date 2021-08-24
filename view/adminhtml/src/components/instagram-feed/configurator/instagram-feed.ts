@@ -8,6 +8,19 @@ import imageTeaserConfigurator from '../../image-teaser/configurator/image-tease
 const instagramFeedConfigurator: vuejs.ComponentOption = {
     extends: imageTeaserConfigurator,
     template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+        <section class="cc-image-teaser-configurator__section" v-if="ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null" v-for="section in ccConfig.image_teaser.custom_sections">
+            <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                        :teaser-index="9999"
+                    ></component>
+                </div>
+            </div>
+        </section>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">{{'Instagram images limit' | translate}}:</h3>
             <div class="cc-input cc-input--group cc-input cc-teaser-configurator__form-group">
@@ -62,13 +75,6 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
         adminPrefix: {
             type: String,
             default: 'admin',
-        },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default(): any {
-                return {};
-            },
         },
     },
     ready(): void {

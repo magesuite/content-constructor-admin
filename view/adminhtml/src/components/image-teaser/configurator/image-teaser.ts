@@ -12,13 +12,6 @@ import {
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
-import customElementTextInput from '../../_custom-elements/text-input';
-import customElementSelect from '../../_custom-elements/select';
-import customElementTextarea from '../../_custom-elements/textarea';
-import customElementCheckbox from '../../_custom-elements/checkbox';
-import customElementRadio from '../../_custom-elements/radio';
-import customElementPosition from '../../_custom-elements/position-grid';
-
 /**
  * Image teaser configurator component.
  * This component is responsible for displaying image teaser's configuration form
@@ -31,12 +24,6 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         'component-adder': componentAdder,
         'component-actions': componentActions,
         'teaser-configurator': teaserConfigurator,
-        'custom-element-input': customElementTextInput,
-        'custom-element-select': customElementSelect,
-        'custom-element-textarea': customElementTextarea,
-        'custom-element-checkbox': customElementCheckbox,
-        'custom-element-radio': customElementRadio,
-        'custom-element-position': customElementPosition,
     },
     template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
@@ -368,12 +355,12 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'admin',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default(): any {
-                return {};
-            },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'image_teaser',
         },
     },
     computed: {
@@ -389,7 +376,6 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         'component-configurator__save'(): void {
             this._validateOptionsSet();
             this._collectTeasersCssClasses();
-            this._collectComponentCssClasses();
             this.onSave();
         },
     },
@@ -619,29 +605,6 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             this.onChange();
         },
 
-        _getCustomCssFields(source: object): Array<any> {
-            const cssClassFields: Array<any> = [];
-
-            Object.keys(source).forEach(
-                (tabKey: string) => {
-                    if (
-                        typeof source[tabKey].content !== 'string' &&
-                        source[tabKey].content.fields != null
-                    ) {
-                        Object.keys(source[tabKey].content.fields).forEach(
-                            (fieldKey: string) => {
-                                if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
-                                    cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
-                                }
-                            }
-                        );
-                    }
-                }
-            );
-
-            return cssClassFields;
-        },
-
         _collectTeasersCssClasses(): void {
             if (this.configuration.items != null) {
                 const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
@@ -661,26 +624,6 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                         teaser.cc_css_classes = cssClasses.join(' ');
                     }
                 );
-            }
-        },
-
-        _collectComponentCssClasses(): void {
-            if (
-                this.ccConfig.image_teaser != null &&
-                this.ccConfig.image_teaser.custom_sections != null
-            ) {
-                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
-                const cssClasses: Array<string> = [];
-
-                cssClassFields.forEach(
-                    (model: string) => {
-                        if (this.configuration[model] && typeof this.configuration[model] === 'string') {
-                            cssClasses.push(this.configuration[model]);
-                        }
-                    }
-                );
-
-                this.configuration.cc_css_classes = cssClasses.join(' ');
             }
         },
 

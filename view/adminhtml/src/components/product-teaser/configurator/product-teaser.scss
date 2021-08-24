@@ -5,6 +5,13 @@
 // Version 0.0.1
 
 .cc-product-teaser-configurator {
+    &__section {
+        margin: 20px 0 20px 0;
+        padding: 20px 0 20px 200px;
+        border-top: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
     &__input-hint,
     &__error-wrapper {
         max-width: 800px;
@@ -36,5 +43,11 @@
 
     .cc-input__hint {
         padding-left: 25%;
+    }
+
+    &__custom-sections {
+        .cc-input__hint {
+            padding-left: 0;
+        }
     }
 }

@@ -59,6 +59,21 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
         'product-finder-preview': productFinderPreview,
     },
     template: `<div class="cc-product-finder-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+        <section class="cc-product-finder-configurator__section cc-product-finder-configurator__section--custom-section" v-if="ccConfig.product_finder != null && ccConfig.product_finder.custom_sections != null" v-for="section in ccConfig.product_finder.custom_sections">
+            <h3 class="cc-product-finder-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-product-finder-configurator__custom-sections">
+                <div class="cc-custom-fields">
+                    <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                        <component
+                            :is="'custom-element-' + field.type"
+                            :configuration="configuration"
+                            :field-configuration="field"
+                        ></component>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="cc-product-finder-configurator__section cc-product-finder-configurator__section--styled">
             <h3 class="cc-product-finder-configurator__subtitle">{{ 'Default settings' | translate }}:</h3>
             <div class="cc-product-finder-configurator__global-options">
@@ -175,7 +190,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
                     this.configuration.isError = true;
                 }
             }
-
+            
             this.onSave();
         },
     },
@@ -184,6 +199,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     optionsPerRow: {
                         mobile: 1,
                         tablet: 3,
@@ -203,6 +219,13 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
         imageEndpoint: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'product_finder',
         },
     },
     data(): Object {

@@ -12,4 +12,11 @@
             background: darken(#e3e3e3, 5%);
         }
     }
+
+    &__section {
+        margin: 20px 0 20px 0;
+        padding: 20px 0 20px 200px;
+        border-top: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+    }
 }
