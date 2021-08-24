@@ -14,6 +14,19 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
         componentConfigurator,
     ],
     template: `<form class="cc-daily-deal-teaser-configurator" {{ attributes }}>
+        <section class="cc-daily-deal-teaser-configurator__section" v-if="ccConfig.daily_deal_teaser != null && ccConfig.daily_deal_teaser.custom_sections != null" v-for="section in ccConfig.daily_deal_teaser.custom_sections">
+            <h3 class="cc-daily-deal-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </section>
+
         <div class="cc-input cc-input--type-inline">
             <label class="cc-input__label">${$t( 'Categories' )}:</label>
             <input type="hidden" v-model="configuration.category_id" @change="onChange" id="cp-daily-deal-teaser">
@@ -66,6 +79,7 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     category_id: '',
                     filter: '',
                     order_by: 'creation_date',
@@ -89,6 +103,13 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
         productCollectionsFilters: {
             type: [String, Array],
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'daily_deal_teaser',
         },
     },
     data(): Object {

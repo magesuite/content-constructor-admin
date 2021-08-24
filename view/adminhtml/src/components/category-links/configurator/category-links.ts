@@ -14,6 +14,19 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
         componentConfigurator,
     ],
     template: `<form class="cc-category-links-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
+        <section class="cc-category-links-configurator__section" v-if="ccConfig.category_links != null && ccConfig.category_links.custom_sections != null" v-for="section in ccConfig.category_links.custom_sections">
+            <h3 class="cc-category-links-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </section>
+
         <div class="cc-input cc-input--type-inline">
             <label class="cc-input__label">${$t( 'Category' )}</label>
             <input type="hidden" v-model="configuration.main_category_id" id="cp-main">
@@ -74,6 +87,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     main_category_id: '',
                     sub_categories_ids: '',
                     shownumbers: false,
@@ -85,6 +99,13 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
         categoriesDataUrl: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'category_links',
         },
     },
     data(): Object {

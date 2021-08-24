@@ -19,7 +19,7 @@ confirm = confirm && confirm.hasOwnProperty('default') ? confirm['default'] : co
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var componentPicker = {
-    template: "<section class=\"cc-component-picker | {{ class }}\">\n        <div class=\"cc-component-picker__search\" :class=\"{ 'cc-component-picker__search--clearable': search.length > 0 }\">\n            <input \n                type=\"text\" \n                class=\"cc-input__input cc-component-picker__search-input\" \n                placeholder=\"{{ 'Search components...' | translate }}\" \n                v-model=\"search\" \n                @keyup.esc=\"clearSearch\"\n                v-el:search-input\n            >\n            <a href=\"#\" class=\"cc-component-picker__search-clear\" @click=\"clearSearch\">\n                <span class=\"visually-hidden\">{{ Clear | translate }}</span>\n            </a>\n        </div>\n        <ul class=\"cc-component-picker__list\" v-if=\"filteredComponents.length\">\n            <li class=\"cc-component-picker__list-item cc-component-picker__list-item--{{component.type}}\" v-for=\"component in filteredComponents\">\n                <a class=\"cc-component-picker__component-link\" href=\"#\" @click.prevent=\"onPickComponent( component.type, component.name )\">\n                    <span class=\"cc-component-picker__component-figure\">\n                        <svg class=\"cc-component-picker__component-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#icon_component-' + component.type }\"></use>\n                        </svg>\n                    </span>\n                    <span class=\"cc-component-picker__component-name\">{{ component.name }}</span>\n                    <span class=\"cc-component-picker__component-description\">{{ component.description }}</span>\n                </a>\n            </li>\n        </ul>\n        <p class=\"cc-component-picker__no-components\" v-if=\"!filteredComponents.length\">\n            No components available.\n        </p>\n    </section>",
+    template: "<section class=\"cc-component-picker | {{ class }}\">\n        <div class=\"cc-component-picker__search\" :class=\"{ 'cc-component-picker__search--clearable': search.length > 0 }\">\n            <input \n                type=\"text\" \n                class=\"cc-input__input cc-component-picker__search-input\" \n                placeholder=\"{{ 'Search components...' | translate }}\" \n                v-model=\"search\" \n                v-el:search-input\n            >\n            <a href=\"#\" class=\"cc-component-picker__search-clear\" @click=\"clearSearch\">\n                <span class=\"visually-hidden\">{{ Clear | translate }}</span>\n            </a>\n        </div>\n        <ul class=\"cc-component-picker__list\" v-if=\"filteredComponents.length\">\n            <li class=\"cc-component-picker__list-item cc-component-picker__list-item--{{component.type}}\" v-for=\"component in filteredComponents\">\n                <a class=\"cc-component-picker__component-link\" href=\"#\" @click.prevent=\"onPickComponent( component.type, component.name )\">\n                    <span class=\"cc-component-picker__component-figure\">\n                        <svg class=\"cc-component-picker__component-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#icon_component-' + component.type }\"></use>\n                        </svg>\n                    </span>\n                    <span class=\"cc-component-picker__component-name\">{{ component.name }}</span>\n                    <span class=\"cc-component-picker__component-description\">{{ component.description }}</span>\n                </a>\n            </li>\n        </ul>\n        <p class=\"cc-component-picker__no-components\" v-if=\"!filteredComponents.length\">\n            No components available.\n        </p>\n    </section>",
     props: {
         /**
          * Class property support to enable BEM mixes.
@@ -89,6 +89,10 @@ var componentPicker = {
         this.focusSearch();
     },
     computed: {
+        /**
+         * Filters 'availableComponents' array by 'search' model.
+         * @returns Array - filtered components array
+         */
         filteredComponents: function () {
             var _this = this;
             return this.availableComponents.filter(function (item) {
@@ -116,9 +120,7 @@ var componentPicker = {
                 this.pickComponent(componentType, componentName);
             }
         },
-        clearSearch: function (a1, a2) {
-            console.log(a1);
-            console.log(a2);
+        clearSearch: function () {
             this.search = '';
         },
         focusSearch: function () {
@@ -1604,12 +1606,282 @@ var layoutBuilder = {
     },
 };
 
+var customElementTextInput = {
+    template: "<div class=\"cc-input cc-input--type-text\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <input type=\"text\" class=\"cc-input__input\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
+    props: {
+        fieldConfiguration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        configuration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        teaserIndex: {
+            type: Number,
+            default: 0,
+        },
+    },
+    filters: {
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+        prefixFieldId: function (id) {
+            return "cfg-teaser-" + this.teaserIndex + "-" + id;
+        },
+    },
+    ready: function () {
+        /**
+         * Set default value if model is not set yet and default value is defined in etc/view.xml
+         */
+        if (this.configuration[this.fieldConfiguration.model] == null &&
+            this.fieldConfiguration.default != null) {
+            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
+        }
+    },
+};
+
+var customElementSelect = {
+    template: "<div class=\"cc-input cc-input--type-select\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <select class=\"cc-input__select\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n            <option v-for=\"(value, label) in fieldConfiguration.options\" :value=\"value\">{{ label }}</option>\n        </select>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
+    props: {
+        fieldConfiguration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        configuration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        teaserIndex: {
+            type: Number,
+            default: 0,
+        },
+    },
+    filters: {
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+        prefixFieldId: function (id) {
+            return "cfg-teaser-" + this.teaserIndex + "-" + id;
+        },
+    },
+    ready: function () {
+        /**
+         * Set default value if model is not set yet and default value is defined in etc/view.xml
+         */
+        if (this.configuration[this.fieldConfiguration.model] == null &&
+            this.fieldConfiguration.default != null) {
+            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
+        }
+    },
+};
+
+var customElementTextarea = {
+    template: "<div class=\"cc-input cc-input--type-textarea\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <textarea class=\"cc-input__textarea\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model] | prettify\"></textarea>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
+    props: {
+        fieldConfiguration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        configuration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        teaserIndex: {
+            type: Number,
+            default: 0,
+        },
+    },
+    filters: {
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+        prefixFieldId: function (id) {
+            return "cfg-teaser-" + this.teaserIndex + "-" + id;
+        },
+        prettify: {
+            read: function (txt) {
+                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
+            },
+            write: function (txt) {
+                return txt.replace(/\n/g, '<br>');
+            },
+        },
+    },
+    ready: function () {
+        /**
+         * Set default value if model is not set yet and default value is defined in etc/view.xml
+         */
+        if (this.configuration[this.fieldConfiguration.model] == null &&
+            this.fieldConfiguration.default != null) {
+            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
+        }
+    },
+};
+
+var customElementCheckbox = {
+    template: "<div class=\"cc-input cc-input--type-switcher\">\n        <div class=\"admin__actions-switch\" data-role=\"switcher\">\n            <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n            <label class=\"admin__actions-switch-label\" for=\"{{fieldConfiguration.model | prefixFieldId}}\" v-if=\"fieldConfiguration.label\">\n                <span class=\"admin__actions-switch-text\">{{fieldConfiguration.label | translate}}</span>\n            </label>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
+    props: {
+        fieldConfiguration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        configuration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        teaserIndex: {
+            type: Number,
+            default: 0,
+        },
+    },
+    filters: {
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+        prefixFieldId: function (id) {
+            return "cfg-teaser-" + this.teaserIndex + "-" + id;
+        },
+    },
+    ready: function () {
+        /**
+         * Set default value if model is not set yet and default value is defined in etc/view.xml
+         */
+        if (this.configuration[this.fieldConfiguration.model] == null &&
+            this.fieldConfiguration.checked != null) {
+            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.checked);
+        }
+    }
+};
+
+var customElementRadio = {
+    template: "<div class=\"cc-input cc-input--wrapper\">\n        <label class=\"cc-input__label cc-input__label--radio-group\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}\n        </label>\n        <div class=\"cc-input cc-input--type-radio\" v-for=\"(value, label) in fieldConfiguration.options\">\n            <input type=\"radio\" id=\"{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}\" class=\"cc-input__radio\" :name=\"fieldConfiguration.model\" :value=\"value\" v-model=\"configuration[fieldConfiguration.model]\">\n            <label for=\"{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}\" class=\"cc-input__label cc-input__label--radio\">{{label | translate}}</label>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
+    props: {
+        fieldConfiguration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        configuration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        teaserIndex: {
+            type: Number,
+            default: 0,
+        },
+    },
+    filters: {
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+        prefixFieldId: function (id) {
+            return "cfg-teaser-" + this.teaserIndex + "-" + id;
+        },
+    },
+    ready: function () {
+        /**
+         * Set default value if model is not set yet and default value is defined in etc/view.xml
+         */
+        if (this.configuration[this.fieldConfiguration.model] == null &&
+            this.fieldConfiguration.default != null) {
+            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
+        }
+    },
+};
+
+var customElementPosition = {
+    template: "<div class=\"cc-input cc-input--type-position-grid\">\n        <label class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">{{fieldConfiguration.label | translate}}:</label>\n        <div \n            class=\"cc-position-grid\"\n            :style=\"{'width': gridWidth}\"\n        >\n            <template v-for=\"y in rows\">\n                <template v-for=\"x in columns\">\n                    <span\n                        class=\"cc-position-grid__item\"\n                        :class=\"{\n                            'cc-position-grid__item--active': isCurrentPosition(x+1, y+1)\n                        }\"\n                        @click=\"setPosition(x+1, y+1)\"\n                    ></span>\n                </template>\n            </template>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
+    props: {
+        fieldConfiguration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        configuration: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+    },
+    filters: {
+        translate: function (txt) {
+            return $.mage.__(txt);
+        },
+    },
+    computed: {
+        rows: function () {
+            return Number(this.fieldConfiguration.rows);
+        },
+        columns: function () {
+            return Number(this.fieldConfiguration.columns);
+        },
+        gridWidth: function () {
+            return this.columns * 4 + "rem";
+        },
+    },
+    methods: {
+        isCurrentPosition: function (x, y) {
+            return (Number(this.configuration[this.fieldConfiguration.model].x) === x &&
+                Number(this.configuration[this.fieldConfiguration.model].y) === y);
+        },
+        setPosition: function (x, y) {
+            this.configuration[this.fieldConfiguration.model] = {
+                x: x,
+                y: y,
+            };
+        },
+    },
+    ready: function () {
+        /**
+         * Set default value if model is not set yet and default value is defined in etc/view.xml
+         */
+        if (this.configuration[this.fieldConfiguration.model] == null) {
+            this.$set("configuration." + this.fieldConfiguration.model, {});
+            if (this.fieldConfiguration.default != null &&
+                typeof this.fieldConfiguration.default.x === 'number' &&
+                typeof this.fieldConfiguration.default.y === 'number') {
+                this.setPosition(this.fieldConfiguration.default.x, this.fieldConfiguration.default.y);
+            }
+        }
+    },
+};
+
 /**
  * Base configurator component.
  * This component is responsible for providing base functionality for other configurators.
  * @type {vuejs.ComponentOption} Vue component object.
  */
 var componentConfigurator = {
+    components: {
+        'custom-element-input': customElementTextInput,
+        'custom-element-select': customElementSelect,
+        'custom-element-textarea': customElementTextarea,
+        'custom-element-checkbox': customElementCheckbox,
+        'custom-element-radio': customElementRadio,
+        'custom-element-position': customElementPosition,
+    },
     props: {
         /**
          * Class property support to enable BEM mixes.
@@ -1641,8 +1913,43 @@ var componentConfigurator = {
             type: String,
             default: function () { },
         },
+        /* Obtain content-constructor's config file */
+        ccConfig: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
     },
     methods: {
+        _getCustomCssFields: function (source) {
+            var cssClassFields = [];
+            Object.keys(source).forEach(function (tabKey) {
+                if (typeof source[tabKey].content !== 'string' &&
+                    source[tabKey].content.fields != null) {
+                    Object.keys(source[tabKey].content.fields).forEach(function (fieldKey) {
+                        if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
+                            cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
+                        }
+                    });
+                }
+            });
+            return cssClassFields;
+        },
+        _collectComponentCssClasses: function () {
+            var _this = this;
+            if (this.ccConfig[this.xmlConfigEntry] != null &&
+                this.ccConfig[this.xmlConfigEntry].custom_sections != null) {
+                var cssClassFields = this._getCustomCssFields(this.ccConfig[this.xmlConfigEntry].custom_sections);
+                var cssClasses_1 = [];
+                cssClassFields.forEach(function (model) {
+                    if (_this.configuration[model] && typeof _this.configuration[model] === 'string') {
+                        cssClasses_1.push(_this.configuration[model]);
+                    }
+                });
+                this.configuration.cc_css_classes = cssClasses_1.join(' ');
+            }
+        },
         onChange: function (event) {
             // Serialize reactive data.
             var data = JSON.parse(JSON.stringify(this.configuration));
@@ -1651,6 +1958,7 @@ var componentConfigurator = {
             this.change(data);
         },
         onSave: function (event) {
+            this._collectComponentCssClasses();
             // Serialize reactive data.
             var data = JSON.parse(JSON.stringify(this.configuration));
             // Trigger event and callback.
@@ -1677,7 +1985,7 @@ var componentConfigurator = {
  */
 var buttonConfigurator = {
     mixins: [componentConfigurator],
-    template: "<form class=\"cc-button-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-label\" class=\"cc-input__label\">" + $t('Label') + ":</label>\n            <input type=\"text\" v-model=\"configuration.label\" id=\"cfg-label\" class=\"cc-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-addon cc-input--type-inline | cc-button-configurator__item-form-element\">\n            <label for=\"cfg-target\" class=\"cc-input__label\">" + $t('Target') + ":</label>\n            <div class=\"cc-input__addon-wrapper\">\n                <input type=\"text\" class=\"cc-input__input | cc-button-configurator__target\" v-model=\"configuration.target\" id=\"cfg-target\">\n                <span class=\"cc-input__addon | cc-button-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal()\">\n                    <svg class=\"cc-input__addon-icon\">\n                        <use xlink:href=\"#icon_link\"></use>\n                    </svg>\n                </span>\n            </div>\n        </div>\n    </form>",
+    template: "<form class=\"cc-button-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <section class=\"cc-button-configurator__section\" v-if=\"ccConfig.button != null && ccConfig.button.custom_sections != null\" v-for=\"section in ccConfig.button.custom_sections\">\n            <h3 class=\"cc-button-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n    \n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-label\" class=\"cc-input__label\">" + $t('Label') + ":</label>\n            <input type=\"text\" v-model=\"configuration.label\" id=\"cfg-label\" class=\"cc-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-addon cc-input--type-inline | cc-button-configurator__item-form-element\">\n            <label for=\"cfg-target\" class=\"cc-input__label\">" + $t('Target') + ":</label>\n            <div class=\"cc-input__addon-wrapper\">\n                <input type=\"text\" class=\"cc-input__input | cc-button-configurator__target\" v-model=\"configuration.target\" id=\"cfg-target\">\n                <span class=\"cc-input__addon | cc-button-configurator__widget-chooser-trigger\" @click=\"openCtaTargetModal()\">\n                    <svg class=\"cc-input__addon-icon\">\n                        <use xlink:href=\"#icon_link\"></use>\n                    </svg>\n                </span>\n            </div>\n        </div>\n    </form>",
     props: {
         /*
          * Single's component configuration
@@ -1686,6 +1994,7 @@ var buttonConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     label: '',
                     target: '',
                 };
@@ -1700,6 +2009,13 @@ var buttonConfigurator = {
         adminPrefix: {
             type: String,
             default: 'admin',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'button',
         },
     },
     events: {
@@ -2221,7 +2537,7 @@ var categoryLinksConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    template: "<form class=\"cc-category-links-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Category') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.main_category_id\" id=\"cp-main\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Subcategories') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.sub_categories_ids\" id=\"cp-sub\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-shownumbers\" class=\"cc-input__label\">" + $t('Show products count') + "</label>\n            <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"cfg-shownumbers\" name=\"use_name_in_product_search\" v-model=\"configuration.shownumbers\" @change=\"onChange\">\n                <label class=\"admin__actions-switch-label\" for=\"cfg-shownumbers\">\n                    <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                </label>\n            </div>\n        </div>\n\n        <div\n            class=\"cc-input cc-input--type-inline\"\n            v-bind:class=\"{ '_disabled': !subCategoriesPicker._categoriesLabels.length}\"\n        >\n            <label for=\"hide_link_to_all_products\" class=\"cc-input__label\">" + $t('Hide link to all products') + "</label>\n            <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                <input\n                    type=\"checkbox\"\n                    class=\"admin__actions-switch-checkbox\"\n                    id=\"cfg-hidelinktoall\"\n                    name=\"hide_link_to_all_products\"\n                    v-model=\"configuration.hide_link_to_all_products\"\n                    @change=\"onChange\"\n                    :checked=\"subCategoriesPicker._categoriesLabels.length && configuration.hide_link_to_all_products\"\n                    :disabled=\"!subCategoriesPicker._categoriesLabels.length\">\n                <label class=\"admin__actions-switch-label\" for=\"cfg-hidelinktoall\">\n                    <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                </label>\n            </div>\n        </div>\n    </form>",
+    template: "<form class=\"cc-category-links-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <section class=\"cc-category-links-configurator__section\" v-if=\"ccConfig.category_links != null && ccConfig.category_links.custom_sections != null\" v-for=\"section in ccConfig.category_links.custom_sections\">\n            <h3 class=\"cc-category-links-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Category') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.main_category_id\" id=\"cp-main\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Subcategories') + "</label>\n            <input type=\"hidden\" v-model=\"configuration.sub_categories_ids\" id=\"cp-sub\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-shownumbers\" class=\"cc-input__label\">" + $t('Show products count') + "</label>\n            <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"cfg-shownumbers\" name=\"use_name_in_product_search\" v-model=\"configuration.shownumbers\" @change=\"onChange\">\n                <label class=\"admin__actions-switch-label\" for=\"cfg-shownumbers\">\n                    <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                </label>\n            </div>\n        </div>\n\n        <div\n            class=\"cc-input cc-input--type-inline\"\n            v-bind:class=\"{ '_disabled': !subCategoriesPicker._categoriesLabels.length}\"\n        >\n            <label for=\"hide_link_to_all_products\" class=\"cc-input__label\">" + $t('Hide link to all products') + "</label>\n            <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                <input\n                    type=\"checkbox\"\n                    class=\"admin__actions-switch-checkbox\"\n                    id=\"cfg-hidelinktoall\"\n                    name=\"hide_link_to_all_products\"\n                    v-model=\"configuration.hide_link_to_all_products\"\n                    @change=\"onChange\"\n                    :checked=\"subCategoriesPicker._categoriesLabels.length && configuration.hide_link_to_all_products\"\n                    :disabled=\"!subCategoriesPicker._categoriesLabels.length\">\n                <label class=\"admin__actions-switch-label\" for=\"cfg-hidelinktoall\">\n                    <span class=\"admin__actions-switch-text\" data-text-on=\"" + $t('Yes') + "\" data-text-off=\"" + $t('No') + "\"></span>\n                </label>\n            </div>\n        </div>\n    </form>",
     events: {
         /**
          * Listen on save event from Content Configurator component.
@@ -2242,6 +2558,7 @@ var categoryLinksConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     main_category_id: '',
                     sub_categories_ids: '',
                     shownumbers: false,
@@ -2253,6 +2570,13 @@ var categoryLinksConfigurator = {
         categoriesDataUrl: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'category_links',
         },
     },
     data: function () {
@@ -2312,14 +2636,11 @@ var cmsPagesTeaserConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    template: "<div class=\"cc-cms-pages-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-cms-pages-teaser-configurator__section\">\n            <h3 class=\"cc-cms-pages-teaser-configurator__subtitle\">" + $t('Data source') + "</h3>\n            <div class=\"cc-cms-pages-teaser-configurator__scenario-options cc-cms-pages-teaser-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option\">\n                    <label class=\"cc-input__label | cc-cms-pages-teaser-configurator__section-option-label\">" + $t('CMS Tags') + ":</label>\n                    <input type=\"hidden\" v-model=\"configuration.tags\" @change=\"onChange\" id=\"cp-cms-pages-teaser\">\n                </div>\n                <div class=\"cc-cms-pages-teaser-configurator__section-option\">\n                    <div class=\"cc-input\">\n                        <label class=\"cc-input__label\" for=\"cfg-cmspt-page-ids\">" + $t('CMS Pages IDs') + ":</label>\n                        <input type=\"text\" name=\"cfg-cmspt-page-ids\" class=\"cc-input__input\" id=\"cfg-cmspt-page-ids\" v-model=\"configuration.ids\" @change=\"onChange\">\n                    </div>\n                    <div class=\"cc-input cc-input--type-inline cc-input--type-hint\">\n                        <span class=\"cc-input__hint cc-input__hint--under-field\">" + $t('Multiple, comma-separated.') + "</span>\n                    </div>\n                    <div class=\"cc-input cc-input--type-inline cc-input--type-hint\" v-if=\"configuration.ids.length\">\n                        <span class=\"cc-input__hint cc-input__hint--info-mark\">" + $t('Providing list of comma separated IDs will result in ignoring any CMS tags (if specified). Only pages with specified IDs will be displayed in exactly the same order as they are provided in the field.') + "</span>\n                    </div>\n                </div>\n\n                <div class=\"cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option\">\n                    <label for=\"cfg-cmspt-limit\" class=\"cc-input__label | cc-cms-pages-teaser-configurator__section-option-label\">" + $t('Teasers limit') + ":</label>\n                    <select name=\"cfg-cmspt-limit\" class=\"cc-input__select\" id=\"cfg-cmspt-limit\" v-model=\"configuration.limit\" @change=\"onChange\">\n                        <option value=\"4\">" + $t('4 teasers') + "</option>\n                        <option value=\"8\">" + $t('8 teasers') + "</option>\n                        <option value=\"16\">" + $t('16 teasers') + "</option>\n                        <option value=\"1000\">" + $t('All available teasers (no limit)') + "</option>\n                    </select>\n                </div>\n\n                <div class=\"cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option\">\n                    <label for=\"cfg-cmspt-text-variant\" class=\"cc-input__label | cc-cms-pages-teaser-configurator__section-option-label\">{{ 'Content align' | translate }}:</label>\n                    <div class=\"cc-teaser-configurator__position-grid\">\n                        <template v-for=\"y in 3\">\n                            <template v-for=\"x in 3\">\n                                <span\n                                    class=\"cc-teaser-configurator__position-grid-item\"\n                                    :class=\"{'cc-teaser-configurator__position-grid-item--active': isCurrentContentAlign(x+1, y+1)}\"\n                                    @click=\"setContentAlign(x+1, y+1)\"\n                                ></span>\n                            </template>\n                        </template>\n                    </div>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-cms-pages-teaser-configurator__section\">\n            <h3 class=\"cc-cms-pages-teaser-configurator__subtitle\">Desktop Layout</h3>\n            <div class=\"cc-cms-pages-teaser-configurator__scenario-options\">\n                <div class=\"cc-cms-pages-teaser-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-cms-pages-teaser-configurator__option--selected': configuration.currentScenario.desktopLayout.id == optionId,\n                        }\"\n                        class=\"cc-cms-pages-teaser-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.desktopLayout\"\n                        @click=\"toggleOption('desktopLayout', optionId)\">\n                        <div class=\"cc-cms-pages-teaser-configurator__option-wrapper\">\n                            <svg class=\"cc-cms-pages-teaser-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-cms-pages-teaser-configurator__option-name\">\n                            " + $t('{{ option.name }}') + "\n                        </p>\n                    </li>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-cms-pages-teaser-configurator__section\">\n            <h3 class=\"cc-cms-pages-teaser-configurator__subtitle\">Mobile Layout</h3>\n            <div class=\"cc-cms-pages-teaser-configurator__scenario-options\">\n                <ul class=\"cc-cms-pages-teaser-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-cms-pages-teaser-configurator__option--selected': configuration.currentScenario.mobileLayout.id == optionId,\n                        }\"\n                        class=\"cc-cms-pages-teaser-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileLayout\"\n                        @click=\"toggleOption('mobileLayout', optionId)\">\n                        <div class=\"cc-cms-pages-teaser-configurator__option-wrapper\">\n                            <svg class=\"cc-cms-pages-teaser-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-cms-pages-teaser-configurator__option-name\">\n                            " + $t('{{ option.name }}') + "\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n    </div>",
-    /**
-     * Get dependencies
-     */
     components: {
         'action-button': actionButton,
         'component-actions': componentActions,
     },
+    template: "<div class=\"cc-cms-pages-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-cms-pages-teaser-configurator__section\" v-if=\"ccConfig.cms_pages_teaser != null && ccConfig.cms_pages_teaser.custom_sections != null\" v-for=\"section in ccConfig.cms_pages_teaser.custom_sections\">\n            <h3 class=\"cc-cms-pages-teaser-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-cms-pages-teaser-configurator__section\">\n            <h3 class=\"cc-cms-pages-teaser-configurator__subtitle\">" + $t('Data source') + "</h3>\n            <div class=\"cc-cms-pages-teaser-configurator__scenario-options cc-cms-pages-teaser-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option\">\n                    <label class=\"cc-input__label | cc-cms-pages-teaser-configurator__section-option-label\">" + $t('CMS Tags') + ":</label>\n                    <input type=\"hidden\" v-model=\"configuration.tags\" @change=\"onChange\" id=\"cp-cms-pages-teaser\">\n                </div>\n                <div class=\"cc-cms-pages-teaser-configurator__section-option\">\n                    <div class=\"cc-input\">\n                        <label class=\"cc-input__label\" for=\"cfg-cmspt-page-ids\">" + $t('CMS Pages IDs') + ":</label>\n                        <input type=\"text\" name=\"cfg-cmspt-page-ids\" class=\"cc-input__input\" id=\"cfg-cmspt-page-ids\" v-model=\"configuration.ids\" @change=\"onChange\">\n                    </div>\n                    <div class=\"cc-input cc-input--type-inline cc-input--type-hint\">\n                        <span class=\"cc-input__hint cc-input__hint--under-field\">" + $t('Multiple, comma-separated.') + "</span>\n                    </div>\n                    <div class=\"cc-input cc-input--type-inline cc-input--type-hint\" v-if=\"configuration.ids.length\">\n                        <span class=\"cc-input__hint cc-input__hint--info-mark\">" + $t('Providing list of comma separated IDs will result in ignoring any CMS tags (if specified). Only pages with specified IDs will be displayed in exactly the same order as they are provided in the field.') + "</span>\n                    </div>\n                </div>\n\n                <div class=\"cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option\">\n                    <label for=\"cfg-cmspt-limit\" class=\"cc-input__label | cc-cms-pages-teaser-configurator__section-option-label\">" + $t('Teasers limit') + ":</label>\n                    <select name=\"cfg-cmspt-limit\" class=\"cc-input__select\" id=\"cfg-cmspt-limit\" v-model=\"configuration.limit\" @change=\"onChange\">\n                        <option value=\"4\">" + $t('4 teasers') + "</option>\n                        <option value=\"8\">" + $t('8 teasers') + "</option>\n                        <option value=\"16\">" + $t('16 teasers') + "</option>\n                        <option value=\"1000\">" + $t('All available teasers (no limit)') + "</option>\n                    </select>\n                </div>\n\n                <div class=\"cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option\">\n                    <label for=\"cfg-cmspt-text-variant\" class=\"cc-input__label | cc-cms-pages-teaser-configurator__section-option-label\">{{ 'Content align' | translate }}:</label>\n                    <div class=\"cc-teaser-configurator__position-grid\">\n                        <template v-for=\"y in 3\">\n                            <template v-for=\"x in 3\">\n                                <span\n                                    class=\"cc-teaser-configurator__position-grid-item\"\n                                    :class=\"{'cc-teaser-configurator__position-grid-item--active': isCurrentContentAlign(x+1, y+1)}\"\n                                    @click=\"setContentAlign(x+1, y+1)\"\n                                ></span>\n                            </template>\n                        </template>\n                    </div>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-cms-pages-teaser-configurator__section\">\n            <h3 class=\"cc-cms-pages-teaser-configurator__subtitle\">Desktop Layout</h3>\n            <div class=\"cc-cms-pages-teaser-configurator__scenario-options\">\n                <div class=\"cc-cms-pages-teaser-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-cms-pages-teaser-configurator__option--selected': configuration.currentScenario.desktopLayout.id == optionId,\n                        }\"\n                        class=\"cc-cms-pages-teaser-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.desktopLayout\"\n                        @click=\"toggleOption('desktopLayout', optionId)\">\n                        <div class=\"cc-cms-pages-teaser-configurator__option-wrapper\">\n                            <svg class=\"cc-cms-pages-teaser-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-cms-pages-teaser-configurator__option-name\">\n                            " + $t('{{ option.name }}') + "\n                        </p>\n                    </li>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-cms-pages-teaser-configurator__section\">\n            <h3 class=\"cc-cms-pages-teaser-configurator__subtitle\">Mobile Layout</h3>\n            <div class=\"cc-cms-pages-teaser-configurator__scenario-options\">\n                <ul class=\"cc-cms-pages-teaser-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-cms-pages-teaser-configurator__option--selected': configuration.currentScenario.mobileLayout.id == optionId,\n                        }\"\n                        class=\"cc-cms-pages-teaser-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileLayout\"\n                        @click=\"toggleOption('mobileLayout', optionId)\">\n                        <div class=\"cc-cms-pages-teaser-configurator__option-wrapper\">\n                            <svg class=\"cc-cms-pages-teaser-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-cms-pages-teaser-configurator__option-name\">\n                            " + $t('{{ option.name }}') + "\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n    </div>",
     props: {
         /**
          * Image teaser configuration
@@ -2328,6 +2649,7 @@ var cmsPagesTeaserConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     tags: '',
                     ids: '',
                     limit: '1000',
@@ -2347,12 +2669,12 @@ var cmsPagesTeaserConfigurator = {
             type: String,
             default: '',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'cms_pages_teaser',
         },
     },
     events: {
@@ -2489,12 +2811,13 @@ var dailyDealTeaserConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    template: "<form class=\"cc-daily-deal-teaser-configurator\" {{ attributes }}>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Categories') + ":</label>\n            <input type=\"hidden\" v-model=\"configuration.category_id\" @change=\"onChange\" id=\"cp-daily-deal-teaser\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-ddt-skus\">" + $t('SKUs') + ":</label>\n            <input type=\"text\" name=\"cfg-ddt-skus\" class=\"cc-input__input\" id=\"cfg-ddt-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field\">" + $t('Multiple, comma-separated') + "</span>\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\" v-if=\"configuration.skus.length\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field cc-input__hint--info-mark\">" + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "</span>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-ddt-dataprovider\">" + $t('Custom Data Provider') + ":</label>\n            <input type=\"text\" name=\"cfg-ddt-dataprovider\" class=\"cc-input__input\" id=\"cfg-ddt-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-ddt-filter\" class=\"cc-input__label\">" + $t('Filter') + ":</label>\n            <select name=\"cfg-ddt-filter\" class=\"cc-input__select\" id=\"cfg-ddt-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                <option value=\"\">" + $t('No filter') + "</option>\n                <template v-for=\"filter in productCollectionsFilters\">\n                    <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                </template>\n            </select>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-ddt-order-by\" class=\"cc-input__label\">" + $t('Order by') + ":</label>\n            <select name=\"cfg-ddt-order-by\" class=\"cc-input__select\" id=\"cfg-ddt-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                <option value=\"\">" + $t('Not specified') + "</option>\n                <template v-for=\"sorter in productCollectionsSorters\">\n                    <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                </template>\n            </select>\n            <select name=\"cfg-ddt-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                <option value=\"ASC\">" + $t('Ascending') + "</option>\n                <option value=\"DESC\">" + $t('Descending') + "</option>\n            </select>\n        </div>\n    </form>",
+    template: "<form class=\"cc-daily-deal-teaser-configurator\" {{ attributes }}>\n        <section class=\"cc-daily-deal-teaser-configurator__section\" v-if=\"ccConfig.daily_deal_teaser != null && ccConfig.daily_deal_teaser.custom_sections != null\" v-for=\"section in ccConfig.daily_deal_teaser.custom_sections\">\n            <h3 class=\"cc-daily-deal-teaser-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Categories') + ":</label>\n            <input type=\"hidden\" v-model=\"configuration.category_id\" @change=\"onChange\" id=\"cp-daily-deal-teaser\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-ddt-skus\">" + $t('SKUs') + ":</label>\n            <input type=\"text\" name=\"cfg-ddt-skus\" class=\"cc-input__input\" id=\"cfg-ddt-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field\">" + $t('Multiple, comma-separated') + "</span>\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\" v-if=\"configuration.skus.length\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field cc-input__hint--info-mark\">" + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "</span>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-ddt-dataprovider\">" + $t('Custom Data Provider') + ":</label>\n            <input type=\"text\" name=\"cfg-ddt-dataprovider\" class=\"cc-input__input\" id=\"cfg-ddt-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-ddt-filter\" class=\"cc-input__label\">" + $t('Filter') + ":</label>\n            <select name=\"cfg-ddt-filter\" class=\"cc-input__select\" id=\"cfg-ddt-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                <option value=\"\">" + $t('No filter') + "</option>\n                <template v-for=\"filter in productCollectionsFilters\">\n                    <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                </template>\n            </select>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-ddt-order-by\" class=\"cc-input__label\">" + $t('Order by') + ":</label>\n            <select name=\"cfg-ddt-order-by\" class=\"cc-input__select\" id=\"cfg-ddt-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                <option value=\"\">" + $t('Not specified') + "</option>\n                <template v-for=\"sorter in productCollectionsSorters\">\n                    <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                </template>\n            </select>\n            <select name=\"cfg-ddt-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                <option value=\"ASC\">" + $t('Ascending') + "</option>\n                <option value=\"DESC\">" + $t('Descending') + "</option>\n            </select>\n        </div>\n    </form>",
     props: {
         configuration: {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     category_id: '',
                     filter: '',
                     order_by: 'creation_date',
@@ -2518,6 +2841,13 @@ var dailyDealTeaserConfigurator = {
         productCollectionsFilters: {
             type: [String, Array],
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'daily_deal_teaser',
         },
     },
     data: function () {
@@ -2567,17 +2897,33 @@ var headlineConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    template: "<div class=\"cc-headline-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.title\" id=\"cfg-headline\" class=\"cc-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.subtitle\" id=\"cfg-subheadline\" class=\"cc-input__input\" @change=\"onChange\">\n        </div>\n\n        <div class=\"cc-headline-configurator__advanced-trigger\">\n            <span :class=\"isAvdancedSettingsOpen ? 'active' : ''\" role=\"button\" @click=\"toggleAdvancedContent()\">" + $t('Advanced settings') + "</span>\n        </div>\n\n        <div class=\"cc-headline-configurator__advanced-content\" v-show=\"isAvdancedSettingsOpen\">\n            <div class=\"cc-input cc-input--type-inline\">\n                <label for=\"cfg-heading-tag\" class=\"cc-input__label\">" + $t('Level of Heading tag') + ":</label>\n                <select name=\"cfg-heading-tag\" class=\"cc-input__select\" id=\"cfg-heading-tag\" v-model=\"configuration.headingTag\" @change=\"onChange\">\n                    <option v-for=\"n in 6\" value=\"h{{ n+1 }}\" :selected=\"n+1 === configuration.headingTag\">Heading {{ n+1 }} (h{{ n+1 }})</option>\n                </select>\n            </div>\n        </div>\n    </div>",
+    template: "<div class=\"cc-headline-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        \n        <section class=\"cc-headline-configurator__section\" v-if=\"ccConfig.headline != null && ccConfig.headline.custom_sections != null\" v-for=\"section in ccConfig.headline.custom_sections\">\n            <h3 class=\"cc-headline-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-headline\" class=\"cc-input__label\">" + $t('Headline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.title\" id=\"cfg-headline\" class=\"cc-input__input\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-subheadline\" class=\"cc-input__label\">" + $t('Subheadline') + ":</label>\n            <input type=\"text\" v-model=\"configuration.subtitle\" id=\"cfg-subheadline\" class=\"cc-input__input\" @change=\"onChange\">\n        </div>\n\n        <div class=\"cc-headline-configurator__advanced-trigger\">\n            <span :class=\"isAvdancedSettingsOpen ? 'active' : ''\" role=\"button\" @click=\"toggleAdvancedContent()\">" + $t('Advanced settings') + "</span>\n        </div>\n\n        <div class=\"cc-headline-configurator__advanced-content\" v-show=\"isAvdancedSettingsOpen\">\n            <div class=\"cc-input cc-input--type-inline\">\n                <label for=\"cfg-heading-tag\" class=\"cc-input__label\">" + $t('Level of Heading tag') + ":</label>\n                <select name=\"cfg-heading-tag\" class=\"cc-input__select\" id=\"cfg-heading-tag\" v-model=\"configuration.headingTag\" @change=\"onChange\">\n                    <option v-for=\"n in 6\" value=\"h{{ n+1 }}\" :selected=\"n+1 === configuration.headingTag\">Heading {{ n+1 }} (h{{ n+1 }})</option>\n                </select>\n            </div>\n        </div>\n    </div>",
     props: {
         configuration: {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     title: '',
                     subtitle: '',
                     headingTag: 'h2',
                 };
             },
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'headline',
+        },
+    },
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         */
+        'component-configurator__save': function () {
+            this.onSave();
         },
     },
     data: function () {
@@ -2593,268 +2939,6 @@ var headlineConfigurator = {
     ready: function () {
         if (!this.configuration.headingTag) {
             this.configuration.headingTag = 'h2';
-        }
-    },
-};
-
-var customElementTextInput = {
-    template: "<div class=\"cc-input cc-input--type-text\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <input type=\"text\" class=\"cc-input__input\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
-    props: {
-        fieldConfiguration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        configuration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        teaserIndex: {
-            type: Number,
-            default: 0,
-        },
-    },
-    filters: {
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-        prefixFieldId: function (id) {
-            return "cfg-teaser-" + this.teaserIndex + "-" + id;
-        },
-    },
-    ready: function () {
-        /**
-         * Set default value if model is not set yet and default value is defined in etc/view.xml
-         */
-        if (this.configuration[this.fieldConfiguration.model] == null &&
-            this.fieldConfiguration.default != null) {
-            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
-        }
-    },
-};
-
-var customElementSelect = {
-    template: "<div class=\"cc-input cc-input--type-select\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <select class=\"cc-input__select\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n            <option v-for=\"(value, label) in fieldConfiguration.options\" :value=\"value\">{{ label }}</option>\n        </select>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
-    props: {
-        fieldConfiguration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        configuration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        teaserIndex: {
-            type: Number,
-            default: 0,
-        },
-    },
-    filters: {
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-        prefixFieldId: function (id) {
-            return "cfg-teaser-" + this.teaserIndex + "-" + id;
-        },
-    },
-    ready: function () {
-        /**
-         * Set default value if model is not set yet and default value is defined in etc/view.xml
-         */
-        if (this.configuration[this.fieldConfiguration.model] == null &&
-            this.fieldConfiguration.default != null) {
-            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
-        }
-    },
-};
-
-var customElementTextarea = {
-    template: "<div class=\"cc-input cc-input--type-textarea\">\n        <label for=\"{{fieldConfiguration.model | prefixFieldId}}\" class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}:\n        </label>\n        <textarea class=\"cc-input__textarea\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model] | prettify\"></textarea>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
-    props: {
-        fieldConfiguration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        configuration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        teaserIndex: {
-            type: Number,
-            default: 0,
-        },
-    },
-    filters: {
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-        prefixFieldId: function (id) {
-            return "cfg-teaser-" + this.teaserIndex + "-" + id;
-        },
-        prettify: {
-            read: function (txt) {
-                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
-            },
-            write: function (txt) {
-                return txt.replace(/\n/g, '<br>');
-            },
-        },
-    },
-    ready: function () {
-        /**
-         * Set default value if model is not set yet and default value is defined in etc/view.xml
-         */
-        if (this.configuration[this.fieldConfiguration.model] == null &&
-            this.fieldConfiguration.default != null) {
-            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
-        }
-    },
-};
-
-var customElementCheckbox = {
-    template: "<div class=\"cc-input cc-input--type-switcher\">\n        <div class=\"admin__actions-switch\" data-role=\"switcher\">\n            <input type=\"checkbox\" class=\"admin__actions-switch-checkbox\" id=\"{{fieldConfiguration.model | prefixFieldId}}\" :name=\"fieldConfiguration.model\" v-model=\"configuration[fieldConfiguration.model]\">\n            <label class=\"admin__actions-switch-label\" for=\"{{fieldConfiguration.model | prefixFieldId}}\" v-if=\"fieldConfiguration.label\">\n                <span class=\"admin__actions-switch-text\">{{fieldConfiguration.label | translate}}</span>\n            </label>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
-    props: {
-        fieldConfiguration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        configuration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        teaserIndex: {
-            type: Number,
-            default: 0,
-        },
-    },
-    filters: {
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-        prefixFieldId: function (id) {
-            return "cfg-teaser-" + this.teaserIndex + "-" + id;
-        },
-    },
-    ready: function () {
-        /**
-         * Set default value if model is not set yet and default value is defined in etc/view.xml
-         */
-        if (this.configuration[this.fieldConfiguration.model] == null &&
-            this.fieldConfiguration.checked != null) {
-            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.checked);
-        }
-    }
-};
-
-var customElementRadio = {
-    template: "<div class=\"cc-input cc-input--wrapper\">\n        <label class=\"cc-input__label cc-input__label--radio-group\" v-if=\"fieldConfiguration.label\">\n            {{fieldConfiguration.label | translate}}\n        </label>\n        <div class=\"cc-input cc-input--type-radio\" v-for=\"(value, label) in fieldConfiguration.options\">\n            <input type=\"radio\" id=\"{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}\" class=\"cc-input__radio\" :name=\"fieldConfiguration.model\" :value=\"value\" v-model=\"configuration[fieldConfiguration.model]\">\n            <label for=\"{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}\" class=\"cc-input__label cc-input__label--radio\">{{label | translate}}</label>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
-    props: {
-        fieldConfiguration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        configuration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        teaserIndex: {
-            type: Number,
-            default: 0,
-        },
-    },
-    filters: {
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-        prefixFieldId: function (id) {
-            return "cfg-teaser-" + this.teaserIndex + "-" + id;
-        },
-    },
-    ready: function () {
-        /**
-         * Set default value if model is not set yet and default value is defined in etc/view.xml
-         */
-        if (this.configuration[this.fieldConfiguration.model] == null &&
-            this.fieldConfiguration.default != null) {
-            this.$set("configuration." + this.fieldConfiguration.model, this.fieldConfiguration.default);
-        }
-    },
-};
-
-var customElementPosition = {
-    template: "<div class=\"cc-input cc-input--type-position-grid\">\n        <label class=\"cc-input__label\" v-if=\"fieldConfiguration.label\">{{fieldConfiguration.label | translate}}:</label>\n        <div \n            class=\"cc-position-grid\"\n            :style=\"{'width': gridWidth}\"\n        >\n            <template v-for=\"y in rows\">\n                <template v-for=\"x in columns\">\n                    <span\n                        class=\"cc-position-grid__item\"\n                        :class=\"{\n                            'cc-position-grid__item--active': isCurrentPosition(x+1, y+1)\n                        }\"\n                        @click=\"setPosition(x+1, y+1)\"\n                    ></span>\n                </template>\n            </template>\n        </div>\n        <p class=\"cc-warning\" v-if=\"fieldConfiguration.warning\">{{{fieldConfiguration.warning | translate}}}</p>\n        <p class=\"cc-input__note\" v-if=\"fieldConfiguration.note\">{{{fieldConfiguration.note | translate}}}</p>\n        <p class=\"cc-input__hint\" v-if=\"fieldConfiguration.hint\">{{{fieldConfiguration.hint | translate}}}</p>\n    </div>",
-    props: {
-        fieldConfiguration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-        configuration: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
-    },
-    filters: {
-        translate: function (txt) {
-            return $.mage.__(txt);
-        },
-    },
-    computed: {
-        rows: function () {
-            return Number(this.fieldConfiguration.rows);
-        },
-        columns: function () {
-            return Number(this.fieldConfiguration.columns);
-        },
-        gridWidth: function () {
-            return this.columns * 4 + "rem";
-        },
-    },
-    methods: {
-        isCurrentPosition: function (x, y) {
-            return (Number(this.configuration[this.fieldConfiguration.model].x) === x &&
-                Number(this.configuration[this.fieldConfiguration.model].y) === y);
-        },
-        setPosition: function (x, y) {
-            this.configuration[this.fieldConfiguration.model] = {
-                x: x,
-                y: y,
-            };
-        },
-    },
-    ready: function () {
-        /**
-         * Set default value if model is not set yet and default value is defined in etc/view.xml
-         */
-        if (this.configuration[this.fieldConfiguration.model] == null) {
-            this.$set("configuration." + this.fieldConfiguration.model, {});
-            if (this.fieldConfiguration.default != null &&
-                typeof this.fieldConfiguration.default.x === 'number' &&
-                typeof this.fieldConfiguration.default.y === 'number') {
-                this.setPosition(this.fieldConfiguration.default.x, this.fieldConfiguration.default.y);
-            }
         }
     },
 };
@@ -3541,9 +3625,9 @@ var heroCarouselConfigurator = {
         'action-button': actionButton,
         'component-adder': componentAdder,
         'component-actions': componentActions,
-        'teaser-configurator': teaserConfigurator
+        'teaser-configurator': teaserConfigurator,
     },
-    template: "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n        <section class=\"cc-hero-carousel-configurator__section\">\n            <h3 class=\"cc-hero-carousel-configurator__subtitle\">Mobile Devices Scenario</h3>\n            <div class=\"cc-hero-carousel-configurator__scenario-options\">\n                <ul class=\"cc-hero-carousel-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-hero-carousel-configurator__option--selected': configuration.mobileDisplayVariant.id == optionId,\n                        }\"\n                        class=\"cc-hero-carousel-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileDisplayVariant\"\n                        @click=\"setOption('mobileDisplayVariant', optionId)\">\n                        <div class=\"cc-hero-carousel-configurator__option-wrapper\">\n                            <svg class=\"cc-hero-carousel-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-hero-carousel-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <h3 class=\"cc-hero-carousel-configurator__title\">Content</h3>\n\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.items\">\n            <div class=\"cc-hero-carousel-configurator__item\" id=\"cc-hero-carousel-item-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <teaser-configurator\n                    :class=\"cc-teaser-configurator--image-teaser\"\n                    :teaser-index=\"$index\"\n                    :configuration=\"items[$index]\"\n                    :parent-configuration=\"configuration\"\n                    :uploader-base-url=\"uploaderBaseUrl\"\n                    :image-endpoint=\"imageEndpoint\"\n                    :admin-prefix=\"adminPrefix\"\n                    :cc-config=\"ccConfig\"\n                    :caller-component-type=\"hero-carousel\"\n                ></teaser-configurator>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-hero-carousel-configurator__modal\" v-el:error-modal></div>\n    </div>",
+    template: "<div class=\"cc-hero-carousel-configurator | {{ class }}\">\n        <section class=\"cc-hero-carousel-configurator__section\" v-if=\"ccConfig.hero_carousel != null && ccConfig.hero_carousel.custom_sections != null\" v-for=\"section in ccConfig.hero_carousel.custom_sections\">\n            <h3 class=\"cc-hero-carousel-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-hero-carousel-configurator__custom-sections\">\n                <div class=\"cc-custom-fields\">\n                    <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                        <component\n                            :is=\"'custom-element-' + field.type\"\n                            :configuration=\"configuration\"\n                            :field-configuration=\"field\"\n                            :teaser-index=\"9999\"\n                        ></component>\n                    </div>\n                </div>\n            </div>\n        </section>\n        \n        <section class=\"cc-hero-carousel-configurator__section\">\n            <h3 class=\"cc-hero-carousel-configurator__subtitle\">Mobile Devices Scenario</h3>\n            <div class=\"cc-hero-carousel-configurator__scenario-options\">\n                <ul class=\"cc-hero-carousel-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-hero-carousel-configurator__option--selected': configuration.mobileDisplayVariant.id == optionId,\n                        }\"\n                        class=\"cc-hero-carousel-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.mobileDisplayVariant\"\n                        @click=\"setOption('mobileDisplayVariant', optionId)\">\n                        <div class=\"cc-hero-carousel-configurator__option-wrapper\">\n                            <svg class=\"cc-hero-carousel-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-hero-carousel-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <h3 class=\"cc-hero-carousel-configurator__title\">Content</h3>\n\n        <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n            <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( 0 )\">\n                <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                    <use xlink:href=\"#icon_plus\"></use>\n                </svg>\n            </button>\n        </component-adder>\n\n        <template v-for=\"item in configuration.items\">\n            <div class=\"cc-hero-carousel-configurator__item\" id=\"cc-hero-carousel-item-{{ $index }}\">\n                <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n\n                <teaser-configurator\n                    :class=\"cc-teaser-configurator--image-teaser\"\n                    :teaser-index=\"$index\"\n                    :configuration=\"items[$index]\"\n                    :parent-configuration=\"configuration\"\n                    :uploader-base-url=\"uploaderBaseUrl\"\n                    :image-endpoint=\"imageEndpoint\"\n                    :admin-prefix=\"adminPrefix\"\n                    :cc-config=\"ccConfig\"\n                    :caller-component-type=\"hero-carousel\"\n                ></teaser-configurator>\n\n                <component-adder class=\"cc-component-adder cc-component-adder--last\">\n                    <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-hero-carousel-configurator__item-action-button\" @click=\"createNewHeroItem( $index + 1 )\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                    </button>\n                </component-adder>\n            </div>\n        </template>\n\n        <div class=\"cc-hero-carousel-configurator__modal\" v-el:error-modal></div>\n    </div>",
     props: {
         /*
          * Single's component configuration
@@ -3552,6 +3636,7 @@ var heroCarouselConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     mobileDisplayVariant: {},
                     items: [JSON.parse(JSON.stringify(teaserPrototype))],
                     ignoredItems: [],
@@ -3584,12 +3669,12 @@ var heroCarouselConfigurator = {
             type: String,
             default: 'admin',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'hero_carousel',
         },
     },
     computed: {
@@ -3710,7 +3795,7 @@ var heroCarouselConfigurator = {
                     }
                 };
             }
-        }
+        },
     },
     ready: function () {
         if (!this.configuration.mobileDisplayVariant.id) {
@@ -3734,12 +3819,6 @@ var imageTeaserConfigurator = {
         'component-adder': componentAdder,
         'component-actions': componentActions,
         'teaser-configurator': teaserConfigurator,
-        'custom-element-input': customElementTextInput,
-        'custom-element-select': customElementSelect,
-        'custom-element-textarea': customElementTextarea,
-        'custom-element-checkbox': customElementCheckbox,
-        'custom-element-radio': customElementRadio,
-        'custom-element-position': customElementPosition,
     },
     template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Teaser Width</h3>\n            <p class=\"cc-image-teaser-configurator__section-error\" v-if=\"configuration.scenario.teaserWidth.error\">{{configuration.scenario.teaserWidth.error}}</p>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.teaserWidth.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.teaserWidth\"\n                    @click=\"!option.disabled && toggleOption('teaserWidth', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Desktop and Tablet Layout</h3>\n            <p class=\"cc-image-teaser-configurator__section-error\" v-if=\"configuration.scenario.desktopLayout.error\">{{configuration.scenario.desktopLayout.error}}</p>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.desktopLayout.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.desktopLayout\"\n                    @click=\"!option.disabled && toggleOption('desktopLayout', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Mobile Layout</h3>\n            <p class=\"cc-image-teaser-configurator__section-error\" v-if=\"configuration.scenario.mobileLayout.error\">{{configuration.scenario.mobileLayout.error}}</p>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.mobileLayout.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.mobileLayout\"\n                    @click=\"!option.disabled && toggleOption('mobileLayout', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">Text Positioning</h3>\n            <p class=\"cc-image-teaser-configurator__section-error\" v-if=\"configuration.scenario.contentPlacement.error\">{{configuration.scenario.contentPlacement.error}}</p>\n            <div class=\"cc-image-teaser-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-image-teaser-configurator__option--selected': configuration.scenario.contentPlacement.id == optionId,\n                        'cc-image-teaser-configurator__option--disabled': option.disabled,\n                    }\"\n                    class=\"cc-image-teaser-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.contentPlacement\"\n                    @click=\"!option.disabled && toggleOption('contentPlacement', optionId)\">\n                    <div class=\"cc-image-teaser-configurator__option-wrapper\">\n                        <svg class=\"cc-image-teaser-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-image-teaser-configurator__option-name\">\n                        {{ option.name }}\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-image-teaser-configurator__section\" v-if=\"ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null\" v-for=\"section in ccConfig.image_teaser.custom_sections\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                        :teaser-index=\"9999\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-image-teaser-configurator__section\">\n            <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.items.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( 0 )\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <template v-for=\"item in configuration.items\">\n                <div class=\"cc-image-teaser-configurator__item\" id=\"cc-image-teaser-item-{{ $index }}\">\n                    <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( $index )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n\n                    <teaser-configurator :class=\"cc-teaser-configurator--image-teaser\" :teaser-index=\"$index\" :configuration=\"items[$index]\" :parent-configuration=\"configuration\" :uploader-base-url=\"uploaderBaseUrl\" :image-endpoint=\"imageEndpoint\" :admin-prefix=\"adminPrefix\" :cc-config=\"ccConfig\" :caller-component-type=\"image-teaser\"></teaser-configurator>\n\n                    <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.items.length\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-configurator__item-action-button\" @click=\"createTeaserItem( $index + 1 )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
     data: function () {
@@ -3916,12 +3995,12 @@ var imageTeaserConfigurator = {
             type: String,
             default: 'admin',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'image_teaser',
         },
     },
     computed: {
@@ -3937,7 +4016,6 @@ var imageTeaserConfigurator = {
         'component-configurator__save': function () {
             this._validateOptionsSet();
             this._collectTeasersCssClasses();
-            this._collectComponentCssClasses();
             this.onSave();
         },
     },
@@ -4086,20 +4164,6 @@ var imageTeaserConfigurator = {
             this.configuration.ignoredItems = this.configuration.ignoredItems.filter(function (item) { return item.image.raw !== ''; });
             this.onChange();
         },
-        _getCustomCssFields: function (source) {
-            var cssClassFields = [];
-            Object.keys(source).forEach(function (tabKey) {
-                if (typeof source[tabKey].content !== 'string' &&
-                    source[tabKey].content.fields != null) {
-                    Object.keys(source[tabKey].content.fields).forEach(function (fieldKey) {
-                        if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
-                            cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
-                        }
-                    });
-                }
-            });
-            return cssClassFields;
-        },
         _collectTeasersCssClasses: function () {
             if (this.configuration.items != null) {
                 var cssClassFields_1 = this._getCustomCssFields(this.ccConfig.teaser.tabs);
@@ -4112,20 +4176,6 @@ var imageTeaserConfigurator = {
                     });
                     teaser.cc_css_classes = cssClasses.join(' ');
                 });
-            }
-        },
-        _collectComponentCssClasses: function () {
-            var _this = this;
-            if (this.ccConfig.image_teaser != null &&
-                this.ccConfig.image_teaser.custom_sections != null) {
-                var cssClassFields = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
-                var cssClasses_1 = [];
-                cssClassFields.forEach(function (model) {
-                    if (_this.configuration[model] && typeof _this.configuration[model] === 'string') {
-                        cssClasses_1.push(_this.configuration[model]);
-                    }
-                });
-                this.configuration.cc_css_classes = cssClasses_1.join(' ');
             }
         },
         /*
@@ -4897,13 +4947,6 @@ var magentoProductGridTeasersConfigurator = {
                 };
             },
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
         productsPerPage: {
             type: String,
             default: '30',
@@ -4922,6 +4965,13 @@ var magentoProductGridTeasersConfigurator = {
         imageEndpoint: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        componentCcEntry: {
+            type: String,
+            default: 'image_teaser',
         },
     },
     data: function () {
@@ -5048,20 +5098,6 @@ var magentoProductGridTeasersConfigurator = {
             this.configuration.teasers = filteredArray;
             this.onChange();
         },
-        _getCustomCssFields: function (source) {
-            var cssClassFields = [];
-            Object.keys(source).forEach(function (tabKey) {
-                if (typeof source[tabKey].content !== 'string' &&
-                    source[tabKey].content.fields != null) {
-                    Object.keys(source[tabKey].content.fields).forEach(function (fieldKey) {
-                        if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
-                            cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
-                        }
-                    });
-                }
-            });
-            return cssClassFields;
-        },
         _collectTeasersCssClasses: function () {
             if (this.configuration.teasers != null) {
                 var cssClassFields_1 = this._getCustomCssFields(this.ccConfig.teaser.tabs);
@@ -5074,20 +5110,6 @@ var magentoProductGridTeasersConfigurator = {
                     });
                     teaser.cc_css_classes = cssClasses.join(' ');
                 });
-            }
-        },
-        _collectComponentCssClasses: function () {
-            var _this = this;
-            if (this.ccConfig.image_teaser != null &&
-                this.ccConfig.image_teaser.custom_sections != null) {
-                var cssClassFields = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
-                var cssClasses_1 = [];
-                cssClassFields.forEach(function (model) {
-                    if (_this.configuration[model] && typeof _this.configuration[model] === 'string') {
-                        cssClasses_1.push(_this.configuration[model]);
-                    }
-                });
-                this.configuration.cc_css_classes = cssClasses_1.join(' ');
             }
         },
         /* Generates 1:1 JSON for grid-layout component so it can be simply passed without any modifications within templates
@@ -5120,7 +5142,7 @@ var magentoProductGridTeasersConfigurator = {
  */
 var paragraphConfigurator = {
     mixins: [componentConfigurator],
-    template: "<form class=\"cc-paragraph-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n\n        <div class=\"cc-paragraph-configurator__error\" v-text=\"tempConfiguration.errorMessage\" v-show=\"tempConfiguration.errorMessage\">\n        </div>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <h3 class=\"cc-paragraph-configurator__subtitle\">" + $t('Paragraph width') + "</h3>\n            <div class=\"cc-paragraph-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-paragraph-configurator__option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-paragraph-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-paragraph-configurator__option-wrapper\">\n                        <svg class=\"cc-paragraph-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-paragraph-configurator__option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-title\" class=\"cc-input__label\">" + $t('Title') + ":</label>\n                <input type=\"text\" name=\"cfg-title\" v-model=\"configuration.title\" id=\"input-cfg-title\" class=\"cc-input__input cc-input__input--limited-width\" maxlength=\"100\">\n            </div>\n            <div class=\"cc-input\" v-if=\"isColumnsConfigAvailable()\">\n                <label for=\"input-cfg-columns\" class=\"cc-input__label\">" + $t('Number of columns') + ":</label>\n                <select name=\"input-cfg-columns\" class=\"cc-input__select | cc-paragraph-configurator__select\" id=\"input-cfg-columns\" v-model=\"configuration.columns\">\n                    <option value=\"none\">" + $t("Don't split content - display full width") + "</option>\n                    <option value=\"2\">" + $t('Split content into 2 columns') + "</option>\n                    <option value=\"3\">" + $t('Split content into 3 columns') + "</option>\n                    <option value=\"4\">" + $t('Split content into 4 columns') + "</option>\n                </select>\n                <div class=\"admin__field-note cc-input__note\">\n                    <span>" + $t('Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.') + "</span>\n                </div>\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"textarea-cfg-paragraph\" class=\"cc-input__label cc-input__label--look-top-align\">" + $t('HTML') + ":</label>\n\n                <div class=\"buttons-set | cc-paragraph-configurator__wysiwyg-buttons\">\n                    <button type=\"button\" class=\"scalable action-show-hide\" id=\"toggle-wysiwyg\">" + $t('Show / Hide Editor') + "</button>\n                    <button type=\"button\" class=\"scalable action-add-widget plugin\" @click=\"openWidgetModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Widget') + "...</button>\n                    <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"openMediaModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Image') + "...</button>\n                    <button type=\"button\" class=\"scalable add-variable plugin\" @click=\"openMagentoVariablesModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Variable') + "...</button>\n                </div>\n\n                <textarea name=\"cfg-paragraph\" v-model=\"configuration.content\" id=\"textarea-cfg-paragraph\" class=\"cc-input__textarea | cc-paragraph-configurator__textarea\"></textarea>\n            </div>\n        </section>\n    </form>",
+    template: "<form class=\"cc-paragraph-configurator {{ classes }} | {{ mix }}\" {{ attributes }} @submit.prevent=\"onSave\">\n\n        <div class=\"cc-paragraph-configurator__error\" v-text=\"tempConfiguration.errorMessage\" v-show=\"tempConfiguration.errorMessage\">\n        </div>\n\n        <section class=\"cc-paragraph-configurator__section\" v-if=\"ccConfig.paragraph != null && ccConfig.paragraph.custom_sections != null\" v-for=\"section in ccConfig.paragraph.custom_sections\">\n            <h3 class=\"cc-paragraph-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <h3 class=\"cc-paragraph-configurator__subtitle\">" + $t('Paragraph width') + "</h3>\n            <div class=\"cc-paragraph-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-paragraph-configurator__option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-paragraph-configurator__option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-paragraph-configurator__option-wrapper\">\n                        <svg class=\"cc-paragraph-configurator__option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-paragraph-configurator__option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-paragraph-configurator__section\">\n            <div class=\"cc-input\">\n                <label for=\"input-cfg-title\" class=\"cc-input__label\">" + $t('Title') + ":</label>\n                <input type=\"text\" name=\"cfg-title\" v-model=\"configuration.title\" id=\"input-cfg-title\" class=\"cc-input__input cc-input__input--limited-width\" maxlength=\"100\">\n            </div>\n            <div class=\"cc-input\" v-if=\"isColumnsConfigAvailable()\">\n                <label for=\"input-cfg-columns\" class=\"cc-input__label\">" + $t('Number of columns') + ":</label>\n                <select name=\"input-cfg-columns\" class=\"cc-input__select | cc-paragraph-configurator__select\" id=\"input-cfg-columns\" v-model=\"configuration.columns\">\n                    <option value=\"none\">" + $t("Don't split content - display full width") + "</option>\n                    <option value=\"2\">" + $t('Split content into 2 columns') + "</option>\n                    <option value=\"3\">" + $t('Split content into 3 columns') + "</option>\n                    <option value=\"4\">" + $t('Split content into 4 columns') + "</option>\n                </select>\n                <div class=\"admin__field-note cc-input__note\">\n                    <span>" + $t('Defines the way of content display. Content can be splitted into defined number of columns. This setting has no effect on small screen resolutions (such as smartphones) where content is always displayed in one column.') + "</span>\n                </div>\n            </div>\n            <div class=\"cc-input\">\n                <label for=\"textarea-cfg-paragraph\" class=\"cc-input__label cc-input__label--look-top-align\">" + $t('HTML') + ":</label>\n\n                <div class=\"buttons-set | cc-paragraph-configurator__wysiwyg-buttons\">\n                    <button type=\"button\" class=\"scalable action-show-hide\" id=\"toggle-wysiwyg\">" + $t('Show / Hide Editor') + "</button>\n                    <button type=\"button\" class=\"scalable action-add-widget plugin\" @click=\"openWidgetModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Widget') + "...</button>\n                    <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"openMediaModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Image') + "...</button>\n                    <button type=\"button\" class=\"scalable add-variable plugin\" @click=\"openMagentoVariablesModal()\" v-show=\"!isEditorVisible\">" + $t('Insert Variable') + "...</button>\n                </div>\n\n                <textarea name=\"cfg-paragraph\" v-model=\"configuration.content\" id=\"textarea-cfg-paragraph\" class=\"cc-input__textarea | cc-paragraph-configurator__textarea\"></textarea>\n            </div>\n        </section>\n    </form>",
     props: {
         /*
          * Single's component configuration
@@ -5129,6 +5151,7 @@ var paragraphConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     title: '',
                     columns: 'none',
                     content: '',
@@ -5160,6 +5183,13 @@ var paragraphConfigurator = {
         assetsUrl: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'paragraph',
         },
     },
     data: function () {
@@ -5344,12 +5374,13 @@ var productCarouselConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    template: "<form class=\"cc-product-carousel-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Categories') + ":</label>\n            <input type=\"hidden\" v-model=\"configuration.category_id\" @change=\"onChange\" id=\"cp-products-carousel\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-skus\">" + $t('SKUs') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-skus\" class=\"cc-input__input\" id=\"cfg-pc-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field\">" + $t('Multiple, comma-separated') + "</span>\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\" v-if=\"configuration.skus.length\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field cc-input__hint--info-mark\">" + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "</span>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-dataprovider\">" + $t('Custom Data Provider') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-dataprovider\" class=\"cc-input__input\" id=\"cfg-pc-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-pc-filter\" class=\"cc-input__label\">" + $t('Filter') + ":</label>\n            <select name=\"cfg-pc-filter\" class=\"cc-input__select\" id=\"cfg-pc-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                <option value=\"\">" + $t('No filter') + "</option>\n                <template v-for=\"filter in productCollectionsFilters\">\n                    <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                </template>\n            </select>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-pc-order-by\" class=\"cc-input__label\">" + $t('Order by') + ":</label>\n            <select name=\"cfg-pc-order-by\" class=\"cc-input__select\" id=\"cfg-pc-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                <option value=\"\">" + $t('Not specified') + "</option>\n                <template v-for=\"sorter in productCollectionsSorters\">\n                    <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                </template>\n            </select>\n            <select name=\"cfg-pc-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                <option value=\"ASC\">" + $t('Ascending') + "</option>\n                <option value=\"DESC\">" + $t('Descending') + "</option>\n            </select>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-pc-order-by\" class=\"cc-input__label\">" + $t('Show ') + ":</label>\n            <select name=\"cfg-pc-limit\" class=\"cc-input__select\" id=\"cfg-pc-limit\" v-model=\"configuration.limit\" @change=\"onChange\">\n                <option value=\"20\">20 " + $t('products ') + "</option>\n                <option value=\"40\">40 " + $t('products ') + "</option>\n                <option value=\"60\">60 " + $t('products ') + "</option>\n                <option value=\"80\">80 " + $t('products ') + "</option>\n                <option value=\"100\">100 " + $t('products ') + "</option>\n            </select>\n        </div>\n    </form>",
+    template: "<form class=\"cc-product-carousel-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-product-carousel-configurator__section\" v-if=\"ccConfig.product_carousel != null && ccConfig.product_carousel.custom_sections != null\" v-for=\"section in ccConfig.product_carousel.custom_sections\">\n            <h3 class=\"cc-product-carousel-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\">" + $t('Categories') + ":</label>\n            <input type=\"hidden\" v-model=\"configuration.category_id\" @change=\"onChange\" id=\"cp-products-carousel\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-skus\">" + $t('SKUs') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-skus\" class=\"cc-input__input\" id=\"cfg-pc-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field\">" + $t('Multiple, comma-separated') + "</span>\n        </div>\n        <div class=\"cc-input cc-input--type-inline cc-input--type-hint\" v-if=\"configuration.skus.length\">\n            <label class=\"cc-input__label\"> </label>\n            <span class=\"cc-input__hint cc-input__hint--under-field cc-input__hint--info-mark\">" + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "</span>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-dataprovider\">" + $t('Custom Data Provider') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-dataprovider\" class=\"cc-input__input\" id=\"cfg-pc-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-pc-filter\" class=\"cc-input__label\">" + $t('Filter') + ":</label>\n            <select name=\"cfg-pc-filter\" class=\"cc-input__select\" id=\"cfg-pc-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                <option value=\"\">" + $t('No filter') + "</option>\n                <template v-for=\"filter in productCollectionsFilters\">\n                    <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                </template>\n            </select>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-pc-order-by\" class=\"cc-input__label\">" + $t('Order by') + ":</label>\n            <select name=\"cfg-pc-order-by\" class=\"cc-input__select\" id=\"cfg-pc-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                <option value=\"\">" + $t('Not specified') + "</option>\n                <template v-for=\"sorter in productCollectionsSorters\">\n                    <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                </template>\n            </select>\n            <select name=\"cfg-pc-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                <option value=\"ASC\">" + $t('Ascending') + "</option>\n                <option value=\"DESC\">" + $t('Descending') + "</option>\n            </select>\n        </div>\n\n        <div class=\"cc-input cc-input--type-inline\">\n            <label for=\"cfg-pc-order-by\" class=\"cc-input__label\">" + $t('Show ') + ":</label>\n            <select name=\"cfg-pc-limit\" class=\"cc-input__select\" id=\"cfg-pc-limit\" v-model=\"configuration.limit\" @change=\"onChange\">\n                <option value=\"20\">20 " + $t('products ') + "</option>\n                <option value=\"40\">40 " + $t('products ') + "</option>\n                <option value=\"60\">60 " + $t('products ') + "</option>\n                <option value=\"80\">80 " + $t('products ') + "</option>\n                <option value=\"100\">100 " + $t('products ') + "</option>\n            </select>\n        </div>\n    </form>",
     props: {
         configuration: {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     category_id: '',
                     filter: '',
                     order_by: 'creation_date',
@@ -5374,6 +5405,13 @@ var productCarouselConfigurator = {
         productCollectionsFilters: {
             type: [String, Array],
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'product_carousel',
         },
     },
     data: function () {
@@ -5461,7 +5499,7 @@ var ccProductFinderConfigurator = {
         'component-actions': componentActions,
         'product-finder-preview': productFinderPreview,
     },
-    template: "<div class=\"cc-product-finder-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-product-finder-configurator__section cc-product-finder-configurator__section--styled\">\n            <h3 class=\"cc-product-finder-configurator__subtitle\">{{ 'Default settings' | translate }}:</h3>\n            <div class=\"cc-product-finder-configurator__global-options\">\n                <div class=\"cc-input | cc-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-m\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">{{ 'Mobile layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-m\" class=\"cc-input__select\" id=\"cfg-pf-layout-m\" v-model=\"configuration.optionsPerRow.mobile\" @change=\"onChange\">\n                        <option value=\"1\">{{ '1 option per row' | translate }}</option>\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-t\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">{{ 'Tablet layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-t\" class=\"cc-input__select\" id=\"cfg-pf-layout-t\" v-model=\"configuration.optionsPerRow.tablet\" @change=\"onChange\">\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-d\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">{{ 'Desktop layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-d\" class=\"cc-input__select\" id=\"cfg-pf-layout-d\" v-model=\"configuration.optionsPerRow.desktop\" @change=\"onChange\">\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                        <option value=\"5\">{{ '5 options per row' | translate }}</option>\n                        <option value=\"6\">{{ '6 options per row' | translate }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-product-finder-configurator__section\">\n            <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.steps.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-product-finder-configurator__item-action-button\" @click=\"createStep(0)\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <template v-for=\"step in configuration.steps\">\n                <div class=\"cc-product-finder-configurator__step\" id=\"cc-product-finder-step-{{ $index }}\">\n                    <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep($index)\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n\n                    <div class=\"cc-product-finder-configurator__step-content\">\n                        <div :class=\"[ componentConfigurationErrors[$index] ? 'cc-product-finder-configurator__preview cc-product-finder-configurator__preview--error' : 'cc-product-finder-configurator__preview' ]\">\n                            <div class=\"cc-product-finder-configurator__error\" v-if=\"componentConfigurationErrors[$index]\">\n                                {{ componentConfigurationErrors[$index] }}\n                            </div>\n\n                            <template v-if=\"!componentConfigurationErrors[$index]\">\n                                <product-finder-preview :configuration=\"configuration\" :step-index=\"$index\" :is-configurator-preview=\"true\" :image-endpoint=\"imageEndpoint\"></product-finder-preview>\n                            </template>\n\n                            <div class=\"cc-product-finder-configurator__step-actions\">\n                                <component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | cc-product-finder-configurator__item-action-button\" @click=\"moveStepUp($index)\" :class=\"[ isFirstStep($index) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstStep($index)\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | cc-product-finder-configurator__item-action-button\" @click=\"moveStepDown( $index )\" :class=\"[ isLastStep($index) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastStep($index)\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | cc-product-finder-configurator__item-action-button\" @click=\"deleteStep($index)\">\n                                            <svg class=\"cc-action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </component-actions>\n                            </div>\n                        </div>\n\n                        <div class=\"cc-input | cc-product-finder-configurator__source\">\n                            <div class=\"buttons-set\">\n                                <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"getImageUploader($index)\">{{ 'Insert Image' | translate }}...</button>\n                            </div>\n                            <textarea class=\"cc-input__textarea | cc-product-finder-configurator__editor\" id=\"cfg-pf-step{{ $index }}-sourcefield\" @keydown=\"saveCaretPosition($event)\" @click=\"saveCaretPosition($event)\" v-model=\"step | prettify $index\"></textarea>\n                            <input type=\"hidden\" class=\"cc-product-finder-configurator__imgholder\" data-step-index=\"{{$index}}\" id=\"pf-imgholder-{{$index}}\" />\n                        </div>\n                    </div>\n\n                    <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.steps.length\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep( $index + 1 )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
+    template: "<div class=\"cc-product-finder-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-product-finder-configurator__section cc-product-finder-configurator__section--custom-section\" v-if=\"ccConfig.product_finder != null && ccConfig.product_finder.custom_sections != null\" v-for=\"section in ccConfig.product_finder.custom_sections\">\n            <h3 class=\"cc-product-finder-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-product-finder-configurator__custom-sections\">\n                <div class=\"cc-custom-fields\">\n                    <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                        <component\n                            :is=\"'custom-element-' + field.type\"\n                            :configuration=\"configuration\"\n                            :field-configuration=\"field\"\n                        ></component>\n                    </div>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-product-finder-configurator__section cc-product-finder-configurator__section--styled\">\n            <h3 class=\"cc-product-finder-configurator__subtitle\">{{ 'Default settings' | translate }}:</h3>\n            <div class=\"cc-product-finder-configurator__global-options\">\n                <div class=\"cc-input | cc-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-m\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">{{ 'Mobile layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-m\" class=\"cc-input__select\" id=\"cfg-pf-layout-m\" v-model=\"configuration.optionsPerRow.mobile\" @change=\"onChange\">\n                        <option value=\"1\">{{ '1 option per row' | translate }}</option>\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-t\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">{{ 'Tablet layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-t\" class=\"cc-input__select\" id=\"cfg-pf-layout-t\" v-model=\"configuration.optionsPerRow.tablet\" @change=\"onChange\">\n                        <option value=\"2\">{{ '2 options per row' | translate }}</option>\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-product-finder-configurator__global-option\">\n                    <label for=\"cfg-pf-layout-d\" class=\"cc-input__label | cc-product-finder-configurator__section-option-label\">{{ 'Desktop layout' | translate }}:</label>\n                    <select name=\"cfg-pf-layout-d\" class=\"cc-input__select\" id=\"cfg-pf-layout-d\" v-model=\"configuration.optionsPerRow.desktop\" @change=\"onChange\">\n                        <option value=\"3\">{{ '3 options per row' | translate }}</option>\n                        <option value=\"4\">{{ '4 options per row' | translate }}</option>\n                        <option value=\"5\">{{ '5 options per row' | translate }}</option>\n                        <option value=\"6\">{{ '6 options per row' | translate }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-product-finder-configurator__section\">\n            <component-adder class=\"cc-component-adder cc-component-adder--static\" v-show=\"!configuration.steps.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-product-finder-configurator__item-action-button\" @click=\"createStep(0)\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon\">\n                        <use v-bind=\"{ 'xlink:href': '#icon_plus' }\"></use>\n                    </svg>\n                </button>\n            </component-adder>\n\n            <template v-for=\"step in configuration.steps\">\n                <div class=\"cc-product-finder-configurator__step\" id=\"cc-product-finder-step-{{ $index }}\">\n                    <component-adder class=\"cc-component-adder cc-component-adder--first\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep($index)\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n\n                    <div class=\"cc-product-finder-configurator__step-content\">\n                        <div :class=\"[ componentConfigurationErrors[$index] ? 'cc-product-finder-configurator__preview cc-product-finder-configurator__preview--error' : 'cc-product-finder-configurator__preview' ]\">\n                            <div class=\"cc-product-finder-configurator__error\" v-if=\"componentConfigurationErrors[$index]\">\n                                {{ componentConfigurationErrors[$index] }}\n                            </div>\n\n                            <template v-if=\"!componentConfigurationErrors[$index]\">\n                                <product-finder-preview :configuration=\"configuration\" :step-index=\"$index\" :is-configurator-preview=\"true\" :image-endpoint=\"imageEndpoint\"></product-finder-preview>\n                            </template>\n\n                            <div class=\"cc-product-finder-configurator__step-actions\">\n                                <component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--up | cc-product-finder-configurator__item-action-button\" @click=\"moveStepUp($index)\" :class=\"[ isFirstStep($index) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isFirstStep($index)\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--down | cc-product-finder-configurator__item-action-button\" @click=\"moveStepDown( $index )\" :class=\"[ isLastStep($index) ? 'cc-action-button--look_disabled' : '' ]\" :disabled=\"isLastStep($index)\">\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--delete | cc-product-finder-configurator__item-action-button\" @click=\"deleteStep($index)\">\n                                            <svg class=\"cc-action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </component-actions>\n                            </div>\n                        </div>\n\n                        <div class=\"cc-input | cc-product-finder-configurator__source\">\n                            <div class=\"buttons-set\">\n                                <button type=\"button\" class=\"scalable action-add-image plugin\" @click=\"getImageUploader($index)\">{{ 'Insert Image' | translate }}...</button>\n                            </div>\n                            <textarea class=\"cc-input__textarea | cc-product-finder-configurator__editor\" id=\"cfg-pf-step{{ $index }}-sourcefield\" @keydown=\"saveCaretPosition($event)\" @click=\"saveCaretPosition($event)\" v-model=\"step | prettify $index\"></textarea>\n                            <input type=\"hidden\" class=\"cc-product-finder-configurator__imgholder\" data-step-index=\"{{$index}}\" id=\"pf-imgholder-{{$index}}\" />\n                        </div>\n                    </div>\n\n                    <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"configuration.steps.length\">\n                        <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-product-finder-configurator__item-action-button\" @click=\"createStep( $index + 1 )\">\n                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\">\n                                <use xlink:href=\"#icon_plus\"></use>\n                            </svg>\n                        </button>\n                    </component-adder>\n                </div>\n            </template>\n        </section>\n    </div>",
     events: {
         /**
          * Listen on save event from Content Configurator component.
@@ -5483,6 +5521,7 @@ var ccProductFinderConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     optionsPerRow: {
                         mobile: 1,
                         tablet: 3,
@@ -5502,6 +5541,13 @@ var ccProductFinderConfigurator = {
         imageEndpoint: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'product_finder',
         },
     },
     data: function () {
@@ -5727,20 +5773,18 @@ var ccProductFinderConfigurator = {
  */
 var productsGridConfigurator = {
     mixins: [componentConfigurator],
-    template: "<div class=\"cc-products-grid-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Data source') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options cc-products-grid-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-category\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Category ID') + ":</label>\n                    <select class=\"cc-input__select tmp-select\" style=\"width:25em\">\n                        <option>" + $t('Select...') + "</option>\n                    </select>\n                    <input type=\"hidden\" name=\"cfg-pg-category-select\" class=\"cc-input__input | cc-products-grid-configurator__form-input\" id=\"cfg-pg-category\" v-model=\"configuration.category_id\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-filter\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Filter') + ":</label>\n                    <select name=\"cfg-pg-filter\" class=\"cc-input__select\" id=\"cfg-pg-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                        <option value=\"\">" + $t('No filter') + "</option>\n                        <template v-for=\"filter in productCollectionsFilters\">\n                            <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                        </template>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-skus\" class=\"cc-input__label\">" + $t('SKUs') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-skus\" class=\"cc-input__input\" id=\"cfg-pg-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n                    <div class=\"cc-input__hint\">" + $t('Multiple, comma-separated') + "</div>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-order-by\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Order by') + ":</label>\n                    <select name=\"cfg-pg-order-by\" class=\"cc-input__select\" id=\"cfg-pg-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                        <option value=\"\">" + $t('Not specified') + "</option>\n                        <template v-for=\"sorter in productCollectionsSorters\">\n                            <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                        </template>\n                    </select>\n                    <select name=\"cfg-pg-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                        <option value=\"ASC\">" + $t('Ascending') + "</option>\n                        <option value=\"DESC\">" + $t('Descending') + "</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-dataprovider\" class=\"cc-input__label\">" + $t('Custom Data Provider') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-dataprovider\" class=\"cc-input__input\" id=\"cfg-pg-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input__hint cc-input__hint--info-mark\" v-if=\"configuration.skus.length\">\n                    " + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Mobile Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_mobile', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_mobile\"\n                        @click=\"setOption('rows_mobile', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-ml-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-ml-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_mobile\" @change=\"setOption('rows_mobile', tmpConfiguration.rows_mobile)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Tablet Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_tablet', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_tablet\"\n                        @click=\"setOption('rows_tablet', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-tl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-tl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_tablet\" @change=\"setOption('rows_tablet', tmpConfiguration.rows_tablet)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Desktop Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_desktop', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_desktop\"\n                        @click=\"setOption('rows_desktop', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-dl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-dl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_desktop\" @change=\"setOption('rows_desktop', tmpConfiguration.rows_desktop)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Image Teaser') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': configuration.useTeaser == optionId,\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.useTeaser\"\n                        @click=\"setOption('useTeaser', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <teaser-configurator :configuration=\"configuration.items\" :parent-configuration=\"configuration\" :uploader-base-url=\"uploaderBaseUrl\" :image-endpoint=\"imageEndpoint\" :admin-prefix=\"adminPrefix\" :cc-config=\"ccConfig\" :caller-component-type=\"'products-grid'\" :products-per-page=\"productsPerPage\" v-show=\"configuration.useTeaser\"></teaser-configurator>\n\n    </div>",
-    /**
-     * Get dependencies
-     */
     components: {
         'action-button': actionButton,
         'component-actions': componentActions,
         'teaser-configurator': teaserConfigurator,
     },
+    template: "<div class=\"cc-products-grid-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-products-grid-configurator__section\" v-if=\"ccConfig.products_grid != null && ccConfig.products_grid.custom_sections != null\" v-for=\"section in ccConfig.products_grid.custom_sections\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-hero-carousel-configurator__custom-sections\">\n                <div class=\"cc-custom-fields\">\n                    <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                        <component\n                            :is=\"'custom-element-' + field.type\"\n                            :configuration=\"configuration\"\n                            :field-configuration=\"field\"\n                        ></component>\n                    </div>\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Data source') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options cc-products-grid-configurator__scenario-options--inputs\">\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-category\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Category ID') + ":</label>\n                    <select class=\"cc-input__select tmp-select\" style=\"width:25em\">\n                        <option>" + $t('Select...') + "</option>\n                    </select>\n                    <input type=\"hidden\" name=\"cfg-pg-category-select\" class=\"cc-input__input | cc-products-grid-configurator__form-input\" id=\"cfg-pg-category\" v-model=\"configuration.category_id\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-filter\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Filter') + ":</label>\n                    <select name=\"cfg-pg-filter\" class=\"cc-input__select\" id=\"cfg-pg-filter\" v-model=\"configuration.filter\" @change=\"onChange\">\n                        <option value=\"\">" + $t('No filter') + "</option>\n                        <template v-for=\"filter in productCollectionsFilters\">\n                            <option value=\"{{ filter.value }}\" :selected=\"filter.value === configuration.filter\">{{ filter.label }}</option>\n                        </template>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-skus\" class=\"cc-input__label\">" + $t('SKUs') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-skus\" class=\"cc-input__input\" id=\"cfg-pg-skus\" v-model=\"configuration.skus\" @change=\"onChange\">\n                    <div class=\"cc-input__hint\">" + $t('Multiple, comma-separated') + "</div>\n                </div>\n                <div class=\"cc-input cc-input--type-inline | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-order-by\" class=\"cc-input__label | cc-products-grid-configurator__section-option-label\">" + $t('Order by') + ":</label>\n                    <select name=\"cfg-pg-order-by\" class=\"cc-input__select\" id=\"cfg-pg-order-by\" v-model=\"configuration.order_by\" @change=\"onChange\">\n                        <option value=\"\">" + $t('Not specified') + "</option>\n                        <template v-for=\"sorter in productCollectionsSorters\">\n                            <option value=\"{{ sorter.value }}\" :selected=\"sorter.value === configuration.order_by\">{{ sorter.label }}</option>\n                        </template>\n                    </select>\n                    <select name=\"cfg-pg-order-type\" class=\"cc-input__select\" v-model=\"configuration.order_type\" @change=\"onChange\">\n                        <option value=\"ASC\">" + $t('Ascending') + "</option>\n                        <option value=\"DESC\">" + $t('Descending') + "</option>\n                    </select>\n                </div>\n                <div class=\"cc-input | cc-products-grid-configurator__section-option\">\n                    <label for=\"cfg-pg-dataprovider\" class=\"cc-input__label\">" + $t('Custom Data Provider') + ":</label>\n                    <input type=\"text\" name=\"cfg-pg-dataprovider\" class=\"cc-input__input\" id=\"cfg-pg-dataprovider\" v-model=\"configuration.class_overrides.dataProvider\" @change=\"onChange\">\n                </div>\n                <div class=\"cc-input__hint cc-input__hint--info-mark\" v-if=\"configuration.skus.length\">\n                    " + $t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.') + "\n                </div>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Mobile Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_mobile', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_mobile\"\n                        @click=\"setOption('rows_mobile', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-ml-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-ml-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_mobile\" @change=\"setOption('rows_mobile', tmpConfiguration.rows_mobile)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Tablet Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_tablet', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_tablet\"\n                        @click=\"setOption('rows_tablet', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-tl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-tl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_tablet\" @change=\"setOption('rows_tablet', tmpConfiguration.rows_tablet)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Desktop Layout') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': isOptionSelected('rows_desktop', optionId),\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.rows_desktop\"\n                        @click=\"setOption('rows_desktop', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            <input v-if=\"optionId === '1000'\" type=\"text\" name=\"cfg-dl-custom\" class=\"cc-input__input cc-input__input--type-tiny\" id=\"cfg-dl-custom\" maxlength=\"3\" v-model=\"tmpConfiguration.rows_desktop\" @change=\"setOption('rows_desktop', tmpConfiguration.rows_desktop)\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <section class=\"cc-products-grid-configurator__section\">\n            <h3 class=\"cc-products-grid-configurator__subtitle\">" + $t('Image Teaser') + ":</h3>\n            <div class=\"cc-products-grid-configurator__scenario-options\">\n                <ul class=\"cc-products-grid-configurator__scenario-options-list\">\n                    <li\n                        :class=\"{\n                            'cc-products-grid-configurator__option--selected': configuration.useTeaser == optionId,\n                        }\"\n                        class=\"cc-products-grid-configurator__option\"\n                        v-for=\"(optionId, option) in scenarioOptions.useTeaser\"\n                        @click=\"setOption('useTeaser', optionId)\">\n                        <div class=\"cc-products-grid-configurator__option-wrapper\">\n                            <svg class=\"cc-products-grid-configurator__option-icon\">\n                                <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                            </svg>\n                        </div>\n                        <p class=\"cc-products-grid-configurator__option-name\">\n                            {{ option.name }}\n                        </p>\n                    </li>\n                </ul>\n            </div>\n        </section>\n\n        <teaser-configurator :configuration=\"configuration.items\" :parent-configuration=\"configuration\" :uploader-base-url=\"uploaderBaseUrl\" :image-endpoint=\"imageEndpoint\" :admin-prefix=\"adminPrefix\" :cc-config=\"ccConfig\" :caller-component-type=\"'products-grid'\" :products-per-page=\"productsPerPage\" v-show=\"configuration.useTeaser\"></teaser-configurator>\n\n    </div>",
     props: {
         configuration: {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     category_id: '',
                     filter: '',
                     order_by: 'creation_date',
@@ -5783,13 +5827,6 @@ var productsGridConfigurator = {
             type: String,
             default: 'admin',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
         productCollectionsSorters: {
             type: [String, Array],
             default: '',
@@ -5797,6 +5834,13 @@ var productsGridConfigurator = {
         productCollectionsFilters: {
             type: [String, Array],
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'products_grid',
         },
     },
     data: function () {
@@ -5898,7 +5942,6 @@ var productsGridConfigurator = {
             }
             this.setProductsLimit();
             this._collectTeasersCssClasses();
-            this._collectComponentCssClasses();
             this.onSave();
         },
     },
@@ -6024,20 +6067,6 @@ var productsGridConfigurator = {
                 ? this.configuration[layoutOption]
                 : 5;
         },
-        _getCustomCssFields: function (source) {
-            var cssClassFields = [];
-            Object.keys(source).forEach(function (tabKey) {
-                if (typeof source[tabKey].content !== 'string' &&
-                    source[tabKey].content.fields != null) {
-                    Object.keys(source[tabKey].content.fields).forEach(function (fieldKey) {
-                        if (source[tabKey].content.fields[fieldKey].frontend_type === 'css_class') {
-                            cssClassFields.push(source[tabKey].content.fields[fieldKey].model);
-                        }
-                    });
-                }
-            });
-            return cssClassFields;
-        },
         _collectTeasersCssClasses: function () {
             if (this.configuration.items != null) {
                 var cssClassFields_1 = this._getCustomCssFields(this.ccConfig.teaser.tabs);
@@ -6050,20 +6079,6 @@ var productsGridConfigurator = {
                     });
                     teaser.cc_css_classes = cssClasses.join(' ');
                 });
-            }
-        },
-        _collectComponentCssClasses: function () {
-            var _this = this;
-            if (this.ccConfig.image_teaser != null &&
-                this.ccConfig.image_teaser.custom_sections != null) {
-                var cssClassFields = this._getCustomCssFields(this.ccConfig.image_teaser.custom_sections);
-                var cssClasses_1 = [];
-                cssClassFields.forEach(function (model) {
-                    if (_this.configuration[model] && typeof _this.configuration[model] === 'string') {
-                        cssClasses_1.push(_this.configuration[model]);
-                    }
-                });
-                this.configuration.cc_css_classes = cssClasses_1.join(' ');
             }
         },
     },
@@ -6209,7 +6224,7 @@ var teaserAndTextConfigurator = {
  */
 var instagramFeedConfigurator = {
     extends: imageTeaserConfigurator,
-    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">{{'Instagram images limit' | translate}}:</h3>\n            <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                <div class=\"cc-input cc-teaser-configurator__form-element\">\n                    <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                        {{'Instagram images limit' | translate}}:\n                    </label>\n                    <select class=\"cc-input__select\" v-model=\"configuration.scenario.numberOfSlides\">\n                        <option v-for=\"(optionId, option) in scenarioOptions.numberOfSlides\" :value=\"optionId\">{{ option.name }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n    </div>",
+    template: "<div class=\"cc-image-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-image-teaser-configurator__section\" v-if=\"ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null\" v-for=\"section in ccConfig.image_teaser.custom_sections\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                        :teaser-index=\"9999\"\n                    ></component>\n                </div>\n            </div>\n        </section>\n        <section class=\"cc-image-teaser-configurator__section\">\n            <h3 class=\"cc-image-teaser-configurator__subtitle\">{{'Instagram images limit' | translate}}:</h3>\n            <div class=\"cc-input cc-input--group cc-input cc-teaser-configurator__form-group\">\n                <div class=\"cc-input cc-teaser-configurator__form-element\">\n                    <label for=\"{{fieldId | randomizeElementId}}\" class=\"cc-input__label\">\n                        {{'Instagram images limit' | translate}}:\n                    </label>\n                    <select class=\"cc-input__select\" v-model=\"configuration.scenario.numberOfSlides\">\n                        <option v-for=\"(optionId, option) in scenarioOptions.numberOfSlides\" :value=\"optionId\">{{ option.name }}</option>\n                    </select>\n                </div>\n            </div>\n        </section>\n    </div>",
     props: {
         /**
          * Image teaser configuration
@@ -6250,13 +6265,6 @@ var instagramFeedConfigurator = {
         adminPrefix: {
             type: String,
             default: 'admin',
-        },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
         },
     },
     ready: function () {
@@ -6330,13 +6338,6 @@ var mosaicConfigurator = {
                         },
                     },
                 };
-            },
-        },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
             },
         },
     },
@@ -6419,15 +6420,8 @@ var accordionConfigurator = {
         'component-adder': componentAdder,
         'component-actions': componentActions,
     },
-    template: "<div :class=\"componentCssClasses\">\n        <div class=\"cc-accordion-configurator__section\">\n            <h3 class=\"cc-accordion-configurator__subtitle\">" + $t('Accordion width') + "</h3>\n            <div class=\"cc-accordion-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-accordion-configurator__scenario-option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-accordion-configurator__scenario-option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-accordion-configurator__scenario-option-wrapper\">\n                        <svg class=\"cc-accordion-configurator__scenario-option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-accordion-configurator__scenario-option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </div>\n        <div class=\"cc-accordion-configurator__section\">\n            <h3 class=\"cc-accordion-configurator__subtitle\">Global options</h3>\n            <div class=\"cc-accordion-configurator__option\">\n                <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                    <input\n                        type=\"checkbox\"\n                        class=\"admin__actions-switch-checkbox\"\n                        id=\"multiple-collapsible-switcher\"\n                        v-model=\"configuration.multiple_collapsible\"\n                    >\n                    <label for=\"multiple-collapsible-switcher\" class=\"admin__actions-switch-label\">\n                        <span class=\"admin__actions-switch-text\">{{ 'Allow multiple sections to be opened at the same time' | translate }}</span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"cc-accordion-configurator__option\">\n                <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                    <input\n                        type=\"checkbox\"\n                        class=\"admin__actions-switch-checkbox\"\n                        id=\"expand-first-switcher\"\n                        v-model=\"configuration.expand_first\"\n                    >\n                    <label for=\"expand-first-switcher\" class=\"admin__actions-switch-label\">\n                        <span class=\"admin__actions-switch-text\" v-if=\"!supportGroups\">{{ 'Unfold first entry on page loaded' | translate }}</span>\n                        <span class=\"admin__actions-switch-text\" v-if=\"supportGroups\">{{ 'Unfold first entry of each group on page loaded' | translate }}</span>\n                    </label>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"cc-accordion-configurator__section cc-accordion-configurator__group\" v-for=\"(groupIndex, group) in configuration.groups\" id=\"cc-accordion-group-{{ groupIndex }}\">\n            <component-adder class=\"cc-component-adder cc-component-adder--first\" v-if=\"supportGroups\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-accordion-configurator__item-action-button\" @click=\"createGroup(groupIndex)\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\"><use xlink:href=\"#icon_plus\"></use></svg>\n                </button>\n            </component-adder>\n\n            <div class=\"cc-accordion-configurator__group-content\">\n                <div class=\"cc-accordion-configurator__group-headline\" v-if=\"supportGroups\">\n                    <div class=\"cc-input cc-input cc-accordion-configurator__group-headline-input-wrapper\">\n                        <input type=\"text\" v-model=\"group.headline\" class=\"cc-input__input cc-accordion-configurator__group-headline-input\" placeholder=\"{{ 'Group title' | translate }}\">\n                    </div>\n                    <div class=\"cc-accordion-configurator__group-tools\">\n                        <component-actions>\n                            <template slot=\"cc-component-actions__buttons\">\n                                <button\n                                    class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-accordion-configurator__group-action-button\"\n                                    :class=\"{'cc-action-button--look_disabled': isFirstItem(groupIndex)}\"\n                                    @click=\"moveGroupUp(groupIndex)\"\n                                    :disabled=\"isFirstItem(groupIndex)\"\n                                >\n                                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                        <use xlink:href=\"#icon_arrow-up\"></use>\n                                    </svg>\n                                </button>\n                                <button\n                                    class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-accordion-configurator__group-action-button\"\n                                    :class=\"{'cc-action-button--look_disabled': configuration.groups.length < 2}\"\n                                    @click=\"deleteGroup(groupIndex)\"\n                                    :disabled=\"configuration.groups.length < 2\"\n                                >\n                                    <svg class=\"cc-action-button__icon\">\n                                        <use xlink:href=\"#icon_trash-can\"></use>\n                                    </svg>\n                                </button>\n                                <button\n                                    class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-accordion-configurator__group-action-button\"\n                                    :class=\"{'cc-action-button--look_disabled': isLastGroup(groupIndex)}\"\n                                    :disabled=\"isLastGroup(groupIndex)\"\n                                    @click=\"moveGroupDown(groupIndex)\"\n                                >\n                                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                        <use xlink:href=\"#icon_arrow-down\"></use>\n                                    </svg>\n                                </button>\n                            </template>\n                        </component-actions>\n                    </div>\n                </div>\n                <div class=\"cc-accordion-configurator__items\">\n                    <div class=\"cc-accordion-configurator__item\" id=\"cc-accordion-item-{{ groupIndex }}-{{ $index }}\" v-for=\"item in group.items\">\n                        <div class=\"cc-input cc-accordion-configurator__item-headline\">\n                            <div class=\"cc-accordion-configurator__item-headline-input-wrapper\">\n                                <input type=\"text\" v-model=\"item.headline\" class=\"cc-input__input cc-accordion-configurator__input cc-accordion-configurator__item-headline-input\" placeholder=\"{{ 'Headline' | translate }}\">\n                            </div>\n                            <div class=\"cc-accordion-configurator__item-tools\">\n                                <component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button\n                                            class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-accordion-configurator__action-button\"\n                                            :class=\"{'cc-action-button--look_disabled': isFirstItem($index)}\"\n                                            @click=\"moveItemUp(groupIndex, $index)\"\n                                            :disabled=\"isFirstItem($index)\"\n                                        >\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button\n                                            class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-accordion-configurator__action-button\"\n                                            :class=\"{'cc-action-button--look_disabled': group.items.length < 2}\"\n                                            @click=\"deleteItem(groupIndex, $index)\"\n                                            :disabled=\"group.items.length < 2\"\n                                        >\n                                            <svg class=\"cc-action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                        <button\n                                            class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-accordion-configurator__action-button\"\n                                            :class=\"{'cc-action-button--look_disabled': isLastItem(groupIndex, $index)}\"\n                                            :disabled=\"isLastItem(groupIndex, $index)\"\n                                            @click=\"moveItemDown(groupIndex, $index)\"\n                                        >\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </component-actions>\n                            </div>\n                        </div>\n                        <div class=\"cc-input cc-accordion-configurator__item-content\">\n                            <div class=\"cc-accordion-configurator__item-editor\">\n                                <div class=\"buttons-set | cc-accordion-configurator__wysiwyg-buttons\">\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable action-show-hide\" \n                                        @click=\"toggleEditor(item.editorId, groupIndex, $index)\"\n                                    >\n                                        {{ item.isEditorOpened ? 'Hide Editor' : 'Show Editor' | translate }}\n                                    </button>\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable action-add-widget plugin\" \n                                        @click=\"openWidgetModal(item.editorId)\" \n                                        v-show=\"!item.isEditorOpened\"\n                                    >\n                                        {{ 'Insert Widget' | translate }}...\n                                    </button>\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable action-add-image plugin\" \n                                        @click=\"openMediaModal(item.editorId)\" \n                                        v-show=\"!item.isEditorOpened\"\n                                    >\n                                        {{ 'Insert Image' | translate }}...\n                                    </button>\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable add-variable plugin\" \n                                        @click=\"openMagentoVariablesModal(item.editorId)\" \n                                        v-show=\"!item.isEditorOpened\"\n                                    >\n                                        {{ 'Insert Variable' | translate }}...\n                                    </button>\n                                </div>\n                                <textarea v-model=\"item.content\" class=\"cc-input__textarea cc-accordion-configurator__textarea cc-accordion-configurator__item-content-textarea\" placeholder=\"{{ 'Content (including HTML)' | translate }}\" data-item-index=\"{{ groupIndex }}-{{ $index }}\" id=\"{{ item.editorId }}\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n\n                    <button class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--add cc-accordion-configurator__add-item-button\" @click=\"createItem(groupIndex)\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                        {{ 'Add' | translate }}\n                    </button>\n                </div>\n            </div>\n\n            <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"supportGroups && configuration.groups.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-accordion-configurator__item-action-button\" @click=\"createGroup(groupIndex + 1)\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\"><use xlink:href=\"#icon_plus\"></use></svg>\n                </button>\n            </component-adder>\n        </div>\n    </div>",
+    template: "<div :class=\"componentCssClasses\">\n        <div class=\"cc-accordion-configurator__section\" v-if=\"ccConfig.accordion != null && ccConfig.accordion.custom_sections != null\" v-for=\"section in ccConfig.accordion.custom_sections\">\n            <h3 class=\"cc-accordion-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-custom-fields\">\n                <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                    <component\n                        :is=\"'custom-element-' + field.type\"\n                        :configuration=\"configuration\"\n                        :field-configuration=\"field\"\n                    ></component>\n                </div>\n            </div>\n        </div>\n        <div class=\"cc-accordion-configurator__section\">\n            <h3 class=\"cc-accordion-configurator__subtitle\">" + $t('Accordion width') + "</h3>\n            <div class=\"cc-accordion-configurator__scenario-options\">\n                <div\n                    :class=\"{\n                        'cc-accordion-configurator__scenario-option--selected': configuration.scenarios.reading.id == optionId,\n                    }\"\n                    class=\"cc-accordion-configurator__scenario-option\"\n                    v-for=\"(optionId, option) in scenarioOptions.reading\"\n                    @click=\"toggleOption('reading', optionId)\">\n                    <div class=\"cc-accordion-configurator__scenario-option-wrapper\">\n                        <svg class=\"cc-accordion-configurator__scenario-option-icon\">\n                            <use v-bind=\"{ 'xlink:href': '#' + option.iconId }\"></use>\n                        </svg>\n                    </div>\n                    <p class=\"cc-accordion-configurator__scenario-option-name\">\n                        " + $t('{{ option.name }}') + "\n                    </p>\n                </div>\n            </div>\n        </div>\n        <div class=\"cc-accordion-configurator__section\">\n            <h3 class=\"cc-accordion-configurator__subtitle\">Global options</h3>\n            <div class=\"cc-accordion-configurator__option\">\n                <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                    <input\n                        type=\"checkbox\"\n                        class=\"admin__actions-switch-checkbox\"\n                        id=\"multiple-collapsible-switcher\"\n                        v-model=\"configuration.multiple_collapsible\"\n                    >\n                    <label for=\"multiple-collapsible-switcher\" class=\"admin__actions-switch-label\">\n                        <span class=\"admin__actions-switch-text\">{{ 'Allow multiple sections to be opened at the same time' | translate }}</span>\n                    </label>\n                </div>\n            </div>\n            <div class=\"cc-accordion-configurator__option\">\n                <div class=\"admin__actions-switch\" data-role=\"switcher\">\n                    <input\n                        type=\"checkbox\"\n                        class=\"admin__actions-switch-checkbox\"\n                        id=\"expand-first-switcher\"\n                        v-model=\"configuration.expand_first\"\n                    >\n                    <label for=\"expand-first-switcher\" class=\"admin__actions-switch-label\">\n                        <span class=\"admin__actions-switch-text\" v-if=\"!supportGroups\">{{ 'Unfold first entry on page loaded' | translate }}</span>\n                        <span class=\"admin__actions-switch-text\" v-if=\"supportGroups\">{{ 'Unfold first entry of each group on page loaded' | translate }}</span>\n                    </label>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"cc-accordion-configurator__section cc-accordion-configurator__group\" v-for=\"(groupIndex, group) in configuration.groups\" id=\"cc-accordion-group-{{ groupIndex }}\">\n            <component-adder class=\"cc-component-adder cc-component-adder--first\" v-if=\"supportGroups\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-accordion-configurator__item-action-button\" @click=\"createGroup(groupIndex)\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\"><use xlink:href=\"#icon_plus\"></use></svg>\n                </button>\n            </component-adder>\n\n            <div class=\"cc-accordion-configurator__group-content\">\n                <div class=\"cc-accordion-configurator__group-headline\" v-if=\"supportGroups\">\n                    <div class=\"cc-input cc-input cc-accordion-configurator__group-headline-input-wrapper\">\n                        <input type=\"text\" v-model=\"group.headline\" class=\"cc-input__input cc-accordion-configurator__group-headline-input\" placeholder=\"{{ 'Group title' | translate }}\">\n                    </div>\n                    <div class=\"cc-accordion-configurator__group-tools\">\n                        <component-actions>\n                            <template slot=\"cc-component-actions__buttons\">\n                                <button\n                                    class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-accordion-configurator__group-action-button\"\n                                    :class=\"{'cc-action-button--look_disabled': isFirstItem(groupIndex)}\"\n                                    @click=\"moveGroupUp(groupIndex)\"\n                                    :disabled=\"isFirstItem(groupIndex)\"\n                                >\n                                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                        <use xlink:href=\"#icon_arrow-up\"></use>\n                                    </svg>\n                                </button>\n                                <button\n                                    class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-accordion-configurator__group-action-button\"\n                                    :class=\"{'cc-action-button--look_disabled': configuration.groups.length < 2}\"\n                                    @click=\"deleteGroup(groupIndex)\"\n                                    :disabled=\"configuration.groups.length < 2\"\n                                >\n                                    <svg class=\"cc-action-button__icon\">\n                                        <use xlink:href=\"#icon_trash-can\"></use>\n                                    </svg>\n                                </button>\n                                <button\n                                    class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-accordion-configurator__group-action-button\"\n                                    :class=\"{'cc-action-button--look_disabled': isLastGroup(groupIndex)}\"\n                                    :disabled=\"isLastGroup(groupIndex)\"\n                                    @click=\"moveGroupDown(groupIndex)\"\n                                >\n                                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                        <use xlink:href=\"#icon_arrow-down\"></use>\n                                    </svg>\n                                </button>\n                            </template>\n                        </component-actions>\n                    </div>\n                </div>\n                <div class=\"cc-accordion-configurator__items\">\n                    <div class=\"cc-accordion-configurator__item\" id=\"cc-accordion-item-{{ groupIndex }}-{{ $index }}\" v-for=\"item in group.items\">\n                        <div class=\"cc-input cc-accordion-configurator__item-headline\">\n                            <div class=\"cc-accordion-configurator__item-headline-input-wrapper\">\n                                <input type=\"text\" v-model=\"item.headline\" class=\"cc-input__input cc-accordion-configurator__input cc-accordion-configurator__item-headline-input\" placeholder=\"{{ 'Headline' | translate }}\">\n                            </div>\n                            <div class=\"cc-accordion-configurator__item-tools\">\n                                <component-actions>\n                                    <template slot=\"cc-component-actions__buttons\">\n                                        <button\n                                            class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--up cc-accordion-configurator__action-button\"\n                                            :class=\"{'cc-action-button--look_disabled': isFirstItem($index)}\"\n                                            @click=\"moveItemUp(groupIndex, $index)\"\n                                            :disabled=\"isFirstItem($index)\"\n                                        >\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-up\"></use>\n                                            </svg>\n                                        </button>\n                                        <button\n                                            class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-accordion-configurator__action-button\"\n                                            :class=\"{'cc-action-button--look_disabled': group.items.length < 2}\"\n                                            @click=\"deleteItem(groupIndex, $index)\"\n                                            :disabled=\"group.items.length < 2\"\n                                        >\n                                            <svg class=\"cc-action-button__icon\">\n                                                <use xlink:href=\"#icon_trash-can\"></use>\n                                            </svg>\n                                        </button>\n                                        <button\n                                            class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--down cc-accordion-configurator__action-button\"\n                                            :class=\"{'cc-action-button--look_disabled': isLastItem(groupIndex, $index)}\"\n                                            :disabled=\"isLastItem(groupIndex, $index)\"\n                                            @click=\"moveItemDown(groupIndex, $index)\"\n                                        >\n                                            <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                                                <use xlink:href=\"#icon_arrow-down\"></use>\n                                            </svg>\n                                        </button>\n                                    </template>\n                                </component-actions>\n                            </div>\n                        </div>\n                        <div class=\"cc-input cc-accordion-configurator__item-content\">\n                            <div class=\"cc-accordion-configurator__item-editor\">\n                                <div class=\"buttons-set | cc-accordion-configurator__wysiwyg-buttons\">\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable action-show-hide\" \n                                        @click=\"toggleEditor(item.editorId, groupIndex, $index)\"\n                                    >\n                                        {{ item.isEditorOpened ? 'Hide Editor' : 'Show Editor' | translate }}\n                                    </button>\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable action-add-widget plugin\" \n                                        @click=\"openWidgetModal(item.editorId)\" \n                                        v-show=\"!item.isEditorOpened\"\n                                    >\n                                        {{ 'Insert Widget' | translate }}...\n                                    </button>\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable action-add-image plugin\" \n                                        @click=\"openMediaModal(item.editorId)\" \n                                        v-show=\"!item.isEditorOpened\"\n                                    >\n                                        {{ 'Insert Image' | translate }}...\n                                    </button>\n                                    <button \n                                        type=\"button\" \n                                        class=\"scalable add-variable plugin\" \n                                        @click=\"openMagentoVariablesModal(item.editorId)\" \n                                        v-show=\"!item.isEditorOpened\"\n                                    >\n                                        {{ 'Insert Variable' | translate }}...\n                                    </button>\n                                </div>\n                                <textarea v-model=\"item.content\" class=\"cc-input__textarea cc-accordion-configurator__textarea cc-accordion-configurator__item-content-textarea\" placeholder=\"{{ 'Content (including HTML)' | translate }}\" data-item-index=\"{{ groupIndex }}-{{ $index }}\" id=\"{{ item.editorId }}\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n\n                    <button class=\"cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--add cc-accordion-configurator__add-item-button\" @click=\"createItem(groupIndex)\">\n                        <svg class=\"cc-action-button__icon cc-action-button__icon--size_100\">\n                            <use xlink:href=\"#icon_plus\"></use>\n                        </svg>\n                        {{ 'Add' | translate }}\n                    </button>\n                </div>\n            </div>\n\n            <component-adder class=\"cc-component-adder cc-component-adder--last\" v-if=\"supportGroups && configuration.groups.length\">\n                <button is=\"action-button\" class=\"cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-accordion-configurator__item-action-button\" @click=\"createGroup(groupIndex + 1)\">\n                    <svg class=\"cc-action-button__icon cc-action-button__icon--size_300\"><use xlink:href=\"#icon_plus\"></use></svg>\n                </button>\n            </component-adder>\n        </div>\n    </div>",
     props: {
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default: function () {
-                return {};
-            },
-        },
         /*
          * Single's component configuration
          */
@@ -6435,6 +6429,7 @@ var accordionConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     multiple_collapsible: true,
                     expand_first: true,
                     groups: [
@@ -6455,6 +6450,13 @@ var accordionConfigurator = {
                     },
                 };
             },
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'accordion',
         },
         /* Obtain configuration of WYSIWYG editor (TinyMCE) */
         wysiwygConfig: {
@@ -6924,10 +6926,7 @@ var productTeaserConfigurator = {
     mixins: [
         componentConfigurator,
     ],
-    /**
-     * Get dependencies
-     */
-    template: "\n    <form class=\"cc-product-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-sku\">" + $t('SKU') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-sku\" class=\"cc-input__input\" id=\"cfg-pc-sku\" v-model=\"configuration.sku\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-product-teaser-configurator__input-hint\">\n            <div class=\"cc-input__hint\">" + $t('Provide only one SKU per component instance.') + "</div>\n        </div>\n        <div class=\"cc-product-teaser-configurator__error-wrapper\" v-if=\"errorMessage.length\">\n            <span class=\"cc-product-teaser-configurator__error\">{{ errorMessage }}</span>\n        </div>\n    </form>\n    ",
+    template: "\n    <form class=\"cc-product-teaser-configurator {{ classes }} | {{ mix }}\" {{ attributes }}>\n        <section class=\"cc-product-teaser-configurator__section\" v-if=\"ccConfig.product_teaser != null && ccConfig.product_teaser.custom_sections != null\" v-for=\"section in ccConfig.product_teaser.custom_sections\">\n            <h3 class=\"cc-product-teaser-configurator__subtitle\" v-if=\"section.label\">{{section.label | translate}}</h3>\n            <div class=\"cc-product-teaser-configurator__custom-sections\">\n                <div class=\"cc-custom-fields\">\n                    <div class=\"cc-custom-fields__form-group\" v-for=\"field in section.content.fields\">\n                        <component\n                            :is=\"'custom-element-' + field.type\"\n                            :configuration=\"configuration\"\n                            :field-configuration=\"field\"\n                        ></component>\n                    </div>\n                </div>\n            </div>\n        </section>\n        <div class=\"cc-input cc-input--type-inline\">\n            <label class=\"cc-input__label\" for=\"cfg-pc-sku\">" + $t('SKU') + ":</label>\n            <input type=\"text\" name=\"cfg-pc-sku\" class=\"cc-input__input\" id=\"cfg-pc-sku\" v-model=\"configuration.sku\" @change=\"onChange\">\n        </div>\n        <div class=\"cc-product-teaser-configurator__input-hint\">\n            <div class=\"cc-input__hint\">" + $t('Provide only one SKU per component instance.') + "</div>\n        </div>\n        <div class=\"cc-product-teaser-configurator__error-wrapper\" v-if=\"errorMessage.length\">\n            <span class=\"cc-product-teaser-configurator__error\">{{ errorMessage }}</span>\n        </div>\n    </form>\n    ",
     events: {
         /**
          * Listen on save event from Content Configurator component.
@@ -6952,6 +6951,7 @@ var productTeaserConfigurator = {
             type: Object,
             default: function () {
                 return {
+                    customCssClass: '',
                     sku: '',
                 };
             },
@@ -6959,6 +6959,13 @@ var productTeaserConfigurator = {
         productDataEndpoint: {
             type: String,
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'product_teaser',
         },
     },
     data: function () {

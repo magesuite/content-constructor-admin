@@ -42,7 +42,8 @@
         }
     }
 
-    &__scenario-options {
+    &__scenario-options,
+    &__custom-sections {
         padding: 1.5rem 1.5rem 1.25rem;
         border-radius: 2px;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);

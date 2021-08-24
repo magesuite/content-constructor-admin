@@ -5,12 +5,12 @@ import actionButton from '../../../utils/action-button/action-button';
 import componentActions from '../../../utils/component-actions/component-actions';
 import componentAdder from '../../../utils/component-adder/component-adder';
 
-import componentConfigurator from '../../_component-configurator/component-configurator';
-
 import {
     default as teaserConfigurator,
     teaserPrototype as teaserItemPrototype,
 } from '../../_teaser/configurator/teaser';
+
+import componentConfigurator from '../../_component-configurator/component-configurator';
 
 /**
  * Hero carousel configurator component.
@@ -26,9 +26,25 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
         'action-button': actionButton,
         'component-adder': componentAdder,
         'component-actions': componentActions,
-        'teaser-configurator': teaserConfigurator
+        'teaser-configurator': teaserConfigurator,
     },
     template: `<div class="cc-hero-carousel-configurator | {{ class }}">
+        <section class="cc-hero-carousel-configurator__section" v-if="ccConfig.hero_carousel != null && ccConfig.hero_carousel.custom_sections != null" v-for="section in ccConfig.hero_carousel.custom_sections">
+            <h3 class="cc-hero-carousel-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-hero-carousel-configurator__custom-sections">
+                <div class="cc-custom-fields">
+                    <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                        <component
+                            :is="'custom-element-' + field.type"
+                            :configuration="configuration"
+                            :field-configuration="field"
+                            :teaser-index="9999"
+                        ></component>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <section class="cc-hero-carousel-configurator__section">
             <h3 class="cc-hero-carousel-configurator__subtitle">Mobile Devices Scenario</h3>
             <div class="cc-hero-carousel-configurator__scenario-options">
@@ -105,6 +121,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): any {
                 return {
+                    customCssClass: '',
                     mobileDisplayVariant: {},
                     items: [JSON.parse(JSON.stringify(teaserItemPrototype))],
                     ignoredItems: [],
@@ -137,12 +154,12 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'admin',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default(): any {
-                return {};
-            },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'hero_carousel',
         },
     },
     computed: {
@@ -272,7 +289,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                     }
                 };
             }
-        }
+        },
     },
     ready(): void {
         if (!this.configuration.mobileDisplayVariant.id) {

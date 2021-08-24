@@ -133,13 +133,6 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                 };
             },
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default(): any {
-                return {};
-            },
-        },
     },
     ready(): void {
         this.scenarioOptions = {

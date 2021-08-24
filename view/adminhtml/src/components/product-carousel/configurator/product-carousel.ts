@@ -14,6 +14,18 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
         componentConfigurator,
     ],
     template: `<form class="cc-product-carousel-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+        <section class="cc-product-carousel-configurator__section" v-if="ccConfig.product_carousel != null && ccConfig.product_carousel.custom_sections != null" v-for="section in ccConfig.product_carousel.custom_sections">
+            <h3 class="cc-product-carousel-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </section>
 
         <div class="cc-input cc-input--type-inline">
             <label class="cc-input__label">${$t( 'Categories' )}:</label>
@@ -78,6 +90,7 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     category_id: '',
                     filter: '',
                     order_by: 'creation_date',
@@ -102,6 +115,13 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
         productCollectionsFilters: {
             type: [String, Array],
             default: '',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'product_carousel',
         },
     },
     data(): Object {

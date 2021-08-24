@@ -11,6 +11,19 @@ import componentConfigurator from '../../_component-configurator/component-confi
 const buttonConfigurator: vuejs.ComponentOption = {
     mixins: [componentConfigurator],
     template: `<form class="cc-button-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
+        <section class="cc-button-configurator__section" v-if="ccConfig.button != null && ccConfig.button.custom_sections != null" v-for="section in ccConfig.button.custom_sections">
+            <h3 class="cc-button-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </section>
+    
         <div class="cc-input cc-input--type-inline">
             <label for="cfg-label" class="cc-input__label">${$t(
                 'Label'
@@ -39,6 +52,7 @@ const buttonConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     label: '',
                     target: '',
                 };
@@ -53,6 +67,13 @@ const buttonConfigurator: vuejs.ComponentOption = {
         adminPrefix: {
             type: String,
             default: 'admin',
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'button',
         },
     },
     events: {

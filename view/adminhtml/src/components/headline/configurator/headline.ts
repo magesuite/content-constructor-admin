@@ -20,7 +20,21 @@ const headlineConfigurator: vuejs.ComponentOption = {
     mixins: [
         componentConfigurator,
     ],
-    template: `<div class="cc-headline-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
+    template: `<div class="cc-headline-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+        
+        <section class="cc-headline-configurator__section" v-if="ccConfig.headline != null && ccConfig.headline.custom_sections != null" v-for="section in ccConfig.headline.custom_sections">
+            <h3 class="cc-headline-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </section>
+
         <div class="cc-input cc-input--type-inline">
             <label for="cfg-headline" class="cc-input__label">${ $t('Headline') }:</label>
             <input type="text" v-model="configuration.title" id="cfg-headline" class="cc-input__input" @change="onChange">
@@ -48,11 +62,27 @@ const headlineConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): any {
                 return {
+                    customCssClass: '',
                     title: '',
                     subtitle: '',
                     headingTag: 'h2',
                 };
             },
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'headline',
+        },
+    },
+    events: {
+        /**
+         * Listen on save event from Content Configurator component.
+         */
+        'component-configurator__save'(): void {
+            this.onSave();
         },
     },
     data(): Object {

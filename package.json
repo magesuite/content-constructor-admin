@@ -16,6 +16,9 @@
     ],
     "author": "Mateusz Krzeszowiak",
     "license": "ISC",
+    "resolutions": {
+        "graceful-fs": "^4.2.4"
+    },
     "devDependencies": {
         "@types/vue": "^1.0.28",
         "@types/vue-resource": "^0.9.29",

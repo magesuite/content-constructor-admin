@@ -34,6 +34,18 @@ const accordionConfigurator: vuejs.ComponentOption = {
         'component-actions': componentActions,
     },
     template: `<div :class="componentCssClasses">
+        <div class="cc-accordion-configurator__section" v-if="ccConfig.accordion != null && ccConfig.accordion.custom_sections != null" v-for="section in ccConfig.accordion.custom_sections">
+            <h3 class="cc-accordion-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </div>
         <div class="cc-accordion-configurator__section">
             <h3 class="cc-accordion-configurator__subtitle">${$t(
                 'Accordion width'
@@ -237,13 +249,6 @@ const accordionConfigurator: vuejs.ComponentOption = {
         </div>
     </div>`,
     props: {
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default(): any {
-                return {};
-            },
-        },
         /*
          * Single's component configuration
          */
@@ -251,6 +256,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): any {
                 return {
+                    customCssClass: '',
                     multiple_collapsible: true,
                     expand_first: true,
                     groups: [
@@ -271,6 +277,13 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     },
                 };
             },
+        },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'accordion',
         },
         /* Obtain configuration of WYSIWYG editor (TinyMCE) */
         wysiwygConfig: {
@@ -348,7 +361,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     );
                 }
             );
-
+            
             this.onSave();
         },
     },

@@ -16,7 +16,24 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
     mixins: [
         componentConfigurator,
     ],
+    components: {
+        'action-button': actionButton,
+        'component-actions': componentActions,
+    },
     template: `<div class="cc-cms-pages-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
+        <section class="cc-cms-pages-teaser-configurator__section" v-if="ccConfig.cms_pages_teaser != null && ccConfig.cms_pages_teaser.custom_sections != null" v-for="section in ccConfig.cms_pages_teaser.custom_sections">
+            <h3 class="cc-cms-pages-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                    ></component>
+                </div>
+            </div>
+        </section>
+
         <section class="cc-cms-pages-teaser-configurator__section">
             <h3 class="cc-cms-pages-teaser-configurator__subtitle">${ $t('Data source') }</h3>
             <div class="cc-cms-pages-teaser-configurator__scenario-options cc-cms-pages-teaser-configurator__scenario-options--inputs">
@@ -112,13 +129,6 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
     </div>`,
-    /**
-     * Get dependencies
-     */
-    components: {
-        'action-button': actionButton,
-        'component-actions': componentActions,
-    },
     props: {
         /**
          * Image teaser configuration
@@ -127,6 +137,7 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             type: Object,
             default(): Object {
                 return {
+                    customCssClass: '',
                     tags: '',
                     ids: '',
                     limit: '1000',
@@ -146,12 +157,12 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: '',
         },
-        /* Obtain content-constructor's config file */
-        ccConfig: {
-            type: Object,
-            default(): any {
-                return {};
-            },
+        /* Set prop with component name in order to
+         * pass it to `component-configurator` methods
+        */
+        xmlConfigEntry: {
+            type: String,
+            default: 'cms_pages_teaser',
         },
     },
     events: {
