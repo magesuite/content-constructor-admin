@@ -7,6 +7,11 @@
     width: 100%;
     min-height: 100%;
 
+    &__slide,
+    &__image {
+        max-height: 60rem;
+    }
+
     &__slide {
         position: relative;
         height: auto;
@@ -52,6 +57,7 @@
     &__image {
         display: block;
         width: 100%;
+        object-fit: contain;
     }
 
     &__image-placeholder {
@@ -252,6 +258,24 @@
 
         #{$root}__figure {
             height: 100%;
+        }
+    }
+
+    @for $in-row from 5 to 9 {
+        .cc-image-teaser-preview__scene--#{$in-row}-in-row & {
+            &__slogan,
+            &__description {
+                font-size: 1.2rem;
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+                word-break: break-word;
+                hyphens: auto;
+            }
+
+            &--content-under #{$root}__content {
+                margin: -3rem 0.5rem 0.5rem;
+                padding: 2rem 0.5rem;
+            }
         }
     }
 }

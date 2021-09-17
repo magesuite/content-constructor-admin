@@ -1089,6 +1089,8 @@
 .cc-teaser-preview {
   width: 100%;
   min-height: 100%; }
+  .cc-teaser-preview__slide, .cc-teaser-preview__image {
+    max-height: 60rem; }
   .cc-teaser-preview__slide {
     position: relative;
     height: auto;
@@ -1123,7 +1125,9 @@
     padding: 0; }
   .cc-teaser-preview__image {
     display: block;
-    width: 100%; }
+    width: 100%;
+    -o-object-fit: contain;
+       object-fit: contain; }
   .cc-teaser-preview__image-placeholder {
     width: 8rem;
     height: 6.6rem;
@@ -1377,6 +1381,50 @@
       width: 100%; }
     .cc-teaser-preview--no-image .cc-teaser-preview__figure {
       height: 100%; }
+  .cc-image-teaser-preview__scene--5-in-row .cc-teaser-preview__slogan, .cc-image-teaser-preview__scene--5-in-row .cc-teaser-preview__description {
+    font-size: 1.2rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto; }
+  .cc-image-teaser-preview__scene--5-in-row .cc-teaser-preview--content-under .cc-teaser-preview__content {
+    margin: -3rem 0.5rem 0.5rem;
+    padding: 2rem 0.5rem; }
+  .cc-image-teaser-preview__scene--6-in-row .cc-teaser-preview__slogan, .cc-image-teaser-preview__scene--6-in-row .cc-teaser-preview__description {
+    font-size: 1.2rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto; }
+  .cc-image-teaser-preview__scene--6-in-row .cc-teaser-preview--content-under .cc-teaser-preview__content {
+    margin: -3rem 0.5rem 0.5rem;
+    padding: 2rem 0.5rem; }
+  .cc-image-teaser-preview__scene--7-in-row .cc-teaser-preview__slogan, .cc-image-teaser-preview__scene--7-in-row .cc-teaser-preview__description {
+    font-size: 1.2rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto; }
+  .cc-image-teaser-preview__scene--7-in-row .cc-teaser-preview--content-under .cc-teaser-preview__content {
+    margin: -3rem 0.5rem 0.5rem;
+    padding: 2rem 0.5rem; }
+  .cc-image-teaser-preview__scene--8-in-row .cc-teaser-preview__slogan, .cc-image-teaser-preview__scene--8-in-row .cc-teaser-preview__description {
+    font-size: 1.2rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto; }
+  .cc-image-teaser-preview__scene--8-in-row .cc-teaser-preview--content-under .cc-teaser-preview__content {
+    margin: -3rem 0.5rem 0.5rem;
+    padding: 2rem 0.5rem; }
 
 .cc-brand-carousel-preview {
   position: relative; }
@@ -1892,6 +1940,8 @@
     width: calc( 16.6666666667% - 1.3rem); }
   .cc-image-teaser-preview__scene--7-in-row .cc-image-teaser-preview__item {
     width: calc( 14.2857142857% - 1.3rem); }
+  .cc-image-teaser-preview__scene--8-in-row .cc-image-teaser-preview__item {
+    width: calc( 12.5% - 1.3rem); }
   .cc-image-teaser-preview__item--text-only .cc-teaser-preview__image-placeholder {
     display: none; }
 
