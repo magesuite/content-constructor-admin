@@ -48,7 +48,7 @@ $image-teaser-preview-item-gap: 1.3rem;
         position: relative;
         margin: 0 #{$image-teaser-preview-item-gap / 2};
 
-        @for $in-row from 2 to 8 {
+        @for $in-row from 2 to 9 {
             #{$root}__scene--#{$in-row}-in-row & {
                 width: calc(
                     #{100% / $in-row} - #{$image-teaser-preview-item-gap}
