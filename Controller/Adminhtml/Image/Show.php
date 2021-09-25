@@ -19,14 +19,14 @@ class Show extends Action
     private $redirectFactory;
 
     /**
-     * @var \MageSuite\ContentConstructor\Service\MediaResolver
+     * @var \MageSuite\ContentConstructorFrontend\Service\MediaResolver
      */
     private $mediaResolver;
 
     public function __construct(
         Context $context,
         \Magento\Framework\Controller\Result\RedirectFactory $redirectFactory,
-        \MageSuite\ContentConstructor\Service\MediaResolver $mediaResolver
+        \MageSuite\ContentConstructorFrontend\Service\MediaResolver $mediaResolver
     )
     {
         parent::__construct($context);

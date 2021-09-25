@@ -2,7 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\UiComponents;
 
-class CategoryPickerProvider implements \MageSuite\ContentConstructor\Components\ProductCarousel\CategoryPickerProvider
+class CategoryPickerProvider
 {
     /**
      * @var \MageSuite\ContentConstructorAdmin\Service\UiComponentRenderer

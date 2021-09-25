@@ -36,14 +36,6 @@ class CategoryPickerProviderTest extends \PHPUnit\Framework\TestCase
             );
     }
 
-    public function testItImplementsCategoryPickerProviderInterface()
-    {
-        $this->assertInstanceOf(
-            \MageSuite\ContentConstructor\Components\ProductCarousel\CategoryPickerProvider::class,
-            $this->pickerProvider
-        );
-    }
-
     public function testItRendersUiComponent()
     {
         $this->uiComponentRendererMock

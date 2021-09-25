@@ -2,7 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\DataProviders;
 
-class WysiwygConfigDataProvider implements \MageSuite\ContentConstructor\Components\Paragraph\WysiwygConfigDataProvider
+class WysiwygConfigDataProvider
 {
     /**
      * @var \Magento\Cms\Model\Wysiwyg\Config
