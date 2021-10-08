@@ -2,7 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\DataProviders;
 
-class CmsTeaserAdminDataProvider implements \MageSuite\ContentConstructor\Components\CmsTeaser\CmsTeaserAdminDataProvider
+class CmsTeaserAdminDataProvider
 {
     /**
      * @var \MageSuite\CmsTagManager\Api\TagsRepositoryInterface

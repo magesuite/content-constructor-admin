@@ -20,13 +20,6 @@ class StaticBlockDataProviderTest extends \PHPUnit\Framework\TestCase
                 ->get(\MageSuite\ContentConstructorAdmin\DataProviders\StaticBlockDataProvider::class);
     }
 
-    public function testItImplementsCorrectInterface() {
-        $this->assertInstanceOf(
-            \MageSuite\ContentConstructor\Components\StaticBlock\DataProvider::class,
-            $this->dataProvider
-        );
-    }
-
     /**
      * @magentoDbIsolation enabled
      * @magentoDataFixture removeAllStaticBlocks

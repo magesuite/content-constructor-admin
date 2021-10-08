@@ -2,7 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\Template;
 
-class Locator implements \MageSuite\ContentConstructor\View\AdminTemplateLocator
+class Locator
 {
     private function getBasePath() {
         return realpath(__DIR__.'/../');

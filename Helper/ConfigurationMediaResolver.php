@@ -7,11 +7,11 @@ class ConfigurationMediaResolver
     protected $decodedImageArrayKeys = ['decodedImage', 'decoded_image', 'decoded'];
 
     /**
-     * @var \MageSuite\ContentConstructor\Service\MediaResolver
+     * @var \MageSuite\ContentConstructorFrontend\Service\MediaResolver
      */
     protected $mediaResolver;
 
-    public function __construct(\MageSuite\ContentConstructor\Service\MediaResolver $mediaResolver)
+    public function __construct(\MageSuite\ContentConstructorFrontend\Service\MediaResolver $mediaResolver)
     {
         $this->mediaResolver = $mediaResolver;
     }

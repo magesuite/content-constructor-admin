@@ -8,7 +8,7 @@ class Configurator extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\View\Layout
      */
     protected $layout;
-    
+
     /**
      * @var \Magento\Backend\App\Action\Context
      */
@@ -18,11 +18,6 @@ class Configurator extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\Controller\Result\RawFactory
      */
     protected $resultRawFactory;
-
-    /**
-     * @var \MageSuite\ContentConstructor\ComponentManager
-     */
-    protected $componentManager;
 
     /**
      * @var \Magento\Framework\View\Result\PageFactory
@@ -38,7 +33,6 @@ class Configurator extends \Magento\Framework\App\Action\Action
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
-        \MageSuite\ContentConstructor\ComponentManager $componentManager,
         \Magento\Framework\View\Layout $layout,
         \MageSuite\ContentConstructorAdmin\Model\ComponentsPool $componentsPool
     )
@@ -47,7 +41,6 @@ class Configurator extends \Magento\Framework\App\Action\Action
 
         $this->context = $context;
         $this->resultRawFactory = $resultRawFactory;
-        $this->componentManager = $componentManager;
         $this->pageFactory = $pageFactory;
         $this->layout = $layout;
         $this->componentsPool = $componentsPool;

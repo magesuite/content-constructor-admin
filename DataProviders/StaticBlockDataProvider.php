@@ -2,7 +2,7 @@
 
 namespace MageSuite\ContentConstructorAdmin\DataProviders;
 
-class StaticBlockDataProvider implements \MageSuite\ContentConstructor\Components\StaticBlock\DataProvider
+class StaticBlockDataProvider
 {
 
     /**
