@@ -15,6 +15,7 @@ import customElementTextarea from '../../_custom-elements/textarea';
 import customElementCheckbox from '../../_custom-elements/checkbox';
 import customElementRadio from '../../_custom-elements/radio';
 import customElementPosition from '../../_custom-elements/position-grid';
+import { getVideoTypeFromUrl, VideoType } from './_video/types';
 
 export const teaserPrototype: any = {
     image: {
@@ -31,6 +32,10 @@ export const teaserPrototype: any = {
             decoded: '',
             aspect_ratio: '',
         },
+    },
+    video: {
+        url: '',
+        type: '',
     },
     slogan: '',
     description: '',
@@ -104,7 +109,7 @@ export const teaserPrototype: any = {
             },
         },
     },
-    teaserType: ''
+    teaserType: '',
 };
 
 /**
@@ -125,7 +130,17 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'custom-element-radio': customElementRadio,
         'custom-element-position': customElementPosition,
     },
-    template: `<div class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}} cc-teaser-configurator--{{teaserType}}">
+    template: `
+    <div
+        class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}} cc-teaser-configurator--{{teaserType}}"
+        :class="{
+            'cc-teaser-configurator--actions-visible': videoInputVisible,
+            'cc-teaser-configurator--error': videoTeaserPlaceholderError && !configuration.image.raw
+        }"
+    >
+        <p class="cc-image-teaser-configurator__section-error" v-if="videoTeaserPlaceholderError && !configuration.image.raw">
+            {{ 'Please upload an image, too. It will be used as a placeholder and a fallback for your video' | translate }}
+        </p>
         <section class="cc-teaser-configurator__section">
             <div class="cc-teaser-configurator__content cc-teaser-configurator__content--{{currentImageUploader}}" id="cc-teaser-{{teaserIndex}}">
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--preview" :class="{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}">
@@ -136,6 +151,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--mobile" id="teaser-img-mobile-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
                         <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--tablet" id="teaser-img-tablet-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
                         <input type="hidden" class="cc-teaser-configurator__image-url" id="teaser-img-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}">
+                        <input type="hidden" class="cc-teaser-configurator__video-url" id="teaser-video-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}">
 
                         <div class="cc-teaser-configurator__device-tabs" v-if="supportBreakpointDedicatedImages">
                             <component-actions>
@@ -188,13 +204,23 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </button>
                                     </template>
                                     <button
+                                        title="{{ 'Open media uploader' | translate }}"
                                         class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
-                                        @click="getImageUploader(teaserIndex)"
+                                        @click="getMediaUploader(teaserIndex)"
                                     >
                                         <svg class="cc-action-button__icon cc-action-button__icon--size_100">
                                             <use xlink:href="#icon_upload-image"></use>
                                         </svg>
                                         {{ imageActionText | translate }}
+                                    </button>
+                                    <button
+                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-teaser-configurator__action-button cc-teaser-configurator__action-button--video"
+                                        @click="toggleVideoConfig(teaserIndex)"
+                                    >
+                                        <svg class="cc-action-button__icon">
+                                            <use xlink:href="#icon_video"></use>
+                                        </svg>
+                                        {{ "Video" | translate }}
                                     </button>
                                     <template v-if="callerComponentType !== 'products-grid'">
                                         <button
@@ -208,6 +234,45 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     </template>
                                 </template>
                             </component-actions>
+                            <div
+                                class="cc-teaser-configurator__video-link"
+                                :class="{
+                                    'cc-teaser-configurator__video-link--show': videoInputVisible
+                                }"
+                            >
+                                <div class="cc-input cc-input--type-addon cc-teaser-configurator__form-element">
+                                    <label for="cfg-teaser-{{teaserIndex}}-video-link" class="cc-input__label">{{ 'Video url' | translate }}:</label>
+                                    <input
+                                        v-model="videoInputValue"
+                                        type="text"
+                                        id="cfg-teaser-{{teaserIndex}}-video-link"
+                                        class="cc-input__input"
+                                        v-on:keyup.enter="setVideoData(teaserIndex)"
+                                    >
+                                        <span
+                                            title="{{ 'Submit url' | translate }}"
+                                            class="cc-input__addon cc-teaser-configurator__video-link-submit"
+                                            :class="{'cc-teaser-configurator__video-link-submit--confirmed': configuration.video && videoInputValue === configuration.video.url}"
+                                            @click="setVideoData(teaserIndex)"
+                                        >
+                                            <svg class="cc-input__addon-icon">
+                                                <use xlink:href="#check"></use>
+                                            </svg>
+                                        </span>
+                                        <span
+                                            title="{{ 'Open media uploader' | translate }}"
+                                            class="cc-input__addon cc-teaser-configurator__video-upload-trigger"
+                                            @click="getMediaUploader(teaserIndex,'video')"
+                                        >
+                                            <svg class="cc-input__addon-icon">
+                                                <use xlink:href="#icon_upload-file"></use>
+                                            </svg>
+                                        </span>
+                                </div>
+                                <div class="cc-teaser-configurator__video-support-info">
+                                    {{ 'Supported services:' | translate }} <b>YouTube</b>, <b>Vimeo</b>, <b>Facebook</b>, <b>{{ 'File (mp4)' | translate }}</b>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -280,7 +345,11 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     <div class="cc-input cc-input--type-addon cc-teaser-configurator__form-element">
                                         <label for="cfg-teaser-{{teaserIndex}}-cta-href" class="cc-input__label">{{ 'CTA target link' | translate }}:</label>
                                         <input type="text" class="cc-input__input cc-teaser-configurator__cta-target-link" v-model="configuration.cta.href" id="cfg-teaser-{{teaserIndex}}-cta-href">
-                                        <span class="cc-input__addon cc-teaser-configurator__widget-chooser-trigger" @click="openCtaTargetModal(teaserIndex)">
+                                        <span
+                                            title="{{ 'Open widget selector' | translate }}"
+                                            class="cc-input__addon cc-teaser-configurator__widget-chooser-trigger"
+                                            @click="openCtaTargetModal(teaserIndex)"
+                                        >
                                             <svg class="cc-input__addon-icon">
                                                 <use xlink:href="#icon_link"></use>
                                             </svg>
@@ -525,6 +594,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: '30',
         },
+        videoTeaserPlaceholderError: {
+            type: Boolean,
+            default: false,
+        },
     },
     computed: {
         /**
@@ -532,13 +605,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * Backend change is required, for now if teaser is called from product grid
          * then it uses teasers instead of items (as other components do)
          */
-        configuration: function (): object {
+        configuration: function(): object {
             if (this.callerComponentType === 'magento-product-grid-teasers') {
                 return this.parentConfiguration.teasers[this.teaserIndex];
             }
             return this.parentConfiguration.items[this.teaserIndex];
         },
-        imageActionText: function (): string {
+        imageActionText: function(): string {
             if (this.currentImageUploader === 'mobile') {
                 return this.configuration.image.mobile.raw ? 'Change' : 'Upload';
             } else if (this.currentImageUploader === 'tablet') {
@@ -547,7 +620,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 return this.configuration.image.raw ? 'Change' : 'Upload';
             }
         },
-        mirrorImageTextOutput: function (): string {
+        mirrorImageTextOutput: function(): string {
             return this.configuration.optimizers.mirror_image ? 'Yes' : 'No';
         },
         /**
@@ -555,7 +628,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * Backend change is required, for now if teaser is called from product grid
          * then it uses teasers instead of items (as other components do)
          */
-        parentConfigurationVariation: function (): object {
+        parentConfigurationVariation: function(): object {
             if (this.callerComponentType === 'magento-product-grid-teasers') {
                 return this.parentConfiguration.teasers;
             } else {
@@ -566,7 +639,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
          * Count rows if 'position' tab is available in magento product grid teasers and products grid
          * @return {number} number of rows or null if not available
          */
-        rowsCount: function (): number {
+        rowsCount: function(): number {
             if (this.callerComponentType === 'magento-product-grid-teasers') {
                 return this.getCurrentFErowsCount();
             } else if (this.callerComponentType === 'products-grid') {
@@ -575,8 +648,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 return null;
             }
         },
-
-        supportBreakpointDedicatedImages: function(): boolean { 
+        supportBreakpointDedicatedImages: function(): boolean {
             return this.callerComponentType === 'mosaic' && this.ccConfig.mosaic.support_breakpoint_dedicated_images;
         },
     },
@@ -584,6 +656,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
         return {
             currentTab: 0,
             currentImageUploader: 'desktop',
+            videoInputVisible: false,
+            videoInputValue: '',
         };
     },
     filters: {
@@ -662,8 +736,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
 
         setOptimizer(optimizer: any): void {
-            for (let opt in this.configuration.optimizers.scenarios) {
-                this.configuration.optimizers.scenarios[opt].enabled = false;
+            for (const opt in this.configuration.optimizers.scenarios) {
+                if (this.configuration.optimizers.scenarios[opt]) {
+                    this.configuration.optimizers.scenarios[opt].enabled = false;
+                }
             }
 
             optimizer.enabled = true;
@@ -754,14 +830,16 @@ const teaserConfigurator: vuejs.ComponentOption = {
             return virtualLength;
         },
 
-        /* Opens M2's built-in image manager modal.
-         * Manages all images: image upload from hdd, select image that was already uploaded to server.
-         * @param index {number} - index of image of image teaser.
-         */
-        getImageUploader(index: number): void {
-            const url: string = this.currentImageUploader === 'desktop' ?
-                                `${this.uploaderBaseUrl}target_element_id/teaser-img-${index}/` :
-                                `${this.uploaderBaseUrl}target_element_id/teaser-img-${this.currentImageUploader}-${index}/`;
+        getMediaUploader(index: number, type?: 'video'): void {
+            let url: string;
+
+            if (type === 'video') {
+                url = `${this.uploaderBaseUrl}target_element_id/teaser-video-${index}/`;
+            } else {
+                url = this.currentImageUploader === 'desktop' ?
+                    `${this.uploaderBaseUrl}target_element_id/teaser-img-${index}/` :
+                    `${this.uploaderBaseUrl}target_element_id/teaser-img-${this.currentImageUploader}-${index}/`;
+            }
 
             MediabrowserUtility.openDialog(
                 url,
@@ -773,7 +851,18 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 }
             );
         },
+        onVideoFileUrlChange(event: $.Event, teaserIndex: number): void {
+            const rawValue: string = event.target.value;
+            const encodedImage: string = rawValue.match(
+                '___directive/([a-zA-Z0-9]*)'
+            )[1];
+            const decoded: string = Base64
+                ? Base64.decode(encodedImage)
+                : window.atob(encodedImage);
 
+            this.videoInputValue = decoded;
+            this.setVideoData(teaserIndex);
+        },
         onRawImageUrlChange(event: $.Event): void {
             const rawValue: string = event.target.value;
             const encodedImage: string = rawValue.match(
@@ -818,10 +907,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     this.$set('configuration.image.aspect_ratio', aspectRatio);
                 }
 
-                /** 
-                 * If Mosaic component has support for breakpoint-dedicated pics and image is uploaded to any of breakpoint and 
+                /**
+                 * If Mosaic component has support for breakpoint-dedicated pics and image is uploaded to any of breakpoint and
                  * image was not uploaded either for other breakpoints, fill missing breakpoints with just uploaded image data.
-                 **/
+                 */
                 if (this.supportBreakpointDedicatedImages) {
                     ['mobile', 'tablet', 'desktop'].forEach((item: string): void => {
                         if (item === 'desktop') {
@@ -966,7 +1055,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     .removeClass('cc-teaser-configurator--animating')
                     .css('transform', '');
 
-                this.parentConfiguration.items.reverse()
+                this.parentConfiguration.items.reverse();
                 this.onChange();
             }, 400);
         },
@@ -1044,7 +1133,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     ),
                     actions: {
                         confirm(): void {
-                            if(component.callerComponentType === 'magento-product-grid-teasers') {
+                            if (component.callerComponentType === 'magento-product-grid-teasers') {
                                 component.parentConfiguration.teasers.splice(index, 1);
                                 component.getCurrentFErowsCount();
                                 component.fixOverflowedRowsSetup();
@@ -1064,7 +1153,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         checkImageSizes(): boolean {
 
             // Do not open alert if there is another alert shown or Mosaic component is a caller one
-            if($('.modal-popup.confirm._show').length || this.callerComponentType === 'mosaic') {
+            if ($('.modal-popup.confirm._show').length || this.callerComponentType === 'mosaic') {
                 return;
             }
 
@@ -1090,9 +1179,25 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     return false;
                 }
             }
+
+            for (let i: number = 0; i < itemsToCheck.length; i++) {
+                if (
+                    itemsToCheck[i].image.aspect_ratio !==
+                    itemsToCheck[0].image.aspect_ratio
+                ) {
+                    alert({
+                        title: $.mage.__('Warning'),
+                        content: $.mage.__(
+                            'Images you have uploaded have different aspect ratio. This may cause this component to display wrong. We recommend to keep the same aspect ratio for all uploaded images.'
+                        ),
+                    });
+                    return false;
+                }
+            }
             return true;
         },
-        /* Returns greatest common divisor for 2 numbers
+        /**
+         * Returns greatest common divisor for 2 numbers
          * @param a {number}
          * @param b {number}
          * @return {number} - greatest common divisor
@@ -1104,7 +1209,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
             return this.getGreatestCommonDivisor(b, a % b);
         },
-        /* Returns Aspect ratio for 2 numbers based on GDC algoritm (greatest common divisor)
+        /**
+         * Returns Aspect ratio for 2 numbers based on GDC algoritm (greatest common divisor)
          * @param a {number}
          * @param b {number}
          * @return {number} - greatest common divisor
@@ -1114,18 +1220,73 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
             return `${a / c}:${b / c}`;
         },
-
         handleJqEvents(): void {
             $(`.cc-teaser-configurator__image-url[data-teaser-index="${this.teaserIndex}"]`)
                 .off('change')
                 .on(
-                    'change', 
-                    this.onRawImageUrlChange,
+                    'change',
+                    this.onRawImageUrlChange
+                );
+
+            $(`.cc-teaser-configurator__video-url[data-teaser-index="${this.teaserIndex}"]`)
+                .off('change')
+                .on(
+                    'change',
+                    (event: $.event) => { this.onVideoFileUrlChange(event, this.teaserIndex); }
                 );
         },
-
         switchUploaderBreakpoint(deviceType: string): void {
             this.currentImageUploader = deviceType;
+        },
+        /**
+         * Shows/hides video configuration flyout.
+         * Focuses input on show and resetores default input on close.
+         * @param teaserIndex
+         */
+        toggleVideoConfig(teaserIndex: number): void {
+            this.videoInputVisible = !this.videoInputVisible;
+            if (this.videoInputVisible) {
+                document.getElementById(`cfg-teaser-${teaserIndex}-video-link`).focus();
+            }
+        },
+        /**
+         * Based on provided url, saves video type and url
+         * Supports short urls as well.
+         * @param teaserIndex {number}
+         */
+        setVideoData(teaserIndex: number): void {
+            if (this.videoInputValue.length) {
+                const videoType: VideoType = getVideoTypeFromUrl(this.videoInputValue);
+
+                if (videoType) {
+                    this.configuration.video = {
+                        url: this.videoInputValue,
+                        type: videoType,
+                    };
+                    this.toggleVideoConfig(teaserIndex);
+                } else {
+                    alert({
+                        title: $.mage.__('Warning'),
+                        content: `
+                            ${$.mage.__('Please make sure that provided URL is correct') } \n
+                        `,
+                    });
+                }
+            } else if (this.configuration.video && this.configuration.video.url.length) {
+                this.clearVideoData();
+                this.toggleVideoConfig(teaserIndex);
+            } else {
+                this.toggleVideoConfig(teaserIndex);
+            }
+        },
+        /**
+         * Clears video configuration
+         */
+        clearVideoData(): void {
+            this.configuration.video = {
+                url: '',
+                type: '',
+            };
         },
     },
     ready(): void {
@@ -1133,7 +1294,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
         // get aspect ratio for images from hero image-teaser (old products grid)
         if (this.callerComponentType === 'products-grid') {
-            if(!this.configuration.image.aspect_ratio) {
+            if (!this.configuration.image.aspect_ratio) {
                 const tempImg = new Image();
                 tempImg.src = this.configuration.image.raw;
                 tempImg.onload = () => {
@@ -1141,7 +1302,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         tempImg.width,
                         tempImg.height
                     );
-                }
+                };
             }
         }
 
@@ -1149,11 +1310,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
             this.fixOverflowedRowsSetup();
         }
 
-        if(!this.configuration.teaserType) {
+        if (!this.configuration.teaserType) {
             this.configuration.teaserType = this.teaserType;
         }
 
         $(`#cc-image-teaser-item-${this.teaserIndex} .cc-teaser-configurator`).toggleClass('cc-teaser-configurator--text-only', this.configuration.teaserType === 'text-only');
+
+        if (this.configuration.video) {
+            this.videoInputValue = this.configuration.video.url;
+        }
     },
 };
 

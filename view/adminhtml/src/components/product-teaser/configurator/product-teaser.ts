@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
- 
+
 import componentConfigurator from '../../_component-configurator/component-configurator';
- 
+
 /**
  * Product teaser configurator component.
  * This component is responsible for displaying product teaser configuration modal
