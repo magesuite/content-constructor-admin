@@ -57,7 +57,6 @@
 <script>
     function previewContentConstructor(json) {
         requirejs(['jquery'], function ($) {
-            debugger;
             var url = "<?= $block->getBaseUrl() ?>content-constructor/preview/view";
             var getTokenUrl = "<?= $block->getPreviewTokenUrl() ?>";
             jQuery.ajax({

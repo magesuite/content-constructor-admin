@@ -60,6 +60,30 @@
         object-fit: contain;
     }
 
+    &__video-indicator {
+        z-index: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 6rem;
+        height: 6rem;
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.7);
+        border: 1px dashed #cac3b3;
+        opacity: 0.7;
+    }
+
+    &__video-icon {
+        width: 5rem;
+        height: 5rem;
+        color: #333;
+    }
+
     &__image-placeholder {
         width: 8rem;
         height: 6.6rem;

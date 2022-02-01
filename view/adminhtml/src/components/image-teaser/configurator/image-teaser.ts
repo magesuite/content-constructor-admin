@@ -153,7 +153,18 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                         </button>
                     </component-adder>
 
-                    <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="$index" :configuration="items[$index]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="image-teaser"></teaser-configurator>
+                    <teaser-configurator
+                        :class="cc-teaser-configurator--image-teaser"
+                        :teaser-index="$index"
+                        :configuration="items[$index]"
+                        :parent-configuration="configuration"
+                        :uploader-base-url="uploaderBaseUrl"
+                        :image-endpoint="imageEndpoint"
+                        :admin-prefix="adminPrefix"
+                        :cc-config="ccConfig"
+                        :caller-component-type="image-teaser"
+                        :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf($index) != -1"
+                    ></teaser-configurator>
 
                     <component-adder class="cc-component-adder cc-component-adder--last" v-if="configuration.items.length">
                         <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-image-teaser-configurator__item-action-button" @click="createTeaserItem( $index + 1 )">
@@ -168,15 +179,16 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
     </div>`,
     data(): any {
         return {
+            invalidVideoPlaceholderTeaserIndexes: [],
             scenarioOptions: {
                 // Teaser width scenario elements.
                 teaserWidth: {
-                    container: {
+                    'container': {
                         name: 'Content width',
                         iconId: 'tw_content-width',
                         disabled: false,
                     },
-                    window: {
+                    'window': {
                         name: 'Browser width',
                         iconId: 'tw_window-width',
                         disabled: false,
@@ -194,25 +206,25 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                 },
                 // Desktop layout scenario elements.
                 desktopLayout: {
-                    '1': {
+                    1: {
                         name: '1 in row',
                         iconId: 'dl_1',
                         disabled: false,
                         teasersNum: 1,
                     },
-                    '2': {
+                    2: {
                         name: '2 in row',
                         iconId: 'dl_2',
                         disabled: false,
                         teasersNum: 2,
                     },
-                    '3': {
+                    3: {
                         name: '3 in row',
                         iconId: 'dl_3',
                         disabled: false,
                         teasersNum: 3,
                     },
-                    '4': {
+                    4: {
                         name: '4 in row',
                         iconId: 'dl_4',
                         disabled: false,
@@ -364,7 +376,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         },
     },
     computed: {
-        imageTeasersContentPositions: function (): object {
+        imageTeasersContentPositions: function(): object {
             const data: object = this.ccConfig.image_teasers_content_positions;
             return Object.keys(data).map(key => (data as any)[key]);
         },
@@ -374,7 +386,9 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
+            this.configuration.isError = false;
             this._validateOptionsSet();
+            this._validateVideoPlaceholders();
             this._collectTeasersCssClasses();
             this.onSave();
         },
@@ -607,11 +621,11 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
 
         _collectTeasersCssClasses(): void {
             if (this.configuration.items != null) {
-                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+                const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig.teaser.tabs);
 
                 this.configuration.items.forEach(
                     (teaser: any, index: number) => {
-                        const cssClasses: Array<string> = [];
+                        const cssClasses: string[] = [];
 
                         cssClassFields.forEach(
                             (model: string) => {
@@ -634,14 +648,11 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          * This method takes defaults of 'configuration' and merges is with exising configuration object
          */
         updateConfigurationProp(): void {
-            const propDefaults: Object = this.$options.props.configuration.default();
+            const propDefaults: object = this.$options.props.configuration.default();
             this.configuration = $.extend({}, propDefaults, this.configuration, true);
         },
-
         _validateOptionsSet(): void {
-            this.configuration.isError = false;
-
-            for (let scenario of Object.keys(this.configuration.scenario)) {
+            for (const scenario of Object.keys(this.configuration.scenario)) {
                 if (scenario !== 'numberOfSlides') {
                     this.$delete(`configuration.scenario.${scenario}`, 'error');
 
@@ -651,6 +662,19 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                     }
                 }
             }
+        },
+        _validateVideoPlaceholders(): void {
+            this.invalidVideoPlaceholderTeaserIndexes = [];
+            this.configuration.items.forEach((teaser: any, index: number) => {
+                if (
+                    teaser.video &&
+                    teaser.video.url.length &&
+                    !teaser.image.raw
+                ) {
+                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
+                    this.configuration.isError = true;
+                }
+            });
         },
     },
     ready(): void {

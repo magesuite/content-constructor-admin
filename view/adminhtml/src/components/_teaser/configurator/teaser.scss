@@ -18,12 +18,11 @@
     &--text-only {
         .cc-component-actions__button--upload-image,
         .cc-teaser-configurator__tab-section--optimizer,
-        .cc-teaser-configurator__switcher--mirror-image, 
+        .cc-teaser-configurator__switcher--mirror-image,
         .cc-teaser-preview__image-placeholder {
             display: none;
         }
     }
-
 
     &--column {
         height: 100%;
@@ -32,6 +31,10 @@
         .cc-component-actions__button--up {
             transform: rotate(-90deg);
         }
+    }
+
+    &--error {
+        border: 1px dashed #ff0000;
     }
 
     &:hover {
@@ -64,6 +67,19 @@
 
     &__action-button {
         font-size: 1.45rem !important;
+
+        &--video {
+            svg {
+                margin-right: 0.1rem;
+                color: #333;
+            }
+
+            &:hover {
+                svg {
+                    color: #007bdb;
+                }
+            }
+        }
     }
 
     &__col {
@@ -247,10 +263,82 @@
         backface-visibility: hidden;
         will-change: unset, transform;
         transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+        overflow: hidden;
+    }
+
+    &__video-link {
+        position: relative;
+        width: 100%;
+        top: -10rem;
+        will-change: top;
+        transition: top 0.25s ease-in-out;
+        z-index: -1;
+        overflow: hidden;
+
+        &--show {
+            top: 0;
+        }
+
+        .cc-input {
+            padding: 1.2rem 1rem 1rem;
+            background: #ffffff;
+
+            &__input {
+                padding-right: 7rem;
+            }
+        }
+    }
+
+    &__video-link-submit {
+        height: 31px !important;
+        bottom: calc(1rem + 1px) !important;
+        right: 4.5rem !important;
+
+        &:hover {
+            background-color: #e4f7fe;
+        }
+
+        &--confirmed {
+            background-color: transparent !important;
+            border: none !important;
+            cursor: default;
+
+            svg {
+                fill: #0072ff !important;
+            }
+        }
+    }
+
+    &__video-upload-trigger {
+        height: 31px !important;
+        bottom: calc(1rem + 1px) !important;
+        right: calc(1rem + 1px) !important;
+
+        &:hover {
+            background-color: #e4f7fe;
+        }
+
+        .cc-input__addon-icon {
+            height: 51%;
+        }
+    }
+
+    &__video-support-info {
+        background: #fff;
+        padding: 0 1rem 1rem;
+        font-size: 1.2rem;
     }
 
     &__device-tabs {
         top: 1.5rem;
+    }
+
+    &__video-indicator {
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        width: 6rem;
+        height: 6rem;
     }
 
     &__image {
@@ -287,7 +375,8 @@
                 opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
         }
 
-        &:hover {
+        &:hover,
+        #{$root}--actions-visible & {
             &:before {
                 transform: scale(1);
                 opacity: 1;
@@ -296,7 +385,7 @@
             #{$root}__actions,
             #{$root}__device-tabs {
                 opacity: 1;
-                transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 20%, 0);
             }
         }
     }

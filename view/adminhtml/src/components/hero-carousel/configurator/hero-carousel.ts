@@ -44,7 +44,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                 </div>
             </div>
         </section>
-        
+
         <section class="cc-hero-carousel-configurator__section">
             <h3 class="cc-hero-carousel-configurator__subtitle">Mobile Devices Scenario</h3>
             <div class="cc-hero-carousel-configurator__scenario-options">
@@ -99,6 +99,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                     :admin-prefix="adminPrefix"
                     :cc-config="ccConfig"
                     :caller-component-type="hero-carousel"
+                    :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf($index) != -1"
                 ></teaser-configurator>
 
                 <component-adder class="cc-component-adder cc-component-adder--last">
@@ -170,6 +171,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
     },
     data(): any {
         return {
+            invalidVideoPlaceholderTeaserIndexes: [],
             imageUploadedText: $t('Change'),
             noImageUploadedText: $t('Upload'),
             scenarioOptions: {
@@ -182,7 +184,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                     slider: {
                         name: 'Slider',
                         iconId: 'ml_slider',
-                    }
+                    },
                 },
             },
         };
@@ -192,6 +194,8 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
+            this.configuration.isError = false;
+            this._validateVideoPlaceholders();
             this.onSave();
         },
     },
@@ -290,6 +294,19 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                 };
             }
         },
+        _validateVideoPlaceholders(): void {
+            this.invalidVideoPlaceholderTeaserIndexes = [];
+            this.configuration.items.forEach((teaser: any, index: number) => {
+                if (
+                    teaser.video &&
+                    teaser.video.url.length &&
+                    !teaser.image.raw
+                ) {
+                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
+                    this.configuration.isError = true;
+                }
+            });
+        },
     },
     ready(): void {
         if (!this.configuration.mobileDisplayVariant.id) {
@@ -298,7 +315,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
     },
     created(): void {
         this.mapLegacyConfiguration();
-    }
+    },
 };
 
 export default heroCarouselConfigurator;
