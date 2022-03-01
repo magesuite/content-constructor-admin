@@ -162,7 +162,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                         :image-endpoint="imageEndpoint"
                         :admin-prefix="adminPrefix"
                         :cc-config="ccConfig"
-                        :caller-component-type="image-teaser"
+                        :caller-component-type="callerComponentType"
                         :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf($index) != -1"
                     ></teaser-configurator>
 
@@ -366,6 +366,11 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         adminPrefix: {
             type: String,
             default: 'admin',
+        },
+        /* Caller component type */
+        callerComponentType: {
+            type: String,
+            default: 'image-teaser'
         },
         /* Set prop with component name in order to
          * pass it to `component-configurator` methods

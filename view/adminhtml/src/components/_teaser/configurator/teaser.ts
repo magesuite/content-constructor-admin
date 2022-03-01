@@ -205,7 +205,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     </template>
                                     <button
                                         title="{{ 'Open media uploader' | translate }}"
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image  cc-teaser-configurator__action-button"
+                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-image cc-teaser-configurator__action-button"
                                         @click="getMediaUploader(teaserIndex)"
                                     >
                                         <svg class="cc-action-button__icon cc-action-button__icon--size_100">
@@ -213,15 +213,17 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </svg>
                                         {{ imageActionText | translate }}
                                     </button>
-                                    <button
-                                        class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-teaser-configurator__action-button cc-teaser-configurator__action-button--video"
-                                        @click="toggleVideoConfig(teaserIndex)"
-                                    >
-                                        <svg class="cc-action-button__icon">
-                                            <use xlink:href="#icon_video"></use>
-                                        </svg>
-                                        {{ "Video" | translate }}
-                                    </button>
+                                    <template v-if="callerComponentType !== 'icon'">
+                                        <button
+                                            class="cc-action-button cc-action-button--look_default cc-action-button--type_icon cc-component-actions__button cc-component-actions__button--upload-video cc-teaser-configurator__action-button cc-teaser-configurator__action-button--video"
+                                            @click="toggleVideoConfig(teaserIndex)"
+                                        >
+                                            <svg class="cc-action-button__icon">
+                                                <use xlink:href="#icon_video"></use>
+                                            </svg>
+                                            {{ "Video" | translate }}
+                                        </button>
+                                    </template>
                                     <template v-if="callerComponentType !== 'products-grid'">
                                         <button
                                             class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only cc-component-actions__button cc-component-actions__button--delete cc-teaser-configurator__action-button"

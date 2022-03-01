@@ -7,6 +7,13 @@ import imageTeaserConfigurator from '../../image-teaser/configurator/image-tease
  */
 const iconConfigurator: vuejs.ComponentOption = {
     extends: imageTeaserConfigurator,
+    props: {
+        /* Caller component type */
+        callerComponentType: {
+            type: String,
+            default: 'icon'
+        }
+    },
     ready(): void {
         this.scenarioOptions = {
             // Teaser width scenario elements.
