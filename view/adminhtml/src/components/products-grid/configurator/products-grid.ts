@@ -210,7 +210,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
-        <teaser-configurator :configuration="configuration.items" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'products-grid'" :products-per-page="productsPerPage" v-show="configuration.useTeaser"></teaser-configurator>
+        <teaser-configurator :configuration="configuration.items" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'products-grid'" :products-per-page="productsPerPage" v-show="configuration.useTeaser" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(0) != -1"></teaser-configurator>
 
     </div>`,
     props: {
@@ -279,6 +279,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
     },
     data(): Object {
         return {
+            invalidVideoPlaceholderTeaserIndexes: [],
             configuration: this.getInitialConfiguration(),
             categoryPicker: undefined,
             tmpConfiguration: {
@@ -371,10 +372,12 @@ const productsGridConfigurator: vuejs.ComponentOption = {
          * Listen on save event from Content Configurator component.
          */
         'component-configurator__save'(): void {
-            if (this.configuration.class_overrides.dataProvider === '') {
+            if (this.configuration.class_overrides && this.configuration.class_overrides.dataProvider === '') {
                 delete this.configuration.class_overrides;
             }
 
+            this.configuration.isError = false;
+            this._validateVideoPlaceholders();
             this.setProductsLimit();
             this._collectTeasersCssClasses();
             this.onSave();
@@ -566,6 +569,19 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                     }
                 );
             }
+        },
+        _validateVideoPlaceholders(): void {
+            this.invalidVideoPlaceholderTeaserIndexes = [];
+            this.configuration.items.forEach((teaser: any, index: number) => {
+                if (
+                    teaser.video &&
+                    teaser.video.url.length &&
+                    !teaser.image.raw
+                ) {
+                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
+                    this.configuration.isError = true;
+                }
+            });
         },
     },
     ready(): void {

@@ -38,7 +38,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                     </button>
                 </component-adder>
 
-                <teaser-configurator :teaser-index="$index" :configuration="item[$index]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'magento-product-grid-teasers'" :products-per-page="productsPerPage"></teaser-configurator>
+                <teaser-configurator :teaser-index="$index" :configuration="item[$index]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'magento-product-grid-teasers'" :products-per-page="productsPerPage" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf($index) != -1"></teaser-configurator>
 
                 <component-adder class="cc-component-adder cc-component-adder--last">
                     <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button | cc-magento-product-grid-teasers-configurator__item-action-button" @click="createNewTeaser( $index + 1 )">
@@ -103,6 +103,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
     },
     data(): any {
         return {
+            invalidVideoPlaceholderTeaserIndexes: [],
             configuration: this.getInitialConfiguration(),
         };
     },
@@ -112,6 +113,8 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          */
         'component-configurator__save'(): void {
             // this.cleanupConfiguration();
+            this.configuration.isError = false;
+            this._validateVideoPlaceholders();
             this._collectTeasersCssClasses();
             this._collectComponentCssClasses();
             this.generateTeasersConfig();
@@ -300,6 +303,19 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
 
                 this.configuration.json.push(teaser);
             }
+        },
+        _validateVideoPlaceholders(): void {
+            this.invalidVideoPlaceholderTeaserIndexes = [];
+            this.configuration.teasers.forEach((teaser: any, index: number) => {
+                if (
+                    teaser.video &&
+                    teaser.video.url.length &&
+                    !teaser.image.raw
+                ) {
+                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
+                    this.configuration.isError = true;
+                }
+            });
         },
     },
 };

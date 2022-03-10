@@ -6,7 +6,7 @@
             display: none;
         }
     }
-    
+
 
     &__section {
         margin: 20px 0 0;
@@ -53,6 +53,7 @@
             font-size: 1.2rem;
             text-align: center;
             font-weight: bold;
+            flex-shrink: 0;
         }
     }
 
