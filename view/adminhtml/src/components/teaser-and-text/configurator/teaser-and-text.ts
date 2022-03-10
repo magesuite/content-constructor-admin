@@ -70,14 +70,14 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
                 </div>
             </div>
         </section>
-        
+
         <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--2-columns">
             <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-0">
-                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" configurator-layout="column"></teaser-configurator>
+                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" configurator-layout="column" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(0) != -1"></teaser-configurator>
             </div>
-            <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-1">    
-                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" configurator-layout="column" :teaser-type="'text-only'"></teaser-configurator>
-            </div>            
+            <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-1">
+                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" configurator-layout="column" :teaser-type="'text-only'" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(1) != -1"></teaser-configurator>
+            </div>
         </section>
     </div>`,
     props: {
@@ -99,6 +99,21 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
                     },
                 };
             },
+        },
+    },
+    data(): any {
+        return {
+            invalidVideoPlaceholderTeaserIndexes: []
+        };
+    },
+    events: {
+        /**
+        * Listen on save event from Content Configurator component.
+        */
+        'component-configurator__save'(): void {
+            this.configuration.isError = false;
+            this._validateVideoPlaceholders();
+            this.onSave();
         },
     },
     ready(): void {
@@ -139,6 +154,19 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
     methods: {
         _validateOptionsSet(): void {
             return;
+        },
+        _validateVideoPlaceholders(): void {
+            this.invalidVideoPlaceholderTeaserIndexes = [];
+            this.configuration.items.forEach((teaser: any, index: number) => {
+                if (
+                    teaser.video &&
+                    teaser.video.url.length &&
+                    !teaser.image.raw
+                ) {
+                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
+                    this.configuration.isError = true;
+                }
+            });
         },
     },
 };

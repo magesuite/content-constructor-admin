@@ -94,9 +94,9 @@ const mosaicConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
-        <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'mosaic'"></teaser-configurator>
+        <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'mosaic'" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(0) != -1"></teaser-configurator>
 
-        <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'mosaic'"></teaser-configurator>
+        <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'mosaic'" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(1) != -1"></teaser-configurator>
 
     </div>`,
     props: {
@@ -133,6 +133,11 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                 };
             },
         },
+    },
+    data(): any {
+        return {
+            invalidVideoPlaceholderTeaserIndexes: []
+        };
     },
     ready(): void {
         this.scenarioOptions = {
@@ -186,6 +191,14 @@ const mosaicConfigurator: vuejs.ComponentOption = {
         }
     },
     events: {
+         /**
+         * Listen on save event from Content Configurator component.
+         */
+        'component-configurator__save'(): void {
+            this.configuration.isError = false;
+            this._validateVideoPlaceholders();
+            this.onSave();
+        },
         'teaser__deleteItem'(index: number): void {
             this.deleteTeaserItem(index);
         },
@@ -210,6 +223,19 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                         );
                     },
                 },
+            });
+        },
+        _validateVideoPlaceholders(): void {
+            this.invalidVideoPlaceholderTeaserIndexes = [];
+            this.configuration.items.forEach((teaser: any, index: number) => {
+                if (
+                    teaser.video &&
+                    teaser.video.url.length &&
+                    !teaser.image.raw
+                ) {
+                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
+                    this.configuration.isError = true;
+                }
             });
         },
     }
