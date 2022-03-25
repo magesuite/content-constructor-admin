@@ -134,11 +134,6 @@ const mosaicConfigurator: vuejs.ComponentOption = {
             },
         },
     },
-    data(): any {
-        return {
-            invalidVideoPlaceholderTeaserIndexes: []
-        };
-    },
     ready(): void {
         this.scenarioOptions = {
             // Teaser width scenario elements
@@ -191,14 +186,6 @@ const mosaicConfigurator: vuejs.ComponentOption = {
         }
     },
     events: {
-         /**
-         * Listen on save event from Content Configurator component.
-         */
-        'component-configurator__save'(): void {
-            this.configuration.isError = false;
-            this._validateVideoPlaceholders();
-            this.onSave();
-        },
         'teaser__deleteItem'(index: number): void {
             this.deleteTeaserItem(index);
         },
@@ -224,20 +211,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                     },
                 },
             });
-        },
-        _validateVideoPlaceholders(): void {
-            this.invalidVideoPlaceholderTeaserIndexes = [];
-            this.configuration.items.forEach((teaser: any, index: number) => {
-                if (
-                    teaser.video &&
-                    teaser.video.url.length &&
-                    !teaser.image.raw
-                ) {
-                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
-                    this.configuration.isError = true;
-                }
-            });
-        },
+        }
     }
 };
 
