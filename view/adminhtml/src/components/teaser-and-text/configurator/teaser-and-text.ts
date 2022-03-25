@@ -106,16 +106,6 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
             invalidVideoPlaceholderTeaserIndexes: []
         };
     },
-    events: {
-        /**
-        * Listen on save event from Content Configurator component.
-        */
-        'component-configurator__save'(): void {
-            this.configuration.isError = false;
-            this._validateVideoPlaceholders();
-            this.onSave();
-        },
-    },
     ready(): void {
         this.scenarioOptions = {
             // Teaser width scenario elements.
@@ -154,19 +144,6 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
     methods: {
         _validateOptionsSet(): void {
             return;
-        },
-        _validateVideoPlaceholders(): void {
-            this.invalidVideoPlaceholderTeaserIndexes = [];
-            this.configuration.items.forEach((teaser: any, index: number) => {
-                if (
-                    teaser.video &&
-                    teaser.video.url.length &&
-                    !teaser.image.raw
-                ) {
-                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
-                    this.configuration.isError = true;
-                }
-            });
         },
     },
 };

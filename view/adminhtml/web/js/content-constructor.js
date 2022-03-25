@@ -1000,7 +1000,7 @@ var staticBlockPreview = {
 };
 
 /**
- * Icon preview component.
+ * Teaser & Text preview component.
  * This component is responsible for displaying preview of icon component in Layout Builder (admin panel)
  * @type {vuejs.ComponentOption} Vue component object.
  */
@@ -6364,16 +6364,6 @@ var teaserAndTextConfigurator = {
             invalidVideoPlaceholderTeaserIndexes: []
         };
     },
-    events: {
-        /**
-        * Listen on save event from Content Configurator component.
-        */
-        'component-configurator__save': function () {
-            this.configuration.isError = false;
-            this._validateVideoPlaceholders();
-            this.onSave();
-        },
-    },
     ready: function () {
         this.scenarioOptions = {
             // Teaser width scenario elements.
@@ -6410,18 +6400,6 @@ var teaserAndTextConfigurator = {
     methods: {
         _validateOptionsSet: function () {
             return;
-        },
-        _validateVideoPlaceholders: function () {
-            var _this = this;
-            this.invalidVideoPlaceholderTeaserIndexes = [];
-            this.configuration.items.forEach(function (teaser, index) {
-                if (teaser.video &&
-                    teaser.video.url.length &&
-                    !teaser.image.raw) {
-                    _this.invalidVideoPlaceholderTeaserIndexes.push(index);
-                    _this.configuration.isError = true;
-                }
-            });
         },
     },
 };
@@ -6550,11 +6528,6 @@ var mosaicConfigurator = {
             },
         },
     },
-    data: function () {
-        return {
-            invalidVideoPlaceholderTeaserIndexes: []
-        };
-    },
     ready: function () {
         this.scenarioOptions = {
             // Teaser width scenario elements
@@ -6604,15 +6577,6 @@ var mosaicConfigurator = {
         };
     },
     events: {
-        /**
-        * Listen on save event from Content Configurator component.
-        */
-        'component-configurator__save': function () {
-            // this.cleanupConfiguration();
-            this.configuration.isError = false;
-            this._validateVideoPlaceholders();
-            this.onSave();
-        },
         'teaser__deleteItem': function (index) {
             this.deleteTeaserItem(index);
         },
@@ -6632,19 +6596,7 @@ var mosaicConfigurator = {
                     },
                 },
             });
-        },
-        _validateVideoPlaceholders: function () {
-            var _this = this;
-            this.invalidVideoPlaceholderTeaserIndexes = [];
-            this.configuration.items.forEach(function (teaser, index) {
-                if (teaser.video &&
-                    teaser.video.url.length &&
-                    !teaser.image.raw) {
-                    _this.invalidVideoPlaceholderTeaserIndexes.push(index);
-                    _this.configuration.isError = true;
-                }
-            });
-        },
+        }
     }
 };
 
