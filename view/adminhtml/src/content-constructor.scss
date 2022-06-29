@@ -6,12 +6,12 @@
 @import './utils/component-adder/component-adder';
 @import './utils/component-display-controller/component-display-controller';
 @import './utils/component-placeholder/component-placeholder';
-@import './utils/position-grid/position-grid';
 
 // Core essentials
 @import './components/_layout-builder/layout-builder';
 @import './components/_component-picker/component-picker';
 @import './components/_teaser/configurator/teaser';
+@import './components/_custom-fields/custom-fields';
 
 // Configurators
 @import './components/button/configurator/button';
@@ -31,9 +31,6 @@
 @import './components/static-block/configurator/static-block';
 @import './components/accordion/configurator/accordion';
 @import './components/product-teaser/configurator/product-teaser';
-
-// Custom fields
-
 
 .content-constructor {
     max-width: 1280px;

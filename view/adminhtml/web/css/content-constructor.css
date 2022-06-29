@@ -379,11 +379,6 @@
       width: 100%;
       height: 100%;
       z-index: -1; }
-  .cc-input--type-daterange .cc-input__label:nth-of-type(1) {
-    width: 100%;
-    margin-bottom: 1rem; }
-  .cc-input--type-daterange .cc-input__label:nth-of-type(3) {
-    margin-top: 1rem; }
   .cc-input input[type='range'] {
     /* removes default webkit styles */
     -webkit-appearance: none;
@@ -452,52 +447,6 @@
       background-color: transparent; }
     .cc-input input[type='range']:focus::-ms-fill-upper {
       background-color: transparent; }
-
-.cc-custom-fields {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  width: calc(100% + 40px);
-  margin: -20px; }
-  .cc-custom-fields__form-group {
-    width: calc(100% / 3);
-    padding: 20px; }
-  .cc-custom-fields .cc-input {
-    padding: 0; }
-    .cc-custom-fields .cc-input__select {
-      width: 100%;
-      padding-top: 0.6rem;
-      padding-bottom: 0.6rem; }
-    .cc-custom-fields .cc-input--type-radio .cc-input__label {
-      font-weight: normal; }
-    .cc-custom-fields .cc-input .admin__actions-switch-label {
-      font-weight: 600; }
-    .cc-custom-fields .cc-input__label--radio-group {
-      padding-bottom: 1rem; }
-  .cc-custom-fields .cc-input:not(.cc-input--type-switcher) .cc-input__label,
-  .cc-custom-fields .cc-input:not(.cc-input--type-radio) .cc-input__label {
-    padding-top: 0; }
-  .cc-custom-fields--narrow {
-    width: calc(100% + 1.5rem);
-    margin: -0.75rem; }
-    .cc-custom-fields--narrow .cc-custom-fields__form-group {
-      width: 50%;
-      padding: 0.75rem; }
-  .cc-custom-fields p {
-    margin: 0.45rem 0 0.75rem;
-    font-size: 1.2rem; }
-    .cc-custom-fields p:last-of-type {
-      margin-bottom: 0; }
-  .cc-custom-fields .cc-warning,
-  .cc-custom-fields .cc-error {
-    margin-top: 0.75rem;
-    padding: 0.65rem 1.2rem 0.75rem;
-    border-style: dashed; }
 
 .cc-warning {
   margin: 0;
@@ -1075,28 +1024,6 @@
     color: #fff;
     font-size: 1.45rem;
     font-weight: 300; }
-
-.cc-position-grid {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  margin: 2px -1px -1px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box; }
-  .cc-position-grid__item {
-    width: 3.8rem;
-    height: 0.9rem;
-    margin: 1px;
-    border: 2px solid #d4d4d4;
-    background-color: #fff;
-    cursor: pointer;
-    -webkit-transition: background-color 0.15s linear, border-color 0.15s linear;
-    transition: background-color 0.15s linear, border-color 0.15s linear; }
-    .cc-position-grid__item--active {
-      background-color: #0072ff;
-      border-color: #0072ff; }
 
 .cc-teaser-preview {
   width: 100%;
@@ -3267,6 +3194,74 @@
       z-index: 2; }
   .cc-teaser-configurator__note {
     font-size: 1.2rem; }
+
+.cc-position-grid {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin: 2px -1px -1px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box; }
+  .cc-position-grid__item {
+    width: 3.8rem;
+    height: 0.9rem;
+    margin: 1px;
+    border: 2px solid #d4d4d4;
+    background-color: #fff;
+    cursor: pointer;
+    -webkit-transition: background-color 0.15s linear, border-color 0.15s linear;
+    transition: background-color 0.15s linear, border-color 0.15s linear; }
+    .cc-position-grid__item--active {
+      background-color: #0072ff;
+      border-color: #0072ff; }
+
+.cc-custom-fields {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  width: calc(100% + 40px);
+  margin: -20px; }
+  .cc-custom-fields__form-group {
+    width: calc(100% / 3);
+    padding: 20px; }
+  .cc-custom-fields .cc-input {
+    padding: 0; }
+    .cc-custom-fields .cc-input__select {
+      width: 100%;
+      padding-top: 0.6rem;
+      padding-bottom: 0.6rem; }
+    .cc-custom-fields .cc-input--type-radio .cc-input__label {
+      font-weight: normal; }
+    .cc-custom-fields .cc-input .admin__actions-switch-label {
+      font-weight: 600; }
+    .cc-custom-fields .cc-input__label--radio-group {
+      padding-bottom: 1rem; }
+  .cc-custom-fields .cc-input:not(.cc-input--type-switcher) .cc-input__label,
+  .cc-custom-fields .cc-input:not(.cc-input--type-radio) .cc-input__label {
+    padding-top: 0; }
+  .cc-custom-fields--narrow {
+    width: calc(100% + 1.5rem);
+    margin: -0.75rem; }
+    .cc-custom-fields--narrow .cc-custom-fields__form-group {
+      width: 50%;
+      padding: 0.75rem; }
+  .cc-custom-fields p {
+    margin: 0.45rem 0 0.75rem;
+    font-size: 1.2rem; }
+    .cc-custom-fields p:last-of-type {
+      margin-bottom: 0; }
+  .cc-custom-fields .cc-warning,
+  .cc-custom-fields .cc-error {
+    margin-top: 0.75rem;
+    padding: 0.65rem 1.2rem 0.75rem;
+    border-style: dashed; }
 
 .cc-button-configurator__widget-chooser-trigger {
   cursor: pointer;

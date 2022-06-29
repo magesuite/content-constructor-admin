@@ -17,7 +17,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
         <section class="cc-category-links-configurator__section" v-if="ccConfig.category_links != null && ccConfig.category_links.custom_sections != null" v-for="section in ccConfig.category_links.custom_sections">
             <h3 class="cc-category-links-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
-                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                <div class="cc-custom-fields__form-group" :class="{'cc-custom-fields__form-group--full': section.type === 'full-width'}" v-for="field in section.content.fields">
                     <component
                         :is="'custom-element-' + field.type"
                         :configuration="configuration"
