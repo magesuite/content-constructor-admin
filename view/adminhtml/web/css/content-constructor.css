@@ -379,6 +379,11 @@
       width: 100%;
       height: 100%;
       z-index: -1; }
+  .cc-input--type-daterange .cc-input__label:nth-of-type(1) {
+    width: 100%;
+    margin-bottom: 1rem; }
+  .cc-input--type-daterange .cc-input__label:nth-of-type(3) {
+    margin-top: 1rem; }
   .cc-input input[type='range'] {
     /* removes default webkit styles */
     -webkit-appearance: none;
@@ -488,7 +493,8 @@
     font-size: 1.2rem; }
     .cc-custom-fields p:last-of-type {
       margin-bottom: 0; }
-  .cc-custom-fields .cc-warning {
+  .cc-custom-fields .cc-warning,
+  .cc-custom-fields .cc-error {
     margin-top: 0.75rem;
     padding: 0.65rem 1.2rem 0.75rem;
     border-style: dashed; }
@@ -498,6 +504,12 @@
   padding: 1rem 1.5rem;
   border: 1px solid #007bdb;
   background-color: rgba(0, 123, 219, 0.11); }
+
+.cc-error {
+  margin: 0;
+  padding: 1rem 1.5rem;
+  border: 1px solid #c20000;
+  background-color: rgba(194, 0, 0, 0.11); }
 
 /**
  * Define block class using namespace.

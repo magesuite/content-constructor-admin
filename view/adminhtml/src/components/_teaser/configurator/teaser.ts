@@ -16,6 +16,7 @@ import customElementCheckbox from '../../_custom-elements/checkbox';
 import customElementRadio from '../../_custom-elements/radio';
 import customElementPosition from '../../_custom-elements/position-grid';
 import { getVideoTypeFromUrl, VideoType } from './_video/types';
+import customElementDatetimeRange from '../../_custom-elements/datetime-range';
 
 export const teaserPrototype: any = {
     image: {
@@ -129,6 +130,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'custom-element-checkbox': customElementCheckbox,
         'custom-element-radio': customElementRadio,
         'custom-element-position': customElementPosition,
+        'custom-element-datetime': customElementDatetimeRange,
     },
     template: `
     <div

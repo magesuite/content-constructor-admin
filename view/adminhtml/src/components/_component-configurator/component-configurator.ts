@@ -13,6 +13,7 @@ const componentConfigurator: vuejs.ComponentOption = {
         'custom-element-checkbox': customElements.customElementCheckbox,
         'custom-element-radio': customElements.customElementRadio,
         'custom-element-position': customElements.customElementPosition,
+        'custom-element-datetime-range': customElements.customElementDatetimeRange,
     },
     props: {
         /**
