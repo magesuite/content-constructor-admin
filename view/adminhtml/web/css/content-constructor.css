@@ -3383,6 +3383,9 @@
 .cc-cms-pages-teaser-configurator__select {
   width: 100%; }
 
+.cc-custom-html-configurator__section:not(:last-of-type) {
+  margin-bottom: 4rem; }
+
 .cc-daily-deal-teaser-configurator__section {
   margin: 20px 0 20px 0;
   padding: 20px 0 20px 200px;
@@ -4418,6 +4421,9 @@
     line-height: 3.3rem; }
     .cc-products-grid-configurator__option--selected .cc-products-grid-configurator__option-name {
       color: #333; }
+
+.cc-static-block-configurator__section:not(:last-of-type) {
+  margin-bottom: 4rem; }
 
 .cc-accordion-configurator__section {
   position: relative;
