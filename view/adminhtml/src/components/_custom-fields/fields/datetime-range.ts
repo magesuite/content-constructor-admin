@@ -10,16 +10,16 @@ interface IFieldInformation {
     warning?: string;
 }
 
-const customElementDatetimeRange: vuejs.ComponentOption = {
+const customFieldDatetimeRange: vuejs.ComponentOption = {
     template: `<div class="cc-input cc-input--type-daterange">
-        <label class="cc-input__label" v-if="fieldConfiguration.label">
+        <label class="cc-input__label" v-if="fieldConfiguration.label" style="margin-bottom: 1rem; width: 100%;">
             {{fieldConfiguration.label | translate}}
         </label>
-        <label for="{{fieldConfiguration.model + "date_from" | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
+        <label for="{{fieldConfiguration.model + "date_from" | prefixFieldId}}" class="cc-input__label">
             From:
         </label>
         <input type="datetime-local" v-model="datetime_from" :max="datetime_to" class="cc-input__input" id="{{fieldConfiguration.model + "date_from" | prefixFieldId}}" :name="datetime_from">
-        <label for="{{fieldConfiguration.model + "date_to" | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
+        <label for="{{fieldConfiguration.model + "date_to" | prefixFieldId}}" class="cc-input__label" style="margin-top: 1rem;">
             To:
         </label>
         <input type="datetime-local" v-model="datetime_to" :min="datetime_from" class="cc-input__input" id="{{fieldConfiguration.model  + "date_to" | prefixFieldId}}" :name="datetime_to">
@@ -123,4 +123,4 @@ const customElementDatetimeRange: vuejs.ComponentOption = {
     },
 };
 
-export default customElementDatetimeRange;
+export default customFieldDatetimeRange;

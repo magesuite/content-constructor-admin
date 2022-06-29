@@ -10,12 +10,12 @@ interface IFieldInformation {
     warning?: string;
 }
 
-const customElementTextarea: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--type-textarea">
+const customFieldTextInput: vuejs.ComponentOption = {
+    template: `<div class="cc-input cc-input--type-text">
         <label for="{{fieldConfiguration.model | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
             {{fieldConfiguration.label | translate}}:
         </label>
-        <textarea class="cc-input__textarea" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model] | prettify"></textarea>
+        <input type="text" class="cc-input__input" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model]">
         <p class="cc-warning" v-if="fieldConfiguration.warning">{{{fieldConfiguration.warning | translate}}}</p>
         <p class="cc-input__note" v-if="fieldConfiguration.note">{{{fieldConfiguration.note | translate}}}</p>
         <p class="cc-input__hint" v-if="fieldConfiguration.hint">{{{fieldConfiguration.hint | translate}}}</p>
@@ -50,16 +50,6 @@ const customElementTextarea: vuejs.ComponentOption = {
         prefixFieldId(id: string): string {
             return `cfg-teaser-${this.teaserIndex}-${id}`;
         },
-
-        prettify: {
-            read(txt: string): string {
-                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
-            },
-
-            write(txt: string): any {
-                return txt.replace(/\n/g, '<br>');
-            },
-        },
     },
 
     ready(): void {
@@ -75,4 +65,4 @@ const customElementTextarea: vuejs.ComponentOption = {
     },
 };
 
-export default customElementTextarea;
+export default customFieldTextInput;

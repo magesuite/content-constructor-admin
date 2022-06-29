@@ -525,18 +525,6 @@
         }
     }
 
-    &--type-daterange {
-        #{$root}__label:nth-of-type(1) {
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        // "To" input label
-        #{$root}__label:nth-of-type(3) {
-            margin-top: 1rem;
-        }
-    }
-
     input[type='range'] {
         /* removes default webkit styles */
         -webkit-appearance: none;
@@ -636,78 +624,6 @@
         &:focus::-ms-fill-upper {
             background-color: transparent;
         }
-    }
-}
-
-.cc-custom-fields {
-    $root: &;
-
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    width: calc(100% + 40px);
-    margin: -20px;
-
-    &__form-group {
-        width: calc(100% / 3);
-        padding: 20px;
-    }
-
-    .cc-input {
-        padding: 0;
-
-        &__select {
-            width: 100%;
-            padding-top: 0.6rem;
-            padding-bottom: 0.6rem;
-        }
-
-        &--type-radio {
-            .cc-input__label {
-                font-weight: normal;
-            }
-        }
-
-        .admin__actions-switch-label {
-            font-weight: 600;
-        }
-
-        &__label--radio-group {
-            padding-bottom: 1rem;
-        }
-    }
-
-    .cc-input:not(.cc-input--type-switcher),
-    .cc-input:not(.cc-input--type-radio) {
-        .cc-input__label {
-            padding-top: 0;
-        }
-    }
-
-    &--narrow {
-        width: calc(100% + 1.5rem);
-        margin: -0.75rem;
-
-        #{$root}__form-group {
-            width: 50%;
-            padding: 0.75rem;
-        }
-    }
-
-    p {
-        margin: 0.45rem 0 0.75rem;
-        font-size: 1.2rem;
-
-        &:last-of-type {
-            margin-bottom: 0;
-        }
-    }
-
-    .cc-warning,
-    .cc-error {
-        margin-top: 0.75rem;
-        padding: 0.65rem 1.2rem 0.75rem;
-        border-style: dashed;
     }
 }
 
