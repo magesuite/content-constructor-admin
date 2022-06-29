@@ -4,5 +4,7 @@
 // See http://warpspire.com/kss/ for documentation guidelines.
 // Version 0.0.1
 .cc-custom-html-configurator {
-    //
+    &__section:not(:last-of-type) {
+        margin-bottom: 4rem;
+    }
 }
