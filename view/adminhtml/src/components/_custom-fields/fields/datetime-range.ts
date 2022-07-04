@@ -24,7 +24,7 @@ const customFieldDatetimeRange: vuejs.ComponentOption = {
         </label>
         <input type="datetime-local" v-model="datetime_to" :min="datetime_from" class="cc-input__input" id="{{fieldConfiguration.model  + "date_to" | prefixFieldId}}" :name="datetime_to">
 
-        <p class="cc-warning" v-if="dateValidationError">{{dateValidationError}}</p>
+        <p class="cc-error" v-if="dateValidationError">{{dateValidationError}}</p>
         <p class="cc-warning" v-if="fieldConfiguration.warning">{{{fieldConfiguration.warning | translate}}}</p>
         <p class="cc-input__note" v-if="fieldConfiguration.note">{{{fieldConfiguration.note | translate}}}</p>
         <p class="cc-input__hint" v-if="fieldConfiguration.hint">{{{fieldConfiguration.hint | translate}}}</p>
@@ -39,8 +39,16 @@ const customFieldDatetimeRange: vuejs.ComponentOption = {
     methods: {
         validateAndUpdateValue: function(): void {
             if (this.validateDates()) {
-                const fromTimestamp = new Date(this.datetime_from).valueOf();
-                const toTimestamp = new Date(this.datetime_to).valueOf();
+                let fromTimestamp = '';
+                let toTimestamp = '';
+
+                if (this.datetime_from.length) {
+                    fromTimestamp = `${Math.floor(new Date(this.datetime_from).getTime() / 1000)}`;
+                }
+
+                if (this.datetime_to.length) {
+                    toTimestamp = `${Math.floor(new Date(this.datetime_to).getTime() / 1000)}`;
+                }
 
                 const output = `${fromTimestamp}|${toTimestamp}`;
                 this.$set(`configuration.${this.fieldConfiguration.model}`, output);
@@ -49,9 +57,7 @@ const customFieldDatetimeRange: vuejs.ComponentOption = {
         validateDates: function(): boolean {
             this.dateValidationError = '';
 
-            if (!(this.datetime_from.length && this.datetime_to.length)) {
-                this.dateValidationError = 'Please provide both dates';
-            } else if (
+            if (
                 new Date(this.datetime_from).valueOf() > new Date(this.datetime_to).valueOf()
             ) {
                 this.dateValidationError = '"From" date needs to preceed "To" date';
@@ -111,8 +117,8 @@ const customFieldDatetimeRange: vuejs.ComponentOption = {
                 const dateTo = dateRange[1];
                 const datetimelocalFormat = 'YYYY-MM-DDTHH:mm:ss';
 
-                self.datetime_from = moment(Number(dateFrom)).format(datetimelocalFormat);
-                self.datetime_to = moment(Number(dateTo)).format(datetimelocalFormat);
+                self.datetime_from = dateFrom.length ? moment(Number(dateFrom * 1000)).format(datetimelocalFormat) : '';
+                self.datetime_to = dateTo.length ? moment(Number(dateTo * 1000)).format(datetimelocalFormat) : '';
             } else if (self.fieldConfiguration.default != null) {
                 /**
                  * Set default value if model is not set yet and default value is defined in etc/view.xml
