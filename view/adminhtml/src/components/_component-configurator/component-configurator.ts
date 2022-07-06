@@ -1,4 +1,4 @@
-import * as customElements from '../_custom-elements/custom-elements';
+import * as customElements from '../_custom-fields/custom-fields';
 
 /**
  * Base configurator component.
@@ -7,12 +7,13 @@ import * as customElements from '../_custom-elements/custom-elements';
  */
 const componentConfigurator: vuejs.ComponentOption = {
     components: {
-        'custom-element-input': customElements.customElementTextInput,
-        'custom-element-select': customElements.customElementSelect,
-        'custom-element-textarea': customElements.customElementTextarea,
-        'custom-element-checkbox': customElements.customElementCheckbox,
-        'custom-element-radio': customElements.customElementRadio,
-        'custom-element-position': customElements.customElementPosition,
+        'custom-element-input': customElements.customFieldTextInput,
+        'custom-element-select': customElements.customFieldSelect,
+        'custom-element-textarea': customElements.customFieldTextarea,
+        'custom-element-checkbox': customElements.customFieldCheckbox,
+        'custom-element-radio': customElements.customFieldRadio,
+        'custom-element-position': customElements.customFieldPosition,
+        'custom-element-datetime-range': customElements.customFieldDatetimeRange,
     },
     props: {
         /**

@@ -4,22 +4,18 @@ interface IFieldInformation {
     label: string;
     type: string;
     model: string;
-    options: Array<any>;
     default?: string;
     note?: string;
     hint?: string;
     warning?: string;
 }
 
-const customElementRadio: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--wrapper">
-        <label class="cc-input__label cc-input__label--radio-group" v-if="fieldConfiguration.label">
-            {{fieldConfiguration.label | translate}}
+const customFieldTextarea: vuejs.ComponentOption = {
+    template: `<div class="cc-input cc-input--type-textarea">
+        <label for="{{fieldConfiguration.model | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
+            {{fieldConfiguration.label | translate}}:
         </label>
-        <div class="cc-input cc-input--type-radio" v-for="(value, label) in fieldConfiguration.options">
-            <input type="radio" id="{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}" class="cc-input__radio" :name="fieldConfiguration.model" :value="value" v-model="configuration[fieldConfiguration.model]">
-            <label for="{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}" class="cc-input__label cc-input__label--radio">{{label | translate}}</label>
-        </div>
+        <textarea class="cc-input__textarea" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model] | prettify"></textarea>
         <p class="cc-warning" v-if="fieldConfiguration.warning">{{{fieldConfiguration.warning | translate}}}</p>
         <p class="cc-input__note" v-if="fieldConfiguration.note">{{{fieldConfiguration.note | translate}}}</p>
         <p class="cc-input__hint" v-if="fieldConfiguration.hint">{{{fieldConfiguration.hint | translate}}}</p>
@@ -54,6 +50,16 @@ const customElementRadio: vuejs.ComponentOption = {
         prefixFieldId(id: string): string {
             return `cfg-teaser-${this.teaserIndex}-${id}`;
         },
+
+        prettify: {
+            read(txt: string): string {
+                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
+            },
+
+            write(txt: string): any {
+                return txt.replace(/\n/g, '<br>');
+            },
+        },
     },
 
     ready(): void {
@@ -69,4 +75,4 @@ const customElementRadio: vuejs.ComponentOption = {
     },
 };
 
-export default customElementRadio;
+export default customFieldTextarea;
