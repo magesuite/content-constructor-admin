@@ -32,6 +32,9 @@ import mosaicPreview from '../mosaic/preview/mosaic';
 import accordionPreview from '../accordion/preview/accordion';
 import productTeaser from '../product-teaser/preview/product-teaser';
 
+// Custom components
+import { customComponentsPreview } from '../../custom-components/custom-components';
+
 /**
  * Single component information interface.
  */
@@ -222,6 +225,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         'mosaic-preview': mosaicPreview,
         'accordion-preview': accordionPreview,
         'product-teaser-preview': productTeaser,
+        ...customComponentsPreview
     },
     props: {
         /**
@@ -287,11 +291,11 @@ const layoutBuilder: vuejs.ComponentOption = {
     computed: {
         ccSections: function (): object {
             const data: object = this.ccConfig.sections[this.pageType];
-            return Object.keys(data).map(key => (<any>data)[key]);
+            return Object.keys(data).map(key => (data as any)[key]);
         },
         specialComponents: function (): object {
             const data: object = this.ccConfig.special_components;
-            return Object.keys(data).map(key => (<any>data)[key]);
+            return Object.keys(data).map(key => (data as any)[key]);
         },
     },
     ready(): void {
@@ -426,7 +430,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         moveComponentUp(index: number): void {
             if (index > 0) {
-                let previousComponent: IComponentInformation = this.components[
+                const previousComponent: IComponentInformation = this.components[
                     index - 1
                 ];
                 const $thisComponent: any = $(`#${this.components[index].id}`);
@@ -469,7 +473,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         moveComponentDown(index: number): void {
             if (index < this.components.length - 1) {
-                let previousComponent: IComponentInformation = this.components[
+                const previousComponent: IComponentInformation = this.components[
                     index + 1
                 ];
                 const $thisComponent: any = $(`#${this.components[index].id}`);
@@ -525,10 +529,10 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @param {number} index Original component's index in array.
          */
         duplicateComponent(index: number): void {
-            let duplicate: IComponentInformation = JSON.parse(
+            const duplicate: IComponentInformation = JSON.parse(
                 JSON.stringify(this.components[index])
             );
-            
+
             duplicate.id = this.generateNewComponentId(duplicate.id);
             this.addComponentInformation(index + 1, duplicate);
 
@@ -623,7 +627,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                     !c.data.hasOwnProperty('componentVisibility') &&
                     !this.getIsSpecialComponent(c.type)
                 ) {
-                    let componentInfo: any = $.extend(true, {}, c, {
+                    const componentInfo: any = $.extend(true, {}, c, {
                         data: {
                             componentVisibility: {
                                 mobile: true,
@@ -724,9 +728,9 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @return {boolean}
          */
         isMobileVisibilityToggleable(componentType: string): boolean {
-            return componentType !== 'mosaic' || 
+            return componentType !== 'mosaic' ||
                    (
-                       componentType === 'mosaic' && 
+                       componentType === 'mosaic' &&
                        this.ccConfig.mosaic.support_breakpoint_dedicated_images
                    );
         },
@@ -761,10 +765,10 @@ const layoutBuilder: vuejs.ComponentOption = {
                 componentData.hasOwnProperty('componentVisibility') &&
                 this.filters
             ) {
-                let visibleMobile: boolean =
+                const visibleMobile: boolean =
                     componentData.componentVisibility.mobile !== '' &&
                     componentData.componentVisibility.mobile !== false;
-                let visibleDesktop: boolean =
+                const visibleDesktop: boolean =
                     componentData.componentVisibility.desktop !== '' &&
                     componentData.componentVisibility.desktop !== false;
 

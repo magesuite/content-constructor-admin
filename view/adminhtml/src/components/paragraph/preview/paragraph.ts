@@ -21,7 +21,7 @@ const paragraphPreview: vuejs.ComponentOption = {
     </div>`,
     props: {
         /**
-         * Single's component configuration 
+         * Single's component configuration
          */
         configuration: {
             type: Object,
@@ -33,7 +33,7 @@ const paragraphPreview: vuejs.ComponentOption = {
             type: [String, Object, Array],
             default: '',
         },
-    }
+    },
 };
 
 export default paragraphPreview;

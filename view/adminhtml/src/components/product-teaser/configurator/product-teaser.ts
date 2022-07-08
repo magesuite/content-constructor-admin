@@ -29,7 +29,7 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
         <div class="cc-input cc-input--type-inline">
-            <label class="cc-input__label" for="cfg-pc-sku">${$t( 'SKU' )}:</label>
+            <label class="cc-input__label" for="cfg-pc-sku">${$t('SKU')}:</label>
             <input type="text" name="cfg-pc-sku" class="cc-input__input" id="cfg-pc-sku" v-model="configuration.sku" @change="onChange">
         </div>
         <div class="cc-product-teaser-configurator__input-hint">

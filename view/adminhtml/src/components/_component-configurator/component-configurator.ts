@@ -54,8 +54,8 @@ const componentConfigurator: vuejs.ComponentOption = {
         },
     },
     methods: {
-        _getCustomCssFields(source: object): Array<any> {
-            const cssClassFields: Array<any> = [];
+        _getCustomCssFields(source: object): any[] {
+            const cssClassFields: any[] = [];
 
             Object.keys(source).forEach(
                 (tabKey: string) => {
@@ -81,8 +81,8 @@ const componentConfigurator: vuejs.ComponentOption = {
                 this.ccConfig[this.xmlConfigEntry] != null &&
                 this.ccConfig[this.xmlConfigEntry].custom_sections != null
             ) {
-                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig[this.xmlConfigEntry].custom_sections);
-                const cssClasses: Array<string> = [];
+                const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig[this.xmlConfigEntry].custom_sections);
+                const cssClasses: string[] = [];
 
                 cssClassFields.forEach(
                     (model: string) => {

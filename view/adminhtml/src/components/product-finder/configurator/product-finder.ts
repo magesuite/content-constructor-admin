@@ -11,34 +11,34 @@ import componentConfigurator from '../../_component-configurator/component-confi
 import productFinderPreview from '../preview/product-finder';
 
 const IStep: any = {
-    "id": "",
-    "additional_css_class": "",
-    "title": "",
-    "description": "",
-    "options": [
+    'id': '',
+    'additional_css_class': '',
+    'title': '',
+    'description': '',
+    'options': [
         {
-            "label": "",
-            "image": "",
-            "attributes": [
+            'label': '',
+            'image': '',
+            'attributes': [
                 {
-                    "code": "",
-                    "values": ["",""]
+                    'code': '',
+                    'values': ['', ''],
                 },
             ],
-            "category_id": "",
-            "next_step": ""
+            'category_id': '',
+            'next_step': '',
         },
         {
-            "label": "",
-            "image": "",
-            "attributes": [
+            'label': '',
+            'image': '',
+            'attributes': [
                 {
-                    "code": "",
-                    "range": ["",""]
+                    'code': '',
+                    'range': ['', ''],
                 },
             ],
-            "category_id": "",
-            "next_step": ""
+            'category_id': '',
+            'next_step': '',
         },
     ],
 };
@@ -185,12 +185,12 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
             this.$set('configuration.showErrorAlert', true);
             this.configuration.isError = false;
 
-            for (let entry of this.componentConfigurationErrors) {
+            for (const entry of this.componentConfigurationErrors) {
                 if (entry.length) {
                     this.configuration.isError = true;
                 }
             }
-            
+
             this.onSave();
         },
     },
@@ -235,11 +235,11 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
         };
     },
     filters: {
-        /** 
+        /**
           * Two-way filter for step content displaing in textarea and keeping in configuration.
          */
         prettify: {
-            /** Displays stringified JSON in textarea if not step is not stringified yet. 
+            /** Displays stringified JSON in textarea if not step is not stringified yet.
              *  If step is already stringified because it couldn't be saved, just return back what came in.
              * @param stepContent {string} - content of textarea
              * @param stepIndex {number} - index of a single step
@@ -258,7 +258,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
              * @param newStepContent {string} - current content of textarea
              * @param oldStepContent {string} - content of textarea in state it was before change was made
              * @param stepIndex {number} - index of a single step
-             * @return {JSON, String} - if string can be parsed to JSON, returns JSON, otherwise String  
+             * @return {JSON, String} - if string can be parsed to JSON, returns JSON, otherwise String
              */
             write(newStepContent: string, oldStepContent: string, stepIndex: number): any {
                 let result: any;
@@ -321,7 +321,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
                     confirm(): void {
                         component.configuration.steps.splice(stepIndex, 1);
                         component.componentConfigurationErrors.splice(stepIndex, 1);
-                    }
+                    },
                 },
             });
         },
@@ -329,10 +329,10 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
          *  It's not saved in configuration so must be called on every open
          * @return {Array} - array with as many empty entires as steps provided
          */
-        prepareComponentErrorsArray(): Array<any> {
-            let errorsArray: Array<any> = [];
+        prepareComponentErrorsArray(): any[] {
+            const errorsArray: any[] = [];
 
-            for (let step of this.configuration.steps) {
+            for (const step of this.configuration.steps) {
                 errorsArray.push('');
             }
 
@@ -348,7 +348,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
                 $.mage.__('Insert File...'),
                 {
                     closed: true,
-                },
+                }
             );
         },
         /* Listener for image uploader
@@ -361,14 +361,14 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
 
             // jQuery has to be used, for some reason native addEventListener doesn't catch change of input's value
             $(document).on('change', '.cc-product-finder-configurator__imgholder', (event: Event): void => {
-                if ( !isAlreadyCalled ) {
+                if (!isAlreadyCalled) {
                     isAlreadyCalled = true;
                     component.setImageUrl(event);
                     setTimeout((): void => {
                         isAlreadyCalled = false;
                     }, 100);
                 }
-            } );
+            });
         },
         /** Action after image was uploaded
          * URL is encoded.
@@ -384,7 +384,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
             const imageUrl: string = window.atob(encodedImage);
             const stepEl: HTMLInputElement = input.previousElementSibling;
             const stepText: string = stepEl.value;
-            const finalImageUrl: string = imageUrl.replace(/\"/g,'\\"');
+            const finalImageUrl: string = imageUrl.replace(/\"/g, '\\"');
 
             stepEl.value = stepText.substr(0, this.caretPosition) + finalImageUrl + stepText.substr(this.caretPosition);
             $(stepEl).trigger('change');
@@ -394,7 +394,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
          * @param event {Event} - click/keyup event
          */
         saveCaretPosition(event: Event): void {
-            const el = <HTMLInputElement>event.target;
+            const el = event.target as HTMLInputElement;
             this.caretPosition = el.selectionStart || 0;
         },
         /**
@@ -406,7 +406,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
                 const $thisItem: any = $(`#cc-product-finder-step-${ stepIndex }`);
                 const $prevItem: any = $(`#cc-product-finder-step-${ stepIndex - 1 }`);
 
-                $thisItem.addClass('cc-product-finder-configurator__step--animating' ).css('transform', `translateY(${ -Math.abs($prevItem.outerHeight(true)) }px)`);
+                $thisItem.addClass('cc-product-finder-configurator__step--animating').css('transform', `translateY(${ -Math.abs($prevItem.outerHeight(true)) }px)`);
                 $prevItem.addClass('cc-product-finder-configurator__step--animating').css('transform', `translateY(${ $thisItem.outerHeight(true) }px)`);
 
                 setTimeout((): void => {

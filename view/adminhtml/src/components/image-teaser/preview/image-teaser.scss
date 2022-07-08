@@ -12,7 +12,7 @@ $image-teaser-preview-item-gap: 1.3rem;
         align-items: stretch;
         padding: 0;
         list-style: none;
-        margin: 0 #{-$image-teaser-preview-item-gap / 2};
+        margin: 0 calc(-#{$image-teaser-preview-item-gap} / 2);
         flex-wrap: wrap;
         min-height: 12rem;
 
@@ -44,14 +44,14 @@ $image-teaser-preview-item-gap: 1.3rem;
     }
 
     &__item {
-        width: calc(100% - #{$image-teaser-preview-item-gap / 2});
+        width: calc(100% - calc(#{$image-teaser-preview-item-gap} / 2));
         position: relative;
-        margin: 0 #{$image-teaser-preview-item-gap / 2};
+        margin: 0 calc(#{$image-teaser-preview-item-gap} / 2);
 
         @for $in-row from 2 to 9 {
             #{$root}__scene--#{$in-row}-in-row & {
                 width: calc(
-                    #{100% / $in-row} - #{$image-teaser-preview-item-gap}
+                    calc(100% / #{$in-row}) - #{$image-teaser-preview-item-gap}
                 );
             }
         }
