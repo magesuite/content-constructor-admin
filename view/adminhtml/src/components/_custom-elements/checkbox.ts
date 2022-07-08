@@ -64,7 +64,7 @@ const customElementCheckbox: vuejs.ComponentOption = {
         ) {
             this.$set(`configuration.${this.fieldConfiguration.model}`, this.fieldConfiguration.checked);
         }
-    }
+    },
 };
 
 export default customElementCheckbox;

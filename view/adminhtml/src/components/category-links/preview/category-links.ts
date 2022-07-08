@@ -10,7 +10,7 @@ interface IComponentInformation {
     sub_categories_ids: string;
     sub_categories_labels: string;
     shownumbers: boolean;
-};
+}
 
 /**
  * Brand carousel preview component.

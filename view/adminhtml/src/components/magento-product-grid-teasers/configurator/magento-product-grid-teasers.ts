@@ -135,7 +135,7 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                 }
             );
 
-            if(this.configuration.scenario == null) {
+            if (this.configuration.scenario == null) {
                 this.$set('configuration.scenario.contentPlacement.id', 'over');
             }
 
@@ -146,46 +146,46 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
          * in order to update the values in admin panel
          */
         updateTeaser(teaser: object, index: number): void {
-            const oldTeaser: object = Object.assign({}, teaser);
+            const oldTeaser: object = {...teaser};
             this.configuration.teasers.splice(index, 1);
             this.createNewTeaser(index);
 
             Object.entries(oldTeaser).map(
                 (oldConfig: any) => {
-                    if(oldConfig[0] === 'colorScheme') {
+                    if (oldConfig[0] === 'colorScheme') {
                         this.configuration.teasers[index].optimizers.color_scheme = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'image') {
+                    if (oldConfig[0] === 'image') {
                         this.configuration.teasers[index].image.raw = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'decodedImage') {
+                    if (oldConfig[0] === 'decodedImage') {
                         this.configuration.teasers[index].image.decoded = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'ctaLabel') {
+                    if (oldConfig[0] === 'ctaLabel') {
                         this.configuration.teasers[index].cta.label = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'href') {
+                    if (oldConfig[0] === 'href') {
                         this.configuration.teasers[index].cta.href = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'headline') {
+                    if (oldConfig[0] === 'headline') {
                         this.configuration.teasers[index].slogan = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'subheadline') {
+                    if (oldConfig[0] === 'subheadline') {
                         this.configuration.teasers[index].description = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'paragraph') {
-                        this.configuration.teasers[index].description += "<br>" + oldConfig[1];
+                    if (oldConfig[0] === 'paragraph') {
+                        this.configuration.teasers[index].description += '<br>' + oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'displayVariant') {
-                        switch(oldConfig[1]) {
+                    if (oldConfig[0] === 'displayVariant') {
+                        switch (oldConfig[1]) {
                             case ('variant-1'):
                                 this.configuration.teasers[index].content_align.x = 1;
                                 this.configuration.teasers[index].content_align.y = 2;
@@ -209,23 +209,23 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
                         }
                     }
 
-                    if(oldConfig[0] === 'position') {
+                    if (oldConfig[0] === 'position') {
                         this.configuration.teasers[index].position = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'row') {
+                    if (oldConfig[0] === 'row') {
                         this.configuration.teasers[index].row = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'size') {
+                    if (oldConfig[0] === 'size') {
                         this.configuration.teasers[index].size = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'sizeSelect') {
+                    if (oldConfig[0] === 'sizeSelect') {
                         this.configuration.teasers[index].sizeSelect = oldConfig[1];
                     }
 
-                    if(oldConfig[0] === 'isAvailableForMobile') {
+                    if (oldConfig[0] === 'isAvailableForMobile') {
                         this.configuration.teasers[index].isAvailableForMobile = oldConfig[1];
                     }
                 }
@@ -256,11 +256,11 @@ const magentoProductGridTeasersConfigurator: vuejs.ComponentOption = {
 
         _collectTeasersCssClasses(): void {
             if (this.configuration.teasers != null) {
-                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+                const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig.teaser.tabs);
 
                 this.configuration.teasers.forEach(
                     (teaser: any, index: number) => {
-                        const cssClasses: Array<string> = [];
+                        const cssClasses: string[] = [];
 
                         cssClassFields.forEach(
                             (model: string) => {

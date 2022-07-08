@@ -25,10 +25,10 @@ const customElementTextInput: vuejs.ComponentOption = {
         fieldConfiguration: {
             type: Object,
             default(): any {
-                return {}
+                return {};
             },
         },
-        
+
         configuration: {
             type: Object,
             default(): any {

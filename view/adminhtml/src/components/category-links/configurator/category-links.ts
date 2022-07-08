@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
 
-import componentConfigurator from '../../_component-configurator/component-configurator';
 import categoryPicker from '../../../utils/category-picker/category-picker';
+import componentConfigurator from '../../_component-configurator/component-configurator';
 
 /**
  * Category links configurator component.
@@ -28,20 +28,20 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
         </section>
 
         <div class="cc-input cc-input--type-inline">
-            <label class="cc-input__label">${$t( 'Category' )}</label>
+            <label class="cc-input__label">${$t('Category')}</label>
             <input type="hidden" v-model="configuration.main_category_id" id="cp-main">
         </div>
         <div class="cc-input cc-input--type-inline">
-            <label class="cc-input__label">${$t( 'Subcategories' )}</label>
+            <label class="cc-input__label">${$t('Subcategories')}</label>
             <input type="hidden" v-model="configuration.sub_categories_ids" id="cp-sub">
         </div>
 
         <div class="cc-input cc-input--type-inline">
-            <label for="cfg-shownumbers" class="cc-input__label">${$t( 'Show products count' )}</label>
+            <label for="cfg-shownumbers" class="cc-input__label">${$t('Show products count')}</label>
             <div class="admin__actions-switch" data-role="switcher">
                 <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-shownumbers" name="use_name_in_product_search" v-model="configuration.shownumbers" @change="onChange">
                 <label class="admin__actions-switch-label" for="cfg-shownumbers">
-                    <span class="admin__actions-switch-text" data-text-on="${$t( 'Yes' )}" data-text-off="${$t( 'No' )}"></span>
+                    <span class="admin__actions-switch-text" data-text-on="${$t('Yes')}" data-text-off="${$t('No')}"></span>
                 </label>
             </div>
         </div>
@@ -50,7 +50,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
             class="cc-input cc-input--type-inline"
             v-bind:class="{ '_disabled': !subCategoriesPicker._categoriesLabels.length}"
         >
-            <label for="hide_link_to_all_products" class="cc-input__label">${$t( 'Hide link to all products' )}</label>
+            <label for="hide_link_to_all_products" class="cc-input__label">${$t('Hide link to all products')}</label>
             <div class="admin__actions-switch" data-role="switcher">
                 <input
                     type="checkbox"
@@ -62,7 +62,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
                     :checked="subCategoriesPicker._categoriesLabels.length && configuration.hide_link_to_all_products"
                     :disabled="!subCategoriesPicker._categoriesLabels.length">
                 <label class="admin__actions-switch-label" for="cfg-hidelinktoall">
-                    <span class="admin__actions-switch-text" data-text-on="${$t( 'Yes' )}" data-text-off="${$t( 'No' )}"></span>
+                    <span class="admin__actions-switch-text" data-text-on="${$t('Yes')}" data-text-off="${$t('No')}"></span>
                 </label>
             </div>
         </div>
@@ -123,7 +123,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
 
             // Hide loader
             $('body').trigger('hideLoadingPopup');
-        } );
+        });
     },
     methods: {
         initializePickers(categories: any): void {

@@ -28,11 +28,11 @@ interface IComponentsInformation {
 const componentPicker: vuejs.ComponentOption = {
     template: `<section class="cc-component-picker | {{ class }}">
         <div class="cc-component-picker__search" :class="{ 'cc-component-picker__search--clearable': search.length > 0 }">
-            <input 
-                type="text" 
-                class="cc-input__input cc-component-picker__search-input" 
-                placeholder="{{ 'Search components...' | translate }}" 
-                v-model="search" 
+            <input
+                type="text"
+                class="cc-input__input cc-component-picker__search-input"
+                placeholder="{{ 'Search components...' | translate }}"
+                v-model="search"
                 v-el:search-input
             >
             <a href="#" class="cc-component-picker__search-clear" @click="clearSearch">
@@ -128,7 +128,7 @@ const componentPicker: vuejs.ComponentOption = {
          * Filters 'availableComponents' array by 'search' model.
          * @returns Array - filtered components array
          */
-        filteredComponents(): Array<Record<string, unknown>> {
+        filteredComponents(): Record<string, unknown>[] {
             return this.availableComponents.filter((item: Record<string, unknown>) => {
                 return String(item.name).toLowerCase().includes(this.search.toLowerCase());
             });
@@ -149,7 +149,7 @@ const componentPicker: vuejs.ComponentOption = {
          * This handler triggers "cc-component-picker__pick" event up the DOM chain when called.
          * @param {Event} event Click event object.
          */
-        onPickComponent(componentType: string, componentName: string): void {
+         onPickComponent(componentType: string, componentName: string): void {
             this.$dispatch(
                 'component-picker__pick',
                 componentType,
@@ -161,13 +161,13 @@ const componentPicker: vuejs.ComponentOption = {
             }
         },
 
-        clearSearch(): void {
+         clearSearch(): void {
             this.search = '';
         },
 
-        focusSearch(): void {
+         focusSearch(): void {
             this.$els.searchInput.focus();
-        }
+        },
     },
 };
 

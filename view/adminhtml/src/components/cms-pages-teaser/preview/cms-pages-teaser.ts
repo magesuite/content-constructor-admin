@@ -11,7 +11,7 @@ interface IComponentInformation {
             id: string,
         },
     };
-};
+}
 
 /**
  * CMS teaser preview component.
@@ -64,9 +64,9 @@ const cmsPagesTeaserPreview: vuejs.ComponentOption = {
         },
     },
     methods: {
-        getTagsArray(): Array<any> {
+        getTagsArray(): any[] {
             return this.configuration.tags.split(',');
-        }
+        },
     },
 };
 

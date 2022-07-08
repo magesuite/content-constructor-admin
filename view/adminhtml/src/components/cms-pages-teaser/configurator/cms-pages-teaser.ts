@@ -4,8 +4,8 @@ import $t from 'mage/translate';
 import actionButton from '../../../utils/action-button/action-button';
 import componentActions from '../../../utils/component-actions/component-actions';
 
-import componentConfigurator from '../../_component-configurator/component-configurator';
 import categoryPicker from '../../../utils/category-picker/category-picker';
+import componentConfigurator from '../../_component-configurator/component-configurator';
 
 /**
  * CMS Pages Teaser configurator component.
@@ -38,29 +38,29 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             <h3 class="cc-cms-pages-teaser-configurator__subtitle">${ $t('Data source') }</h3>
             <div class="cc-cms-pages-teaser-configurator__scenario-options cc-cms-pages-teaser-configurator__scenario-options--inputs">
                 <div class="cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option">
-                    <label class="cc-input__label | cc-cms-pages-teaser-configurator__section-option-label">${$t( 'CMS Tags' )}:</label>
+                    <label class="cc-input__label | cc-cms-pages-teaser-configurator__section-option-label">${$t('CMS Tags')}:</label>
                     <input type="hidden" v-model="configuration.tags" @change="onChange" id="cp-cms-pages-teaser">
                 </div>
                 <div class="cc-cms-pages-teaser-configurator__section-option">
                     <div class="cc-input">
-                        <label class="cc-input__label" for="cfg-cmspt-page-ids">${$t( 'CMS Pages IDs' )}:</label>
+                        <label class="cc-input__label" for="cfg-cmspt-page-ids">${$t('CMS Pages IDs')}:</label>
                         <input type="text" name="cfg-cmspt-page-ids" class="cc-input__input" id="cfg-cmspt-page-ids" v-model="configuration.ids" @change="onChange">
                     </div>
                     <div class="cc-input cc-input--type-inline cc-input--type-hint">
-                        <span class="cc-input__hint cc-input__hint--under-field">${$t( 'Multiple, comma-separated.' )}</span>
+                        <span class="cc-input__hint cc-input__hint--under-field">${$t('Multiple, comma-separated.')}</span>
                     </div>
                     <div class="cc-input cc-input--type-inline cc-input--type-hint" v-if="configuration.ids.length">
-                        <span class="cc-input__hint cc-input__hint--info-mark">${$t( 'Providing list of comma separated IDs will result in ignoring any CMS tags (if specified). Only pages with specified IDs will be displayed in exactly the same order as they are provided in the field.' )}</span>
+                        <span class="cc-input__hint cc-input__hint--info-mark">${$t('Providing list of comma separated IDs will result in ignoring any CMS tags (if specified). Only pages with specified IDs will be displayed in exactly the same order as they are provided in the field.')}</span>
                     </div>
                 </div>
 
                 <div class="cc-input cc-input--type-inline | cc-cms-pages-teaser-configurator__section-option">
-                    <label for="cfg-cmspt-limit" class="cc-input__label | cc-cms-pages-teaser-configurator__section-option-label">${$t( 'Teasers limit' )}:</label>
+                    <label for="cfg-cmspt-limit" class="cc-input__label | cc-cms-pages-teaser-configurator__section-option-label">${$t('Teasers limit')}:</label>
                     <select name="cfg-cmspt-limit" class="cc-input__select" id="cfg-cmspt-limit" v-model="configuration.limit" @change="onChange">
-                        <option value="4">${$t( '4 teasers' )}</option>
-                        <option value="8">${$t( '8 teasers' )}</option>
-                        <option value="16">${$t( '16 teasers' )}</option>
-                        <option value="1000">${$t( 'All available teasers (no limit)' )}</option>
+                        <option value="4">${$t('4 teasers')}</option>
+                        <option value="8">${$t('8 teasers')}</option>
+                        <option value="16">${$t('16 teasers')}</option>
+                        <option value="1000">${$t('All available teasers (no limit)')}</option>
                     </select>
                 </div>
 
@@ -98,7 +98,7 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
                             </svg>
                         </div>
                         <p class="cc-cms-pages-teaser-configurator__option-name">
-                            ${$t( '{{ option.name }}' )}
+                            ${$t('{{ option.name }}')}
                         </p>
                     </li>
                 </div>
@@ -122,7 +122,7 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
                             </svg>
                         </div>
                         <p class="cc-cms-pages-teaser-configurator__option-name">
-                            ${$t( '{{ option.name }}' )}
+                            ${$t('{{ option.name }}')}
                         </p>
                     </li>
                 </ul>
@@ -178,12 +178,12 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             scenarioOptions: {
                 // Desktop layout scenario elements.
                 desktopLayout: {
-                    '2': {
+                    2: {
                         name: '2 in row',
                         iconId: 'dl_2',
                         teasersNum: 2,
                     },
-                    '4': {
+                    4: {
                         name: '4 in row',
                         iconId: 'dl_4',
                         teasersNum: 4,
@@ -248,6 +248,6 @@ const cmsPagesTeaserConfigurator: vuejs.ComponentOption = {
             this.$set('configuration.content_align.y', 1);
         }
     },
-}
+};
 
 export default cmsPagesTeaserConfigurator;

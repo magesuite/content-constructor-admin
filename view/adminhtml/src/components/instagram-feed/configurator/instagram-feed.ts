@@ -48,26 +48,26 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
                         teaserWidth: {
                             name: 'Content width',
                             disabled: false,
-                            id: 'container-slider'
+                            id: 'container-slider',
                         },
                         desktopLayout: {
                             disabled: ',',
                             id: '4',
                             name: '4 in row',
-                            teasersNum: '4'
+                            teasersNum: '4',
                         },
                         contentPlacement: {
                             contentPlacement: '1',
                             disabled: '',
                             id: 'over',
-                            name: 'Text over image'
+                            name: 'Text over image',
                         },
                         mobileLayout: {
                             id: 'mobile-slider',
                             name: 'Slider',
                             disabled: false,
                         },
-                        numberOfSlides: 4
+                        numberOfSlides: 4,
                     },
                 };
             },
