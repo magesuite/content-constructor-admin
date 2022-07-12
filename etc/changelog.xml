@@ -8,6 +8,12 @@
                         <description>Update CC builder to Gulp 4 and introduce Custom Content Constructor Components which requires building this package manually</description>
                     </entry>
                 </tag>
+                <tag version="v4.2.0" date="2021-07-12">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>New Custom Field - Datetime Range picker and naming refactor - switched from "custom-elements" to "custom-fields"</overview>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
