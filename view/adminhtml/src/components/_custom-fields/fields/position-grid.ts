@@ -15,7 +15,7 @@ interface IFieldInformation {
     warning?: string;
 }
 
-const customElementPosition: vuejs.ComponentOption = {
+const customFieldPosition: vuejs.ComponentOption = {
     template: `<div class="cc-input cc-input--type-position-grid">
         <label class="cc-input__label" v-if="fieldConfiguration.label">{{fieldConfiguration.label | translate}}:</label>
         <div
@@ -112,4 +112,4 @@ const customElementPosition: vuejs.ComponentOption = {
     },
 };
 
-export default customElementPosition;
+export default customFieldPosition;

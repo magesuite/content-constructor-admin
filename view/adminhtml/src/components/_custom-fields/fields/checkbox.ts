@@ -4,21 +4,20 @@ interface IFieldInformation {
     label: string;
     type: string;
     model: string;
-    options: any[];
-    default?: string;
+    checked?: boolean;
     note?: string;
     hint?: string;
     warning?: string;
 }
 
-const customElementSelect: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--type-select">
-        <label for="{{fieldConfiguration.model | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
-            {{fieldConfiguration.label | translate}}:
-        </label>
-        <select class="cc-input__select" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model]">
-            <option v-for="(value, label) in fieldConfiguration.options" :value="value">{{ label }}</option>
-        </select>
+const customFieldCheckbox: vuejs.ComponentOption = {
+    template: `<div class="cc-input cc-input--type-switcher">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model]">
+            <label class="admin__actions-switch-label" for="{{fieldConfiguration.model | prefixFieldId}}" v-if="fieldConfiguration.label">
+                <span class="admin__actions-switch-text">{{fieldConfiguration.label | translate}}</span>
+            </label>
+        </div>
         <p class="cc-warning" v-if="fieldConfiguration.warning">{{{fieldConfiguration.warning | translate}}}</p>
         <p class="cc-input__note" v-if="fieldConfiguration.note">{{{fieldConfiguration.note | translate}}}</p>
         <p class="cc-input__hint" v-if="fieldConfiguration.hint">{{{fieldConfiguration.hint | translate}}}</p>
@@ -61,11 +60,11 @@ const customElementSelect: vuejs.ComponentOption = {
          */
         if (
             this.configuration[this.fieldConfiguration.model] == null &&
-            this.fieldConfiguration.default != null
+            this.fieldConfiguration.checked != null
         ) {
-            this.$set(`configuration.${this.fieldConfiguration.model}`, this.fieldConfiguration.default);
+            this.$set(`configuration.${this.fieldConfiguration.model}`, this.fieldConfiguration.checked);
         }
     },
 };
 
-export default customElementSelect;
+export default customFieldCheckbox;

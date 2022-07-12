@@ -9,13 +9,14 @@ import teaserPreview from '../preview/teaser';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
-import customElementTextInput from '../../_custom-elements/text-input';
-import customElementSelect from '../../_custom-elements/select';
-import customElementTextarea from '../../_custom-elements/textarea';
-import customElementCheckbox from '../../_custom-elements/checkbox';
-import customElementRadio from '../../_custom-elements/radio';
-import customElementPosition from '../../_custom-elements/position-grid';
+import customFieldTextInput from '../../_custom-fields/fields/text-input';
+import customFieldSelect from '../../_custom-fields/fields/select';
+import customFieldTextarea from '../../_custom-fields/fields/textarea';
+import customFieldCheckbox from '../../_custom-fields/fields/checkbox';
+import customFieldRadio from '../../_custom-fields/fields/radio';
+import customFieldPosition from '../../_custom-fields/fields/position-grid';
 import { getVideoTypeFromUrl, VideoType } from './_video/types';
+import customFieldDatetimeRange from '../../_custom-fields/fields/datetime-range';
 
 export const teaserPrototype: any = {
     image: {
@@ -123,12 +124,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'action-button': actionButton,
         'component-actions': componentActions,
         'teaser-preview': teaserPreview,
-        'custom-element-input': customElementTextInput,
-        'custom-element-select': customElementSelect,
-        'custom-element-textarea': customElementTextarea,
-        'custom-element-checkbox': customElementCheckbox,
-        'custom-element-radio': customElementRadio,
-        'custom-element-position': customElementPosition,
+        'custom-element-input': customFieldTextInput,
+        'custom-element-select': customFieldSelect,
+        'custom-element-textarea': customFieldTextarea,
+        'custom-element-checkbox': customFieldCheckbox,
+        'custom-element-radio': customFieldRadio,
+        'custom-element-position': customFieldPosition,
+        'custom-element-datetime': customFieldDatetimeRange,
     },
     template: `
     <div

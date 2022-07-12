@@ -4,18 +4,22 @@ interface IFieldInformation {
     label: string;
     type: string;
     model: string;
+    options: any[];
     default?: string;
     note?: string;
     hint?: string;
     warning?: string;
 }
 
-const customElementTextInput: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--type-text">
-        <label for="{{fieldConfiguration.model | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
-            {{fieldConfiguration.label | translate}}:
+const customFieldRadio: vuejs.ComponentOption = {
+    template: `<div class="cc-input cc-input--wrapper">
+        <label class="cc-input__label cc-input__label--radio-group" v-if="fieldConfiguration.label">
+            {{fieldConfiguration.label | translate}}
         </label>
-        <input type="text" class="cc-input__input" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model]">
+        <div class="cc-input cc-input--type-radio" v-for="(value, label) in fieldConfiguration.options">
+            <input type="radio" id="{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}" class="cc-input__radio" :name="fieldConfiguration.model" :value="value" v-model="configuration[fieldConfiguration.model]">
+            <label for="{{fieldConfiguration.model | prefixFieldId }}-{{$index + 1}}" class="cc-input__label cc-input__label--radio">{{label | translate}}</label>
+        </div>
         <p class="cc-warning" v-if="fieldConfiguration.warning">{{{fieldConfiguration.warning | translate}}}</p>
         <p class="cc-input__note" v-if="fieldConfiguration.note">{{{fieldConfiguration.note | translate}}}</p>
         <p class="cc-input__hint" v-if="fieldConfiguration.hint">{{{fieldConfiguration.hint | translate}}}</p>
@@ -65,4 +69,4 @@ const customElementTextInput: vuejs.ComponentOption = {
     },
 };
 
-export default customElementTextInput;
+export default customFieldRadio;
