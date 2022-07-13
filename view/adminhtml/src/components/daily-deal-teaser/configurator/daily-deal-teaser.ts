@@ -3,7 +3,7 @@ import $t from 'mage/translate';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 import categoryPicker from '../../../utils/category-picker/category-picker';
- 
+
 /**
  * Daily deal teaser configurator component.
  * This component is responsible for displaying daily deal teaser configuration form
@@ -28,32 +28,32 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
         </section>
 
         <div class="cc-input cc-input--type-inline">
-            <label class="cc-input__label">${$t( 'Categories' )}:</label>
+            <label class="cc-input__label">${$t('Categories')}:</label>
             <input type="hidden" v-model="configuration.category_id" @change="onChange" id="cp-daily-deal-teaser">
         </div>
 
         <div class="cc-input cc-input--type-inline">
-            <label class="cc-input__label" for="cfg-ddt-skus">${$t( 'SKUs' )}:</label>
+            <label class="cc-input__label" for="cfg-ddt-skus">${$t('SKUs')}:</label>
             <input type="text" name="cfg-ddt-skus" class="cc-input__input" id="cfg-ddt-skus" v-model="configuration.skus" @change="onChange">
         </div>
         <div class="cc-input cc-input--type-inline cc-input--type-hint">
             <label class="cc-input__label"> </label>
-            <span class="cc-input__hint cc-input__hint--under-field">${$t( 'Multiple, comma-separated' )}</span>
+            <span class="cc-input__hint cc-input__hint--under-field">${$t('Multiple, comma-separated')}</span>
         </div>
         <div class="cc-input cc-input--type-inline cc-input--type-hint" v-if="configuration.skus.length">
             <label class="cc-input__label"> </label>
-            <span class="cc-input__hint cc-input__hint--under-field cc-input__hint--info-mark">${$t( 'Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.' )}</span>
+            <span class="cc-input__hint cc-input__hint--under-field cc-input__hint--info-mark">${$t('Providing list of comma separated SKUs will disable any filtering and sorting configured for that component.  Category (if specified) will also not be taken into account. Only products with specified SKUs will be displayed in exactly the same order as they are provided in SKUs field.')}</span>
         </div>
 
         <div class="cc-input cc-input--type-inline">
-            <label class="cc-input__label" for="cfg-ddt-dataprovider">${$t( 'Custom Data Provider' )}:</label>
+            <label class="cc-input__label" for="cfg-ddt-dataprovider">${$t('Custom Data Provider')}:</label>
             <input type="text" name="cfg-ddt-dataprovider" class="cc-input__input" id="cfg-ddt-dataprovider" v-model="configuration.class_overrides.dataProvider" @change="onChange">
         </div>
 
         <div class="cc-input cc-input--type-inline">
-            <label for="cfg-ddt-filter" class="cc-input__label">${$t( 'Filter' )}:</label>
+            <label for="cfg-ddt-filter" class="cc-input__label">${$t('Filter')}:</label>
             <select name="cfg-ddt-filter" class="cc-input__select" id="cfg-ddt-filter" v-model="configuration.filter" @change="onChange">
-                <option value="">${$t( 'No filter' )}</option>
+                <option value="">${$t('No filter')}</option>
                 <template v-for="filter in productCollectionsFilters">
                     <option value="{{ filter.value }}" :selected="filter.value === configuration.filter">{{ filter.label }}</option>
                 </template>
@@ -61,16 +61,16 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
         </div>
 
         <div class="cc-input cc-input--type-inline">
-            <label for="cfg-ddt-order-by" class="cc-input__label">${$t( 'Order by' )}:</label>
+            <label for="cfg-ddt-order-by" class="cc-input__label">${$t('Order by')}:</label>
             <select name="cfg-ddt-order-by" class="cc-input__select" id="cfg-ddt-order-by" v-model="configuration.order_by" @change="onChange">
-                <option value="">${$t( 'Not specified' )}</option>
+                <option value="">${$t('Not specified')}</option>
                 <template v-for="sorter in productCollectionsSorters">
                     <option value="{{ sorter.value }}" :selected="sorter.value === configuration.order_by">{{ sorter.label }}</option>
                 </template>
             </select>
             <select name="cfg-ddt-order-type" class="cc-input__select" v-model="configuration.order_type" @change="onChange">
-                <option value="ASC">${$t( 'Ascending' )}</option>
-                <option value="DESC">${$t( 'Descending' )}</option>
+                <option value="ASC">${$t('Ascending')}</option>
+                <option value="DESC">${$t('Descending')}</option>
             </select>
         </div>
     </form>`,
@@ -147,11 +147,11 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
             this.categoryPicker = new categoryPicker($('#cp-daily-deal-teaser'), JSON.parse(response.body), {
                 multiple: false,
             });
-            
+
             // Hide loader
             $('body').trigger('hideLoadingPopup');
         });
     },
 };
- 
+
 export default dailyDealTeaserConfigurator;

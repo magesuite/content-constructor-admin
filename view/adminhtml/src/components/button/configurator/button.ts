@@ -23,7 +23,7 @@ const buttonConfigurator: vuejs.ComponentOption = {
                 </div>
             </div>
         </section>
-    
+
         <div class="cc-input cc-input--type-inline">
             <label for="cfg-label" class="cc-input__label">${$t(
                 'Label'

@@ -42,9 +42,11 @@ import mosaicConfigurator from './components/mosaic/configurator/mosaic';
 import accordionConfigurator from './components/accordion/configurator/accordion';
 import productTeaserConfigurator from './components/product-teaser/configurator/product-teaser';
 
+// Custom components
+import { customComponentsConfigurator } from './custom-components/custom-components';
+
 // Use Vue resource
 Vue.use(vr);
-
 // Set Vue's $http headers Accept to text/html
 Vue.http.headers.custom.Accept = 'text/html';
 
@@ -141,6 +143,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'mosaic-configurator': mosaicConfigurator,
         'accordion-configurator': accordionConfigurator,
         'product-teaser-configurator': productTeaserConfigurator,
+        ...customComponentsConfigurator
     },
     props: {
         configuration: {
@@ -310,7 +313,7 @@ const contentConstructor: vuejs.ComponentOption = {
                             $('body').trigger('hideLoadingPopup');
                         });
                 }
-                
+
                 component.$broadcast('component-picker__opened');
             };
             // Create or Show picker modal depending if exists
@@ -428,7 +431,7 @@ const contentConstructor: vuejs.ComponentOption = {
                     .then((response: any): void => {
                         component.$els.configuratorModal.innerHTML =
                             response.body;
-                        
+
                         // Set current component configuration data
                         component.initialComponentConfiguration =
                             componentInformation.data;

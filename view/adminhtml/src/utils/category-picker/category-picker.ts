@@ -76,9 +76,10 @@ interface categoryPickerOptions {
     };
 
     classes?: {};
-};
+}
 
 export default class categoryPicker {
+    public _categoriesLabels: any;
     protected _$output: any;
     protected _defaults: any;
     protected _categoriesData: any;
@@ -87,7 +88,6 @@ export default class categoryPicker {
     protected _$wrapper: any;
     protected _orderedCheckboxes: any;
     protected _prefix: string;
-    public _categoriesLabels: any;
 
     /**
      * Creates new CcCategoryPicker component with optional settings.
@@ -321,8 +321,8 @@ export default class categoryPicker {
                 const path: string = $(data[i].path).map(function(): string {
                     return this;
                 }).get().join(' / ');
-                const checked: string = $(`#cp-${ this._prefix }-${ data[i].value }` ).prop('checked') ? 'checked' : '';
-                const disabled: string = $(`#cp-${ this._prefix }-${ data[i].value }`).prop( 'disabled' ) ? 'disabled' : '';
+                const checked: string = $(`#cp-${ this._prefix }-${ data[i].value }`).prop('checked') ? 'checked' : '';
+                const disabled: string = $(`#cp-${ this._prefix }-${ data[i].value }`).prop('disabled') ? 'disabled' : '';
 
                 result += `<li class="${ c.search.resultsLI }" role="option-group">`;
 
@@ -344,11 +344,11 @@ export default class categoryPicker {
             result += '</ul>';
         }
 
-        this._$wrapper.find(`.${ c.search.resultsWrapper }` ).html(result);
+        this._$wrapper.find(`.${ c.search.resultsWrapper }`).html(result);
 
         this._$wrapper.find(`.${ c.search.resultsUL } input[type="checkbox"]`).off('change').on('change', function(): void {
             _this._$wrapper.find(`.${ c.menu.content } :input[value="${ this.value }"]`).trigger('click');
-        } );
+        });
 
         const text: string = data.length === 1 ? `${ data.length } ${ $t('Result') }` : `${ data.length } ${ $t('Results') }`;
         this._$wrapper.find(`.${ this._options.classes.search.resultsQty }`).html(text);
@@ -437,7 +437,7 @@ export default class categoryPicker {
          */
         for (let i: number = 0; i < categories.length; i++) {
             if (categories[i].is_active === '1') {
-                const checked = $( `#cp-${ this._prefix }-${ categories[i].value }`).prop('checked') ? 'checked' : '';
+                const checked = $(`#cp-${ this._prefix }-${ categories[i].value }`).prop('checked') ? 'checked' : '';
 
                 str += `<li class="${ c.dropdown.li }" data-role="option-group">`;
 
@@ -453,7 +453,7 @@ export default class categoryPicker {
 
                 if (categories[i].optgroup && categories[i].optgroup.length && this._options.showChildren) {
                     str += `<div class="${ c.dropdown.toggler }"></div></div>
-                        ${ this._getContents( categories[i].optgroup, '' ) }`;
+                        ${ this._getContents(categories[i].optgroup, '') }`;
                 } else {
                     str += '</div>';
                 }
@@ -569,7 +569,7 @@ export default class categoryPicker {
                 if (this.value.length >= _this._options.minSearchQueryLength) {
                     const key: any = String.fromCharCode(e.keyCode).toLowerCase();
 
-                    if (key.match(listen) && fKeys.indexOf(e.which) === -1 && !e.ctrlKey && !e.metaKey && !e.altKey ) {
+                    if (key.match(listen) && fKeys.indexOf(e.which) === -1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
                         _this._renderSearchResults(_this._getByQuery(_this._categoriesData, this.value));
                     }
 

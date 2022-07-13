@@ -1057,7 +1057,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
          * @return {number} - greatest common divisor
          */
         getAspectRatio(a: number, b: number): string {
-            let c: number = this.getGreatestCommonDivisor(a, b);
+            const c: number = this.getGreatestCommonDivisor(a, b);
 
             return `${a / c}:${b / c}`;
         },

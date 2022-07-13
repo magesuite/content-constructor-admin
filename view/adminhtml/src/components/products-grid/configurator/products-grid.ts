@@ -235,7 +235,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                     scenario: {
                         contentPlacement: {
                             id: 'over',
-                        }
+                        },
                     },
                     items: [JSON.parse(JSON.stringify(teaserItemPrototype))],
                 };
@@ -392,40 +392,40 @@ const productsGridConfigurator: vuejs.ComponentOption = {
 
                 Object.entries(this.configuration.hero).map(
                     (oldConfig: any) => {
-                        if(oldConfig[0] === 'colorScheme') {
+                        if (oldConfig[0] === 'colorScheme') {
                             this.configuration.items[0].optimizers.color_scheme = oldConfig[1];
                         }
 
-                        if(oldConfig[0] === 'image') {
+                        if (oldConfig[0] === 'image') {
                             this.configuration.items[0].image.raw = oldConfig[1];
                         }
 
-                        if(oldConfig[0] === 'decoded_image') {
+                        if (oldConfig[0] === 'decoded_image') {
                             this.configuration.items[0].image.decoded = oldConfig[1];
                         }
 
-                        if(oldConfig[0] === 'button') {
+                        if (oldConfig[0] === 'button') {
                             this.configuration.items[0].cta.label = oldConfig[1].label;
                         }
 
-                        if(oldConfig[0] === 'href') {
+                        if (oldConfig[0] === 'href') {
                             this.configuration.items[0].cta.href = oldConfig[1];
                         }
 
-                        if(oldConfig[0] === 'headline') {
+                        if (oldConfig[0] === 'headline') {
                             this.configuration.items[0].slogan = oldConfig[1];
                         }
 
-                        if(oldConfig[0] === 'subheadline') {
+                        if (oldConfig[0] === 'subheadline') {
                             this.configuration.items[0].description = oldConfig[1];
                         }
 
-                        if(oldConfig[0] === 'paragraph') {
-                            this.configuration.items[0].description += "<br>" + oldConfig[1];
+                        if (oldConfig[0] === 'paragraph') {
+                            this.configuration.items[0].description += '<br>' + oldConfig[1];
                         }
 
-                        if(oldConfig[0] === 'displayVariant') {
-                            switch(oldConfig[1]) {
+                        if (oldConfig[0] === 'displayVariant') {
+                            switch (oldConfig[1]) {
                                 case ('1'):
                                     this.configuration.items[0].content_align.x = 1;
                                     this.configuration.items[0].content_align.y = 2;
@@ -449,7 +449,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                             }
                         }
 
-                        if(oldConfig[0] === 'position') {
+                        if (oldConfig[0] === 'position') {
                             this.configuration.items[0].position = oldConfig[1];
                         }
                     }
@@ -498,7 +498,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
             const maxColumns: object = this.ccConfig.columns['one-column'];
             return Math.max.apply(
                 Math,
-                Object.keys(maxColumns).map(key => (<any>maxColumns)[key])
+                Object.keys(maxColumns).map(key => (maxColumns as any)[key])
             );
         },
 
@@ -551,11 +551,11 @@ const productsGridConfigurator: vuejs.ComponentOption = {
 
         _collectTeasersCssClasses(): void {
             if (this.configuration.items != null) {
-                const cssClassFields: Array<any> = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+                const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig.teaser.tabs);
 
                 this.configuration.items.forEach(
                     (teaser: any, index: number) => {
-                        const cssClasses: Array<string> = [];
+                        const cssClasses: string[] = [];
 
                         cssClassFields.forEach(
                             (model: string) => {

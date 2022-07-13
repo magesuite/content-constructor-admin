@@ -91,7 +91,7 @@ const productFinderPreview: vuejs.ComponentOption = {
          * @return {string} - permanent image url that can be viewed in Magento's admin panel OR empty if something went wrong
          */
         decode(imageUrl: string): string {
-            const decodedImage: string = window.btoa(imageUrl.replace(/\\\//g, "/"));
+            const decodedImage: string = window.btoa(imageUrl.replace(/\\\//g, '/'));
 
             if (decodedImage && decodedImage.length && this.imageEndpoint.length) {
                 return this.imageEndpoint.replace('{/encoded_image}', decodedImage);

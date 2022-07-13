@@ -73,7 +73,7 @@ const customHtmlConfigurator: vuejs.ComponentOption = {
         fixMarkup(markup: string): string {
             return markup.replace(/\/>/g, '>').replace(/&quot;/g, "'");
         },
-    }
+    },
 };
 
 export default customHtmlConfigurator;

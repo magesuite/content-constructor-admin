@@ -27,6 +27,9 @@
 @import '../accordion/preview/accordion';
 @import '../product-teaser/preview/product-teaser';
 
+// Custom components
+@import '../../custom-components/custom-components-preview';
+
 .cc-layout-builder {
     $root: &;
 

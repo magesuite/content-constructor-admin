@@ -1,5 +1,5 @@
 
-# Main creativepatterns .gitignore configuration.
+# Main .gitignore configuration.
 
 node_modules/
 npm-debug.log

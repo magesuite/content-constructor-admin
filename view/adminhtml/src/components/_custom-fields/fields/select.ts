@@ -4,7 +4,7 @@ interface IFieldInformation {
     label: string;
     type: string;
     model: string;
-    options: Array<any>;
+    options: any[];
     default?: string;
     note?: string;
     hint?: string;

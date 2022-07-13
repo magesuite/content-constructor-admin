@@ -137,7 +137,7 @@ const productGridPreview: vuejs.ComponentOption = {
         isLoading: {
             type: Boolean,
             default: true,
-        }
+        },
     },
     computed: {
         itemsGridClass(): string {

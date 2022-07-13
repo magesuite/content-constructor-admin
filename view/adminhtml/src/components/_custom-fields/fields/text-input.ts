@@ -25,7 +25,7 @@ const customFieldTextInput: vuejs.ComponentOption = {
         fieldConfiguration: {
             type: Object,
             default(): any {
-                return {}
+                return {};
             },
         },
 
