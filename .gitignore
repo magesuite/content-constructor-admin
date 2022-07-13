@@ -4,10 +4,6 @@
 node_modules/
 npm-debug.log
 
-# These files are to be created by a manually-run build process.
-view/adminhtml/web/css/content-constructor.css
-view/adminhtml/web/css/content-constructor.js
-
 # Created by https://www.gitignore.io/api/jetbrains,osx,linux,windows
 
 ### JetBrains ###
