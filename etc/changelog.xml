@@ -14,6 +14,12 @@
                         <overview>New Custom Field - Datetime Range picker and naming refactor - switched from "custom-elements" to "custom-fields"</overview>
                     </entry>
                 </tag>
+                <tag version="v4.2.1" date="2021-07-13">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Keep default CC files</overview>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
