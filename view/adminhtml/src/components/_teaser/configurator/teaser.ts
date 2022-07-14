@@ -17,6 +17,7 @@ import customFieldRadio from '../../_custom-fields/fields/radio';
 import customFieldPosition from '../../_custom-fields/fields/position-grid';
 import { getVideoTypeFromUrl, VideoType } from './_video/types';
 import customFieldDatetimeRange from '../../_custom-fields/fields/datetime-range';
+import { customFieldColor } from '../../_custom-fields/custom-fields';
 
 export const teaserPrototype: any = {
     image: {
@@ -131,6 +132,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'custom-element-radio': customFieldRadio,
         'custom-element-position': customFieldPosition,
         'custom-element-datetime': customFieldDatetimeRange,
+        'custom-element-color': customFieldColor,
     },
     template: `
     <div

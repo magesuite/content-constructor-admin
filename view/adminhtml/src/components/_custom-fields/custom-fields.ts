@@ -5,6 +5,7 @@ import customFieldCheckbox from './fields/checkbox';
 import customFieldRadio from './fields/radio';
 import customFieldPosition from './fields/position-grid';
 import customFieldDatetimeRange from './fields/datetime-range';
+import customFieldColor from './fields/color';
 
 export {
     customFieldTextInput,
@@ -13,5 +14,6 @@ export {
     customFieldCheckbox,
     customFieldRadio,
     customFieldPosition,
-    customFieldDatetimeRange
+    customFieldDatetimeRange,
+    customFieldColor
 };

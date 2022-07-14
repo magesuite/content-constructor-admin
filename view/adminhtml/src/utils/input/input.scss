@@ -347,6 +347,15 @@
         }
     }
 
+    &--type-color {
+        #{$root}__input {
+            width: 3.3rem;
+            height: 3.3rem;
+            background-color: buttonface;
+            padding: 0rem 0.1rem;
+        }
+    }
+
     &--type-textarea {
         align-self: flex-start;
         padding-top: 0.5rem;

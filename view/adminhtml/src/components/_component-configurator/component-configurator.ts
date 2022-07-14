@@ -14,6 +14,7 @@ const componentConfigurator: vuejs.ComponentOption = {
         'custom-element-radio': customElements.customFieldRadio,
         'custom-element-position': customElements.customFieldPosition,
         'custom-element-datetime-range': customElements.customFieldDatetimeRange,
+        'custom-element-color': customElements.customFieldColor,
     },
     props: {
         /**
