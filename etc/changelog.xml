@@ -20,6 +20,12 @@
                         <overview>Keep default CC files</overview>
                     </entry>
                 </tag>
+		        <tag version="v4.3.0" date="2021-07-13">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>New Custom Field - Color</overview>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
