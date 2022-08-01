@@ -670,16 +670,18 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         },
         _validateVideoPlaceholders(): void {
             this.invalidVideoPlaceholderTeaserIndexes = [];
-            this.configuration.items.forEach((teaser: any, index: number) => {
-                if (
-                    teaser.video &&
-                    teaser.video.url.length &&
-                    !teaser.image.raw
-                ) {
-                    this.invalidVideoPlaceholderTeaserIndexes.push(index);
-                    this.configuration.isError = true;
-                }
-            });
+            if (this.configuration.items?.length) {
+                this.configuration.items.forEach((teaser: any, index: number) => {
+                    if (
+                        teaser.video &&
+                        teaser.video.url.length &&
+                        !teaser.image.raw
+                    ) {
+                        this.invalidVideoPlaceholderTeaserIndexes.push(index);
+                        this.configuration.isError = true;
+                    }
+                });
+            }
         },
     },
     ready(): void {
