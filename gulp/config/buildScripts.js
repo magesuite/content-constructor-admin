@@ -53,7 +53,8 @@ module.exports = {
             ...(environment.production ? [terser()] : []),
             alias({
                 entries: {
-                    'components': path.resolve('view/adminhtml/src/components')
+                    'components': path.resolve('view/adminhtml/src/components'),
+                    'utils': path.resolve('view/adminhtml/src/utils')
                 }
             })
         ],
