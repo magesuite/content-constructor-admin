@@ -11,7 +11,15 @@ class GeneratorTest extends \Magento\TestFramework\TestCase\AbstractBackendContr
 
         $token = $this->getResponse()->getBody();
 
-        $this->assertEquals(32, strlen($token));
+        $productMetadata = $this->_objectManager->get(\Magento\Framework\App\ProductMetadataInterface::class);
+        $version = $productMetadata->getVersion();
+
+        // From Magento 2.4.4 JWT tokens are introduced that have length of 151 characters
+        if(version_compare($version, '2.4.4', '>=')) {
+            $this->assertEquals(151, strlen($token));
+        } else {
+            $this->assertEquals(32, strlen($token));
+        }
     }
 
 
