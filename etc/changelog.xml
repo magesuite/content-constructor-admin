@@ -26,6 +26,12 @@
                         <overview>New Custom Field - Color</overview>
                     </entry>
                 </tag>
+                <tag version="v4.4.1" date="2021-07-13">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Build build files and commit tem for proejcts not using manual build</overview>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
