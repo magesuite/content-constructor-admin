@@ -42,7 +42,7 @@ class ComponentConfigurationToXmlMapper
      */
     public function map($components, $existingXml = '')
     {
-        $existingXml = trim($existingXml);
+        $existingXml = $existingXml === null ? '' : trim($existingXml);
 
         if (!empty($existingXml)) {
             $xmlRootNode = $this->getXmlRootNodeFromExistingXml($existingXml);
