@@ -39,6 +39,10 @@ class TokenValidator
             return false;
         }
 
+        if($token->getCreatedAt() === null) {
+            return true;
+        }
+
         if ($this->dateTime->strToTime($token->getCreatedAt()) < ($this->date->gmtTimestamp() - $tokenTtl * self::SECONDS_IN_HOUR)) {
             return true;
         }
