@@ -31,7 +31,7 @@ class PageEditObserver implements \Magento\Framework\Event\ObserverInterface
 
         $data = $request->getPostValue();
 
-        if (isset($data['components']) && !empty($data['components'])) {
+        if (!empty($data['components'])) {
             $components = json_decode($data['components'], true);
             $existingComponents = $page->getContentConstructorContent();
 

@@ -23,7 +23,7 @@ class CategoryEditObserver implements \Magento\Framework\Event\ObserverInterface
 
         $data = $request->getPostValue();
 
-        if (isset($data['components']) && !empty($data['components'])) {
+        if (empty($data['use_default_components']) && !empty($data['components'])) {
             $category->setContentConstructorContent($data['components']);
         }
     }
