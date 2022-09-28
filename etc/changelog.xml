@@ -1,5 +1,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:MageSuite_Changelog:etc/changelog.xsd">
-    <module id="MageSuite_ContentConstructorAdmin" name="MageSuite_ContentConstructorAdmin">
+    <module
+        id="MageSuite_ContentConstructorAdmin"
+        name="MageSuite_ContentConstructorAdmin"
+        url="https://github.com/magesuite/content-constructor-admin">
             <changelog>
                 <tag version="v4.1.0" date="2021-03-12">
                     <entry>
@@ -30,6 +33,13 @@
                     <entry>
                         <type>FIX</type>
                         <overview>Build build files and commit tem for proejcts not using manual build</overview>
+                    </entry>
+                </tag>
+                <tag version="v4.5.0" date="2021-07-13">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Add 'use defualt' field to Content Constructor fieldset</overview>
+                        <ticket_id>MGS-3221</ticket_id>
                     </entry>
                 </tag>
         </changelog>
