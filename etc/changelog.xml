@@ -47,8 +47,9 @@
                         <type>FEATURE</type>
                         <overview>Add additional options for teaser based CC components via advanced tab</overview>
                         <description>
+                            Frontend related changes available in MageSuite v11 (theme-creativeshop v18)
                             Additional options that can be set via advanced tab:
-                            - featchpriority attribute can be set for image,
+                            - fetchpriority attribute can be set for image,
                             - cta target can now be set as _blank (link will be opened in new tab),
                             - promotion tracking (id)
                         </description>
