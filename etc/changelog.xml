@@ -42,7 +42,7 @@
                         <ticket_id>MGS-3221</ticket_id>
                     </entry>
                 </tag>
-                <tag version="4.5.1" date="2022-10-11">
+                <tag version="4.6.0" date="2022-10-11">
                     <entry>
                         <type>FEATURE</type>
                         <overview>Add additional options for teaser based CC components via advanced tab</overview>
