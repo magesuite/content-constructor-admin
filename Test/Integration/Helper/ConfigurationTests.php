@@ -1,6 +1,6 @@
 <?php
 
-namespace Creativestyle\MagesuiteContentConstructorAdmin\Helper;
+namespace Magesuite\ContentConstructorAdmin\Helper;
 
 class ConfigurationTests extends \PHPUnit\Framework\TestCase
 {
@@ -9,7 +9,7 @@ class ConfigurationTests extends \PHPUnit\Framework\TestCase
      */
     protected $configuration;
 
-    public function setUp()
+    public function setUp(): void
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->configuration = $objectManager->get(\MageSuite\ContentConstructorAdmin\Helper\Configuration::class);

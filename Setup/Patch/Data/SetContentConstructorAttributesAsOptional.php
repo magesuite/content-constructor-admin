@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Setup\Patch\Data;
 
 class SetContentConstructorAttributesAsOptional implements \Magento\Framework\Setup\Patch\DataPatchInterface

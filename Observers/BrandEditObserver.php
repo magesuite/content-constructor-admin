@@ -21,7 +21,7 @@ class BrandEditObserver implements \Magento\Framework\Event\ObserverInterface
         /** @var \MageSuite\BrandManagement\Model\Brands $brand */
         $brand = $observer->getData('brand');
 
-        if (isset($params['components']) && !empty($params['components'])) {
+        if (empty($params['use_default_components']) && !empty($params['components'])) {
             $components = json_decode($params['components'], true);
 
             $layoutUpdateXml = $this->configurationToXmlMapper->map($components, $brand->getLayoutUpdateXml());
