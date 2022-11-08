@@ -15,6 +15,22 @@
         <plugin name="remap_sorting_fields" type="MageSuite\ContentConstructorAdmin\Plugin\RemapSortingFields" sortOrder="1" />
     </type>
 
+    <type name="Magento\Catalog\Api\Data\CategoryInterface">
+        <plugin name="remove_content_constructor_store_data"
+                type="MageSuite\ContentConstructorAdmin\Plugin\Catalog\Model\Category\RemoveContentConstructorStoreData"
+                sortOrder="1" />
+    </type>
+    <type name="Magento\Catalog\Api\Data\ProductInterface">
+        <plugin name="remove_content_constructor_store_data"
+                type="MageSuite\ContentConstructorAdmin\Plugin\Catalog\Model\Product\RemoveContentConstructorStoreData"
+                sortOrder="1" />
+    </type>
+    <type name="MageSuite\BrandManagement\Api\Data\BrandsInterface">
+        <plugin name="remove_content_constructor_store_data"
+                type="MageSuite\ContentConstructorAdmin\Plugin\BrandManagement\Model\Brands\RemoveContentConstructorStoreData"
+                sortOrder="1" />
+    </type>
+
     <type name="MageSuite\ContentConstructorAdmin\Model\ComponentsPool">
         <arguments>
             <argument name="data" xsi:type="array">

@@ -5,4 +5,14 @@
                 type="MageSuite\ContentConstructorAdmin\Plugin\GetAllowedExtensionTypes"
                 sortOrder="1" />
     </type>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="use_default_components" xsi:type="array">
+                    <item name="class" xsi:type="string">MageSuite\ContentConstructorAdmin\UiComponents\DataProvider\Product\Form\Modifier\DisableUseDefaultComponentsField</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>

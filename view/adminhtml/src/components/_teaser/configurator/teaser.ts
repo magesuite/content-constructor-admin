@@ -24,6 +24,7 @@ export const teaserPrototype: any = {
         raw: '',
         decoded: '',
         aspect_ratio: '',
+        fetch_priority: false,
         mobile: {
             raw: '',
             decoded: '',
@@ -44,6 +45,7 @@ export const teaserPrototype: any = {
     cta: {
         label: 'More',
         href: '',
+        target: false,
     },
     content_align: {
         x: 1,
@@ -111,6 +113,7 @@ export const teaserPrototype: any = {
             },
         },
     },
+    tracking_id: '',
     teaserType: '',
 };
 
@@ -473,7 +476,57 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             </div>
                         </template>
 
-                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style'">
+                        <template v-if="tab.content && tab.content === '#advanced'">
+                            <div class="cc-teaser-configurator__tab-section">
+                                <label class="cc-input__label">{{ 'Image' | translate }}</label>
+                                <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--fetch-priority">
+                                    <div class="admin__actions-switch" data-role="switcher" :class="{'block-disabled': !configuration.image.raw}">
+                                        <label for="cfg-teaser-{{teaserIndex}}-fetch-priority" class="cc-input__label">{{ 'High fetch priority' | translate }}: </label>
+                                        <input
+                                            type="checkbox"
+                                            class="admin__actions-switch-checkbox"
+                                            id="cfg-teaser-{{teaserIndex}}-fetch-priority"
+                                            v-model="configuration.image.fetch_priority"
+                                            :disabled="!configuration.image.raw"
+                                        >
+                                        <label for="cfg-teaser-{{teaserIndex}}-fetch-priority" class="admin__actions-switch-label"></label>
+                                        <span class="admin__actions-switch-text">
+                                            {{ fetchPriorityTextOutput | translate }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cc-teaser-configurator__tab-section">
+                                <label class="cc-input__label">{{ 'CTA' | translate }}</label>
+                                <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--cta-target">
+                                    <div class="admin__actions-switch" data-role="switcher">
+                                        <label for="cfg-teaser-{{teaserIndex}}-cta-target" class="cc-input__label">{{ 'Open link in new tab' | translate }}: </label>
+                                        <input
+                                            type="checkbox"
+                                            class="admin__actions-switch-checkbox"
+                                            id="cfg-teaser-{{teaserIndex}}-cta-target"
+                                            v-model="configuration.cta.target"
+                                        >
+                                        <label for="cfg-teaser-{{teaserIndex}}-cta-target" class="admin__actions-switch-label"></label>
+                                        <span class="admin__actions-switch-text">
+                                            {{ ctaTargetTextOutput | translate }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--tracking">
+                                <label class="cc-input__label cc-input__label--spacious">{{ 'Promotion tracking' | translate }}</label>
+                                <div class="cc-input cc-input--group">
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <label for="cfg-teaser-{{teaserIndex}}-tracking-id" class="cc-input__label">{{ 'Tracking ID' | translate }}:</label>
+                                        <input type="text" v-model="configuration.tracking_id" id="cfg-teaser-{{teaserIndex}}-tracking-id" class="cc-input__input">
+                                        <p class="cc-input__hint">{{ 'Value will be passed to slide data attribute' | translate }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#advanced'">
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-custom-fields cc-custom-fields--narrow">
                                     <div class="cc-custom-fields__form-group" v-for="field in tab.content.fields">
@@ -628,6 +681,12 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
         mirrorImageTextOutput: function(): string {
             return this.configuration.optimizers.mirror_image ? 'Yes' : 'No';
+        },
+        fetchPriorityTextOutput: function(): string {
+            return this.configuration.image.fetch_priority ? 'Yes' : 'No';
+        },
+        ctaTargetTextOutput: function(): string {
+            return this.configuration.cta.target ? 'Yes' : 'No';
         },
         /**
          * Magento product grid teasers use configuration with 'teasers' instead of 'items'
