@@ -89,6 +89,7 @@
 
         &--preview {
             border: 1px dashed #cac3b3;
+            overflow: hidden;
 
             #{$root}--column & {
                 min-height: 25rem;

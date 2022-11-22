@@ -56,6 +56,13 @@
                         <ticket_id>KRG-2273</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.6.1" date="2022-11-22">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>Adjust font sizes for image teaser preview, and add overflow: hidden</overview>
+                        <ticket_id>MGP-950</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
