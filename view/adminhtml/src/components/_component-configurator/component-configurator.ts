@@ -123,6 +123,11 @@ const componentConfigurator: vuejs.ComponentOption = {
             }
         },
     },
+    filters: {
+        sectionID(id: string): string {
+            return id.replace(/\s+/g, '-').toLowerCase();
+        },
+    },
 };
 
 export { componentConfigurator };

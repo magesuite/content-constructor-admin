@@ -11,7 +11,7 @@ interface IFieldInformation {
 }
 
 const customFieldCheckbox: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--type-switcher">
+    template: `<div class="cc-input cc-input--type-switcher cc-input--{{fieldConfiguration.model}}">
         <div class="admin__actions-switch" data-role="switcher">
             <input type="checkbox" class="admin__actions-switch-checkbox" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model]">
             <label class="admin__actions-switch-label" for="{{fieldConfiguration.model | prefixFieldId}}" v-if="fieldConfiguration.label">

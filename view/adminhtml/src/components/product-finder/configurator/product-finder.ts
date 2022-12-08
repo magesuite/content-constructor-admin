@@ -59,7 +59,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
         'product-finder-preview': productFinderPreview,
     },
     template: `<div class="cc-product-finder-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
-        <section class="cc-product-finder-configurator__section cc-product-finder-configurator__section--custom-section" v-if="ccConfig.product_finder != null && ccConfig.product_finder.custom_sections != null" v-for="section in ccConfig.product_finder.custom_sections">
+        <section class="cc-product-finder-configurator__section cc-product-finder-configurator__section--{{section.label | sectionID}} cc-product-finder-configurator__section--custom-section" v-if="ccConfig.product_finder != null && ccConfig.product_finder.custom_sections != null" v-for="section in ccConfig.product_finder.custom_sections">
             <h3 class="cc-product-finder-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-product-finder-configurator__custom-sections">
                 <div class="cc-custom-fields">

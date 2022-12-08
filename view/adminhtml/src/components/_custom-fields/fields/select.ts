@@ -12,7 +12,7 @@ interface IFieldInformation {
 }
 
 const customFieldSelect: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--type-select">
+    template: `<div class="cc-input cc-input--type-select cc-input--{{fieldConfiguration.model}}">
         <label for="{{fieldConfiguration.model | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
             {{fieldConfiguration.label | translate}}:
         </label>

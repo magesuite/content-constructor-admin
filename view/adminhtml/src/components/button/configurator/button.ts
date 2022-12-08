@@ -11,7 +11,7 @@ import componentConfigurator from '../../_component-configurator/component-confi
 const buttonConfigurator: vuejs.ComponentOption = {
     mixins: [componentConfigurator],
     template: `<form class="cc-button-configurator {{ classes }} | {{ mix }}" {{ attributes }} @submit.prevent="onSave">
-        <section class="cc-button-configurator__section" v-if="ccConfig.button != null && ccConfig.button.custom_sections != null" v-for="section in ccConfig.button.custom_sections">
+        <section class="cc-button-configurator__section cc-button-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.button != null && ccConfig.button.custom_sections != null" v-for="section in ccConfig.button.custom_sections">
             <h3 class="cc-button-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">

@@ -14,7 +14,7 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
     ],
     template: `
     <form class="cc-product-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
-        <section class="cc-product-teaser-configurator__section" v-if="ccConfig.product_teaser != null && ccConfig.product_teaser.custom_sections != null" v-for="section in ccConfig.product_teaser.custom_sections">
+        <section class="cc-product-teaser-configurator__section cc-product-teaser-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.product_teaser != null && ccConfig.product_teaser.custom_sections != null" v-for="section in ccConfig.product_teaser.custom_sections">
             <h3 class="cc-product-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-product-teaser-configurator__custom-sections">
                 <div class="cc-custom-fields">

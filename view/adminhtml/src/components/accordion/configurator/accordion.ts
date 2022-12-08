@@ -34,7 +34,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
         'component-actions': componentActions,
     },
     template: `<div :class="componentCssClasses">
-        <div class="cc-accordion-configurator__section" v-if="ccConfig.accordion != null && ccConfig.accordion.custom_sections != null" v-for="section in ccConfig.accordion.custom_sections">
+        <div class="cc-accordion-configurator__section cc-accordion-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.accordion != null && ccConfig.accordion.custom_sections != null" v-for="section in ccConfig.accordion.custom_sections">
             <h3 class="cc-accordion-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
