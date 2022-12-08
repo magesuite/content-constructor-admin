@@ -61,6 +61,10 @@
             color: #303030;
         }
 
+        &:invalid {
+            border: 1px solid #eb5202;
+        }
+
         &[readonly] {
             cursor: not-allowed;
             color: #797979;
@@ -84,6 +88,14 @@
 
         &--group-quarter #{$root}:last-child {
             text-align: right;
+        }
+
+        &--type-color {
+            width: 3.3rem;
+            height: 3.3rem;
+            background-color: buttonface;
+            padding: 0rem 0.1rem;
+
         }
     }
 
@@ -348,15 +360,6 @@
             + #{$root}__select {
                 margin-left: 1em;
             }
-        }
-    }
-
-    &--type-color {
-        #{$root}__input {
-            width: 3.3rem;
-            height: 3.3rem;
-            background-color: buttonface;
-            padding: 0rem 0.1rem;
         }
     }
 

@@ -17,6 +17,11 @@
     .cc-input {
         padding: 0;
 
+        &__wrapper {
+            display: flex;
+            position: relative;
+        }
+
         &__select {
             width: 100%;
             padding-top: 0.6rem;
