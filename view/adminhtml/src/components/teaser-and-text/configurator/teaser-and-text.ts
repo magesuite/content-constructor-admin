@@ -57,7 +57,7 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
-        <section class="cc-image-teaser-configurator__section" v-if="ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null" v-for="section in ccConfig.image_teaser.custom_sections">
+        <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null" v-for="section in ccConfig.image_teaser.custom_sections">
             <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">

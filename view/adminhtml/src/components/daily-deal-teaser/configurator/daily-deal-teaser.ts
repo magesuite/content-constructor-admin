@@ -14,7 +14,7 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
         componentConfigurator,
     ],
     template: `<form class="cc-daily-deal-teaser-configurator" {{ attributes }}>
-        <section class="cc-daily-deal-teaser-configurator__section" v-if="ccConfig.daily_deal_teaser != null && ccConfig.daily_deal_teaser.custom_sections != null" v-for="section in ccConfig.daily_deal_teaser.custom_sections">
+        <section class="cc-daily-deal-teaser-configurator__section cc-daily-deal-teaser-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.daily_deal_teaser != null && ccConfig.daily_deal_teaser.custom_sections != null" v-for="section in ccConfig.daily_deal_teaser.custom_sections">
             <h3 class="cc-daily-deal-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">

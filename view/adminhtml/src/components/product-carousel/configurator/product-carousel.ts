@@ -14,7 +14,7 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
         componentConfigurator,
     ],
     template: `<form class="cc-product-carousel-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
-        <section class="cc-product-carousel-configurator__section" v-if="ccConfig.product_carousel != null && ccConfig.product_carousel.custom_sections != null" v-for="section in ccConfig.product_carousel.custom_sections">
+        <section class="cc-product-carousel-configurator__section cc-product-carousel-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.product_carousel != null && ccConfig.product_carousel.custom_sections != null" v-for="section in ccConfig.product_carousel.custom_sections">
             <h3 class="cc-product-carousel-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">

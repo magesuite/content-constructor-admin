@@ -14,7 +14,7 @@ const customHtmlConfigurator: vuejs.ComponentOption = {
     ],
     template: `
     <div class="cc-custom-html-configurator">
-        <section class="cc-custom-html-configurator__section" v-if="ccConfig.custom_html != null && ccConfig.custom_html.custom_sections != null" v-for="section in ccConfig.custom_html.custom_sections">
+        <section class="cc-custom-html-configurator__section cc-custom-html-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.custom_html != null && ccConfig.custom_html.custom_sections != null" v-for="section in ccConfig.custom_html.custom_sections">
             <h3 class="cc-custom-html-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">

@@ -16,7 +16,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         <div class="cc-paragraph-configurator__error" v-text="tempConfiguration.errorMessage" v-show="tempConfiguration.errorMessage">
         </div>
 
-        <section class="cc-paragraph-configurator__section" v-if="ccConfig.paragraph != null && ccConfig.paragraph.custom_sections != null" v-for="section in ccConfig.paragraph.custom_sections">
+        <section class="cc-paragraph-configurator__section cc-paragraph-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.paragraph != null && ccConfig.paragraph.custom_sections != null" v-for="section in ccConfig.paragraph.custom_sections">
             <h3 class="cc-paragraph-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">

@@ -25,7 +25,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         'teaser-configurator': teaserConfigurator,
     },
     template: `<div class="cc-products-grid-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
-        <section class="cc-products-grid-configurator__section" v-if="ccConfig.products_grid != null && ccConfig.products_grid.custom_sections != null" v-for="section in ccConfig.products_grid.custom_sections">
+        <section class="cc-products-grid-configurator__section cc-products-grid-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.products_grid != null && ccConfig.products_grid.custom_sections != null" v-for="section in ccConfig.products_grid.custom_sections">
             <h3 class="cc-products-grid-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-hero-carousel-configurator__custom-sections">
                 <div class="cc-custom-fields">

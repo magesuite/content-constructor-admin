@@ -29,7 +29,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
         'teaser-configurator': teaserConfigurator,
     },
     template: `<div class="cc-hero-carousel-configurator | {{ class }}">
-        <section class="cc-hero-carousel-configurator__section" v-if="ccConfig.hero_carousel != null && ccConfig.hero_carousel.custom_sections != null" v-for="section in ccConfig.hero_carousel.custom_sections">
+        <section class="cc-hero-carousel-configurator__section cc-hero-carousel-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.hero_carousel != null && ccConfig.hero_carousel.custom_sections != null" v-for="section in ccConfig.hero_carousel.custom_sections">
             <h3 class="cc-hero-carousel-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-hero-carousel-configurator__custom-sections">
                 <div class="cc-custom-fields">

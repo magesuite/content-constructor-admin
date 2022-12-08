@@ -11,7 +11,7 @@ interface IFieldInformation {
 }
 
 const customFieldDatetimeRange: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--type-daterange">
+    template: `<div class="cc-input cc-input--type-daterange cc-input--{{fieldConfiguration.model}}">
         <label class="cc-input__label" v-if="fieldConfiguration.label" style="margin-bottom: 1rem; width: 100%;">
             {{fieldConfiguration.label}}
         </label>

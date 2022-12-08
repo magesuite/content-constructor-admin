@@ -12,7 +12,7 @@ interface IFieldInformation {
 }
 
 const customFieldRadio: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--wrapper">
+    template: `<div class="cc-input cc-input--wrapper cc-input--{{fieldConfiguration.model}}">
         <label class="cc-input__label cc-input__label--radio-group" v-if="fieldConfiguration.label">
             {{fieldConfiguration.label | translate}}
         </label>

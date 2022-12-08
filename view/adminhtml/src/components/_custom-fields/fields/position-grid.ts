@@ -16,7 +16,7 @@ interface IFieldInformation {
 }
 
 const customFieldPosition: vuejs.ComponentOption = {
-    template: `<div class="cc-input cc-input--type-position-grid">
+    template: `<div class="cc-input cc-input--type-position-grid cc-input--{{fieldConfiguration.model}}">
         <label class="cc-input__label" v-if="fieldConfiguration.label">{{fieldConfiguration.label | translate}}:</label>
         <div
             class="cc-position-grid"
