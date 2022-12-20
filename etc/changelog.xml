@@ -75,6 +75,13 @@
                         <ticket_id>NKD-3457</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.7.2" date="2022-12-19">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>Add alt tag to teaser component in advanced tab</overview>
+                        <ticket_id>RK-522</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>

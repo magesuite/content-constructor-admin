@@ -115,6 +115,7 @@ export const teaserPrototype: any = {
     },
     tracking_id: '',
     teaserType: '',
+    image_alt: '',
 };
 
 /**
@@ -493,6 +494,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         <span class="admin__actions-switch-text">
                                             {{ fetchPriorityTextOutput | translate }}
                                         </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--alt">
+                                <label class="cc-input__label">{{ 'Alt' | translate }}</label>
+                                <div class="cc-input cc-input--group">
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <input type="text" v-model="configuration.image_alt" id="cfg-teaser-{{teaserIndex}}-alt" class="cc-input__input">
+                                        <p class="cc-input__hint">{{ 'Value will be passed to alt (if alt field empty - slogan is used, if slogan is empty - description is used, if empty "Teaser image" is used)' | translate }}</p>
                                     </div>
                                 </div>
                             </div>
