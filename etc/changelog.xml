@@ -143,6 +143,18 @@
                         <ticket_id>RK-662</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.9.0" date="2023-03-07">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>Add loading options for slide images in teaser based CC components via advanced tab</overview>
+                        <description>
+                            Additional options that can be set via advanced tab:
+                            - lazyload (via vanilla-lazyload),
+                            - eagerload (via native attribute)
+                        </description>
+                        <ticket_id>MGS-5019</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
