@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import alert from 'Magento_Ui/js/modal/alert';
 import confirm from 'Magento_Ui/js/modal/confirm';
+import $t from 'mage/translate';
 
 import actionButton from '../../../utils/action-button/action-button';
 import componentActions from '../../../utils/component-actions/component-actions';
@@ -46,6 +47,7 @@ export const teaserPrototype: any = {
         label: 'More',
         href: '',
         target: false,
+        link: false,
     },
     content_align: {
         x: 1,
@@ -337,11 +339,17 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
                                         <label for="cfg-teaser-{{teaserIndex}}-slogan" class="cc-input__label">{{ 'Slogan' | translate }}:</label>
-                                        <textarea v-model="configuration.slogan | prettify" id="cfg-teaser-{{teaserIndex}}-slogan" class="cc-input__textarea"></textarea>
+                                        <textarea v-model="configuration.slogan | prettifySlogan" id="cfg-teaser-{{teaserIndex}}-slogan" class="cc-input__textarea"></textarea>
+                                        <button v-if="ccConfig.teaser.allow_slogan_editor" type="button" class="scalable action-show-hide" id="toggle-slogan-wysiwyg-{{teaserIndex}}">${$t(
+                                            'Show / Hide Editor'
+                                        )}</button>
                                     </div>
                                     <div class="cc-input cc-teaser-configurator__form-element">
                                         <label for="cfg-teaser-{{teaserIndex}}-description" class="cc-input__label">{{ 'Description' | translate }}:</label>
-                                        <textarea v-model="configuration.description | prettify" id="cfg-teaser-{{teaserIndex}}-description" class="cc-input__textarea"></textarea>
+                                        <textarea v-model="configuration.description | prettifyDescription" id="cfg-teaser-{{teaserIndex}}-description" class="cc-input__textarea"></textarea>
+                                        <button v-if="ccConfig.teaser.allow_description_editor" type="button" class="scalable action-show-hide" id="toggle-description-wysiwyg-{{teaserIndex}}">${$t(
+                                            'Show / Hide Editor'
+                                        )}</button>
                                     </div>
                                 </div>
                             </div>
@@ -523,6 +531,21 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </span>
                                     </div>
                                 </div>
+                                <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--cta-target">
+                                    <div class="admin__actions-switch" data-role="switcher">
+                                        <label for="cfg-teaser-{{teaserIndex}}-link-only-cta" class="cc-input__label">{{ 'Link only CTA button' | translate }}: </label>
+                                        <input
+                                            type="checkbox"
+                                            class="admin__actions-switch-checkbox"
+                                            id="cfg-teaser-{{teaserIndex}}-link-only-cta"
+                                            v-model="configuration.cta.link"
+                                        >
+                                        <label for="cfg-teaser-{{teaserIndex}}-link-only-cta" class="admin__actions-switch-label"></label>
+                                        <span class="admin__actions-switch-text">
+                                            {{ ctaLinkOnlyTextOutput | translate }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--tracking">
                                 <label class="cc-input__label cc-input__label--spacious">{{ 'Promotion tracking' | translate }}</label>
@@ -667,6 +690,31 @@ const teaserConfigurator: vuejs.ComponentOption = {
             type: Boolean,
             default: false,
         },
+        wysiwygConfig: {
+            type: Object,
+            default: {
+                'plugins': [],
+                'add_directives': false,
+                'add_images': false,
+                'add_variables': false,
+                'add_widgets': false,
+                'tinymce': {
+                    'toolbar': 'undo redo | styleselect | fontsizeselect | lineheight | forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist | link',
+                    'plugins': [
+                        'lists',
+                        'link',
+                    ],
+                },
+            },
+        },
+        isSloganEditorInitialized: {
+            type: Boolean,
+            default: false,
+        },
+        isDescriptionEditorInitialized: {
+            type: Boolean,
+            default: false,
+        }
     },
     computed: {
         /**
@@ -697,6 +745,9 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
         ctaTargetTextOutput: function(): string {
             return this.configuration.cta.target ? 'Yes' : 'No';
+        },
+        ctaLinkOnlyTextOutput: function(): string {
+            return this.configuration.cta.link ? 'Yes' : 'No';
         },
         /**
          * Magento product grid teasers use configuration with 'teasers' instead of 'items'
@@ -758,12 +809,16 @@ const teaserConfigurator: vuejs.ComponentOption = {
             return `cfg-teaser-${this.teaserIndex}-${id}`;
         },
 
-        prettify: {
+        prettifySlogan: {
             /**
              * @param txt {string} - original v-model value
              * @return {String} - HTML ready
              */
             read(txt: string): string {
+                if (this.isSloganEditorInitialized) {
+                    return txt;
+                }
+                
                 return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
             },
 
@@ -772,6 +827,36 @@ const teaserConfigurator: vuejs.ComponentOption = {
              * @return {String} - stripped html
              */
             write(txt: string): any {
+                if (this.isSloganEditorInitialized) {
+                    return txt;
+                }
+
+                return txt.replace(/\n/g, '<br>');
+            },
+        },
+
+        prettifyDescription: {
+            /**
+             * @param txt {string} - original v-model value
+             * @return {String} - HTML ready
+             */
+            read(txt: string): string {
+                if (this.isDescriptionEditorInitialized) {
+                    return txt;
+                }
+
+                return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
+            },
+
+            /**
+             * @param txt {string} - current content of v-model
+             * @return {String} - stripped html
+             */
+            write(txt: string): any {
+                if (this.isDescriptionEditorInitialized) {
+                    return txt;
+                }
+
                 return txt.replace(/\n/g, '<br>');
             },
         },
@@ -1363,6 +1448,64 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 type: '',
             };
         },
+        /**
+         * Initializes TinyMCE WYSIWYG with given configuration (this.wysiwygConfig).
+         * Custom Event.observe(... event added to toggle editor on/off
+         * @param teaserIndex
+         */
+        initSloganWysiwyg(teaserIndex: number): void {
+            const _this: any = this;
+            let sloganEditor: any;
+
+            require([
+                'mage/adminhtml/wysiwyg/tiny_mce/setup',
+            ], function(): void {
+                Event.observe(
+                    `toggle-slogan-wysiwyg-${teaserIndex}`,
+                    'click',
+                    function(): void {
+                        if (!sloganEditor) {
+                            sloganEditor = new wysiwygSetup(
+                                `cfg-teaser-${teaserIndex}-slogan`,
+                                _this.wysiwygConfig
+                            );
+            
+                            sloganEditor.setup('exact');
+                            _this.isSloganEditorInitialized = true;
+                        } else {
+                            sloganEditor.toggle();
+                        }
+                    }.bind(sloganEditor)
+                );
+            });
+        },
+
+        initDescriptionWysiwyg(teaserIndex: number): void {
+            const _this: any = this;
+            let descriptionEditor: any;
+
+            require([
+                'mage/adminhtml/wysiwyg/tiny_mce/setup',
+            ], function(): void {
+                Event.observe(
+                    `toggle-description-wysiwyg-${teaserIndex}`,
+                    'click',
+                    function(): void {
+                        if (!descriptionEditor) {
+                            descriptionEditor = new wysiwygSetup(
+                                `cfg-teaser-${teaserIndex}-description`,
+                                _this.wysiwygConfig
+                            );
+            
+                            descriptionEditor.setup('exact');
+                            _this.isDescriptionEditorInitialized = true;
+                        } else {
+                            descriptionEditor.toggle();
+                        }
+                    }.bind(descriptionEditor)
+                );
+            });
+        },
     },
     ready(): void {
         this.handleJqEvents();
@@ -1393,6 +1536,14 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
         if (this.configuration.video) {
             this.videoInputValue = this.configuration.video.url;
+        }
+
+        if (this.ccConfig.teaser.allow_slogan_editor) {
+            this.initSloganWysiwyg(this.teaserIndex);
+        }
+
+        if (this.ccConfig.teaser.allow_description_editor) {
+            this.initDescriptionWysiwyg(this.teaserIndex);
         }
     },
 };
