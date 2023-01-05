@@ -12,6 +12,10 @@ const iconConfigurator: vuejs.ComponentOption = {
         callerComponentType: {
             type: String,
             default: 'icon'
+        },
+        mix: {
+            type: String,
+            default: 'cc-image-teaser-configurator--icon'
         }
     },
     ready(): void {
