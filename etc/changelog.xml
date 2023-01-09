@@ -82,6 +82,13 @@
                         <ticket_id>RK-522</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.7.3" date="2023-01-02">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>Hide alt and fetchpriority fields in teaser and text component (for text)</overview>
+                        <ticket_id>RK-522</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>

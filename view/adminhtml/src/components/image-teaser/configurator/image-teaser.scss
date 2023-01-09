@@ -5,6 +5,13 @@
         .cc-component-actions__button--delete {
             display: none;
         }
+
+        #cc-image-teaser-item-1 {
+            .cc-teaser-configurator__tab-section--alt,
+            .cc-teaser-configurator__tab-section--fetch-priority {
+                display: none;
+            }
+        }
     }
 
 

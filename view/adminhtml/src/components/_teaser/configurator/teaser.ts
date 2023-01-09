@@ -486,7 +486,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         </template>
 
                         <template v-if="tab.content && tab.content === '#advanced'">
-                            <div class="cc-teaser-configurator__tab-section">
+                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--fetch-priority">
                                 <label class="cc-input__label">{{ 'Image' | translate }}</label>
                                 <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--fetch-priority">
                                     <div class="admin__actions-switch" data-role="switcher" :class="{'block-disabled': !configuration.image.raw}">
