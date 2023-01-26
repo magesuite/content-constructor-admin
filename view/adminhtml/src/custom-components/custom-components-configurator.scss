@@ -1,1 +1,101 @@
-// No custom components by default
+@import './components/extended-mosaic/configurator/extended-mosaic';
+@import './components/background/configurator/background';
+
+.cc-component-picker__list-item {
+    order: 100;
+
+    &--headline {
+        order: 1;
+    }
+
+    &--hero-carousel {
+        order: 2;
+    }
+
+    &--image-teaser-2 {
+        order: 3;
+    }
+
+    &--extended-mosaic {
+        order: 4;
+    }
+
+    &--teaser-and-text {
+        order: 5;
+    }
+
+    &--paragraph {
+        order: 6;
+    }
+
+    &--product-grid {
+        order: 7;
+    }
+
+    &--product-carousel {
+        order: 8;
+    }
+
+    &--accordion {
+        order: 9;
+    }
+
+    &--separator {
+        order: 10;
+    }
+
+    &--static-cms-block {
+        order: 11;
+    }
+
+    &--custom-html {
+        order: 12;
+    }
+
+    &--mosaic {
+        order: 13;
+    }
+
+    &--button {
+        order: 14;
+    }
+
+    &--image-teaser {
+        display: none;
+    }
+}
+
+.cc-teaser-configurator--text-only {
+    .cc-custom-fields__form-group {
+        &:nth-child(5),
+        &:nth-child(6) {
+            display: none;
+        }
+    }
+}
+
+.cc-teaser-preview__text-content {
+    font-size: 1.4rem !important;
+}
+
+.cc-image-teaser-configurator--extended-mosaic, 
+.cc-image-teaser-configurator--mosaic, 
+.cc-image-teaser-configurator--teaser-and-text, 
+.cc-image-teaser-configurator--icon {
+    .cc-input--special-variant {
+        display: none;
+    }
+
+    .cc-custom-fields__form-group:has(.cc-input--special-variant) {
+        display: none;
+    }
+}
+
+.cc-custom-fields__form-group {
+    &:nth-child(3) {
+        margin-right: 50%;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #d4d4d4;
+    }
+}

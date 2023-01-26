@@ -94,6 +94,12 @@
                         <type>FIX</type>
                         <overview>Fix for [Teaser and Text] 'Alt' input field displays incorrect when I move image to the right in admin panel</overview>
                         <ticket_id>RK-588</ticket_id>
+                </tag>
+                <tag version="4.8.0" date="2023-01-26">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>Add possibility to copy one or more CC components between pages</overview>
+                        <ticket_id>RK-590</ticket_id>
                     </entry>
                 </tag>
         </changelog>
