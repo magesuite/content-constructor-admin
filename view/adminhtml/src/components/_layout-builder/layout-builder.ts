@@ -440,7 +440,7 @@ const layoutBuilder: vuejs.ComponentOption = {
             }
             
             const components: [IComponentInformation] = JSON.parse(componentsData);
-            const layoutBuilderInstance = this;
+            const builder = this;
 
             let buttons: any = [];
 
@@ -452,42 +452,15 @@ const layoutBuilder: vuejs.ComponentOption = {
                         click: function () {
                             this.closeModal();
 
-                            component.id = layoutBuilderInstance.generateNewComponentId(component.id);
-                            layoutBuilderInstance.addComponentInformation(index, component);
+                            component.id = builder.generateNewComponentId(component.id);
+                            builder.addComponentInformation(index, component);
 
-                            layoutBuilderInstance.$nextTick(
+                            builder.$nextTick(
                                 (): void => {
-                                    const $origin: JQuery = $(`#${layoutBuilderInstance.components[index].id}`);
-                                    const $copied: JQuery = $(`#${component.id}`);
-                
-                                    $copied.addClass(
-                                        'cc-layout-builder__component--duplicate cc-layout-builder__component--show-up'
-                                    );
-                
-                                    setTimeout((): void => {
-                                        $copied.removeClass(
-                                            'cc-layout-builder__component--show-up'
-                                        );
-                                        
-                                        const scrollDown: boolean = $origin.offset().top < $copied.offset().top;
-                
-                                        $('html, body').animate(
-                                            {
-                                                scrollTop:
-                                                    $origin.offset().top +
-                                                    (scrollDown ? $copied.outerHeight(true) : $copied.outerHeight(true) * -1 ) -
-                                                    150,
-                                            },
-                                            350,
-                                            'swing'
-                                        );
-                                    }, 200);
-                
-                                    setTimeout((): void => {
-                                        $copied.removeClass(
-                                            'cc-layout-builder__component--duplicate'
-                                        );
-                                    }, 1000);
+                                    setTimeout(
+                                        builder.animateAddingComponent(builder.components[index].id, component.id),
+                                        200
+                                    )
                                 }
                             );
                         }
@@ -504,8 +477,8 @@ const layoutBuilder: vuejs.ComponentOption = {
                             this.closeModal();
     
                             components.forEach((component, i) => {
-                                component.id = layoutBuilderInstance.generateNewComponentId(component.id);
-                                layoutBuilderInstance.addComponentInformation(index + i, component);
+                                component.id = builder.generateNewComponentId(component.id);
+                                builder.addComponentInformation(index + i, component);
                             });
                         }
                     }
@@ -528,6 +501,44 @@ const layoutBuilder: vuejs.ComponentOption = {
                 modalClass: 'choose-component-to-paste-modal',
                 buttons: buttons
             });
+        },
+        /**
+         * Animate newly added component (duplicated or copied).
+         * @param {string} originId Original component's id.
+         * @param {string} newId New component's id.
+         */
+        animateAddingComponent(originId: string, duplicateId: string): void {
+            const $origin: JQuery = $(`#${originId}`);
+            const $duplicate: JQuery = $(`#${duplicateId}`);
+
+            $duplicate.addClass(
+                'cc-layout-builder__component--duplicate cc-layout-builder__component--show-up'
+            );
+
+            setTimeout((): void => {
+                $duplicate.removeClass(
+                    'cc-layout-builder__component--show-up'
+                );
+
+                const scrollDown: boolean = $origin.offset().top < $duplicate.offset().top;
+                
+                $('html, body').animate(
+                    {
+                        scrollTop:
+                            $origin.offset().top +
+                            (scrollDown ? $origin.outerHeight(true) : $origin.outerHeight(true) * -1 ) -
+                            150,
+                    },
+                    350,
+                    'swing'
+                );
+            }, 10);
+
+            setTimeout((): void => {
+                $duplicate.removeClass(
+                    'cc-layout-builder__component--duplicate'
+                );
+            }, 800);
         },
         /**
          * Initializes edit mode of component.
@@ -669,35 +680,7 @@ const layoutBuilder: vuejs.ComponentOption = {
 
             this.$nextTick(
                 (): void => {
-                    const $origin: JQuery = $(`#${this.components[index].id}`);
-                    const $duplicate: JQuery = $(`#${duplicate.id}`);
-
-                    $duplicate.addClass(
-                        'cc-layout-builder__component--duplicate cc-layout-builder__component--show-up'
-                    );
-
-                    setTimeout((): void => {
-                        $duplicate.removeClass(
-                            'cc-layout-builder__component--show-up'
-                        );
-
-                        $('html, body').animate(
-                            {
-                                scrollTop:
-                                    $origin.offset().top +
-                                    $origin.outerHeight(true) -
-                                    150,
-                            },
-                            350,
-                            'swing'
-                        );
-                    }, 10);
-
-                    setTimeout((): void => {
-                        $duplicate.removeClass(
-                            'cc-layout-builder__component--duplicate'
-                        );
-                    }, 800);
+                    this.animateAddingComponent(this.components[index].id, duplicate.id);
                 }
             );
         },
@@ -709,7 +692,7 @@ const layoutBuilder: vuejs.ComponentOption = {
          */
         copyComponent(index: number): void {
             const oldCopiedComponents: any = localStorage.getItem('magesuite-cc-admin-last-copied-components') || '[]';
-            const newCopiedComponents: any = [this.components[index], ...JSON.parse(oldCopiedComponents)].slice(0, 10);
+            const newCopiedComponents: any = [...JSON.parse(oldCopiedComponents), this.components[index]].slice(0, 10);
 
             localStorage.setItem(
                 'magesuite-cc-admin-last-copied-components',
