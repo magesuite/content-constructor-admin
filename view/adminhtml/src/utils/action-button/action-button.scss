@@ -108,6 +108,22 @@
                 fill: lighten(#e4e1d9, 3.5%);
             }
         }
+
+        &_used {
+            color: #14A8A3;
+            background-color: lighten(#14A8A3, 57%);
+            border-color: #14A8A3;
+            fill: #14A8A3;
+
+            &:after {
+                content: '\2714';
+                font-size: 18px;
+            }
+
+            #{$root}__icon {
+                display: none !important;
+            }
+        }
     }
 
     &--type {
