@@ -44,6 +44,11 @@
             </argument>
         </field>
         <field name="content">
+            <settings>
+                <additionalClasses>
+                    <class name="cc-visually-hidden">true</class>
+                </additionalClasses>
+            </settings>
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="formElement" xsi:type="string">hidden</item>
