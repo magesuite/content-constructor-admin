@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
 import confirm from 'Magento_Ui/js/modal/confirm';
+import alert from 'Magento_Ui/js/modal/alert';
 
 import actionButton from '../../utils/action-button/action-button';
 import componentActions from '../../utils/component-actions/component-actions';
@@ -87,9 +88,14 @@ const layoutBuilder: vuejs.ComponentOption = {
             </div>
 
             <component-adder class="cc-component-adder cc-component-adder--last">
-                <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( 0 )">
+                <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( 0 )" title="{{ getTranslatedText('Add new component') }}">
                     <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
                         <use xlink:href="#icon_plus"></use>
+                    </svg>
+                </button>
+                <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="pasteComponent( 0 )" title="{{ getTranslatedText('Paste copied component') }}">
+                    <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
+                        <use xlink:href="#icon_copy"></use>
                     </svg>
                 </button>
             </component-adder>
@@ -98,9 +104,14 @@ const layoutBuilder: vuejs.ComponentOption = {
         <template v-for="component in components">
             <div v-bind:class="{ 'cc-layout-builder__component': true, 'cc-layout-builder__component--special': getIsSpecialComponent( component.type ), 'cc-layout-builder__component--invisible': getIsComponentHiddenFE( component.data ), 'cc-layout-builder__component--filtered-out': !getIsComponentVisibleDashboard( component.data ) }" id="{{ component.id }}">
                 <component-adder class="cc-component-adder cc-component-adder--first">
-                    <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( $index )">
+                    <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( $index )" title="{{ getTranslatedText('Add new component') }}">
                         <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
                             <use xlink:href="#icon_plus"></use>
+                        </svg>
+                    </button>
+                    <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="pasteComponent( $index )" title="{{ getTranslatedText('Paste copied component') }}">
+                        <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
+                            <use xlink:href="#icon_copy"></use>
                         </svg>
                     </button>
                 </component-adder>
@@ -126,6 +137,11 @@ const layoutBuilder: vuejs.ComponentOption = {
                             <button is="action-button" class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--duplicate" :class="[ isPossibleToDuplicate( component ) ? '' : 'cc-action-button--look_disabled' ]" :disabled="!isPossibleToDuplicate( component )" @click="duplicateComponent( $index )" title="{{ getTranslatedText('Duplicate component') }}">
                                 <svg class="cc-action-button__icon">
                                     <use xlink:href="#icon_duplicate"></use>
+                                </svg>
+                            </button>
+                            <button class="cc-action-button cc-action-button--look_default cc-action-button--type_icon-only | cc-component-actions__button cc-component-actions__button--copy" :class="{ 'cc-action-button--look_disabled': !isPossibleToCopy( component ), 'cc-action-button--look_used': isAlreadyCopied( component.id ) }" :disabled="!isPossibleToCopy( component )" @click="copyComponent( $index )" title="{{ getTranslatedText('Copy component') }}">
+                                <svg class="cc-action-button__icon">
+                                    <use xlink:href="#icon_copy"></use>
                                 </svg>
                             </button>
                             <div class="cc-component-display-controller" v-if="isPossibleToControlDisplay( component.type )">
@@ -166,9 +182,14 @@ const layoutBuilder: vuejs.ComponentOption = {
                 </div>
 
                 <component-adder class="cc-component-adder cc-component-adder--last">
-                    <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( $index + 1 )">
+                    <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( $index + 1 )" title="{{ getTranslatedText('Add new component') }}">
                         <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
                             <use xlink:href="#icon_plus"></use>
+                        </svg>
+                    </button>
+                    <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="pasteComponent( $index + 1 )" title="{{ getTranslatedText('Paste copied component') }}">
+                        <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
+                            <use xlink:href="#icon_copy"></use>
                         </svg>
                     </button>
                 </component-adder>
@@ -177,9 +198,14 @@ const layoutBuilder: vuejs.ComponentOption = {
 
         <div class="cc-layout-builder__component cc-layout-builder__component--static">
             <component-adder class="cc-component-adder cc-component-adder--first">
-                <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( components.length + 1 )">
+                <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( components.length + 1 )" title="{{ getTranslatedText('Add new component') }}">
                     <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
                         <use xlink:href="#icon_plus"></use>
+                    </svg>
+                </button>
+                <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="pasteComponent( components.length + 1 )" title="{{ getTranslatedText('Paste copied component') }}">
+                    <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
+                        <use xlink:href="#icon_copy"></use>
                     </svg>
                 </button>
             </component-adder>
@@ -286,6 +312,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         return {
             components: [],
             filters: {},
+            copiedComponents: []
         };
     },
     computed: {
@@ -307,6 +334,10 @@ const layoutBuilder: vuejs.ComponentOption = {
                 window.localStorage.getItem('ccFilters')
                 ? JSON.parse(window.localStorage.getItem('ccFilters'))
                 : this.ccConfig.filters;
+
+        const storedCopiedComponents = localStorage.getItem('magesuite-cc-admin-copied-components');
+        this.copiedComponents = storedCopiedComponents ? JSON.parse(storedCopiedComponents).map((el: any) => el.id) : [];
+
         this.sortComponentsBySections();
         this.setupInitialDisplayProps();
         this.updateLayout();
@@ -397,6 +428,123 @@ const layoutBuilder: vuejs.ComponentOption = {
                 }
             );
             this.addComponentInformation(index, componentInfo);
+        },
+        /**
+         * Paste component or components choosen from the lits in the modal.
+         * 
+         * @param {number} index Original component's index in array.
+         */
+        pasteComponent(index: number): void {
+            const componentsData: string = localStorage.getItem('magesuite-cc-admin-copied-components');
+
+            if (!componentsData) {
+                alert({
+                    title: $t('In order to paste a component first copy another component.'),
+                });
+                return;
+            }
+            
+            const components: [IComponentInformation] = JSON.parse(componentsData);
+            const builder = this;
+
+            let buttons: any = [];
+
+            components.forEach((component, i) => {
+                buttons.push(
+                    {
+                        text: `${component.name}`,
+                        class: 'action-secondary',
+                        click: function () {
+                            this.closeModal();
+
+                            component.id = builder.generateNewComponentId(component.id);
+                            builder.addComponentInformation(index, component);
+
+                            builder.$nextTick(
+                                (): void => {
+                                    setTimeout(
+                                        builder.animateAddingComponent(builder.components[index].id, component.id),
+                                        200
+                                    )
+                                }
+                            );
+                        }
+                    }
+                )
+            });
+
+            if (components.length > 1) {
+                buttons.push(
+                    {
+                        text: $t('Paste all copied components'),
+                        class: 'action-secondary',
+                        click: function () {
+                            this.closeModal();
+    
+                            components.forEach((component, i) => {
+                                component.id = builder.generateNewComponentId(component.id);
+                                builder.addComponentInformation(index + i, component);
+                            });
+                        }
+                    }
+                );
+            }
+
+            buttons.push(
+                {
+                    text: $t('Clear copied components list'),
+                    class: 'action-secondary',
+                    click: function () {
+                        this.copiedComponents = [];
+                        this.closeModal();
+                        localStorage.removeItem('magesuite-cc-admin-copied-components')
+                    }
+                }
+            )
+
+            alert({
+                title: $t('Choose component to paste'),
+                modalClass: 'choose-component-to-paste-modal',
+                buttons: buttons
+            });
+        },
+        /**
+         * Animate newly added component (duplicated or copied).
+         * @param {string} originId Original component's id.
+         * @param {string} newId New component's id.
+         */
+        animateAddingComponent(originId: string, duplicateId: string): void {
+            const $origin: JQuery = $(`#${originId}`);
+            const $duplicate: JQuery = $(`#${duplicateId}`);
+
+            $duplicate.addClass(
+                'cc-layout-builder__component--duplicate cc-layout-builder__component--show-up'
+            );
+
+            setTimeout((): void => {
+                $duplicate.removeClass(
+                    'cc-layout-builder__component--show-up'
+                );
+
+                const scrollDown: boolean = $origin.offset().top < $duplicate.offset().top;
+                
+                $('html, body').animate(
+                    {
+                        scrollTop:
+                            $origin.offset().top +
+                            (scrollDown ? $origin.outerHeight(true) : $origin.outerHeight(true) * -1 ) -
+                            150,
+                    },
+                    350,
+                    'swing'
+                );
+            }, 10);
+
+            setTimeout((): void => {
+                $duplicate.removeClass(
+                    'cc-layout-builder__component--duplicate'
+                );
+            }, 800);
         },
         /**
          * Initializes edit mode of component.
@@ -538,37 +686,40 @@ const layoutBuilder: vuejs.ComponentOption = {
 
             this.$nextTick(
                 (): void => {
-                    const $origin: JQuery = $(`#${this.components[index].id}`);
-                    const $duplicate: JQuery = $(`#${duplicate.id}`);
-
-                    $duplicate.addClass(
-                        'cc-layout-builder__component--duplicate cc-layout-builder__component--show-up'
-                    );
-
-                    setTimeout((): void => {
-                        $duplicate.removeClass(
-                            'cc-layout-builder__component--show-up'
-                        );
-
-                        $('html, body').animate(
-                            {
-                                scrollTop:
-                                    $origin.offset().top +
-                                    $origin.outerHeight(true) -
-                                    150,
-                            },
-                            350,
-                            'swing'
-                        );
-                    }, 10);
-
-                    setTimeout((): void => {
-                        $duplicate.removeClass(
-                            'cc-layout-builder__component--duplicate'
-                        );
-                    }, 800);
+                    this.animateAddingComponent(this.components[index].id, duplicate.id);
                 }
             );
+        },
+        /**
+         * Copy component to localStorage
+         * If there are already copied components add a new component to array
+         * There can be max. 10 components copied
+         * @param {number} index Original component's index in array.
+         */
+        copyComponent(index: number): void {
+            if (this.isAlreadyCopied(this.components[index].id)) {
+                alert({
+                    title: $t('The component has been already copied before'),
+                });
+            } else {
+                const oldCopiedComponents: any = localStorage.getItem('magesuite-cc-admin-copied-components') || '[]';
+                const newCopiedComponents: any = [...JSON.parse(oldCopiedComponents), this.components[index]].slice(0, 10);
+    
+                localStorage.setItem(
+                    'magesuite-cc-admin-copied-components',
+                    JSON.stringify(newCopiedComponents)
+                );
+    
+                this.copiedComponents.push(this.components[index].id);
+                this.copiedComponents.slice(0, 10);
+    
+                alert({
+                    title: $t('The component was copied'),
+                    content: $.mage.__(
+                        'You can copy up to 10 components and paste them later into Content Constructor area on other CMS/PDP/POP page.'
+                    ),
+                });
+            }
         },
         /**
          * Goes through all components and assigns section.
@@ -709,7 +860,23 @@ const layoutBuilder: vuejs.ComponentOption = {
                 (component.type !== 'paragraph' || (component.type === 'paragraph' && component.data.hasOwnProperty('migrated')))
             );
         },
-
+        /**
+         * Checks if it's possible to copy component.
+         * For now we only disallow removal of special components so I just call getIsSpecialComponent
+         * @param  {string}  componentType type of component.
+         * @return {boolean}
+         */
+        isPossibleToCopy(component: any): boolean {
+            return !this.getIsSpecialComponent(component.type);
+        },
+        /**
+         * Checks if component was already copied
+         * @param  {string} id id of component.
+         * @return {boolean}
+         */
+        isAlreadyCopied: function(id: string): boolean {
+            return this.copiedComponents.some((el: any) => el === id)
+        },
         /**
          * FE mobile/desktop visibility cannot be controlled for Built-in components into magento core functionality
          * @param  {string}  componentType type of component.
