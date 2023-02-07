@@ -17,6 +17,10 @@ class ComponentConfigurationToXmlMapper
      */
     public function cleanXml($existingXml)
     {
+        if (empty($existingXml)) {
+            return $existingXml;
+        }
+
         $existingXml = trim($existingXml);
 
         if (!empty($existingXml)) {
