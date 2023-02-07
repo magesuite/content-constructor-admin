@@ -24,8 +24,7 @@ class Brand implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Conten
     public function __construct(
         \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration,
         \Magento\Framework\Registry $registry
-    )
-    {
+    ) {
         $this->xmlToComponentConfiguration = $xmlToComponentConfiguration;
         $this->registry = $registry;
     }
@@ -37,8 +36,8 @@ class Brand implements \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Conten
 
         $configuration = [];
 
-        if ($brand !== null) {
-            $configuration = $this->xmlToComponentConfiguration->map($brand->getLayoutUpdateXml());
+        if ($brand !== null && $brand->getContentConstructorContent()) {
+            $configuration = json_decode($brand->getContentConstructorContent(), true);
         }
 
         if (empty($configuration)) {
