@@ -17,6 +17,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
     template: `<div class="cc-image-teaser-configurator cc-image-teaser-configurator--mosaic {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Teaser Width</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -39,6 +40,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
         </section>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Proportions</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -59,6 +61,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
 
         <section class="cc-image-teaser-configurator__section" v-show="!ccConfig.mosaic.support_breakpoint_dedicated_images">
             <h3 class="cc-image-teaser-configurator__subtitle">Text Positioning</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -82,6 +85,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
 
         <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.image_teaser != null && ccConfig.image_teaser.custom_sections != null" v-for="section in ccConfig.image_teaser.custom_sections">
             <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
             <div class="cc-custom-fields">
                 <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
                     <component
@@ -115,13 +119,13 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                     ignoredItems: [],
                     scenario: {
                         teaserWidth: {
-                            id: 'container',
+                            //id: 'container',
                         },
                         proportions: {
-                            id: '1',
+                           // id: '1',
                         },
                         contentPlacement: {
-                            id: 'over',
+                            //id: 'over',
                         },
                         desktopLayout: {
                             id: '2',
