@@ -40,7 +40,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
         </section>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Proportions</h3>
-            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.proportions.error">{{configuration.scenario.proportions.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
@@ -61,7 +61,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
 
         <section class="cc-image-teaser-configurator__section" v-show="!ccConfig.mosaic.support_breakpoint_dedicated_images">
             <h3 class="cc-image-teaser-configurator__subtitle">Text Positioning</h3>
-            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
+            <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.contentPlacement.error">{{configuration.scenario.contentPlacement.error}}</p>
             <div class="cc-image-teaser-configurator__scenario-options">
                 <div
                     :class="{
