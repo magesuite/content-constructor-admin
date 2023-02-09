@@ -110,6 +110,13 @@
                         <ticket_id>MGS-4794</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.8.4" date="2023-02-09">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Remove preselected options from mosaic component</overview>
+                        <ticket_id>MGS-4793</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
