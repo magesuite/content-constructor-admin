@@ -493,7 +493,7 @@ const layoutBuilder: vuejs.ComponentOption = {
             buttons.push(
                 {
                     text: $t('Clear copied components list'),
-                    class: 'action-secondary',
+                    class: 'action-secondary action-delete-copied',
                     click: function () {
                         this.copiedComponents = [];
                         this.closeModal();
