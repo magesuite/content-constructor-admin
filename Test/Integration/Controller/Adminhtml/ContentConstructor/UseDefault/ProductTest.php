@@ -24,7 +24,7 @@ class ProductTest extends AbstractUseDefault
         $contentConstructorValue = $product->getData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
 
         $this->assertTrue(
-            str_contains($contentConstructorValue, 'headline2'),
+            strpos($contentConstructorValue ?? '', 'headline2') !== false,
             'Fixture value not asserted'
         );
 
@@ -35,11 +35,11 @@ class ProductTest extends AbstractUseDefault
         $contentConstructorValue = $product->getData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
 
         $this->assertFalse(
-            str_contains($contentConstructorValue, 'headline2'),
+            strpos($contentConstructorValue ?? '', 'headline2') !== false,
             'The old value asserted but should be removed'
         );
         $this->assertTrue(
-            str_contains($contentConstructorValue, 'headline'),
+            strpos($contentConstructorValue ?? '', 'headline') !== false,
             'The new value not asserted'
         );
     }

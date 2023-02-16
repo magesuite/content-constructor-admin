@@ -23,7 +23,7 @@ class BrandsTest extends AbstractUseDefault
         $brand = $this->brandsRepository->getById(600, 1);
 
         $this->assertTrue(
-            str_contains($brand->getLayoutUpdateXml(), 'headline2'),
+            strpos($brand->getLayoutUpdateXml() ?? '', 'headline2') !== false,
             'Fixture value not asserted'
         );
 
@@ -33,11 +33,11 @@ class BrandsTest extends AbstractUseDefault
         $brand = $this->brandsRepository->getById(600, 1);
 
         $this->assertFalse(
-            str_contains($brand->getLayoutUpdateXml(), 'headline2'),
+            strpos($brand->getLayoutUpdateXml() ?? '', 'headline2') !== false,
             'The old value asserted but should be removed'
         );
         $this->assertTrue(
-            str_contains($brand->getLayoutUpdateXml(), 'headline'),
+            strpos($brand->getLayoutUpdateXml() ?? '', 'headline') !== false,
             'The new value not asserted'
         );
     }

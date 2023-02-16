@@ -22,11 +22,7 @@ class BrandEditObserver implements \Magento\Framework\Event\ObserverInterface
         $brand = $observer->getData('brand');
 
         if (empty($params['use_default_components']) && !empty($params['components'])) {
-            $components = json_decode($params['components'], true);
-
-            $layoutUpdateXml = $this->configurationToXmlMapper->map($components, $brand->getLayoutUpdateXml());
-
-            $brand->setLayoutUpdateXml($layoutUpdateXml);
+            $brand->setContentConstructorContent($params['components']);
         }
     }
 }
