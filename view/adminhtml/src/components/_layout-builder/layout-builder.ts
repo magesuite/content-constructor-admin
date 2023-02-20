@@ -711,7 +711,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                 );
     
                 this.copiedComponents.push(this.components[index].id);
-                this.copiedComponents.slice(0, 10);
+                this.copiedComponents = this.copiedComponents.slice(-10);
     
                 alert({
                     title: $t('The component was copied'),
