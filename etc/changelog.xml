@@ -124,7 +124,7 @@
                         <ticket_id>RK-663</ticket_id>
                     </entry>
                 </tag>
-                <tag version="4.8.4" date="2023-02-17">
+                <tag version="4.8.6" date="2023-02-17">
                     <entry>
                         <type>FIX</type>
                         <overview>Adjust marking component as copied</overview>
