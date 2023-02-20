@@ -94,7 +94,7 @@
                         <type>FIX</type>
                         <overview>Fix for [Teaser and Text] 'Alt' input field displays incorrect when I move image to the right in admin panel</overview>
                         <ticket_id>RK-588</ticket_id>
-                    </entry>    
+                    </entry>
                 </tag>
                 <tag version="4.8.0" date="2023-02-03">
                     <entry>
@@ -115,6 +115,13 @@
                         <type>FIX</type>
                         <overview>Remove preselected options from mosaic component</overview>
                         <ticket_id>MGS-4793</ticket_id>
+                    </entry>
+                </tag>
+                <tag version="4.8.3" date="2023-02-17">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Adjust clear all copied component button</overview>
+                        <ticket_id>RK-663</ticket_id>
                     </entry>
                 </tag>
         </changelog>
