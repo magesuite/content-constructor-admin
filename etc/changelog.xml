@@ -129,6 +129,13 @@
                         <ticket_id>RK-662</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.8.5" date="2023-02-21">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Copy-paste components improvements</overview>
+                        <ticket_id>RK-662, RK-663</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>

@@ -477,7 +477,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                 buttons.push(
                     {
                         text: $t('Paste all copied components'),
-                        class: 'action-secondary',
+                        class: 'action-default primary action-paste-all-copied',
                         click: function () {
                             this.closeModal();
     
@@ -493,11 +493,11 @@ const layoutBuilder: vuejs.ComponentOption = {
             buttons.push(
                 {
                     text: $t('Clear copied components list'),
-                    class: 'action-secondary action-delete-copied',
+                    class: 'action-default primary action-delete-copied',
                     click: function () {
-                        this.copiedComponents = [];
-                        this.closeModal();
+                        builder.copiedComponents = [];
                         localStorage.removeItem('magesuite-cc-admin-copied-components')
+                        this.closeModal();
                     }
                 }
             )
