@@ -703,7 +703,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                 });
             } else {
                 const oldCopiedComponents: any = localStorage.getItem('magesuite-cc-admin-copied-components') || '[]';
-                const newCopiedComponents: any = [...JSON.parse(oldCopiedComponents), this.components[index]].slice(0, 10);
+                const newCopiedComponents: any = [...JSON.parse(oldCopiedComponents), this.components[index]].slice(-10);
     
                 localStorage.setItem(
                     'magesuite-cc-admin-copied-components',
