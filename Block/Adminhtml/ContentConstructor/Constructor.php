@@ -4,81 +4,22 @@ namespace MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor;
 
 class Constructor extends \Magento\Framework\View\Element\Template
 {
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper
-     */
-    protected $xmlToComponentConfiguration;
+    protected \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration;
+    protected \Magento\Framework\Registry $registry;
+    protected \MageSuite\ContentConstructorAsset\Service\AssetLocator $assetLocator;
+    protected \Magento\Backend\Model\UrlInterface $backendUrl;
+    protected \MageSuite\ContentConstructorAdmin\Service\UiComponentRenderer $uiComponentRenderer;
+    protected \MageSuite\ContentConstructorAdmin\DataProviders\ContentConstructorConfigDataProvider $contentConstructorConfigDataProvider;
+    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
+    protected \MageSuite\ContentConstructorAdmin\Helper\ConfigurationMediaResolver $configurationMediaResolver;
+    protected \MageSuite\ContentConstructorFrontend\Model\Sort\Pool $sortersPool;
+    protected \MageSuite\ContentConstructorFrontend\Model\Filter\Pool $filtersPool;
+    protected \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider;
+    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
+    protected \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper;
+    protected \Magento\Ui\Component\Form\Element\DataType\Media\OpenDialogUrl $openDialogUrl;
+    protected \Magento\Cms\Helper\Wysiwyg\Images $imagesHelper;
 
-    /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $registry;
-    /**
-     * @var \MageSuite\ContentConstructorAsset\Service\AssetLocator
-     */
-    protected $assetLocator;
-    /**
-     * @var \Magento\Backend\Model\UrlInterface
-     */
-    protected $backendUrl;
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Service\UiComponentRenderer
-     */
-    protected $uiComponentRenderer;
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\DataProviders\ContentConstructorConfigDataProvider
-     */
-    protected $contentConstructorConfigDataProvider;
-
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
-
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Helper\ConfigurationMediaResolver
-     */
-    protected $configurationMediaResolver;
-
-    /**
-     * @var \MageSuite\ContentConstructorFrontend\Model\Sort\Pool
-     */
-    protected $sortersPool;
-
-    /**
-     * @var \MageSuite\ContentConstructorFrontend\Model\Filter\Pool
-     */
-    protected $filtersPool;
-
-    /**
-     * @var ConfigurationProvider
-     */
-    protected $configurationProvider;
-
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
-	 * @var \MageSuite\ContentConstructorAdmin\Helper\Configuration
-	 */
-     protected $configurationHelper;
-
-    /**
-     * @var \Magento\Cms\Helper\Wysiwyg\Images
-     */
-    protected $imagesHelper;
-
-    /**
-     * Constructor constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper
-     * @param array $data
-     */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration,
@@ -93,6 +34,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper,
+        \Magento\Ui\Component\Form\Element\DataType\Media\OpenDialogUrl $openDialogUrl,
         \Magento\Cms\Helper\Wysiwyg\Images $imagesHelper,
         array $data = []
     ) {
@@ -110,6 +52,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         $this->configurationProvider = $configurationProvider;
         $this->storeManager = $storeManager;
         $this->configurationHelper = $configurationHelper;
+        $this->openDialogUrl = $openDialogUrl;
         $this->imagesHelper = $imagesHelper;
 
         $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
@@ -148,7 +91,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
     public function getUploaderUrl()
     {
         return $this->backendUrl->getUrl(
-            'cms/wysiwyg_images/index',
+            $this->openDialogUrl->get(),
             ['current_tree_path' => $this->imagesHelper->idEncode('wysiwyg')]
         );
     }
