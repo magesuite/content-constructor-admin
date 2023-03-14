@@ -26,6 +26,8 @@ export const teaserPrototype: any = {
         decoded: '',
         aspect_ratio: '',
         fetch_priority: false,
+        lazyload: true,
+        eagerload: false,
         mobile: {
             raw: '',
             decoded: '',
@@ -486,7 +488,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                         </template>
 
                         <template v-if="tab.content && tab.content === '#advanced'">
-                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--fetch-priority">
+                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--image-load">
                                 <label class="cc-input__label">{{ 'Image' | translate }}</label>
                                 <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--fetch-priority">
                                     <div class="admin__actions-switch" data-role="switcher" :class="{'block-disabled': !configuration.image.raw}">
@@ -504,12 +506,50 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         </span>
                                     </div>
                                 </div>
+                                <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--lazyload">
+                                    <div class="admin__actions-switch" data-role="switcher" :class="{'block-disabled': !isLazyloadAvailable}">
+                                        <label for="cfg-teaser-{{teaserIndex}}-lazyload" class="cc-input__label">{{ 'Lazyload' | translate }}: </label>
+                                        <input
+                                            type="checkbox"
+                                            class="admin__actions-switch-checkbox"
+                                            id="cfg-teaser-{{teaserIndex}}-lazyload"
+                                            v-model="configuration.image.lazyload"
+                                            :disabled="!isLazyloadAvailable"
+                                        >
+                                        <label for="cfg-teaser-{{teaserIndex}}-lazyload" class="admin__actions-switch-label"></label>
+                                        <span class="admin__actions-switch-text">
+                                            {{ lazyloadTextOutput | translate }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="cc-input cc-teaser-configurator__form-element cc-teaser-configurator__switcher cc-teaser-configurator__switcher--eagerload">
+                                    <div class="admin__actions-switch" data-role="switcher" :class="{'block-disabled': !isEagerloadAvailable}">
+                                        <label for="cfg-teaser-{{teaserIndex}}-eagerload" class="cc-input__label">{{ 'Eagerload' | translate }}: </label>
+                                        <input
+                                            type="checkbox"
+                                            class="admin__actions-switch-checkbox"
+                                            id="cfg-teaser-{{teaserIndex}}-eagerload"
+                                            v-model="configuration.image.eagerload"
+                                            :disabled="!isEagerloadAvailable"
+                                        >
+                                        <label for="cfg-teaser-{{teaserIndex}}-eagerload" class="admin__actions-switch-label"></label>
+                                        <span class="admin__actions-switch-text">
+                                            {{ eagerloadTextOutput | translate }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--alt">
                                 <label class="cc-input__label">{{ 'Alt' | translate }}</label>
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
-                                        <input type="text" v-model="configuration.image_alt" id="cfg-teaser-{{teaserIndex}}-alt" class="cc-input__input">
+                                        <input 
+                                            type="text"
+                                            class="cc-input__input"
+                                            id="cfg-teaser-{{teaserIndex}}-alt"
+                                            v-model="configuration.image_alt"
+                                            :disabled="!configuration.image.raw"
+                                        >
                                         <p class="cc-input__hint">{{ 'Value will be passed to alt (if alt field empty - slogan is used, if slogan is empty - description is used, if empty "Teaser image" is used)' | translate }}</p>
                                     </div>
                                 </div>
@@ -742,6 +782,18 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
         fetchPriorityTextOutput: function(): string {
             return this.configuration.image.fetch_priority ? 'Yes' : 'No';
+        },
+        lazyloadTextOutput: function(): string {
+            return this.configuration.image.lazyload ? 'Yes' : 'No';
+        },
+        eagerloadTextOutput: function(): string {
+            return this.configuration.image.eagerload ? 'Yes' : 'No';
+        },
+        isLazyloadAvailable: function(): boolean {
+            return this.configuration.image.raw !== '' && !this.configuration.image.eagerload ? true : false;
+        },
+        isEagerloadAvailable: function(): boolean {
+            return this.configuration.image.raw !== '' && !this.configuration.image.lazyload ? true : false;
         },
         ctaTargetTextOutput: function(): string {
             return this.configuration.cta.target ? 'Yes' : 'No';

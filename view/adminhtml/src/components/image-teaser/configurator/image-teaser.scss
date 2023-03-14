@@ -8,7 +8,7 @@
 
         .cc-teaser-configurator__col--preview:not(.cc-teaser-configurator__col--image-uploaded) + .cc-teaser-configurator__col--configurator {
             .cc-teaser-configurator__tab-section--alt,
-            .cc-teaser-configurator__tab-section--fetch-priority {
+            .cc-teaser-configurator__tab-section--image-load {
                 display: none;
             }
         }
