@@ -1576,6 +1576,16 @@ const teaserConfigurator: vuejs.ComponentOption = {
             }
         }
 
+        // set lazyload as true for existing componets
+        if (this.configuration.image.lazyload == null) {
+            this.$set('configuration.image.lazyload', teaserPrototype.image.lazyload);
+        }
+
+        // set eagerload as false for existing componets
+        if (this.configuration.image.eagerload == null) {
+            this.$set('configuration.image.eagerload', teaserPrototype.image.eagerload);
+        }
+
         if (this.callerComponentType === 'magento-product-grid-teasers') {
             this.fixOverflowedRowsSetup();
         }
