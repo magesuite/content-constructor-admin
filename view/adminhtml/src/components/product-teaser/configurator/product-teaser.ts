@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
-import { customFieldColor } from '../../_custom-fields/custom-fields';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
