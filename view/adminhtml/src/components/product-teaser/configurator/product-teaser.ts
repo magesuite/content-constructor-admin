@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
+import { customFieldColor } from '../../_custom-fields/custom-fields';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
@@ -35,6 +36,44 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
         <div class="cc-product-teaser-configurator__input-hint">
             <div class="cc-input__hint">${$t('Provide only one SKU per component instance.')}</div>
         </div>
+        <br>
+        <div class="cc-input cc-input--type-inline">
+            <label class="cc-input__label" for="cfg-pc-slogan">${$t('Slogan')}:</label>
+            <input type="text" name="cfg-pc-slogan" class="cc-input__input" id="cfg-pc-slogan" v-model="configuration.slogan" @change="onChange">
+        </div>
+        <div class="cc-input cc-input--type-inline">
+            <label class="cc-input__label" for="cfg-pc-subslogan">${$t('Subslogan')}:</label>
+            <input type="text" name="cfg-pc-subslogan" class="cc-input__input" id="cfg-pc-subslogan" v-model="configuration.subslogan" @change="onChange">
+        </div>
+        <div class="cc-input cc-input--type-inline">
+            <label for="cfg-pc-background" class="cc-input__label">${ $t('Component background color') }:</label>
+            <div class="cc-input__wrapper">
+                <input type="text" class="cc-input__input" id="cfg-pc-background" v-model="configuration.background" pattern="#[a-fA-F0-9]{6}" maxlength="7">
+                <input type="color" class="cc-input__input cc-input__input--type-color" :value="configuration.background" @change="updateBackgroundValue($event)">
+            </div>        
+        </div>
+        <div class="cc-product-teaser-configurator__input-hint">
+            <div class="cc-input__hint">${$t('Can be left empty. Product images of component with background should have transparency.')}</div>
+        </div>
+        <br>
+        <div class="cc-input cc-input--type-inline">
+            <label for="cfg-pc-border" class="cc-input__label">${$t('Show border around teaser')}</label>
+            <div class="admin__actions-switch" data-role="switcher">
+                <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-pc-border" v-model="configuration.border" @change="onChange">
+                <label class="admin__actions-switch-label" for="cfg-pc-border">
+                    <span class="admin__actions-switch-text" data-text-on="${$t('Yes')}" data-text-off="${$t('No')}"></span>
+                </label>
+            </div>
+        </div>
+        <div class="cc-input cc-input--type-inline">
+            <label for="cfg-pc-shadow" class="cc-input__label">${$t('Show shadow around teaser')}</label>
+            <div class="admin__actions-switch" data-role="switcher">
+                <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-pc-shadow" v-model="configuration.shadow" @change="onChange">
+                <label class="admin__actions-switch-label" for="cfg-pc-shadow">
+                    <span class="admin__actions-switch-text" data-text-on="${$t('Yes')}" data-text-off="${$t('No')}"></span>
+                </label>
+            </div>
+        </div>
         <div class="cc-product-teaser-configurator__error-wrapper" v-if="errorMessage.length">
             <span class="cc-product-teaser-configurator__error">{{ errorMessage }}</span>
         </div>
@@ -66,6 +105,10 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
                 return {
                     customCssClass: '',
                     sku: '',
+                    slogan: '',
+                    subslogan: '',
+                    border: false,
+                    shadow: false
                 };
             },
         },
@@ -147,6 +190,9 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
 
             this.onSave();
         },
+        updateBackgroundValue(e: Event) {
+            this.$set(`configuration.background`, (e.target as HTMLInputElement).value);
+        }
     },
 };
 
