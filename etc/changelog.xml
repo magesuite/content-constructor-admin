@@ -162,7 +162,14 @@
                         <ticket_id>MGS-5019</ticket_id>
                     </entry>
                 </tag>
-                <tag version="4.9.2" date="2023-03-30">
+                <tag version="4.9.2" date="2023-03-31">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>Add missing modifiers for IT based components in CC configurator page</overview>
+                        <ticket_id>NKD-3645</ticket_id>
+                    </entry>
+                </tag>
+                <tag version="4.9.3" date="2023-04-06">
                     <entry>
                         <type>REFACTOR</type>
                         <overview>Refactor product teaser component basing on product tile</overview>

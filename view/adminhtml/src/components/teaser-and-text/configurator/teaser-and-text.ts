@@ -11,7 +11,7 @@ import {
  */
 const teaserAndTextConfigurator: vuejs.ComponentOption = {
     extends: imageTeaserConfigurator,
-    template: `<div class="cc-image-teaser-configurator cc-image-teaser-configurator--teaser-and-text {{ classes }} | {{ mix }}" {{ attributes }}>
+    template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Teaser Width</h3>
             <div class="cc-image-teaser-configurator__scenario-options">
@@ -100,6 +100,14 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
                 };
             },
         },
+        classes: {
+            type: String,
+            default: 'cc-image-teaser-configurator--teaser-and-text'
+        },
+        mix: {
+            type: String,
+            default: ''
+        }
     },
     data(): any {
         return {
