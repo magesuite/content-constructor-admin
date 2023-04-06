@@ -379,6 +379,14 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'image_teaser',
         },
+        classes: {
+            type: String,
+            default: 'cc-image-teaser-configurator--image-teaser'
+        },
+        mix: {
+            type: String,
+            default: ''
+        }
     },
     computed: {
         imageTeasersContentPositions: function(): object {
