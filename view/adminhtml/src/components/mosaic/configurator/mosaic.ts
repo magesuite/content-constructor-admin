@@ -14,7 +14,7 @@ import {
  */
 const mosaicConfigurator: vuejs.ComponentOption = {
     extends: imageTeaserConfigurator,
-    template: `<div class="cc-image-teaser-configurator cc-image-teaser-configurator--mosaic {{ classes }} | {{ mix }}" {{ attributes }}>
+    template: `<div class="cc-image-teaser-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-image-teaser-configurator__section">
             <h3 class="cc-image-teaser-configurator__subtitle">Teaser Width</h3>
             <p class="cc-image-teaser-configurator__section-error" v-if="configuration.scenario.teaserWidth.error">{{configuration.scenario.teaserWidth.error}}</p>
@@ -130,6 +130,14 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                 };
             },
         },
+        classes: {
+            type: String,
+            default: 'cc-image-teaser-configurator--mosaic'
+        },
+        mix: {
+            type: String,
+            default: ''
+        }
     },
     ready(): void {
         this.scenarioOptions = {

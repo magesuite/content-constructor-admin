@@ -76,6 +76,14 @@ const instagramFeedConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'admin',
         },
+        classes: {
+            type: String,
+            default: 'cc-image-teaser-configurator--instagram'
+        },
+        mix: {
+            type: String,
+            default: ''
+        }
     },
     ready(): void {
         this.scenarioOptions = {
