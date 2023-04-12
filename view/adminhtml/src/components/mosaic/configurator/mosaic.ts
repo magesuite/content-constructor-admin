@@ -140,6 +140,16 @@ const mosaicConfigurator: vuejs.ComponentOption = {
         }
     },
     ready(): void {
+        // set initial value for content placement as `over` when
+        // support for different image per breakpoint feature 
+        // has been enabled for mosaic component
+        if (
+            this.ccConfig.mosaic.support_breakpoint_dedicated_images &&
+            this.configuration.scenario.contentPlacement.id == null
+        ) {
+            this.$set('configuration.scenario.contentPlacement.id', 'over');
+        }
+
         this.scenarioOptions = {
             // Teaser width scenario elements
             teaserWidth: {
