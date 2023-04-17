@@ -73,6 +73,16 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
                 </label>
             </div>
         </div>
+        <div class="cc-product-teaser-configurator__special-description">
+            <label for="cfg-pc-special-description" class="cc-input__label">${ $t('Special description') }:</label>
+            <div class="cc-product-teaser-configurator__input-hint">
+                <div class="cc-input__hint">${$t('Special description is optional. If not present short description or description will be displayed (depending on project settings)')}</div>
+            </div>
+            <br>
+            <div class="cc-input__wrapper">
+                <textarea class="cc-input__textarea" id="cfg-pc-special-description" v-model="configuration.specialdescription"></textarea>
+            </div>        
+        </div>
         <div class="cc-product-teaser-configurator__error-wrapper" v-if="errorMessage.length">
             <span class="cc-product-teaser-configurator__error">{{ errorMessage }}</span>
         </div>
@@ -106,6 +116,7 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
                     sku: '',
                     slogan: '',
                     subslogan: '',
+                    specialdescription: '',
                     border: false,
                     shadow: false
                 };
@@ -121,6 +132,23 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
         xmlConfigEntry: {
             type: String,
             default: 'product_teaser',
+        },
+        wysiwygConfig: {
+            type: Object,
+            default: {
+                'plugins': [],
+                'add_directives': false,
+                'add_images': false,
+                'add_variables': false,
+                'add_widgets': false,
+                'tinymce': {
+                    'toolbar': 'undo redo | styleselect | fontsizeselect | lineheight | forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist | link',
+                    'plugins': [
+                        'lists',
+                        'link',
+                    ],
+                },
+            },
         },
     },
     data(): Object {
@@ -191,8 +219,28 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
         },
         updateBackgroundValue(e: Event) {
             this.$set(`configuration.background`, (e.target as HTMLInputElement).value);
-        }
+        },
+        /**
+         * Initializes TinyMCE WYSIWYG with given configuration (this.wysiwygConfig).
+         */
+        initSpecialDescriptionWysiwyg(): void {
+            const _this: any = this;
+
+            require([
+                'mage/adminhtml/wysiwyg/tiny_mce/setup',
+            ], function(): void {
+                const sloganEditor = new wysiwygSetup(
+                    `cfg-pc-special-description`,
+                    _this.wysiwygConfig
+                );
+
+                sloganEditor.setup('exact');
+            });
+        },
     },
+    ready(): void {
+        this.initSpecialDescriptionWysiwyg();
+    }
 };
 
 export default productTeaserConfigurator;

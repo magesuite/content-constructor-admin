@@ -45,7 +45,12 @@
         padding-left: 25%;
     }
 
-    &__custom-sections {
+    &__special-description {
+        padding-top: 3rem;
+    }
+
+    &__custom-sections, 
+    &__special-description {
         .cc-input__hint {
             padding-left: 0;
         }
