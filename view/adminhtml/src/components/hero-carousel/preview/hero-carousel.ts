@@ -70,8 +70,8 @@ const heroCarouselPreview: vuejs.ComponentOption = {
             let imagesCount: number = $images.length;
 
             if (imagesCount) {
-                $images
-                    .load(function(): void {
+                $images.on('load',
+                    function(): void {
                         imagesCount--;
                         if (!imagesCount) {
                             _this.isLoading = false;
@@ -84,8 +84,7 @@ const heroCarouselPreview: vuejs.ComponentOption = {
                     })
                     .filter(function(): boolean {
                         return this.complete;
-                    })
-                    .load();
+                    });
             } else {
                 _this.isLoading = false;
             }
