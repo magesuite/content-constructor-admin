@@ -4,14 +4,8 @@ namespace MageSuite\ContentConstructorAdmin\Controller\Component;
 
 class ProductTeaserData extends \Magento\Framework\App\Action\Action implements \Magento\Framework\App\Action\HttpGetActionInterface
 {
-    /**
-     * @var \Magento\Framework\Controller\Result\JsonFactory
-     */
-    protected $jsonFactory;
-    /**
-     * @var \MageSuite\ContentConstructorFrontend\DataProviders\ProductCarouselDataProvider
-     */
-    protected $productDataProvider;
+    protected \Magento\Framework\Controller\Result\JsonFactory $jsonFactory;
+    protected \MageSuite\ContentConstructorFrontend\DataProviders\ProductCarouselDataProvider $productDataProvider;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -26,11 +20,9 @@ class ProductTeaserData extends \Magento\Framework\App\Action\Action implements 
     public function execute()
     {
         $sku = $this->getRequest()->getParam('sku');
-
-        $products = $this->productDataProvider->getProducts(['skus' => $sku]);
-
+        $this->productDataProvider->setSkipCollectionFilters(true);
+        $products = $this->productDataProvider->getProducts(['skus' => $sku, 'collection_type' => 'db']);
         $product = !empty($products) ? array_shift($products) : [];
-
         $resultJson = $this->jsonFactory->create();
 
         return $resultJson->setData(['product' => $product]);
