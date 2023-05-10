@@ -74,9 +74,9 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
             </div>
         </div>
         <div class="cc-product-teaser-configurator__special-description">
-            <label for="cfg-pc-special-description" class="cc-input__label">${ $t('Special description') }:</label>
+            <label for="cfg-pc-special-description" class="cc-input__label">${ $t('Custom description') }:</label>
             <div class="cc-product-teaser-configurator__input-hint">
-                <div class="cc-input__hint">${$t('Special description is optional. If not present short description or description will be displayed (depending on project settings)')}</div>
+                <div class="cc-input__hint">${$t('A custom description can be added below. If a custom description is not present short description or description will be displayed (depending on the project tile design). Custom description takes precedence before other descriptions.')}</div>
             </div>
             <br>
             <div class="cc-input__wrapper">
