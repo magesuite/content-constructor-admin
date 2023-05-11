@@ -2,8 +2,6 @@ include:
 - file:
   - jobs/universal.yaml
   - jobs/magesuite.yaml
-  - jobs/universal.yaml
-  - jobs/universal.yaml
   project: gitlab-automation/gitlab-ci-automation
   ref: master
 variables:
