@@ -1,10 +1,10 @@
 # Custom CC Components
-Previous documentation guides serve as a point of reference for development of MageSuite core, 
+Previous documentation guides serve as a point of reference for development of MageSuite core,
 however, the recent release (^4.1.0) introduced a support for Custom Content Contructor Components that can be defined in user's own custom modules.
 
 ## How to setup Content Constructor
 
-Prerequisites: 
+Prerequisites:
 - `yarn` installed
 
 Go to magesuite-content-constructor-admin module and run `yarn install`
@@ -19,9 +19,9 @@ yarn lint
 
 ## How do custom components work?
 
-During build there is a task `copyCustomComponents` executed which will search through the `vendor/*` folder for a directory with the specific name 
+During build there is a task `copyCustomComponents` executed which will search through the `vendor/*` folder for a directory with the specific name
 
-_magesuite-custom-content-constructor-components/_ 
+_magesuite-custom-content-constructor-components/_
 
 and copies its content to `magesuite-content-constructor-admin/view/adminhtml/src/custom-components/`
 
@@ -52,7 +52,7 @@ and also two .scss files with style imports for configurator and preview:
 @import './components/hello-world/configurator/hello-world';
 ```
 - custom-components-preview.scss
-    
+
 ```
 @import './components/hello-world/preview/hello-world';
 ```

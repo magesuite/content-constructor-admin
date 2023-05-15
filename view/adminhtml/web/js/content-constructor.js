@@ -6947,7 +6947,7 @@
         },
         ready: function () {
             // set initial value for content placement as `over` when
-            // support for different image per breakpoint feature 
+            // support for different image per breakpoint feature
             // has been enabled for mosaic component
             if (this.ccConfig.mosaic.support_breakpoint_dedicated_images &&
                 this.configuration.scenario.contentPlacement.id == null) {
@@ -7734,9 +7734,9 @@
      */
     var contentConstructor = {
         template: "<div class=\"content-constructor\">\n        <layout-builder\n            v-ref:layout-builder\n            :assets-src=\"assetsSrc\"\n            :cc-config=\"ccConfig\"\n            :image-endpoint=\"imageEndpoint\"\n            :cc-project-configuration=\"ccProjectConfiguration\"\n            :page-type=\"pageType\"\n            :add-component=\"getComponentPicker\"\n            :edit-component=\"editComponent\"\n            :components-configuration=\"configuration\">\n        </layout-builder>\n        <div class=\"content-constructor__modal content-constructor__modal--picker\" v-el:picker-modal></div>\n        <div class=\"content-constructor__modal content-constructor__modal--configurator\" v-el:configurator-modal></div>\n    </div>",
-        components: __assign({ 
+        components: __assign({
             // Essentials
-            'layout-builder': layoutBuilder, 'component-picker': componentPicker, 
+            'layout-builder': layoutBuilder, 'component-picker': componentPicker,
             // CC components
             'button-configurator': buttonConfigurator, 'category-links-configurator': categoryLinksConfigurator, 'custom-html-configurator': customHtmlConfigurator, 'cms-pages-teaser-configurator': cmsPagesTeaserConfigurator, 'daily-deal-teaser-configurator': dailyDealTeaserConfigurator, 'headline-configurator': headlineConfigurator, 'hero-carousel-configurator': heroCarouselConfigurator, 'image-teaser-configurator': imageTeaserConfigurator$1, 'image-teaser-legacy-configurator': imageTeaserConfigurator, 'magento-product-grid-teasers-configurator': magentoProductGridTeasersConfigurator, 'paragraph-configurator': paragraphConfigurator, 'product-carousel-configurator': productCarouselConfigurator, 'product-finder-configurator': ccProductFinderConfigurator, 'products-grid-configurator': productsGridConfigurator, 'static-block-configurator': staticBlockConfigurator, 'icon-configurator': iconConfigurator, 'teaser-and-text-configurator': teaserAndTextConfigurator, 'instagram-feed-configurator': instagramFeedConfigurator, 'mosaic-configurator': mosaicConfigurator, 'accordion-configurator': accordionConfigurator, 'product-teaser-configurator': productTeaserConfigurator }, customComponentsConfigurator),
         props: {

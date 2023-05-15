@@ -1,9 +1,9 @@
 @import '../../functions';
 
 @mixin teaser-gradient-overlay(
-    $x: 1, 
-    $y: 1, 
-    $color: #000, 
+    $x: 1,
+    $y: 1,
+    $color: #000,
     $gradient-range: 85%,
 ) {
     background: linear-gradient(get-gradient-angle($x, $y), $color 0%, rgba($color, 0) $gradient-range);
