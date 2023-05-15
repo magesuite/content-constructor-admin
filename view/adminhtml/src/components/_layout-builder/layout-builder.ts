@@ -431,7 +431,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         },
         /**
          * Paste component or components choosen from the lits in the modal.
-         * 
+         *
          * @param {number} index Original component's index in array.
          */
         pasteComponent(index: number): void {
@@ -443,7 +443,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                 });
                 return;
             }
-            
+
             const components: [IComponentInformation] = JSON.parse(componentsData);
             const builder = this;
 
@@ -480,7 +480,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                         class: 'action-default primary action-paste-all-copied',
                         click: function () {
                             this.closeModal();
-    
+
                             components.forEach((component, i) => {
                                 component.id = builder.generateNewComponentId(component.id);
                                 builder.addComponentInformation(index + i, component);
@@ -527,7 +527,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                 );
 
                 const scrollDown: boolean = $origin.offset().top < $duplicate.offset().top;
-                
+
                 $('html, body').animate(
                     {
                         scrollTop:
@@ -704,15 +704,15 @@ const layoutBuilder: vuejs.ComponentOption = {
             } else {
                 const oldCopiedComponents: any = localStorage.getItem('magesuite-cc-admin-copied-components') || '[]';
                 const newCopiedComponents: any = [...JSON.parse(oldCopiedComponents), this.components[index]].slice(-10);
-    
+
                 localStorage.setItem(
                     'magesuite-cc-admin-copied-components',
                     JSON.stringify(newCopiedComponents)
                 );
-    
+
                 this.copiedComponents.push(this.components[index].id);
                 this.copiedComponents = this.copiedComponents.slice(-10);
-    
+
                 alert({
                     title: $t('The component was copied'),
                     content: $.mage.__(

@@ -49,7 +49,7 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
             <div class="cc-input__wrapper">
                 <input type="text" class="cc-input__input" id="cfg-pc-background" v-model="configuration.background" pattern="#[a-fA-F0-9]{6}" maxlength="7">
                 <input type="color" class="cc-input__input cc-input__input--type-color" :value="configuration.background" @change="updateBackgroundValue($event)">
-            </div>        
+            </div>
         </div>
         <div class="cc-product-teaser-configurator__input-hint">
             <div class="cc-input__hint">${$t('Can be left empty. Product images of component with background should have transparency.')}</div>
@@ -81,7 +81,7 @@ const productTeaserConfigurator: vuejs.ComponentOption = {
             <br>
             <div class="cc-input__wrapper">
                 <textarea class="cc-input__textarea" id="cfg-pc-special-description" v-model="configuration.specialdescription"></textarea>
-            </div>        
+            </div>
         </div>
         <div class="cc-product-teaser-configurator__error-wrapper" v-if="errorMessage.length">
             <span class="cc-product-teaser-configurator__error">{{ errorMessage }}</span>

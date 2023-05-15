@@ -25,7 +25,7 @@
     &__wrapper:after {
         height: 75%;
         background: linear-gradient(
-            to bottom, 
+            to bottom,
             rgba(#fff, 0) 0%,
             rgba(#fff, 0) 53%,
             rgba(#fff, 1) 96%,
@@ -57,7 +57,7 @@
             #{$root}__item-content:after {
                 z-index: 2;
                 background: linear-gradient(
-                    to bottom, 
+                    to bottom,
                     rgba(#f7f7f7, 0) 0%,
                     rgba(#f7f7f7, 0) 25%,
                     rgba(#f7f7f7, 1) 96%,

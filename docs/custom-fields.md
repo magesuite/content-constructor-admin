@@ -11,9 +11,9 @@ The mechanism relies on adding new configurator fields by extending view.xml var
 There are two places, for which, custom fields can be added:
 
 -   Image Teaser Slide Configurator - a place where we configure a specific image within the Image Teaser
-    
+
 -   Component Configurator - general configurator of the component
-    
+
 
 The rest happens under the hood of content constructor module.
 
@@ -191,7 +191,7 @@ Position grid feature known from Content Align feature to set position of text f
                 <var name="y">1</var>
             </var>
             <var name="warning">Note: Please verify text position
- 				configuration in the "Content" tab. It 
+ 				configuration in the "Content" tab. It
 				might overlap the badge position.</var>
             <var name="frontend_type">html</var>
         </var>
@@ -202,7 +202,7 @@ Position grid feature known from Content Align feature to set position of text f
 
 ### checkbox
 
-Checkbox styled magento way (switcher-alike). Use it if you need boolean value on the frontend 
+Checkbox styled magento way (switcher-alike). Use it if you need boolean value on the frontend
 
 ```
 ...
@@ -248,7 +248,7 @@ Color picker
 
 ```
 ...
-	<var name="fields">    
+	<var name="fields">
 		<var name="1">
         	<var name="label">Text color</var>
         	<var name="type">color</var>
@@ -266,7 +266,7 @@ Fieldset consisting of two datetime-local inputs (native datetime pickers)
 
 ```
 ...
-	<var name="fields">    
+	<var name="fields">
 		<var name="1">
         	<var name="label">Datetime</var>
         	<var name="type">datetime-range</var>

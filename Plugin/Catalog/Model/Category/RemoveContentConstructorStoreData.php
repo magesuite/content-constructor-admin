@@ -24,4 +24,3 @@ class RemoveContentConstructorStoreData extends \MageSuite\ContentConstructorAdm
         return $category;
     }
 }
-

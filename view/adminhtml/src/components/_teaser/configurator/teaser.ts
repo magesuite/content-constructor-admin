@@ -543,7 +543,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 <label class="cc-input__label">{{ 'Alt' | translate }}</label>
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
-                                        <input 
+                                        <input
                                             type="text"
                                             class="cc-input__input"
                                             id="cfg-teaser-{{teaserIndex}}-alt"
@@ -870,7 +870,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 if (this.isSloganEditorInitialized) {
                     return txt;
                 }
-                
+
                 return (txt ? txt.replace(/<br\s*[\/]?>/gi, '\n') : '');
             },
 
@@ -1521,7 +1521,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 `cfg-teaser-${teaserIndex}-slogan`,
                                 _this.wysiwygConfig
                             );
-            
+
                             sloganEditor.setup('exact');
                             _this.isSloganEditorInitialized = true;
                         } else {
@@ -1548,7 +1548,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 `cfg-teaser-${teaserIndex}-description`,
                                 _this.wysiwygConfig
                             );
-            
+
                             descriptionEditor.setup('exact');
                             _this.isDescriptionEditorInitialized = true;
                         } else {

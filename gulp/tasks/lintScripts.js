@@ -12,4 +12,3 @@ module.exports = function lintScripts() {
         .pipe(tslint.report(settings.tslintReport))
         .pipe(gulp.dest(settings.dest));
 };
-

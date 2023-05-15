@@ -20,7 +20,7 @@ class Page extends \Magento\Mtf\Fixture\DataSource
             $page = $fixtureFactory->createByCode('cmsPage', ['dataset' => $data['dataset']]);
 
             $page->persist();
-            
+
             $this->data = $page;
         } else {
             $this->data = $data;

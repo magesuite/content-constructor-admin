@@ -181,7 +181,7 @@
                         <type>FIX</type>
                         <overview>Set default value for content placement in mosaic component when specific conditions are met</overview>
                         <description>
-                            When `support_breakpoint_dedicated_images` option for mosaic component in view.xml 
+                            When `support_breakpoint_dedicated_images` option for mosaic component in view.xml
                             is set as true, Text Positioning option within component configuration is hidden
                             and by default it will be set with value `over` in order to validate component
                             during save process.

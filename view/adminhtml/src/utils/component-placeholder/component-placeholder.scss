@@ -9,9 +9,9 @@
 
         &--header,
         &--footer {
-            position: relative; 
-            height: 0; 
-            width: 100%; 
+            position: relative;
+            height: 0;
+            width: 100%;
         }
 
         &--header {
@@ -23,10 +23,10 @@
         }
 
         &-icon {
-            position: absolute; 
-            height: calc(100% - 2.3rem); 
-            width: calc(100% - 2.3rem); 
-            left: 1.15rem; 
+            position: absolute;
+            height: calc(100% - 2.3rem);
+            width: calc(100% - 2.3rem);
+            left: 1.15rem;
             top: 1.15rem;
         }
     }
