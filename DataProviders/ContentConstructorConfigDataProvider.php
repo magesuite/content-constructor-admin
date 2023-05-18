@@ -85,6 +85,6 @@ class ContentConstructorConfigDataProvider
             return null;
         }
 
-        return file_get_contents($configFilePath);
+        return trim(file_get_contents($configFilePath));
     }
 }
