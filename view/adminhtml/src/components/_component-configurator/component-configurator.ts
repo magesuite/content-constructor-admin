@@ -103,7 +103,6 @@ const componentConfigurator: vuejs.ComponentOption = {
                                     cssClasses.push(configValue[key]);
                                 }
                             }
-
                         }
                     }
                 );
