@@ -1,5 +1,6 @@
 import customFieldTextInput  from './fields/text-input';
 import customFieldSelect from './fields/select';
+import customFieldMultiselect from './fields/multiselect';
 import customFieldTextarea from './fields/textarea';
 import customFieldCheckbox from './fields/checkbox';
 import customFieldRadio from './fields/radio';
@@ -15,5 +16,6 @@ export {
     customFieldRadio,
     customFieldPosition,
     customFieldDatetimeRange,
-    customFieldColor
+    customFieldColor,
+    customFieldMultiselect
 };

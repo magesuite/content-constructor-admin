@@ -196,6 +196,17 @@
                         <ticket_id>RK-47</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.10.0" date="2023-05-23">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Introduce multiselect custom field with support for css classes and html frontend types</overview>
+                        <ticket_id>MGS-5135</ticket_id>
+                        <description>
+                            Custom fields documentation has been updated here:
+                            https://creativestyle.atlassian.net/wiki/spaces/MGSDEV/pages/2130772088/Custom+Fields
+                        </description>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
