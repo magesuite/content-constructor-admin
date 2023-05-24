@@ -9,6 +9,7 @@ const componentConfigurator: vuejs.ComponentOption = {
     components: {
         'custom-element-input': customElements.customFieldTextInput,
         'custom-element-select': customElements.customFieldSelect,
+        'custom-element-multiselect': customElements.customFieldMultiselect,
         'custom-element-textarea': customElements.customFieldTextarea,
         'custom-element-checkbox': customElements.customFieldCheckbox,
         'custom-element-radio': customElements.customFieldRadio,
@@ -88,8 +89,20 @@ const componentConfigurator: vuejs.ComponentOption = {
 
                 cssClassFields.forEach(
                     (model: string) => {
-                        if (this.configuration[model] && typeof this.configuration[model] === 'string') {
-                            cssClasses.push(this.configuration[model]);
+                        const configValue = this.configuration[model];
+
+                        if (!configValue) {
+                            return;
+                        }
+
+                        if (typeof configValue === 'string') {
+                            cssClasses.push(configValue);
+                        } else if (typeof configValue === 'object') {
+                            for (const key in configValue) {
+                                if (configValue.hasOwnProperty(key)) {
+                                    cssClasses.push(configValue[key]);
+                                }
+                            }
                         }
                     }
                 );

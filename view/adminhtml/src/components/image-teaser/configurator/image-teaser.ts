@@ -637,13 +637,23 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                 const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig.teaser.tabs);
 
                 this.configuration.items.forEach(
-                    (teaser: any, index: number) => {
+                    (teaser: any) => {
                         const cssClasses: string[] = [];
 
                         cssClassFields.forEach(
                             (model: string) => {
-                                if (teaser[model] && typeof teaser[model] === 'string') {
+                                if (!teaser[model]) {
+                                    return;
+                                }
+
+                                if (typeof teaser[model] === 'string') {
                                     cssClasses.push(teaser[model]);
+                                } else if (typeof teaser[model] === 'object') {
+                                    for (const key in teaser[model]) {
+                                        if (teaser[model].hasOwnProperty(key)) {
+                                            cssClasses.push(teaser[model][key]);
+                                        }
+                                    }
                                 }
                             }
                         );

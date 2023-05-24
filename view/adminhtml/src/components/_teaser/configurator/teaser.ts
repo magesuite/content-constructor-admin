@@ -12,6 +12,7 @@ import componentConfigurator from '../../_component-configurator/component-confi
 
 import customFieldTextInput from '../../_custom-fields/fields/text-input';
 import customFieldSelect from '../../_custom-fields/fields/select';
+import customFieldMultiselect from '../../_custom-fields/fields/multiselect';
 import customFieldTextarea from '../../_custom-fields/fields/textarea';
 import customFieldCheckbox from '../../_custom-fields/fields/checkbox';
 import customFieldRadio from '../../_custom-fields/fields/radio';
@@ -135,6 +136,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'teaser-preview': teaserPreview,
         'custom-element-input': customFieldTextInput,
         'custom-element-select': customFieldSelect,
+        'custom-element-multiselect': customFieldMultiselect,
         'custom-element-textarea': customFieldTextarea,
         'custom-element-checkbox': customFieldCheckbox,
         'custom-element-radio': customFieldRadio,
