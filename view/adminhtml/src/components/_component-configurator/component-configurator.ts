@@ -89,15 +89,15 @@ const componentConfigurator: vuejs.ComponentOption = {
                     this.ccConfig[entry].custom_sections != null
                 ) {
                     const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig[entry].custom_sections);
-    
+
                     cssClassFields.forEach(
                         (model: string) => {
                             const configValue = this.configuration[model];
-    
+
                             if (!configValue) {
                                 return;
                             }
-    
+
                             if (typeof configValue === 'string') {
                                 cssClasses.push(configValue);
                             } else if (typeof configValue === 'object') {
