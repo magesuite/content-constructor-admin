@@ -172,18 +172,6 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
             return;
         },
     },
-    events: {
-        /**
-         * Listen on save event from Content Configurator component.
-         */
-        'component-configurator__save'(): void {
-            this.configuration.isError = false;
-            this._validateOptionsSet();
-            this._validateVideoPlaceholders();
-            this._collectTeasersCssClasses(['teaser', 'teaser_and_text']);
-            this.onSave();
-        },
-    },
 };
 
 export default teaserAndTextConfigurator;
