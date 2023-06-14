@@ -122,7 +122,7 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
             type: String,
             default: ''
         },
-        secondaryXmlConfigEntry: {
+        childXmlConfigEntry: {
             type: String,
             default: 'teaser_and_text'
         }

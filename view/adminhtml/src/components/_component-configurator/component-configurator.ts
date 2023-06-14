@@ -80,10 +80,10 @@ const componentConfigurator: vuejs.ComponentOption = {
             return cssClassFields;
         },
         _collectComponentCssClasses(): void {
-            const componentsToIterate = this.secondaryXmlConfigEntry ? [this.xmlConfigEntry, this.secondaryXmlConfigEntry] : [this.xmlConfigEntry];
+            const components = this.childXmlConfigEntry ? [this.xmlConfigEntry, this.childXmlConfigEntry] : [this.xmlConfigEntry];
             let cssClasses: string[] = [];
 
-            componentsToIterate.forEach((entry: string) => {
+            components.forEach((entry: string) => {
                 if (
                     this.ccConfig[entry] != null &&
                     this.ccConfig[entry].custom_sections != null

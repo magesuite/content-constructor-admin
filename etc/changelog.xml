@@ -203,6 +203,19 @@
                         <ticket_id>MGS-5135</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.10.1" date="2023-06-14">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Introduce possibility to add custom sections restricted only to components that inherit from another component</overview>
+                        <description>
+                            Add possibility to add custom section restricted only to components that inherit from image teaser,
+                            it is now possible to add custom section only to teaser and text or mosaic component. These custom sections
+                            will not be displayed in image teaser component. However, all custom sections from image teaser component will be 
+                            displayed also in its child component.
+                        </description>
+                        <ticket_id>KRA-36</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
