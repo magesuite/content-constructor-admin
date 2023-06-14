@@ -148,10 +148,10 @@ const mosaicConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'cc-image-teaser-configurator--mosaic'
         },
-        childXmlConfigEntry: {
-            type: String,
-            default: 'mosaic'
-        },
+        // childXmlConfigEntry: {
+        //     type: String,
+        //     default: 'mosaic'
+        // },
         mix: {
             type: String,
             default: ''
