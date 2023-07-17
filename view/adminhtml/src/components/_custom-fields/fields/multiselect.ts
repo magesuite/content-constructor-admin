@@ -74,10 +74,10 @@ const customFieldMultiselect: vuejs.ComponentOption = {
         this.multiselect_value = this.configuration[this.fieldConfiguration.model];
 
         if (
-            this.configuration[this.fieldConfiguration.model] == null &&
+            !this.configuration[this.fieldConfiguration.model] &&
             this.fieldConfiguration.default != null
         ) {
-            this.$set(`configuration.${this.fieldConfiguration.model}`, this.fieldConfiguration.default);
+            this.multiselect_value = this.fieldConfiguration.default;
         }
     },
 };
