@@ -16,13 +16,23 @@ const customFieldMultiselect: vuejs.ComponentOption = {
         <label for="{{fieldConfiguration.model | prefixFieldId}}" class="cc-input__label" v-if="fieldConfiguration.label">
             {{fieldConfiguration.label | translate}}:
         </label>
-        <select multiple class="select multiselect admin__control-multiselect cc-input__multiselect" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="configuration[fieldConfiguration.model]">
-            <option v-for="(value, label) in fieldConfiguration.options" :value="value">{{ label }}</option>
+        <select multiple class="select multiselect admin__control-multiselect cc-input__multiselect" id="{{fieldConfiguration.model | prefixFieldId}}" :name="fieldConfiguration.model" v-model="multiselect_value">
+            <option v-for="(index, option) in fieldConfiguration.options" :value="option.value">{{ option.label }}</option>
         </select>
         <p class="cc-warning" v-if="fieldConfiguration.warning">{{{fieldConfiguration.warning | translate}}}</p>
         <p class="cc-input__note" v-if="fieldConfiguration.note">{{{fieldConfiguration.note | translate}}}</p>
         <p class="cc-input__hint" v-if="fieldConfiguration.hint">{{{fieldConfiguration.hint | translate}}}</p>
     </div>`,
+    data(): any {
+        return {
+            multiselect_value: '',
+        };
+    },
+    watch: {
+        multiselect_value: function(val, oldVal) {
+            this.$set(`configuration.${this.fieldConfiguration.model}`, val);
+        },
+    },
     props: {
         fieldConfiguration: {
             type: Object,
@@ -58,8 +68,11 @@ const customFieldMultiselect: vuejs.ComponentOption = {
 
     ready(): void {
         /**
-         * Set default value if model is not set yet and default value is defined in etc/view.xml
+         * Set local multiselect model based on configuration or set
+         * the default value for configurator model, based on the default options.
          */
+        this.multiselect_value = this.configuration[this.fieldConfiguration.model];
+
         if (
             this.configuration[this.fieldConfiguration.model] == null &&
             this.fieldConfiguration.default != null

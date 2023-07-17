@@ -203,6 +203,13 @@
                         <ticket_id>MGS-5135</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.10.2" date="2023-07-17">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Improve multiselect field flow</overview>
+                        <ticket_id>MGS-5135</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
