@@ -28,10 +28,19 @@
             padding-bottom: 0.6rem;
         }
 
+        &__multiselect {
+            width: fit-content;
+        }
+
         &--type-radio {
             .cc-input__label {
                 font-weight: normal;
             }
+        }
+
+        &--type-multiselect {
+            display: flex;
+            flex-flow: column;
         }
 
         .admin__actions-switch-label {
