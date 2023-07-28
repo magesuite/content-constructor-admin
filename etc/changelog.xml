@@ -203,7 +203,14 @@
                         <ticket_id>MGS-5135</ticket_id>
                     </entry>
                 </tag>
-                <tag version="4.10.1" date="2023-06-14">
+                <tag version="4.10.2" date="2023-07-17">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Improve multiselect field flow</overview>
+                        <ticket_id>MGS-5135</ticket_id>
+                    </entry>
+                </tag>
+                <tag version="4.10.2" date="2023-07-28">
                     <entry>
                         <type>FEAT</type>
                         <overview>Introduce possibility to add custom sections restricted only to components that inherit from another component</overview>
