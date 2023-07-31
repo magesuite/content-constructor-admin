@@ -80,35 +80,39 @@ const componentConfigurator: vuejs.ComponentOption = {
             return cssClassFields;
         },
         _collectComponentCssClasses(): void {
-            if (
-                this.ccConfig[this.xmlConfigEntry] != null &&
-                this.ccConfig[this.xmlConfigEntry].custom_sections != null
-            ) {
-                const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig[this.xmlConfigEntry].custom_sections);
-                const cssClasses: string[] = [];
+            const components = this.childXmlConfigEntry ? [this.xmlConfigEntry, this.childXmlConfigEntry] : [this.xmlConfigEntry];
+            let cssClasses: string[] = [];
 
-                cssClassFields.forEach(
-                    (model: string) => {
-                        const configValue = this.configuration[model];
+            components.forEach((entry: string) => {
+                if (
+                    this.ccConfig[entry] != null &&
+                    this.ccConfig[entry].custom_sections != null
+                ) {
+                    const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig[entry].custom_sections);
 
-                        if (!configValue) {
-                            return;
-                        }
+                    cssClassFields.forEach(
+                        (model: string) => {
+                            const configValue = this.configuration[model];
 
-                        if (typeof configValue === 'string') {
-                            cssClasses.push(configValue);
-                        } else if (typeof configValue === 'object') {
-                            for (const key in configValue) {
-                                if (configValue.hasOwnProperty(key)) {
-                                    cssClasses.push(configValue[key]);
+                            if (!configValue) {
+                                return;
+                            }
+
+                            if (typeof configValue === 'string') {
+                                cssClasses.push(configValue);
+                            } else if (typeof configValue === 'object') {
+                                for (const key in configValue) {
+                                    if (configValue.hasOwnProperty(key)) {
+                                        cssClasses.push(configValue[key]);
+                                    }
                                 }
                             }
                         }
-                    }
-                );
+                    );
+                }
+            });
 
-                this.configuration.cc_css_classes = cssClasses.join(' ');
-            }
+            this.configuration.cc_css_classes = cssClasses.length ? cssClasses.join(' ') : '';
         },
         onChange(event?: Event): void {
             // Serialize reactive data.

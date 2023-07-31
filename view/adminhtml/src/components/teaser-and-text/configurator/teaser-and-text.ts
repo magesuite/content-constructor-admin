@@ -71,6 +71,20 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
+        <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.teaser_and_text != null && ccConfig.teaser_and_text.custom_sections != null" v-for="section in ccConfig.teaser_and_text.custom_sections">
+            <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                        :teaser-index="9999"
+                    ></component>
+                </div>
+            </div>
+        </section>
+
         <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--2-columns">
             <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-0">
                 <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" configurator-layout="column" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(0) != -1"></teaser-configurator>
@@ -107,6 +121,10 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
         mix: {
             type: String,
             default: ''
+        },
+        childXmlConfigEntry: {
+            type: String,
+            default: 'teaser_and_text'
         }
     },
     data(): any {

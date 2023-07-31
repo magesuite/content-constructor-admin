@@ -97,6 +97,20 @@ const mosaicConfigurator: vuejs.ComponentOption = {
             </div>
         </section>
 
+        <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.mosaic != null && ccConfig.mosaic.custom_sections != null" v-for="section in ccConfig.mosaic.custom_sections">
+            <h3 class="cc-image-teaser-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
+            <div class="cc-custom-fields">
+                <div class="cc-custom-fields__form-group" v-for="field in section.content.fields">
+                    <component
+                        :is="'custom-element-' + field.type"
+                        :configuration="configuration"
+                        :field-configuration="field"
+                        :teaser-index="9999"
+                    ></component>
+                </div>
+            </div>
+        </section>
+
         <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'mosaic'" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(0) != -1"></teaser-configurator>
 
         <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'mosaic'" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(1) != -1"></teaser-configurator>
@@ -133,6 +147,10 @@ const mosaicConfigurator: vuejs.ComponentOption = {
         classes: {
             type: String,
             default: 'cc-image-teaser-configurator--mosaic'
+        },
+        childXmlConfigEntry: {
+            type: String,
+            default: 'mosaic'
         },
         mix: {
             type: String,
