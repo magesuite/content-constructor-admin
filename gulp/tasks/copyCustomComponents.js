@@ -16,19 +16,19 @@ module.exports = function copyCustomComponents() {
         gulp.watch(settings.watch, copyCustomComponents);
     }
 
-    return glob(settings.sourcePath, function (err, folders) {
+    return glob(settings.sourcePath, function (err, customComponentsDirectories) {
         if (err) {
             log.error(err);
         }
 
-        if (folders.length > 0) {
+        if (customComponentsDirectories.length > 0) {
             log.info('Custom content constructor components found.');
 
-            folders.forEach(folder => {
-                log.info(`Copying ${folder} directory`);
+            customComponentsDirectories.forEach(directory => {
+                log.info(`Copying ${customComponentsDirectories} directory`);
 
-                fse.readdirSync(folder).forEach(element => {
-                    const elementPath = path.join(folder, element);
+                fse.readdirSync(directory).forEach(element => {
+                    const elementPath = path.join(directory, element);
                     const destinationPath = path.join(settings.destinationPath, element);
                     const isDirectory =  fse.lstatSync(elementPath).isDirectory();
                     
