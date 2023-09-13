@@ -25,7 +25,7 @@ module.exports = function copyCustomComponents() {
             log.info('Custom content constructor components found.');
 
             customComponentsDirectories.forEach(directory => {
-                log.info(`Copying ${customComponentsDirectories} directory`);
+                log.info(`Copying ${directory}`);
 
                 fse.readdirSync(directory).forEach(element => {
                     const elementPath = path.join(directory, element);
