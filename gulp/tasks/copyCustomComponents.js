@@ -31,7 +31,7 @@ module.exports = function copyCustomComponents() {
                     const elementPath = path.join(directory, element);
                     const destinationPath = path.join(settings.destinationPath, element);
                     const isDirectory =  fse.lstatSync(elementPath).isDirectory();
-                    
+
                     if (isDirectory) {
                         fse.copySync(elementPath, destinationPath, { overwrite: true }, function (err) {
                             if (err) {
@@ -40,7 +40,7 @@ module.exports = function copyCustomComponents() {
                         });
                     } else {
                         if (path.extname(element) === '.scss') {
-                            if (fse.existsSync(destinationPath)) { 
+                            if (fse.existsSync(destinationPath)) {
                                 const existingContent = fse.readFileSync(destinationPath, {encoding: 'utf8'});
                                 const newContent = fse.readFileSync(elementPath, {encoding: 'utf8'});
 
@@ -49,7 +49,7 @@ module.exports = function copyCustomComponents() {
                                 fse.copyFileSync(elementPath, destinationPath);
                             }
                         } else if (path.extname(element) === '.ts') {
-                            if (fse.existsSync(destinationPath)) { 
+                            if (fse.existsSync(destinationPath)) {
                                 const existingContent = fse.readFileSync(destinationPath, {encoding: 'utf8'});
                                 const newContent = fse.readFileSync(elementPath, {encoding: 'utf8'});
 
@@ -65,7 +65,7 @@ module.exports = function copyCustomComponents() {
                                 combinedContent = imports + combinedContent[0] + 'export const customComponentsConfigurator = {' + configuratorImports + combinedContent[1];
                                 combinedContent = combinedContent.split('export const customComponentsPreview = {');
                                 combinedContent = combinedContent[0] + 'export const customComponentsPreview = {' + previewImports + combinedContent[1];
-                                
+
                                 fse.writeFileSync(destinationPath, combinedContent, 'utf8', {encoding: 'utf8'});
                             } else {
                                 fse.copyFileSync(elementPath, destinationPath);
