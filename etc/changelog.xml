@@ -223,6 +223,13 @@
                         <ticket_id>KRA-36</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.11.0" date="2023-09-13">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Add possibility to build custom components from more than 1 repository</overview>
+                        <ticket_id>NPW-48</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
