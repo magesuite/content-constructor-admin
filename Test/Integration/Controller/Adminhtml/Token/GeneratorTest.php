@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Controller\Adminhtml\Token;
 
+/**
+ * @magentoAppArea adminhtml
+ * @magentoDbIsolation enabled
+ */
 class GeneratorTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
     const TOKEN_GENERATOR_URL = '/backend/content-constructor/token/generator';
