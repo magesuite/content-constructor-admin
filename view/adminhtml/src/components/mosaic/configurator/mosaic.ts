@@ -109,7 +109,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                 return {
                     customCssClass: '',
                     items: [
-                        JSON.parse(JSON.stringify(teaserItemPrototype)), 
+                        JSON.parse(JSON.stringify(teaserItemPrototype)),
                         JSON.parse(JSON.stringify(teaserItemPrototype))
                     ],
                     ignoredItems: [],
@@ -192,7 +192,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
     },
     methods: {
         /* Teaser component removes teaser item after Delete button is clicked
-         * In this case we only reset configuration.item props to defaults because we need 2 items in this component. Not more, not less. 
+         * In this case we only reset configuration.item props to defaults because we need 2 items in this component. Not more, not less.
          * @param index {number} - index of teaser item to remove
          */
         deleteTeaserItem(index: number): void {
@@ -205,7 +205,7 @@ const mosaicConfigurator: vuejs.ComponentOption = {
                 actions: {
                     confirm(): void {
                         component.$set(
-                            `configuration.items[${index}]`, 
+                            `configuration.items[${index}]`,
                             JSON.parse(JSON.stringify(teaserItemPrototype))
                         );
                     },

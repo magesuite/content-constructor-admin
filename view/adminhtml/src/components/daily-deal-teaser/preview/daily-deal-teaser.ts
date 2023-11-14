@@ -7,7 +7,7 @@ interface IComponentInformation {
     category_id: string;
     skus: string;
 };
- 
+
 /**
  * Daily deal teaser preview component.
  * This component is responsible for displaying preview of daily deal teaser component in Layout Builder (admin panel)
@@ -27,7 +27,7 @@ const dailyDealTeaserPreview: vuejs.ComponentOption = {
                         <p class="cc-daily-deal-teaser-preview__product-data" v-if="configuration.category_id">category ID: {{{ configuration.category_id }}}</p>
                         <p class="cc-daily-deal-teaser-preview__product-data" v-if="configuration.skus">SKU: {{{ configuration.skus }}}</p>
                     </div>
-                    <div class="cc-daily-deal-teaser-preview__product-info-container">                    
+                    <div class="cc-daily-deal-teaser-preview__product-info-container">
                         <div class="cc-daily-deal-teaser-preview__countdown-mockup">
                             <div class="cc-daily-deal-teaser-preview__clock">
                                 <svg class="cc-daily-deal-teaser-preview__clock-icon">

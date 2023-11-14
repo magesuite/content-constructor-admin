@@ -22,5 +22,3 @@ class PreviewButton implements ButtonProviderInterface
         return $data;
     }
 }
-
-

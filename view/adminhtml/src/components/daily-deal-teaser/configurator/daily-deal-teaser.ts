@@ -3,7 +3,7 @@ import $t from 'mage/translate';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 import categoryPicker from '../../../utils/category-picker/category-picker';
- 
+
 /**
  * Daily deal teaser configurator component.
  * This component is responsible for displaying daily deal teaser configuration form
@@ -147,11 +147,11 @@ const dailyDealTeaserConfigurator: vuejs.ComponentOption = {
             this.categoryPicker = new categoryPicker($('#cp-daily-deal-teaser'), JSON.parse(response.body), {
                 multiple: false,
             });
-            
+
             // Hide loader
             $('body').trigger('hideLoadingPopup');
         });
     },
 };
- 
+
 export default dailyDealTeaserConfigurator;

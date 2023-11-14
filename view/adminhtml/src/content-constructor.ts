@@ -310,7 +310,7 @@ const contentConstructor: vuejs.ComponentOption = {
                             $('body').trigger('hideLoadingPopup');
                         });
                 }
-                
+
                 component.$broadcast('component-picker__opened');
             };
             // Create or Show picker modal depending if exists
@@ -428,7 +428,7 @@ const contentConstructor: vuejs.ComponentOption = {
                     .then((response: any): void => {
                         component.$els.configuratorModal.innerHTML =
                             response.body;
-                        
+
                         // Set current component configuration data
                         component.initialComponentConfiguration =
                             componentInformation.data;

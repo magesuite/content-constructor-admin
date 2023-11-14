@@ -19,12 +19,12 @@ const accordionPreview: vuejs.ComponentOption = {
     template: `<div class="cc-accordion-preview">
         <div class="cc-accordion-preview__wrapper">
             <ul class="cc-accordion-preview__items">
-                <li 
+                <li
                     :class="{
                         'cc-accordion-preview__item': true,
                         'cc-accordion-preview__item--open': $index === 0,
                     }"
-                    v-for="item in configuration.groups[0].items" 
+                    v-for="item in configuration.groups[0].items"
                     v-if="$index < 10"
                 >
                     <div class="cc-accordion-preview__item-headline">
@@ -38,7 +38,7 @@ const accordionPreview: vuejs.ComponentOption = {
     </div>`,
     props: {
         /**
-         * Single's component configuration 
+         * Single's component configuration
          */
         configuration: {
             type: Object,

@@ -44,7 +44,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                 </div>
             </div>
         </section>
-        
+
         <section class="cc-hero-carousel-configurator__section">
             <h3 class="cc-hero-carousel-configurator__subtitle">Mobile Devices Scenario</h3>
             <div class="cc-hero-carousel-configurator__scenario-options">

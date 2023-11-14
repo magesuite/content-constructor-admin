@@ -576,7 +576,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
             }
         },
 
-        supportBreakpointDedicatedImages: function(): boolean { 
+        supportBreakpointDedicatedImages: function(): boolean {
             return this.callerComponentType === 'mosaic' && this.ccConfig.mosaic.support_breakpoint_dedicated_images;
         },
     },
@@ -818,8 +818,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     this.$set('configuration.image.aspect_ratio', aspectRatio);
                 }
 
-                /** 
-                 * If Mosaic component has support for breakpoint-dedicated pics and image is uploaded to any of breakpoint and 
+                /**
+                 * If Mosaic component has support for breakpoint-dedicated pics and image is uploaded to any of breakpoint and
                  * image was not uploaded either for other breakpoints, fill missing breakpoints with just uploaded image data.
                  **/
                 if (this.supportBreakpointDedicatedImages) {
@@ -1119,7 +1119,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
             $(`.cc-teaser-configurator__image-url[data-teaser-index="${this.teaserIndex}"]`)
                 .off('change')
                 .on(
-                    'change', 
+                    'change',
                     this.onRawImageUrlChange,
                 );
         },
