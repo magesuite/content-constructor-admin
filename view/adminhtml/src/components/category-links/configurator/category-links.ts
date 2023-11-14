@@ -22,7 +22,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
             <label class="cc-input__label">${$t( 'Subcategories' )}</label>
             <input type="hidden" v-model="configuration.sub_categories_ids" id="cp-sub">
         </div>
-        
+
         <div class="cc-input cc-input--type-inline">
             <label for="cfg-shownumbers" class="cc-input__label">${$t( 'Show products count' )}</label>
             <div class="admin__actions-switch" data-role="switcher">
@@ -72,7 +72,7 @@ const categoryLinksConfigurator: vuejs.ComponentOption = {
 
         this.$http.get(this.categoriesDataUrl).then((response: any): void => {
             this.initializePickers(JSON.parse(response.body));
-            
+
             // Hide loader
             $('body').trigger('hideLoadingPopup');
         } );

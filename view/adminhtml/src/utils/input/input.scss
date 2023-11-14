@@ -2,7 +2,7 @@
  * Inputs
  * Skin - Magento Backend
  */
- 
+
 .cc-input {
     $root: &;
 
@@ -228,7 +228,7 @@
     &__addon {
         cursor: pointer;
         transition: background 0.15s linear;
-        
+
         &:hover {
             background: darken(#e3e3e3, 10%);
         }

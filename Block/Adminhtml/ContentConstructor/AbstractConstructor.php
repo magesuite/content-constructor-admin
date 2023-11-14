@@ -49,7 +49,7 @@ abstract class AbstractConstructor extends \Magento\Framework\View\Element\Templ
      * @var \MageSuite\ContentConstructorFrontend\Model\Sort\Pool
      */
     protected $sortersPool;
-    
+
     /**
      * @var \MageSuite\ContentConstructorFrontend\Model\Filter\Pool
      */

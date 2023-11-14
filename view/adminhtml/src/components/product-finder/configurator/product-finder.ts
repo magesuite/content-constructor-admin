@@ -211,11 +211,11 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
         };
     },
     filters: {
-        /** 
+        /**
           * Two-way filter for step content displaing in textarea and keeping in configuration.
          */
         prettify: {
-            /** Displays stringified JSON in textarea if not step is not stringified yet. 
+            /** Displays stringified JSON in textarea if not step is not stringified yet.
              *  If step is already stringified because it couldn't be saved, just return back what came in.
              * @param stepContent {string} - content of textarea
              * @param stepIndex {number} - index of a single step
@@ -234,7 +234,7 @@ const ccProductFinderConfigurator: vuejs.ComponentOption = {
              * @param newStepContent {string} - current content of textarea
              * @param oldStepContent {string} - content of textarea in state it was before change was made
              * @param stepIndex {number} - index of a single step
-             * @return {JSON, String} - if string can be parsed to JSON, returns JSON, otherwise String  
+             * @return {JSON, String} - if string can be parsed to JSON, returns JSON, otherwise String
              */
             write(newStepContent: string, oldStepContent: string, stepIndex: number): any {
                 let result: any;

@@ -119,7 +119,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'product-finder-configurator': productFinderConfigurator,
         'products-grid-configurator': productsGridConfigurator,
         'static-block-configurator': staticBlockConfigurator,
-        
+
     },
     props: {
         configuration: {

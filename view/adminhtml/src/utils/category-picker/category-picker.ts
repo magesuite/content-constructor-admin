@@ -43,7 +43,7 @@ interface categoryPickerOptions {
     disabled?: boolean;
 
     /**
-     * Defines minimum search query length to initialize filtring of options 
+     * Defines minimum search query length to initialize filtring of options
      * @type {boolean}
      * @default 3
      */
@@ -334,7 +334,7 @@ export default class categoryPicker {
                 }
 
                 result += `<label for="cp-sr-${ this._prefix }-${ data[i].value }" class="cc-input__label | ${ c.search.label }">
-                    ${ data[i].label } 
+                    ${ data[i].label }
                     <span class="${ c.search.resultsPath }">${ path }</span>
                 </label></div>
                 </li>`;
@@ -498,7 +498,7 @@ export default class categoryPicker {
 
             for (let i: number = 0; i < values.length; i++) {
                 const $cb = this._$wrapper.find(`.${ this._options.classes.menu.content } input[value="${ values[i] }"]`);
-                
+
                 if ($cb.length) {
                     $cb.prop('checked', true);
                     this._orderedCheckboxes.push($cb[0]);

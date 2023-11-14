@@ -13,7 +13,7 @@ class CmsPageTest extends \PHPUnit\Framework\TestCase
      * @var \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\CmsPage
      */
     protected $block;
-    
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */

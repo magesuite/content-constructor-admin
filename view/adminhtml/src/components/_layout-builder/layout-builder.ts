@@ -148,7 +148,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                     <component-placeholder>
                         <h3 class="cc-component-placeholder__headline" v-text="transformComponentTypeToText( component.type )"></h3>
                         <div class="cc-component-placeholder__component">
-                            
+
                             <component :is="component.type + '-preview'" :configuration="component.data" :index="$index" :assets-src="assetsSrc" :image-endpoint="imageEndpoint"></component>
 
                         </div>
@@ -507,7 +507,7 @@ const layoutBuilder: vuejs.ComponentOption = {
             }
         },
         /**
-         * Sorts components by their sections. 
+         * Sorts components by their sections.
          * Order is defined by this.ccSections
          */
         sortComponentsBySections(): void {
@@ -518,7 +518,7 @@ const layoutBuilder: vuejs.ComponentOption = {
             }
         },
         /**
-         * Backwards compatibility enhancement 
+         * Backwards compatibility enhancement
          * When components doesn't have {componentVisibility} object set - add defaults once
          * Special Components will not be modified
          */

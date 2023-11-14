@@ -3664,7 +3664,7 @@ var paragraphConfigurator = {
                 catch (err) {
                     console.warn("Could not parse response as JSON: " + err);
                 }
-                
+
                 // Set headers back
                 Vue.http.headers.custom.Accept = 'text/html';
                 // Hide loader
@@ -3951,7 +3951,7 @@ var ccProductFinderConfigurator = {
                         this.setError(stepIndex, JSON.stringify(err));
                     }
                 }
-                
+
                 if (result) {
                     this.clearError(stepIndex);
                     return result;

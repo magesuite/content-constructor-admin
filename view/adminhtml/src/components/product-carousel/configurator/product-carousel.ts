@@ -139,7 +139,7 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
             this.categoryPicker = new categoryPicker($('#cp-products-carousel'), JSON.parse(response.body), {
                 multiple: false,
             });
-            
+
             // Hide loader
             $('body').trigger('hideLoadingPopup');
         });

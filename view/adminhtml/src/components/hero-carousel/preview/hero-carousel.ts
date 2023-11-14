@@ -127,8 +127,8 @@ const heroCarouselPreview: vuejs.ComponentOption = {
                                 .css('min-height', $(_this.$els.scene).outerHeight());
                         }, 150);
                     }
-                }).filter(function(): boolean { 
-                    return this.complete; 
+                }).filter(function(): boolean {
+                    return this.complete;
                 }).load();
             } else {
                 _this.isLoading = false;

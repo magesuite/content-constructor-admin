@@ -90,8 +90,8 @@ const imageTeaserPreview: vuejs.ComponentOption = {
                             $(this).addClass('cc-image-teaser-preview__item-image--border');
                         });
                     }
-                }).filter(function(): boolean { 
-                    return this.complete; 
+                }).filter(function(): boolean {
+                    return this.complete;
                 }).load();
             } else {
                 _this.isLoading = false;

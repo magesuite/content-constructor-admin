@@ -565,7 +565,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         },
 
         /**
-         * Calculate how many products should be returned by BE, 
+         * Calculate how many products should be returned by BE,
          * then saves result to component's configuration
          */
         setProductsLimit(): void {

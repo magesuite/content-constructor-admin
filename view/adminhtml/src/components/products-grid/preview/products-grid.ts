@@ -115,8 +115,8 @@ const productGridPreview: vuejs.ComponentOption = {
                     if (!imagesCount) {
                         _this.isLoading = false;
                     }
-                }).filter(function(): boolean { 
-                    return this.complete; 
+                }).filter(function(): boolean {
+                    return this.complete;
                 }).load();
             } else {
                 _this.isLoading = false;
