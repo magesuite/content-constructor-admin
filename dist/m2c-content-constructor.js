@@ -3568,7 +3568,7 @@ var m2cProductFinderConfigurator = {
                         this.setError(stepIndex, JSON.stringify(err));
                     }
                 }
-                
+
                 if (result) {
                     this.clearError(stepIndex);
                     return result;

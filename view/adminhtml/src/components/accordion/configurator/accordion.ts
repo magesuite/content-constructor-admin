@@ -195,33 +195,33 @@ const accordionConfigurator: vuejs.ComponentOption = {
                         <div class="cc-input cc-accordion-configurator__item-content">
                             <div class="cc-accordion-configurator__item-editor">
                                 <div class="buttons-set | cc-accordion-configurator__wysiwyg-buttons">
-                                    <button 
-                                        type="button" 
-                                        class="scalable action-show-hide" 
+                                    <button
+                                        type="button"
+                                        class="scalable action-show-hide"
                                         @click="toggleEditor(item.editorId, groupIndex, $index)"
                                     >
                                         {{ item.isEditorOpened ? 'Hide Editor' : 'Show Editor' | translate }}
                                     </button>
-                                    <button 
-                                        type="button" 
-                                        class="scalable action-add-widget plugin" 
-                                        @click="openWidgetModal(item.editorId)" 
+                                    <button
+                                        type="button"
+                                        class="scalable action-add-widget plugin"
+                                        @click="openWidgetModal(item.editorId)"
                                         v-show="!item.isEditorOpened"
                                     >
                                         {{ 'Insert Widget' | translate }}...
                                     </button>
-                                    <button 
-                                        type="button" 
-                                        class="scalable action-add-image plugin" 
-                                        @click="openMediaModal(item.editorId)" 
+                                    <button
+                                        type="button"
+                                        class="scalable action-add-image plugin"
+                                        @click="openMediaModal(item.editorId)"
                                         v-show="!item.isEditorOpened"
                                     >
                                         {{ 'Insert Image' | translate }}...
                                     </button>
-                                    <button 
-                                        type="button" 
-                                        class="scalable add-variable plugin" 
-                                        @click="openMagentoVariablesModal(item.editorId)" 
+                                    <button
+                                        type="button"
+                                        class="scalable add-variable plugin"
+                                        @click="openMagentoVariablesModal(item.editorId)"
                                         v-show="!item.isEditorOpened"
                                     >
                                         {{ 'Insert Variable' | translate }}...
@@ -312,14 +312,14 @@ const accordionConfigurator: vuejs.ComponentOption = {
     data(): any {
         return {
             /**
-             * Collects component's CSS classes 
+             * Collects component's CSS classes
              */
             componentCssClasses: {
                 'cc-accordion-configurator': true,
                 'cc-accordion-configurator--with-groups': this.supportGroups,
             },
             /**
-             * Object in which we keep all WYSIWYG instances 
+             * Object in which we keep all WYSIWYG instances
              */
             editorInstances: {},
 
@@ -352,7 +352,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     Object.keys(this.configuration.groups[groupIndex].items).forEach(
                         (itemIndex: string) => {
                             this.$set(
-                                `configuration.groups[${groupIndex}].items[${itemIndex}].content`, 
+                                `configuration.groups[${groupIndex}].items[${itemIndex}].content`,
                                 this.fixMarkup(this.configuration.groups[groupIndex].items[itemIndex].content)
                             );
 
@@ -361,7 +361,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
                     );
                 }
             );
-            
+
             this.onSave();
         },
     },
@@ -376,8 +376,8 @@ const accordionConfigurator: vuejs.ComponentOption = {
         },
     },
     methods: {
-        /* Creates another Group  
-         * @param {number} index: position into which new group should be added 
+        /* Creates another Group
+         * @param {number} index: position into which new group should be added
          */
         createGroup(index: number): void {
             this.configuration.groups.splice(
@@ -584,7 +584,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
         },
 
         /* Creates another group item.
-         * @param {number} groupIndex: index of a group to which new item should be added 
+         * @param {number} groupIndex: index of a group to which new item should be added
          */
         createItem(groupIndex: number): void {
             const newItem: any = {
@@ -828,7 +828,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
                 'mage/adminhtml/wysiwyg/tiny_mce/setup',
             ], function(): void {
                 _this.$set(
-                    `editorInstances.${item.editorId}`, 
+                    `editorInstances.${item.editorId}`,
                     new wysiwygSetup(
                         item.editorId,
                         _this.wysiwygCfg
@@ -848,7 +848,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
          * @param {string} editorId => ID of WYSIWYG editor to find it in editorInstances object
          * @param {number} groupIndex => index of the group in which method should work in
          * @param {number} index => index of the item for which editor should be tolggled
-         */ 
+         */
         toggleEditor(editorId: string, groupIndex: number, index: number): void {
             if (this.configuration.groups[groupIndex].items[index].hasOwnProperty('editorInitialized')) {
                 this.editorInstances[editorId].toggle();
@@ -866,7 +866,7 @@ const accordionConfigurator: vuejs.ComponentOption = {
         /**
          * 1. Replaces all self-closing tags to simple closing mark
          * 2. Replaces special chars for quots (&quot;) to the single quote mark
-         * @param markup {string} - original html generated by WYSIWG 
+         * @param markup {string} - original html generated by WYSIWG
          * @return {string} - string w/o self-closing tags
          */
         fixMarkup(markup: string): string {

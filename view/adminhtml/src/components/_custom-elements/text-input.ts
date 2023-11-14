@@ -28,7 +28,7 @@ const customElementTextInput: vuejs.ComponentOption = {
                 return {}
             },
         },
-        
+
         configuration: {
             type: Object,
             default(): any {

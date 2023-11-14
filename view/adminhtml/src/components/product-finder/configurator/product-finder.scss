@@ -35,7 +35,7 @@
             &:first-child {
                 padding-left: 0;
             }
-        } 
+        }
     }
 
     &__step {
@@ -106,7 +106,7 @@
             transform: scale(0.85);
             transition: transform 0.35s cubic-bezier(0, 0.77, 0.23, 1), opacity 0.3s cubic-bezier(0, 0.77, 0.23, 1);
         }
-        
+
         &:hover {
             &:before {
                 transform: scale(1);

@@ -30,7 +30,7 @@ class Picker extends \Magento\Framework\View\Element\Template
             if(!isset($component['name']) or empty($component['name'])) {
                 continue;
             }
-            
+
             $result[] = [
                 'type' => $type,
                 'name' => $component['name'],

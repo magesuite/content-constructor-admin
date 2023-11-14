@@ -8,7 +8,7 @@ class Configurator extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\View\Layout
      */
     protected $layout;
-    
+
     /**
      * @var \Magento\Backend\App\Action\Context
      */

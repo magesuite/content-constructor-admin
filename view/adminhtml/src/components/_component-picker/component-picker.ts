@@ -28,11 +28,11 @@ interface IComponentsInformation {
 const componentPicker: vuejs.ComponentOption = {
     template: `<section class="cc-component-picker | {{ class }}">
         <div class="cc-component-picker__search" :class="{ 'cc-component-picker__search--clearable': search.length > 0 }">
-            <input 
-                type="text" 
-                class="cc-input__input cc-component-picker__search-input" 
-                placeholder="{{ 'Search components...' | translate }}" 
-                v-model="search" 
+            <input
+                type="text"
+                class="cc-input__input cc-component-picker__search-input"
+                placeholder="{{ 'Search components...' | translate }}"
+                v-model="search"
                 v-el:search-input
             >
             <a href="#" class="cc-component-picker__search-clear" @click="clearSearch">

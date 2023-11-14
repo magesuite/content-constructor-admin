@@ -21,7 +21,7 @@ const headlineConfigurator: vuejs.ComponentOption = {
         componentConfigurator,
     ],
     template: `<div class="cc-headline-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
-        
+
         <section class="cc-headline-configurator__section" v-if="ccConfig.headline != null && ccConfig.headline.custom_sections != null" v-for="section in ccConfig.headline.custom_sections">
             <h3 class="cc-headline-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
             <div class="cc-custom-fields">

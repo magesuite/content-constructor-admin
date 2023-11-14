@@ -13,4 +13,3 @@ module.exports = function() {
         .pipe( tslint.report( settings.tslintReport ) )
         .pipe( this.gulp.dest( settings.dest ) );
 };
-
