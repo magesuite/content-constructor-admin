@@ -196,10 +196,33 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
         'component-configurator__save'(): void {
             this.configuration.isError = false;
             this._validateVideoPlaceholders();
+            this._collectTeasersCssClasses();
             this.onSave();
         },
     },
     methods: {
+        _collectTeasersCssClasses(): void {
+            if (this.configuration.items != null) {
+                const cssClassFields: any[] = this._getCustomCssFields(this.ccConfig.teaser.tabs);
+
+                this.configuration.items.forEach(
+                    (teaser: any, index: number) => {
+                        const cssClasses: string[] = [];
+
+                        cssClassFields.forEach(
+                            (model: string) => {
+                                if (teaser[model] && typeof teaser[model] === 'string') {
+                                    cssClasses.push(teaser[model]);
+                                }
+                            }
+                        );
+
+                        teaser.cc_css_classes = cssClasses.join(' ');
+                    }
+                );
+            }
+        },
+
         setOption(optionCategory: string, optionId: string): void {
             this.configuration[optionCategory] = this.scenarioOptions[
                 optionCategory
