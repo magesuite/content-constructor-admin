@@ -162,6 +162,7 @@ class ComponentConfigurationToXmlMapper
     private function createContainerReference($xmlRoot, $containerName) {
         $referenceContainer = $xmlRoot->addChild('referenceContainer');
         $referenceContainer->addAttribute('name', $containerName);
+        $referenceContainer->addAttribute('xmlns:xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 
         return $referenceContainer;
     }
