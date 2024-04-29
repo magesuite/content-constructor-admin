@@ -1,118 +1,73 @@
 <?php
+declare(strict_types=1);
 
 namespace MageSuite\ContentConstructorAdmin\Controller\Preview;
 
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
-
-class View extends \Magento\Framework\App\Action\Action implements \Magento\Framework\App\CsrfAwareActionInterface
+class View extends \Magento\Framework\App\Action\Action implements \Magento\Framework\App\CsrfAwareActionInterface,
+    \Magento\Framework\App\Action\HttpPostActionInterface
 {
-    /**
-     * @var Context
-     */
-    private $context;
-
-    /**
-     * @var \Magento\Framework\View\Result\PageFactory
-     */
-    private $resultPageFactory;
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper
-     */
-    private $componentConfigurationToXmlMapper;
-    /**
-     * @var \Magento\Framework\App\Cache\TypeListInterface
-     */
-    private $cacheTypeList;
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Service\PreviewSecretProvider
-     */
-    protected $previewSecretProvider;
-    /**
-     * @var \Magento\Framework\Controller\Result\ForwardFactory
-     */
-    protected $resultForwardFactory;
-
+    protected \Magento\Framework\View\Result\PageFactory $resultPageFactory;
+    protected \Magento\Framework\Controller\Result\ForwardFactory $resultForwardFactory;
+    protected \Magento\Framework\View\Layout\LayoutCacheKeyInterface $layoutCacheKey;
+    protected \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $componentConfigurationToXmlMapper;
+    protected \MageSuite\ContentConstructorAdmin\Service\PreviewSecretProvider $previewSecretProvider;
 
     public function __construct(
-        Context $context,
+        \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
+        \Magento\Framework\Controller\Result\ForwardFactory $resultForwardFactory,
+        \Magento\Framework\View\Layout\LayoutCacheKeyInterface $layoutCacheKey,
         \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $componentConfigurationToXmlMapper,
-        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
-        \MageSuite\ContentConstructorAdmin\Service\PreviewSecretProvider $previewSecretProvider,
-        \Magento\Framework\Controller\Result\ForwardFactory $resultForwardFactory
-    )
-    {
+        \MageSuite\ContentConstructorAdmin\Service\PreviewSecretProvider $previewSecretProvider
+    ) {
         parent::__construct($context);
-
-        $this->context = $context;
         $this->resultPageFactory = $resultPageFactory;
-        $this->componentConfigurationToXmlMapper = $componentConfigurationToXmlMapper;
-        $this->cacheTypeList = $cacheTypeList;
-        $this->previewSecretProvider = $previewSecretProvider;
         $this->resultForwardFactory = $resultForwardFactory;
+        $this->layoutCacheKey = $layoutCacheKey;
+        $this->componentConfigurationToXmlMapper = $componentConfigurationToXmlMapper;
+        $this->previewSecretProvider = $previewSecretProvider;
     }
 
-    /**
-     * Dispatch request
-     *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
-     */
     public function execute()
     {
-        $resultPage = $this->resultPageFactory->create();
-
         if (!$this->validatePreviewSecret()) {
             $resultForward = $this->resultForwardFactory->create([\Magento\Framework\Controller\ResultFactory::TYPE_FORWARD]);
             $resultForward->forward('noroute');
             return $resultForward;
         }
 
-        $configuration = urldecode($this->getRequest()->getParam('configuration'));
-
+        $configuration = urldecode($this->getConfiguration());
+        $this->layoutCacheKey->addCacheKeys(['cc_preview' => hash('sha256', $configuration)]);
         $configuration = json_decode($configuration, true);
-
         $layoutUpdate = $this->componentConfigurationToXmlMapper->map($configuration);
 
+        $resultPage = $this->resultPageFactory->create();
         $resultPage->addHandle('cms_page_view');
-
         $resultPage->getConfig()->setPageLayout('1column');
         $resultPage->getLayout()->getUpdate()->addUpdate($layoutUpdate);
 
         return $resultPage;
     }
 
-    /**
-     * Create exception in case CSRF validation failed.
-     * Return null if default exception will suffice.
-     *
-     * @param \Magento\Framework\App\RequestInterface $request
-     *
-     * @return \Magento\Framework\App\Request\InvalidRequestException|null
-     */
     public function createCsrfValidationException(\Magento\Framework\App\RequestInterface $request): ?\Magento\Framework\App\Request\InvalidRequestException
     {
         return null;
     }
 
-    /**
-     * Perform custom request validation.
-     * Return null if default validation is needed.
-     *
-     * @param \Magento\Framework\App\RequestInterface $request
-     *
-     * @return bool|null
-     */
     public function validateForCsrf(\Magento\Framework\App\RequestInterface $request): ?bool
     {
         return true;
     }
 
-    protected function validatePreviewSecret()
+    protected function getConfiguration(): string
     {
-        $requestSecret = $this->getRequest()->getParam('secret_preview_token');
+        return (string)$this->getRequest()->getParam('configuration');
+    }
 
-        return $this->previewSecretProvider->execute($this->getRequest()->getParam('configuration')) === $requestSecret;
+    protected function validatePreviewSecret(): bool
+    {
+        $token = $this->getRequest()->getParam('secret_preview_token');
+
+        return $this->previewSecretProvider->execute($this->getConfiguration()) === $token;
     }
 }
