@@ -237,6 +237,13 @@
                         <ticket_id>NKD-3872</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.12.1" date="2024-06-24">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Add cloudflare domain to CSP whitelist policy</overview>
+                        <ticket_id>MGS-5336</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
