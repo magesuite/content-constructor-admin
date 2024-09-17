@@ -2,6 +2,9 @@
 
 namespace MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor;
 
+use Magento\Ui\Component\Form\Element\DataType\Media\OpenDialogUrl;
+use Magento\Cms\Model\Wysiwyg\Config;
+
 class Constructor extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -71,12 +74,18 @@ class Constructor extends \Magento\Framework\View\Element\Template
     protected $imagesHelper;
 
     /**
+     * @var OpednDialogUrl
+     */
+    protected $openDialogUrl;
+
+    /**
      * Constructor constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper
+     * @param OpenDialogUrl $openDialogUrl
      * @param array $data
      */
     public function __construct(
@@ -94,6 +103,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper,
         \Magento\Cms\Helper\Wysiwyg\Images $imagesHelper,
+        OpenDialogUrl $openDialogUrl,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -111,6 +121,7 @@ class Constructor extends \Magento\Framework\View\Element\Template
         $this->storeManager = $storeManager;
         $this->configurationHelper = $configurationHelper;
         $this->imagesHelper = $imagesHelper;
+        $this->openDialogUrl = $openDialogUrl;
 
         $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
     }
@@ -148,8 +159,11 @@ class Constructor extends \Magento\Framework\View\Element\Template
     public function getUploaderUrl()
     {
         return $this->backendUrl->getUrl(
-            'cms/wysiwyg_images/index',
-            ['current_tree_path' => $this->imagesHelper->idEncode('wysiwyg')]
+            $this->openDialogUrl->get(), [
+                'current_tree_path' => $this->imagesHelper->idEncode(
+                    Config::IMAGE_DIRECTORY // => 'wysiwyg'
+                )
+            ]
         );
     }
 
