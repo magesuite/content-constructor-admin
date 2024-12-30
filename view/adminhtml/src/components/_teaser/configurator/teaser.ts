@@ -1069,6 +1069,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
             );
         },
         onVideoFileUrlChange(event: $.Event, teaserIndex: number): void {
+            if (event.target.value === '') {
+                return;
+            }
+
             const rawValue: string = event.target.value;
             const encodedImage: string = rawValue.match(
                 '___directive/([a-zA-Z0-9]*)'
@@ -1081,10 +1085,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
             this.setVideoData(teaserIndex);
         },
         onRawImageUrlChange(event: $.Event): void {
+            if (event.target.value === '') {
+                return;
+            }
+
             const rawValue: string = event.target.value;
             const encodedImage: string = rawValue.match(
                 '___directive/([a-zA-Z0-9]*)'
             )[1];
+
             const decoded: string = Base64
                 ? Base64.decode(encodedImage)
                 : window.atob(encodedImage);
