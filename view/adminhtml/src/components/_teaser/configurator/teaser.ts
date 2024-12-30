@@ -1045,6 +1045,9 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
 
         getMediaUploader(index: number, type?: 'video'): void {
+            // Detaches and Attaches event listeners to the inputs related to media uploader.
+            this.handleJqEvents();
+
             let url: string;
 
             if (type === 'video') {
@@ -1562,8 +1565,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
     },
     ready(): void {
-        this.handleJqEvents();
-
         // get aspect ratio for images from hero image-teaser (old products grid)
         if (this.callerComponentType === 'products-grid') {
             if (!this.configuration.image.aspect_ratio) {
