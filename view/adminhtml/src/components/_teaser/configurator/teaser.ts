@@ -1045,6 +1045,9 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
 
         getMediaUploader(index: number, type?: 'video'): void {
+            // Detaches and Attaches event listeners to the inputs related to media uploader.
+            this.handleJqEvents();
+
             let url: string;
 
             if (type === 'video') {
@@ -1066,6 +1069,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
             );
         },
         onVideoFileUrlChange(event: $.Event, teaserIndex: number): void {
+            if (event.target.value === '') {
+                return;
+            }
+
             const rawValue: string = event.target.value;
             const encodedImage: string = rawValue.match(
                 '___directive/([a-zA-Z0-9]*)'
@@ -1078,10 +1085,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
             this.setVideoData(teaserIndex);
         },
         onRawImageUrlChange(event: $.Event): void {
+            if (event.target.value === '') {
+                return;
+            }
+
             const rawValue: string = event.target.value;
             const encodedImage: string = rawValue.match(
                 '___directive/([a-zA-Z0-9]*)'
             )[1];
+
             const decoded: string = Base64
                 ? Base64.decode(encodedImage)
                 : window.atob(encodedImage);
@@ -1562,8 +1574,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
     },
     ready(): void {
-        this.handleJqEvents();
-
         // get aspect ratio for images from hero image-teaser (old products grid)
         if (this.callerComponentType === 'products-grid') {
             if (!this.configuration.image.aspect_ratio) {

@@ -244,6 +244,13 @@
                         <ticket_id>MGS-5336</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.13.0" date="2024-12-30">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Issue with image/video uploader in case of multiple teasers added</overview>
+                        <ticket_id>TOYS-1578</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
