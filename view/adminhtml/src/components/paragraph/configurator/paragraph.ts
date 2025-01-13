@@ -176,7 +176,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             isWysiwygInitialized: false,
 
             // wysiwyg editor object
-            editor: undefined,
+            editor: null,
 
             scenarioOptions: {
                 // Reading scenario options.
