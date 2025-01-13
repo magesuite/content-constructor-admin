@@ -89,17 +89,17 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     'HTML'
                 )}:</label>
 
-                <div class="buttons-set | cc-paragraph-configurator__wysiwyg-buttons">
-                    <button type="button" class="scalable action-show-hide" id="toggle-wysiwyg" v-show="isWysiwygAvailable">${$t(
+                <div class="buttons-set | cc-paragraph-configurator__wysiwyg-buttons" v-show="isWysiwygAvailable">
+                    <button type="button" class="scalable action-show-hide" id="toggle-wysiwyg">${$t(
                         'Show / Hide Editor'
                     )}</button>
-                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()" v-show="isWysiwygAvailable">${$t(
+                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()">${$t(
                         'Insert Widget'
                     )}...</button>
-                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()" v-show="isWysiwygAvailable">${$t(
+                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()">${$t(
                         'Insert Image'
                     )}...</button>
-                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()" v-show="isWysiwygAvailable">${$t(
+                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()">${$t(
                         'Insert Variable'
                     )}...</button>
                 </div>
