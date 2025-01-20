@@ -93,13 +93,13 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     <button type="button" class="scalable action-show-hide" id="toggle-wysiwyg">${$t(
                         'Show / Hide Editor'
                     )}</button>
-                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()">${$t(
+                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()"  v-show="!isWysiwygVisible">${$t(
                         'Insert Widget'
                     )}...</button>
-                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()">${$t(
+                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()" v-show="!isWysiwygVisible">${$t(
                         'Insert Image'
                     )}...</button>
-                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()">${$t(
+                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()" v-show="!isWysiwygVisible">${$t(
                         'Insert Variable'
                     )}...</button>
                 </div>
@@ -174,6 +174,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             isWysiwygAvailable: false,
             isWysiwygVisibleByDefault: false,
             isWysiwygInitialized: false,
+            isWysiwygVisible: false,
 
             // wysiwyg editor object
             editor: null,
@@ -334,6 +335,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     _this.editor.setup('exact');
                     _this.isWysiwygInitialized = true;
                     _this.editor.toggle();
+                    _this.isWysiwygVisible = !_this.isWysiwygVisible;
                 }
 
                 // Attach listener to show/hide wysiwyg editor and initialise when first time shown
@@ -347,6 +349,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                         }
 
                         _this.editor.toggle();
+                        _this.isWysiwygVisible = !_this.isWysiwygVisible;
                     }.bind(_this.editor)
                 );
             });
