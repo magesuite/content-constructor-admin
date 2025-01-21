@@ -48,7 +48,7 @@ const productFinderPreview: vuejs.ComponentOption = {
                             <svg class="cc-product-finder-preview__scene-option-placeholder" v-show="!option.image">
                                 <use xlink:href="#icon_image-placeholder"></use>
                             </svg>
-                            <img class="cc-product-finder-preview__scene-option-image" src="{{ option.image | decode }}" alt="" v-show="option.image" />
+                            <img class="cc-product-finder-preview__scene-option-image" :src="option.image | decode" alt="" v-show="option.image" />
                         </figure>
                         <span class="cc-product-finder-preview__scene-option-label" :data-placeholder="'No label' | translate">{{{ option.label }}}</span>
                     </li>
