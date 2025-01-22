@@ -89,17 +89,17 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     'HTML'
                 )}:</label>
 
-                <div class="buttons-set | cc-paragraph-configurator__wysiwyg-buttons">
+                <div class="buttons-set | cc-paragraph-configurator__wysiwyg-buttons" v-show="isWysiwygAvailable">
                     <button type="button" class="scalable action-show-hide" id="toggle-wysiwyg">${$t(
                         'Show / Hide Editor'
                     )}</button>
-                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()" v-show="!isEditorVisible">${$t(
+                    <button type="button" class="scalable action-add-widget plugin" @click="openWidgetModal()"  v-show="!isWysiwygVisible">${$t(
                         'Insert Widget'
                     )}...</button>
-                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()" v-show="!isEditorVisible">${$t(
+                    <button type="button" class="scalable action-add-image plugin" @click="openMediaModal()" v-show="!isWysiwygVisible">${$t(
                         'Insert Image'
                     )}...</button>
-                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()" v-show="!isEditorVisible">${$t(
+                    <button type="button" class="scalable add-variable plugin" @click="openMagentoVariablesModal()" v-show="!isWysiwygVisible">${$t(
                         'Insert Variable'
                     )}...</button>
                 </div>
@@ -171,10 +171,13 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                 errorMessage: '',
             },
 
-            isEditorVisible: true,
+            isWysiwygAvailable: false,
+            isWysiwygVisibleByDefault: false,
+            isWysiwygInitialized: false,
+            isWysiwygVisible: false,
 
             // wysiwyg editor object
-            editor: undefined,
+            editor: null,
 
             scenarioOptions: {
                 // Reading scenario options.
@@ -192,9 +195,11 @@ const paragraphConfigurator: vuejs.ComponentOption = {
         };
     },
     ready(): void {
-        // Check if wysiwygConfig was passed - means that editor is enabled in admin panel
+        // Check if wysiwygConfig was passed and check its fongiguration status from Stores/Congfiguration/General/Content Management
         if (this.wysiwygConfig !== '') {
             this.wysiwygCfg = JSON.parse(this.wysiwygConfig);
+            this.isWysiwygAvailable = this.wysiwygCfg.enabled;
+            this.isWysiwygVisibleByDefault = !this.wysiwygCfg.hidden;
             this.wysiwygCfg.height = '300px';
         }
 
@@ -235,7 +240,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                     this.$set('configuration.title', responseData.title);
 
                     // initialize customized WYSIWYG
-                    if (this.wysiwygCfg) {
+                    if (this.isWysiwygAvailable) {
                         this.initWysiwyg();
                     }
                 },
@@ -245,7 +250,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
             );
         } else {
             // initialize customized WYSIWYG
-            if (this.wysiwygCfg) {
+            if (this.isWysiwygAvailable) {
                 this.initWysiwyg();
             }
         }
@@ -315,29 +320,38 @@ const paragraphConfigurator: vuejs.ComponentOption = {
          */
         initWysiwyg(): void {
             const _this: any = this;
-            let editor: any;
-            const editorConfig: JSON = JSON.parse(this.wysiwygConfig);
 
             require([
                 'mage/adminhtml/wysiwyg/tiny_mce/setup',
             ], function(): void {
-                editor = new wysiwygSetup(
+                // Prepare wysiwyg editor
+                _this.editor = new wysiwygSetup(
                     'textarea-cfg-paragraph',
-                    editorConfig
+                    _this.editorCfg
                 );
 
-                editor.setup('exact');
+                // Initialise and show wysiwyg editor if it's configured to be visible by default
+                if (!_this.isWysiwygInitialized && _this.isWysiwygVisibleByDefault) {
+                    _this.editor.setup('exact');
+                    _this.isWysiwygInitialized = true;
+                    _this.editor.toggle();
+                    _this.isWysiwygVisible = !_this.isWysiwygVisible;
+                }
 
+                // Attach listener to show/hide wysiwyg editor and initialise when first time shown
                 Event.observe(
                     'toggle-wysiwyg',
                     'click',
                     function(): void {
-                        editor.toggle();
-                        _this.isEditorVisible = !_this.isEditorVisible;
-                    }.bind(editor)
-                );
+                        if (!_this.isWysiwygInitialized) {
+                            _this.editor.setup('exact');
+                            _this.isWysiwygInitialized = true;
+                        }
 
-                _this.isEditorVisible = true;
+                        _this.editor.toggle();
+                        _this.isWysiwygVisible = !_this.isWysiwygVisible;
+                    }.bind(_this.editor)
+                );
             });
         },
 

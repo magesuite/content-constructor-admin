@@ -251,6 +251,13 @@
                         <ticket_id>TOYS-1578</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.13.1" date="2025-01-15">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Adjust Paragraph component to respect wysiwyg enabled/disabled status</overview>
+                        <ticket_id>MGP-1485</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
