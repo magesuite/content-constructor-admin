@@ -1,36 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\DataProviders;
 
 class CategoryPickerDataProvider
 {
-    /**
-     * @var \MageSuite\ContentConstructorFrontend\DataProviders\NavigationDataProvider
-     */
-    private $navigationDataProvider;
+    protected \MageSuite\ContentConstructorFrontend\DataProviders\NavigationDataProvider $navigationDataProvider;
 
     public function __construct(\MageSuite\ContentConstructorFrontend\DataProviders\NavigationDataProvider $navigationDataProvider)
     {
         $this->navigationDataProvider = $navigationDataProvider;
     }
 
-    public function getCategories($rootCategoryId) {
+    public function getCategories(int $rootCategoryId): array
+    {
         $categories = $this->navigationDataProvider->getNavigationStructure($rootCategoryId, false);
 
-        $modifiedCategories['optgroup'] = $categories['items'];
+        $modifiedCategories = ['optgroup' => $categories['items']];
 
         $this->modifyKeys($modifiedCategories['optgroup']);
 
         return $modifiedCategories;
     }
 
-    public function modifyKeys(&$categories) {
-        foreach($categories as &$category) {
+    public function modifyKeys(array &$categories): void
+    {
+        foreach ($categories as &$category) {
             $category['value'] = $category['id'];
             unset($category['id']);
             unset($category['hasChildren']);
 
-            if(isset($category['subcategories'])) {
+            if (isset($category['subcategories'])) {
                 $category['optgroup'] = $category['subcategories'];
                 unset($category['subcategories']);
 
