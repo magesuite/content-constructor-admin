@@ -65,11 +65,6 @@
                         <item name="name" xsi:type="string">Hero Carousel</item>
                         <item name="description" xsi:type="string">This component allows you to add several Hero images in a Slider. You can define Headlines, Subheadlines, Text and Buttons on each image.</item>
                     </item>
-                    <item name="image-teaser" xsi:type="array">
-                        <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ImageTeaserLegacy</item>
-                        <item name="name" xsi:type="string">Image Teaser Legacy</item>
-                        <item name="description" xsi:type="string">This component allows you to add 1-6 image teasers with or without text in a row. This component is deprecated and will be removed in the future.</item>
-                    </item>
                     <item name="separator" xsi:type="array">
                         <item name="className" xsi:type="string">MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Separator</item>
                         <item name="name" xsi:type="string">Separator</item>
