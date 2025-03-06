@@ -29,7 +29,6 @@ import headlineConfigurator from './components/headline/configurator/headline';
 import heroCarouselConfigurator from './components/hero-carousel/configurator/hero-carousel';
 import iconConfigurator from './components/icon/configurator/icon';
 import imageTeaserConfigurator from './components/image-teaser/configurator/image-teaser';
-import imageTeaserLegacyConfigurator from './components/image-teaser/configurator/image-teaser-legacy';
 import magentoProductGridTeasersConfigurator from './components/magento-product-grid-teasers/configurator/magento-product-grid-teasers';
 import paragraphConfigurator from './components/paragraph/configurator/paragraph';
 import productCarouselConfigurator from './components/product-carousel/configurator/product-carousel';
@@ -130,7 +129,6 @@ const contentConstructor: vuejs.ComponentOption = {
         'headline-configurator': headlineConfigurator,
         'hero-carousel-configurator': heroCarouselConfigurator,
         'image-teaser-configurator': imageTeaserConfigurator,
-        'image-teaser-legacy-configurator': imageTeaserLegacyConfigurator,
         'magento-product-grid-teasers-configurator': magentoProductGridTeasersConfigurator,
         'paragraph-configurator': paragraphConfigurator,
         'product-carousel-configurator': productCarouselConfigurator,

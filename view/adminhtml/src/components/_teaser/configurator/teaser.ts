@@ -379,6 +379,21 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     </div>
                                 </div>
                             </div>
+                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--alt">
+                                <label class="cc-input__label">{{ 'Image Alt Text' | translate }}</label>
+                                <div class="cc-input cc-input--group">
+                                    <div class="cc-input cc-teaser-configurator__form-element">
+                                        <input
+                                            type="text"
+                                            class="cc-input__input"
+                                            id="cfg-teaser-{{teaserIndex}}-alt"
+                                            v-model="configuration.image_alt"
+                                            :disabled="!configuration.image.raw"
+                                        >
+                                        <p class="cc-input__hint">{{ "Image alt attribute. If slogan or description are provided, they will be used as alt, when scenario's accessibility requires it. Otherwise, custom alt should be provided for accessibility." | translate }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </template>
 
                         <template v-if="tab.content && tab.content === '#style'">
@@ -538,21 +553,6 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                         <span class="admin__actions-switch-text">
                                             {{ eagerloadTextOutput | translate }}
                                         </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--alt">
-                                <label class="cc-input__label">{{ 'Alt' | translate }}</label>
-                                <div class="cc-input cc-input--group">
-                                    <div class="cc-input cc-teaser-configurator__form-element">
-                                        <input
-                                            type="text"
-                                            class="cc-input__input"
-                                            id="cfg-teaser-{{teaserIndex}}-alt"
-                                            v-model="configuration.image_alt"
-                                            :disabled="!configuration.image.raw"
-                                        >
-                                        <p class="cc-input__hint">{{ 'Value will be passed to alt (if alt field empty - slogan is used, if slogan is empty - description is used, if empty "Teaser image" is used)' | translate }}</p>
                                     </div>
                                 </div>
                             </div>
