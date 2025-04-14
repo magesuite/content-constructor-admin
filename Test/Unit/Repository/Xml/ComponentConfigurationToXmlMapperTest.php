@@ -131,9 +131,6 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         $this->$assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
     }
 
-    /**
-     * @dataProvider
-     */
     public function testWorksWithEmptyComponentsArray()
     {
         $rootXml = "\n\n";
