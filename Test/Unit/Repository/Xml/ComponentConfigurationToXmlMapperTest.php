@@ -156,7 +156,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testTypes()
+    private function testTypes()
     {
         return [[true], [false]];
     }
