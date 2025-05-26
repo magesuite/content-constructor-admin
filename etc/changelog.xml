@@ -258,6 +258,16 @@
                         <ticket_id>MGP-1485</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.15.1" date="2025-06-10">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Extend teaser available size options</overview>
+                        <description>
+                            Available sizes for products grid teaser component can now be customized within the theme (view.xml)
+                        </description>
+                        <ticket_id>KRG-2985</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>

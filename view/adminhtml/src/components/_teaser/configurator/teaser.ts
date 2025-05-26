@@ -626,11 +626,15 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
                                         <label for="cfg-mpg-teaser-{{ teaserIndex }}-size-select" class="cc-input__label">{{ 'Teaser size' | translate }}:</label>
-                                        <select name="cfg-mpg-teaser-{{ teaserIndex }}-size-select" class="cc-input__select" id="cfg-mpg-teaser-{{ teaserIndex }}-size-select" v-model="configuration.sizeSelect" @change="setTeaserSize()">
-                                            <option value="1x1">{{ '1x1' | translate }}</option>
-                                            <option value="1x2">{{ '1x2' | translate }}</option>
-                                            <option value="2x1">{{ '2x1' | translate }}</option>
-                                            <option value="2x2">{{ '2x2' | translate }}</option>
+                                        <select 
+                                            name="cfg-mpg-teaser-{{ teaserIndex }}-size-select" 
+                                            class="cc-input__select" 
+                                            id="cfg-mpg-teaser-{{ teaserIndex }}-size-select" 
+                                            v-model="configuration.sizeSelect" 
+                                            @change="setTeaserSize()"
+                                            v-if="productsGridTeaserAvailableSizes.length"
+                                        >
+                                            <option v-for="size in productsGridTeaserAvailableSizes" value="{{ size }}">{{ size | translate}}</option>
                                         </select>
                                     </div>
                                     <div class="cc-input cc-teaser-configurator__form-element">
@@ -830,6 +834,10 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
         supportBreakpointDedicatedImages: function(): boolean {
             return this.callerComponentType === 'mosaic' && this.ccConfig.mosaic.support_breakpoint_dedicated_images;
+        },
+        productsGridTeaserAvailableSizes: function (): object {
+            const data: object = this.ccConfig.products_grid_teaser_available_sizes;
+            return Object.keys(data).map(key => (data as any)[key]);
         },
     },
     data(): any {
