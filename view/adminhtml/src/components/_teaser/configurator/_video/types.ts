@@ -2,7 +2,8 @@ const MATCH_URL_YOUTUBE = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/
 const MATCH_URL_VIMEO = /vimeo\.com\/.+/;
 const MATCH_URL_FACEBOOK = /^https?:\/\/(www\.)?facebook\.com.*\/(video(s)?|watch|story)(\.php?|\/).+$/;
 const MATCH_URL_FACEBOOK_WATCH = /^https?:\/\/fb\.watch\/.+$/;
-const MATCH_URL_FILE = /(^\{\{media url=")|($\}\})/;
+const MATCH_URL_MEDIA_FILE = /(^\{\{media url=")|($\}\})/;
+const MATCH_URL_LOCATION_ORIGIN = new RegExp(`^${window.location.origin}\\/.*\\.mp4$`, 'i');
 
 type VideoType = 'youtube' | 'vimeo' | 'facebook' | 'file';
 
@@ -17,7 +18,7 @@ const getVideoTypeFromUrl = (url: string) => {
         case MATCH_URL_VIMEO.test(url):
             return 'vimeo';
             break;
-        case MATCH_URL_FILE.test(url):
+        case MATCH_URL_MEDIA_FILE.test(url) || MATCH_URL_LOCATION_ORIGIN.test(url):
             return 'file';
         default:
             return null;
