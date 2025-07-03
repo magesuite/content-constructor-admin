@@ -35,6 +35,9 @@ import productTeaser from '../product-teaser/preview/product-teaser';
 // Custom components
 import { customComponentsPreview } from '../../custom-components/custom-components';
 
+// Clipboard utility
+import clipboard from "../../utils/clipboard/clipboard";
+
 /**
  * Single component information interface.
  */
@@ -54,27 +57,36 @@ interface IComponentInformation {
  */
 const layoutBuilder: vuejs.ComponentOption = {
     template: `<div class="cc-layout-builder | {{ class }}">
-        <div class="cc-layout-builder__filters" v-if="filters">
-            <template v-for="(filterKey, filter) in filters">
-                <div class="cc-layout-builder__filter">
-                    <div class="cc-layout-builder__filter-content">
-                        <svg class="cc-layout-builder__filter-icon">
-                            <use xlink:href="{{ filter.icon }}"></use>
-                        </svg>
-                        <span class="cc-layout-builder__filter-title">
-                            {{ getTranslatedText( filter.title ) }}:
-                        </span>
-                        <template v-for="(optionKey, option) in filter.options">
-                            <div class="cc-layout-builder__filter-control">
-                                <label :class="[ option.value ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]">
-                                    <input type="checkbox" v-model="option.value" class="cc-input__checkbox" @change="saveFiltersState()">
-                                    {{ getTranslatedText( option.label ) }}
-                                </label>
-                            </div>
-                        </template>
+        <div class="cc-layout-builder-toolbar">
+            <div class="cc-layout-builder-toolbar__filters" v-if="filters">
+                <template v-for="(filterKey, filter) in filters">
+                    <div class="cc-layout-builder-toolbar__filters__filter">
+                        <div class="cc-layout-builder-toolbar__filters__filter-content">
+                            <svg class="cc-layout-builder-toolbar__filters__filter-icon">
+                                <use xlink:href="{{ filter.icon }}"></use>
+                            </svg>
+                            <span class="cc-layout-builder-toolbar__filters__filter-title">
+                                {{ getTranslatedText( filter.title ) }}:
+                            </span>
+                            <template v-for="(optionKey, option) in filter.options">
+                                <div class="cc-layout-builder-toolbar__filters__filter-control">
+                                    <label :class="[ option.value ? 'cc-input__checkbox-label cc-input__checkbox-label--checked' : 'cc-input__checkbox-label' ]">
+                                        <input type="checkbox" v-model="option.value" class="cc-input__checkbox" @change="saveFiltersState()">
+                                        {{ getTranslatedText( option.label ) }}
+                                    </label>
+                                </div>
+                            </template>
+                        </div>
                     </div>
-                </div>
-            </template>
+                </template>
+            </div>
+            <div class="cc-layout-builder__clipboard">
+                <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-layout-builder__copy-to-clipboard-button" @click="copyComponent()" title="{{ getTranslatedText('Copy all components') }}">
+                    <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
+                        <use xlink:href="#icon_copy"></use>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <div class="cc-layout-builder__component cc-layout-builder__component--static">
@@ -251,6 +263,9 @@ const layoutBuilder: vuejs.ComponentOption = {
         'product-teaser-preview': productTeaser,
         ...customComponentsPreview
     },
+    mixins: [
+        clipboard
+    ],
     props: {
         /**
          * Class property support to enable BEM mixes.
@@ -309,8 +324,7 @@ const layoutBuilder: vuejs.ComponentOption = {
     data(): any {
         return {
             components: [],
-            filters: {},
-            copiedComponents: []
+            filters: {}
         };
     },
     computed: {
@@ -321,7 +335,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         specialComponents: function (): object {
             const data: object = this.ccConfig.special_components;
             return Object.keys(data).map(key => (data as any)[key]);
-        },
+        }
     },
     ready(): void {
         this.components = this.componentsConfiguration
@@ -332,9 +346,6 @@ const layoutBuilder: vuejs.ComponentOption = {
                 window.localStorage.getItem('ccFilters')
                 ? JSON.parse(window.localStorage.getItem('ccFilters'))
                 : this.ccConfig.filters;
-
-        const storedCopiedComponents = localStorage.getItem('magesuite-cc-admin-copied-components');
-        this.copiedComponents = storedCopiedComponents ? JSON.parse(storedCopiedComponents).map((el: any) => el.id) : [];
 
         this.sortComponentsBySections();
         this.setupInitialDisplayProps();
@@ -427,30 +438,45 @@ const layoutBuilder: vuejs.ComponentOption = {
             );
             this.addComponentInformation(index, componentInfo);
         },
+
+        /**
+         * Prepares component information to recognize it from the other same type components.
+         * @param component
+         */
+        getComponentDisplayName(component: IComponentInformation): string {
+            let componentInfo: string[] = [];
+            const itemSlogans = component.data?.items?.map((item: any) => item?.slogan.replace(/(<([^>]+)>)/gi, '')) ?? [];
+            componentInfo = itemSlogans.filter(Boolean);
+
+            if (componentInfo.length === 0 && component.data?.title) {
+                componentInfo = [component.data.title];
+            }
+
+            return `${component.name} ${componentInfo.length ? '(' + componentInfo.join(', ') + ')' : ''}`
+
+        },
         /**
          * Paste component or components choosen from the lits in the modal.
          *
          * @param {number} index Original component's index in array.
          */
-        pasteComponent(index: number): void {
-            const componentsData: string = localStorage.getItem('magesuite-cc-admin-copied-components');
+        async pasteComponent(index: number): Promise<void> {
+            const components: Array<IComponentInformation> = await this.getComponentsFromClipboard()
 
-            if (!componentsData) {
+            if (!components.length) {
                 alert({
                     title: $t('In order to paste a component first copy another component.'),
                 });
                 return;
             }
 
-            const components: [IComponentInformation] = JSON.parse(componentsData);
             const builder = this;
-
             let buttons: any = [];
 
             components.forEach((component, i) => {
                 buttons.push(
                     {
-                        text: `${component.name}`,
+                        text: this.getComponentDisplayName(component),
                         class: 'action-secondary',
                         click: function () {
                             this.closeModal();
@@ -493,8 +519,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                     text: $t('Clear copied components list'),
                     class: 'action-default primary action-delete-copied',
                     click: function () {
-                        builder.copiedComponents = [];
-                        localStorage.removeItem('magesuite-cc-admin-copied-components')
+                        builder.clearClipboard();
                         this.closeModal();
                     }
                 }
@@ -694,28 +719,35 @@ const layoutBuilder: vuejs.ComponentOption = {
          * There can be max. 10 components copied
          * @param {number} index Original component's index in array.
          */
-        copyComponent(index: number): void {
+         copyComponent(index: number | undefined): Promise<void> {
+            if (index === undefined) {
+                this.setComponentsToClipboard(this.components);
+                alert({
+                    title: $t('Components was copied'),
+                    content: $.mage.__(
+                        'All components was copied to clipboard.'
+                    ),
+                });
+                
+                return;
+            }
             if (this.isAlreadyCopied(this.components[index].id)) {
                 alert({
                     title: $t('The component has been already copied before'),
                 });
-            } else {
-                const oldCopiedComponents: any = localStorage.getItem('magesuite-cc-admin-copied-components') || '[]';
-                const newCopiedComponents: any = [...JSON.parse(oldCopiedComponents), this.components[index]].slice(-10);
+                return;
+            }
 
-                localStorage.setItem(
-                    'magesuite-cc-admin-copied-components',
-                    JSON.stringify(newCopiedComponents)
-                );
-
-                this.copiedComponents.push(this.components[index].id);
-                this.copiedComponents = this.copiedComponents.slice(-10);
-
+            try {
+                this.addComponentToClipboard(this.components[index]);
                 alert({
                     title: $t('The component was copied'),
-                    content: $.mage.__(
-                        'You can copy up to 10 components and paste them later into Content Constructor area on other CMS/PDP/POP page.'
-                    ),
+                    content: $.mage.__('You can paste copied component into Content Constructor area on other CMS/PDP/POP page.'),
+                });
+            } catch (error) {
+                alert({
+                    title: $t('Unable to copy component'),
+                    content: error
                 });
             }
         },
@@ -872,8 +904,8 @@ const layoutBuilder: vuejs.ComponentOption = {
          * @param  {string} id id of component.
          * @return {boolean}
          */
-        isAlreadyCopied: function(id: string): boolean {
-            return this.copiedComponents.some((el: any) => el === id)
+         isAlreadyCopied(id: string): boolean {
+            return this.isComponentInClipboard(id);
         },
         /**
          * FE mobile/desktop visibility cannot be controlled for Built-in components into magento core functionality

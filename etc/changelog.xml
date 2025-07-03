@@ -285,6 +285,16 @@
                         <ticket_id>KRG-3010</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.15.4" date="2025-07-03">
+                    <entry>
+                        <type>FEAT</type>
+                        <overview>Clipboard feature</overview>
+                        <description>
+                            Content Constructor now supports system clipboard which allows to copy and paste components between browsers and different environments.
+                        </description>
+                        <ticket_id>MGS-5397</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
