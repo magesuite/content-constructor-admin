@@ -32,42 +32,45 @@
 .cc-layout-builder {
     $root: &;
 
-    &__filters {
+    &-toolbar {
         margin-bottom: 30px;
-    }
+        display: grid;
+        grid-template-columns: 1fr auto;
 
-    &__filter {
-        border-bottom: 1px solid #efefef;
+        &__filters {
+            &__filter {
+                border-bottom: 1px solid #efefef;
 
-        &:first-child {
-            margin-top: -20px;
-            border-top: 1px solid #ccc;
-        }
+                &:first-child {
+                    border-top: 1px solid #ccc;
+                }
 
-        &-content {
-            padding: 15px 0;
-            display: flex;
-            width: 100%;
-            align-items: center;
-            justify-content: center;
-        }
+                &-content {
+                    padding: 15px 0;
+                    display: flex;
+                    width: 100%;
+                    align-items: center;
+                    justify-content: center;
+                }
 
-        &-icon {
-            width: 24px;
-            height: 16px;
-        }
+                &-icon {
+                    width: 24px;
+                    height: 16px;
+                }
 
-        &-title {
-            padding-left: 8px;
-            font-weight: 900;
-            text-transform: uppercase;
-            font-size: 0.9em;
-            line-height: 1.5rem;
-            color: #999;
-        }
+                &-title {
+                    padding-left: 8px;
+                    font-weight: 900;
+                    text-transform: uppercase;
+                    font-size: 0.9em;
+                    line-height: 1.5rem;
+                    color: #999;
+                }
 
-        &-control {
-            margin-left: 27px;
+                &-control {
+                    margin-left: 27px;
+                }
+            }
         }
     }
 
