@@ -78,7 +78,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider testTypes
+     * @dataProvider typesProvider
      */
     public function testItGeneratesProperBlockClass($withExistingXml)
     {
@@ -91,7 +91,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider testTypes
+     * @dataProvider typesProvider
      */
     public function testItGeneratesProperComponentsNames($withExistingXml)
     {
@@ -104,7 +104,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider testTypes
+     * @dataProvider typesProvider
      */
     public function testItGeneratesProperComponentsData($withExistingXml)
     {
@@ -156,7 +156,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    private function testTypes()
+    public static function typesProvider(): array
     {
         return [[true], [false]];
     }
