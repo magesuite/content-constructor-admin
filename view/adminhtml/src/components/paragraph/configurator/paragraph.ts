@@ -327,7 +327,7 @@ const paragraphConfigurator: vuejs.ComponentOption = {
                 // Prepare wysiwyg editor
                 _this.editor = new wysiwygSetup(
                     'textarea-cfg-paragraph',
-                    _this.editorCfg
+                    _this.wysiwygCfg
                 );
 
                 // Initialise and show wysiwyg editor if it's configured to be visible by default
