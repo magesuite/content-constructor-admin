@@ -301,6 +301,12 @@
                         <overview>Fixed issue with wysiwyg config for paragraph</overview>
                     </entry>
                 </tag>
+                <tag version="4.15.7" date="2025-09-17">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Adjust custom components sources path</overview>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
