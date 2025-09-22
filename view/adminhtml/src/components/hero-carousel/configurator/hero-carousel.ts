@@ -252,11 +252,14 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             );
             this.onChange();
         },
+
         /**
          * If there are some legacy teasers saved, maps their configuration to
          * Image Teaser 2.0 interface and updates hero configuration
          */
         mapLegacyConfiguration(): void {
+            if (!this.configuration?.items?.length) return;
+
             const isLegacyTeaserConfiguration: boolean = Object.keys(this.configuration.items[0]).some(
                 (key: string) => ['headline', 'subheadline', 'paragraph', 'ctaLabel', 'href', 'colorScheme', 'aspectRatio', 'decodedImage', 'displayVariant'].indexOf(key) !== -1
             );

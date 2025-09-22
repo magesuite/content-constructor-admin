@@ -307,6 +307,12 @@
                         <overview>Adjust custom components sources path</overview>
                     </entry>
                 </tag>
+                <tag version="4.15.8" date="2025-09-22">
+                    <entry>
+                        <type>FIX</type>
+                        <overview>Added condition for legacy configuration mapping to prevent errors causing the page to get stuck during loading</overview>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
