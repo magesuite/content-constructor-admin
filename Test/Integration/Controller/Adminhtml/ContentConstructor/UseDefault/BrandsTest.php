@@ -20,10 +20,16 @@ class BrandsTest extends AbstractUseDefault
      */
     public function testRemoveStoreData(): void
     {
+        $version = \Composer\InstalledVersions::getVersion('creativestyle/magesuite-brand-management');
+
+        if (!empty($version) && version_compare($version, '2.0.0') >= 0) {
+            $this->markTestSkipped('This test is not applicable for the 2.x version of the brand management module');
+        }
+
         $brand = $this->brandsRepository->getById(600, 1);
 
         $this->assertTrue(
-            strpos($brand->getLayoutUpdateXml() ?? '', 'headline2') !== false,
+            str_contains($brand->getLayoutUpdateXml() ?? '', 'headline2'),
             'Fixture value not asserted'
         );
 
@@ -33,11 +39,11 @@ class BrandsTest extends AbstractUseDefault
         $brand = $this->brandsRepository->getById(600, 1);
 
         $this->assertFalse(
-            strpos($brand->getLayoutUpdateXml() ?? '', 'headline2') !== false,
+            str_contains($brand->getLayoutUpdateXml() ?? '', 'headline2'),
             'The old value asserted but should be removed'
         );
         $this->assertTrue(
-            strpos($brand->getLayoutUpdateXml() ?? '', 'headline') !== false,
+            str_contains($brand->getLayoutUpdateXml() ?? '', 'headline'),
             'The new value not asserted'
         );
     }
