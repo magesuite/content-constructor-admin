@@ -1,21 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Observers;
 
 class BrandEditObserver implements \Magento\Framework\Event\ObserverInterface
 {
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper
-     */
-    protected $configurationToXmlMapper;
+    public function __construct(protected \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $configurationToXmlMapper) {}
 
-    public function __construct(\MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $configurationToXmlMapper)
+    public function execute(\Magento\Framework\Event\Observer $observer): void
     {
-        $this->configurationToXmlMapper = $configurationToXmlMapper;
-    }
+        $version = \Composer\InstalledVersions::getVersion('creativestyle/magesuite-brand-management');
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
-    {
+        if (!empty($version) && version_compare($version, '2.0.0') >= 0) {
+            return;
+        }
+
         $params = $observer->getData('params');
 
         /** @var \MageSuite\BrandManagement\Model\Brands $brand */
