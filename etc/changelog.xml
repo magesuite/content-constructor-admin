@@ -313,6 +313,13 @@
                         <overview>Added condition for legacy configuration mapping to prevent errors causing the page to get stuck during loading</overview>
                     </entry>
                 </tag>
+                <tag version="4.16.1" date="2025-12-04">
+                    <entry>
+                        <type>FEATURE</type>
+                        <overview>Adjust video type validator to allow YouTube short URLs</overview>
+                        <ticket_id>LOWA-821</ticket_id>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>
