@@ -1,39 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Controller\Adminhtml\Image;
 
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\ResponseInterface;
-
-class Show extends Action
+class Show extends \Magento\Backend\App\Action
 {
-    /**
-     * @var Context
-     */
-    private $context;
-
-    /**
-     * @var \Magento\Framework\Controller\Result\RedirectFactory
-     */
-    private $redirectFactory;
-
-    /**
-     * @var \MageSuite\ContentConstructorFrontend\Service\MediaResolver
-     */
-    private $mediaResolver;
-
     public function __construct(
-        Context $context,
-        \Magento\Framework\Controller\Result\RedirectFactory $redirectFactory,
-        \MageSuite\ContentConstructorFrontend\Service\MediaResolver $mediaResolver
-    )
-    {
+        protected \Magento\Backend\App\Action\Context $context,
+        protected \Magento\Framework\Controller\Result\RedirectFactory $redirectFactory,
+        protected \MageSuite\ContentConstructorFrontend\Service\MediaResolver $mediaResolver
+    ) {
         parent::__construct($context);
-
-        $this->context = $context;
-        $this->redirectFactory = $redirectFactory;
-        $this->mediaResolver = $mediaResolver;
     }
 
     /**
@@ -42,7 +20,7 @@ class Show extends Action
      * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
      * @throws \Magento\Framework\Exception\NotFoundException
      */
-    public function execute()
+    public function execute() // phpcs:ignore
     {
         $image = base64_decode($this->getRequest()->getParam('image'));
 
