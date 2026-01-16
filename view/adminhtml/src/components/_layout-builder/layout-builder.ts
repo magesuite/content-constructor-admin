@@ -63,7 +63,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                     <div class="cc-layout-builder-toolbar__filters__filter">
                         <div class="cc-layout-builder-toolbar__filters__filter-content">
                             <svg class="cc-layout-builder-toolbar__filters__filter-icon">
-                                <use xlink:href="{{ filter.icon }}"></use>
+                                <use v-bind:xlink:href="{{ filter.icon }}"></use>
                             </svg>
                             <span class="cc-layout-builder-toolbar__filters__filter-title">
                                 {{ getTranslatedText( filter.title ) }}:

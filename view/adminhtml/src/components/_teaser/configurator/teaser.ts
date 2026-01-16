@@ -411,7 +411,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                     >
                                         <div class="cc-teaser-configurator__optimizer-icon-wrapper">
                                             <svg class="cc-teaser-configurator__optimizer-icon">
-                                                <use xlink:href="{{optimizer.configurator.icon}}"></use>
+                                                <use v-bind:xlink:href="{{ optimizer.configurator.icon }}"></use>
                                             </svg>
                                         </div>
                                         <label class="cc-teaser-configurator__optimizer-label">
