@@ -1,38 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Observer;
 
 class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    protected $objectManager;
-
-    /**
-     * @var \Magento\Cms\Api\PageRepositoryInterface
-     */
-    protected $pageRepository;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
+    protected ?\Magento\Cms\Api\PageRepositoryInterface $pageRepository;
 
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->pageRepository = $this->objectManager->get(\Magento\Cms\Api\PageRepositoryInterface::class);
-
-        parent::setUp();
     }
 
     /**
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
      * @magentoAppArea adminhtml
-     * @param string $title
-     * @param string $components
-     * @param string $identifier
-     * @param string $expected
      * @dataProvider dataProvider
      */
-    public function testItReturnsCorrectData($title, $components, $identifier, $expected)
+    public function testItReturnsCorrectData(string $title, ?string $components, string $identifier, ?string $expected): void
     {
         $this->getRequest()->setMethod(\Magento\Framework\App\Request\Http::METHOD_POST);
         $this->getRequest()->setPostValue([
@@ -47,15 +38,15 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
 
         $assertContains = method_exists($this, 'assertStringContainsString') ? 'assertStringContainsString' : 'assertContains';
 
-        if($expected === null){
+        if ($expected === null) {
             $this->assertNull($page->getContentConstructorContent());
-        }else{
+        } else {
             $this->assertNull($page->getLayoutUpdateXml());
             $this->$assertContains($expected, $page->getContentConstructorContent());
         }
     }
 
-    public function dataProvider()
+    public static function dataProvider(): array
     {
         return [
             ['Page without components', null, 'page-without-components', null],
