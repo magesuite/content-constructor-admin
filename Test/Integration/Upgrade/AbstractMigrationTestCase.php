@@ -1,30 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Upgrade;
 
 abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
 {
-    const ALL_STORE_VIEWS = 0;
+    public const ALL_STORE_VIEWS = 0;
 
-    /**
-     * @var \Magento\Framework\App\ObjectManager
-     */
-    protected $objectManager;
-
-    /**
-     * @var \Magento\Store\Model\StoreRepository
-     */
-    protected $storeRepository;
-
-    /**
-     * @var \Magento\Store\Model\StoreManager
-     */
-    protected $storeManager;
-
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Service\Upgrade\Migration
-     */
-    protected $migration;
+    protected \Magento\Framework\App\ObjectManager $objectManager;
+    protected \Magento\Store\Model\StoreRepository $storeRepository;
+    protected \Magento\Store\Model\StoreManager $storeManager;
+    protected \MageSuite\ContentConstructorAdmin\Service\Upgrade\Migration $migration;
 
     public function setUp(): void
     {
@@ -34,7 +21,7 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
         $this->migration = $this->objectManager->get(\MageSuite\ContentConstructorAdmin\Service\Upgrade\Migration::class);
     }
 
-    protected function runAssertions(array $input, $repository, $idOffset = 0)
+    protected function runAssertions(array $input, object $repository, int $idOffset = 0): void
     {
         foreach ($input as $storeId => $items) {
             for ($i = 1 + $idOffset; $i <= 3 + $idOffset; $i++) {
@@ -58,7 +45,8 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function assertNoComponentsInXml($xml) {
+    protected function assertNoComponentsInXml(?string $xml = null): void
+    {
         $xml = '<?xml version="1.0"?><xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' . $xml . '</xml>';
         $xml = simplexml_load_string($xml);
 
@@ -66,7 +54,7 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
         $this->assertCount(0, $xml->xpath('//block[@class="Creativestyle\ContentConstructorFrontendExtension\Block\Component"]'));
     }
 
-    protected function getXmlInputStringForStoreId($storeId)
+    protected function getXmlInputStringForStoreId(mixed $storeId): string
     {
         return <<<XML
 <referenceContainer name="cc-content">
@@ -89,7 +77,7 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
 XML;
     }
 
-    protected function getExpectedJson($storeId)
+    protected function getExpectedJson(int $storeId): string
     {
         $expected = [
             0 => [
@@ -109,15 +97,5 @@ XML;
         ];
 
         return json_encode($expected);
-    }
-
-    public static function loadWebsiteAndStoresFixture()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores.php";
-    }
-
-    public static function loadReindexInventoryFixtureRollback()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-sales-api/Test/_files/websites_with_stores_rollback.php";
     }
 }
