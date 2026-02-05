@@ -1,29 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Upgrades;
 
 class ProductsMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integration\Upgrade\AbstractMigrationTestCase
 {
-    /**
-     * @var \Magento\Catalog\Model\ProductRepository
-     */
-    protected $productRepository;
+    protected \Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->productRepository = $this->objectManager->get(\Magento\Catalog\Model\ProductRepository::class);
+        $this->productRepository = $this->objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
     }
 
     /**
      * @magentoDbIsolation disabled
      * @magentoAppIsolation enabled
      *
-     * @magentoDataFixture loadWebsiteAndStoresFixture
-     * @magentoDataFixture loadProductsFixture
-     * @magentoDataFixture loadReindexInventoryFixture
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testProductsMigrationOnUpgrade()
+    public function testProductsMigrationOnUpgrade(): void
     {
         $store1 = $this->storeRepository->get("store_for_eu_website");
         $store2 = $this->storeRepository->get("store_for_us_website");
@@ -49,23 +48,8 @@ class ProductsMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Inte
         $this->runAssertions($productsAndStores, $this->productRepository);
     }
 
-    protected function getItemFromRepository($repository, $id, $storeId)
+    protected function getItemFromRepository($repository, $id, $storeId): \Magento\Catalog\Api\Data\ProductInterface
     {
         return $repository->get("SKU-{$id}", false, $storeId, true);
-    }
-
-    public static function loadProductsFixture()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/products.php";
-    }
-
-    public static function loadProductsFixtureRollback()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-api/Test/_files/products_rollback.php";
-    }
-
-    public static function loadReindexInventoryFixture()
-    {
-        include __DIR__ . "/../../../../../magento/module-inventory-indexer/Test/_files/reindex_inventory.php";
     }
 }

@@ -1,31 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Upgrade;
 
 class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integration\Upgrade\AbstractMigrationTestCase
 {
-    /**
-     * @var \Magento\Cms\Model\PageRepository
-     */
-    protected $pageRepository;
+    protected ?\Magento\Cms\Model\PageRepository $pageRepository;
 
     public function setUp(): void
     {
         parent::setUp();
+
         $this->pageRepository = $this->objectManager->get(\Magento\Cms\Model\PageRepository::class);
     }
 
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     *
-     * @magentoDataFixture loadPagesFixture
-     * @magentoDataFixture loadWebsiteAndStoresFixture
+     * @magentoDataFixture MageSuite_Frontend::Test/Integration/_files/pages.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @dataProvider storesAndPagesData
      */
-    public function testPagesMigrationOnUpgrade($storeCode, $pageId)
+    public function testPagesMigrationOnUpgrade(mixed $storeCode, int $pageId): void
     {
-        $storeId = $this->storeRepository->get($storeCode)->getId();
+        $storeId = (int)$this->storeRepository->get($storeCode)->getId();
         $layoutUpdate = $this->getXmlInputStringForStoreId($storeId);
 
         $page = $this->pageRepository->getById($pageId);
@@ -45,7 +44,7 @@ class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integra
         $this->assertEquals($this->getExpectedJson($storeId), $content);
     }
 
-    public static function storesAndPagesData()
+    public static function storesAndPagesData(): array
     {
         return
         [
@@ -53,15 +52,5 @@ class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integra
             ["store_for_eu_website", 102],
             ["store_for_us_website", 103]
         ];
-    }
-
-    public static function loadPagesFixture()
-    {
-        include __DIR__ . "/../../../../magesuite-frontend/Test/Integration/_files/pages.php";
-    }
-
-    public static function loadPagesFixtureRollback()
-    {
-        include __DIR__ . "/../../../../magesuite-frontend/Test/Integration/_files/pages_rollback.php";
     }
 }

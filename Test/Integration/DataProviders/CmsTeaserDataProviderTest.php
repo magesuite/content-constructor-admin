@@ -1,42 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\DataProviders;
 
 class CmsTeaserDataProviderTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    private $objectManager;
+    protected ?\MageSuite\ContentConstructorAdmin\DataProviders\CmsTeaserAdminDataProvider $dataProvider;
 
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\DataProviders\CmsTeaserAdminDataProvider
-     */
-    private $dataProvider;
-
-    public function setUp(): void {
-        $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
-
-        $this->dataProvider = $this->objectManager
+    protected function setUp(): void {
+        $objectManager = \Magento\TestFramework\ObjectManager::getInstance();
+        $this->dataProvider = $objectManager
             ->get(\MageSuite\ContentConstructorAdmin\DataProviders\CmsTeaserAdminDataProvider::class);
     }
 
     /**
      * @magentoDbIsolation enabled
-     * @magentoDataFixture loadCmsPages
+     * @magentoDataFixture MageSuite_ContentConstructorAdmin::Test/Integration/DataProviders/_files/pages.php
      */
-    public function testItReturnsCorrectTagsStructure()
+    public function testItReturnsCorrectTagsStructure(): void
     {
         $result = $this->dataProvider->getTags();
 
         $this->assertEquals($this->getExpectedData(), $result);
     }
 
-    public static function loadCmsPages() {
-        include __DIR__.'/_files/pages.php';
-    }
-
-    protected function getExpectedData()
+    protected function getExpectedData(): array
     {
         return [
             'optgroup' => [

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Unit\Repository\Xml;
 
 class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
 {
-    private $componentsConfiguration = [
+    protected array $componentsConfiguration = [
         [
             'type' => 'static-cms-block',
             'id' => 'first_random_generated_value',
@@ -27,7 +29,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         ],
     ];
 
-    private $existingXml = '
+    protected string $existingXml = '
         <referenceContainer name="sidebar">
               <block class="Something" name="some_value">
                    <arguments>
@@ -49,27 +51,20 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
            </referenceContainer>
         ';
 
-    private $firstComponentPosition;
-    private $secondComponentPosition;
+    protected $firstComponentPosition;
+    protected $secondComponentPosition;
 
-    private $xml;
+    protected $xml;
+    protected $dom;
 
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper
-     */
-    private $mapper;
+    protected \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper $mapper;
 
-    /**
-     * @var \Zend_Dom_Query
-     */
-    private $dom;
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->mapper = new \MageSuite\ContentConstructorAdmin\Repository\Xml\ComponentConfigurationToXmlMapper();
     }
 
-    public function testItLeavesExistingCustomBlocks()
+    public function testItLeavesExistingCustomBlocks(): void
     {
         $this->prepareTestData(true);
 
@@ -80,7 +75,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider typesProvider
      */
-    public function testItGeneratesProperBlockClass($withExistingXml)
+    public function testItGeneratesProperBlockClass($withExistingXml): void
     {
         $this->prepareTestData($withExistingXml);
 
@@ -93,7 +88,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider typesProvider
      */
-    public function testItGeneratesProperComponentsNames($withExistingXml)
+    public function testItGeneratesProperComponentsNames($withExistingXml): void
     {
         $this->prepareTestData($withExistingXml);
 
@@ -106,7 +101,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider typesProvider
      */
-    public function testItGeneratesProperComponentsData($withExistingXml)
+    public function testItGeneratesProperComponentsData($withExistingXml): void
     {
         $this->prepareTestData($withExistingXml);
 
@@ -123,7 +118,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
      * @dataProvider getForbiddenStrings
      * @param $forbiddenString
      */
-    public function testXmlRootNodeDoesNotExists($forbiddenString)
+    public function testXmlRootNodeDoesNotExists(string $forbiddenString): void
     {
         $assertNotContains = method_exists($this, 'assertStringNotContainsString') ? 'assertStringNotContainsString' : 'assertNotContains';
 
@@ -131,7 +126,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         $this->$assertNotContains($forbiddenString, strtolower($this->mapper->map($this->componentsConfiguration)));
     }
 
-    public function testWorksWithEmptyComponentsArray()
+    public function testWorksWithEmptyComponentsArray(): void
     {
         $rootXml = "\n\n";
         $expectedWith = "\n<referenceContainer name=\"sidebar\"/>\n";
@@ -140,7 +135,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedWith, $this->mapper->map(null, '<referenceContainer name="sidebar"></referenceContainer>'));
     }
 
-    public static function getForbiddenStrings()
+    public static function getForbiddenStrings(): array
     {
         return [
             ['<xml'],
