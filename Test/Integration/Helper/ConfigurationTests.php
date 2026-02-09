@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Magesuite\ContentConstructorAdmin\Helper;
 
 class ConfigurationTests extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var \MageSuite\ContentConstructorAdmin\Helper\Configuration
-     */
-    protected $configuration;
+    protected ?\MageSuite\ContentConstructorAdmin\Helper\Configuration $configuration;
 
     public function setUp(): void
     {

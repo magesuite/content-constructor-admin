@@ -8,10 +8,10 @@ abstract class AbstractMigrationTestCase extends \PHPUnit\Framework\TestCase
 {
     public const ALL_STORE_VIEWS = 0;
 
-    protected \Magento\Framework\App\ObjectManager $objectManager;
-    protected \Magento\Store\Model\StoreRepository $storeRepository;
-    protected \Magento\Store\Model\StoreManager $storeManager;
-    protected \MageSuite\ContentConstructorAdmin\Service\Upgrade\Migration $migration;
+    protected ?\Magento\Framework\App\ObjectManager $objectManager;
+    protected ?\Magento\Store\Model\StoreRepository $storeRepository;
+    protected ?\Magento\Store\Model\StoreManager $storeManager;
+    protected ?\MageSuite\ContentConstructorAdmin\Service\Upgrade\Migration $migration;
 
     public function setUp(): void
     {

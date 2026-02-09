@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Controller\Preview;

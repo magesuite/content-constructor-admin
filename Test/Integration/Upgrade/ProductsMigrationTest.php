@@ -6,7 +6,7 @@ namespace MageSuite\ContentConstructorAdmin\Test\Integration\Upgrades;
 
 class ProductsMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integration\Upgrade\AbstractMigrationTestCase
 {
-    protected \Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
+    protected ?\Magento\Catalog\Api\ProductRepositoryInterface $productRepository;
 
     public function setUp(): void
     {
