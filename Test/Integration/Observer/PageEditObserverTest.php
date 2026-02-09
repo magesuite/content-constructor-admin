@@ -1,18 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Observer;
 
 class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    /**
-     * @var \Magento\TestFramework\ObjectManager
-     */
-    protected $objectManager;
-
-    /**
-     * @var \Magento\Cms\Api\PageRepositoryInterface
-     */
-    protected $pageRepository;
+    protected ?\Magento\TestFramework\ObjectManager $objectManager;
+    protected ?\Magento\Cms\Api\PageRepositoryInterface $pageRepository;
 
     public function setUp(): void
     {

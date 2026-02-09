@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Test\Integration\Controller\Adminhtml\Component;
 
 class ConfiguratorTest extends \Magento\TestFramework\TestCase\AbstractBackendController
