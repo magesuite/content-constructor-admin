@@ -22,11 +22,6 @@ class RemoveContentConstructorStoreData
         $this->logger = $logger;
     }
 
-    /**
-     * @param string $entityType
-     * @param object $model
-     * @return void
-     */
     public function execute(string $entityType, object $model): void
     {
         try {
@@ -39,7 +34,8 @@ class RemoveContentConstructorStoreData
             $this->contentConstructorAttributeResourceModel->removeStoreData(
                 (int) $model->getStoreId(),
                 (int) $contentConstructorAttribute->getAttributeId(),
-                $contentConstructorAttribute->getBackend()->getTable()
+                $contentConstructorAttribute->getBackend()->getTable(),
+                (int) $model->getId()
             );
         } catch (\Exception $e) {
             $this->logger->debug(
@@ -53,10 +49,6 @@ class RemoveContentConstructorStoreData
         }
     }
 
-    /**
-     * @param object $model
-     * @return string
-     */
     protected function getAttributeCode(object $model): string
     {
         if ($model instanceof \MageSuite\BrandManagement\Api\Data\BrandsInterface) {
