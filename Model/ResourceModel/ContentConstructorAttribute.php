@@ -13,21 +13,17 @@ class ContentConstructorAttribute
         $this->connection = $resourceConnection->getConnection();
     }
 
-    /**
-     * @param int $storeId
-     * @param int $attributeId
-     * @param string $entityTable
-     * @return int
-     */
-    public function removeStoreData(int $storeId, int $attributeId, string $entityTable): int
+    public function removeStoreData(int $storeId, int $attributeId, string $entityTable, int $entityId): void //phpcs:ignore
     {
-        if (empty($storeId) || empty($attributeId) || empty($entityTable)) {
-            return 0;
+        if (empty($storeId) || empty($attributeId) || empty($entityTable) || empty($entityId)) { //phpcs:ignore
+            return;
         }
 
-        $where  = $this->connection->quoteInto('store_id = ? and ', $storeId);
-        $where .= $this->connection->quoteInto('attribute_id = ?', $attributeId);
+        $where = [];
+        $where[] = $this->connection->quoteInto('store_id = ?', $storeId);
+        $where[] = $this->connection->quoteInto('attribute_id = ?', $attributeId);
+        $where[] = $this->connection->quoteInto('entity_id = ?', $entityId);
 
-        return $this->connection->delete($entityTable, $where);
+        $this->connection->delete($entityTable, implode(' AND ', $where));
     }
 }

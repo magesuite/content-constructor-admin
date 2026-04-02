@@ -13,5 +13,6 @@ abstract class AbstractUseDefault extends \PHPUnit\Framework\TestCase
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->request = $this->objectManager->get(\Magento\Framework\App\RequestInterface::class);
+        $this->request->setPostValue([]);
     }
 }
