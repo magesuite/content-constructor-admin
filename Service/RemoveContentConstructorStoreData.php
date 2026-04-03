@@ -6,7 +6,7 @@ namespace MageSuite\ContentConstructorAdmin\Service;
 
 class RemoveContentConstructorStoreData
 {
-    public const LAYOUT_UPDATE_XML_ATTRIBUTE_NAME = "layout_update_xml";
+    public const LAYOUT_UPDATE_XML_ATTRIBUTE_NAME = 'layout_update_xml';
 
     protected \Magento\Eav\Api\AttributeRepositoryInterface $attributeRepository;
     protected \MageSuite\ContentConstructorAdmin\Model\ResourceModel\ContentConstructorAttribute $contentConstructorAttributeResourceModel;
@@ -25,6 +25,10 @@ class RemoveContentConstructorStoreData
     public function execute(string $entityType, object $model): void
     {
         try {
+            if (!$model instanceof \Magento\Framework\Model\AbstractModel) {
+                return;
+            }
+
             /** @var \Magento\Eav\Api\Data\AttributeInterface $contentConstructorAttribute */
             $contentConstructorAttribute = $this->attributeRepository->get(
                 $entityType,
@@ -32,10 +36,9 @@ class RemoveContentConstructorStoreData
             );
 
             $this->contentConstructorAttributeResourceModel->removeStoreData(
-                (int) $model->getStoreId(),
-                (int) $contentConstructorAttribute->getAttributeId(),
-                $contentConstructorAttribute->getBackend()->getTable(),
-                (int) $model->getId()
+                (int)$model->getStoreId(),
+                $contentConstructorAttribute,
+                $model
             );
         } catch (\Exception $e) {
             $this->logger->debug(

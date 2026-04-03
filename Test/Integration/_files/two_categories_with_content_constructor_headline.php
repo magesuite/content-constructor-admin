@@ -7,6 +7,9 @@ $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 /** @var \Magento\Catalog\Api\CategoryRepositoryInterface $categoryRepository */
 $categoryRepository = $objectManager->get(\Magento\Catalog\Api\CategoryRepositoryInterface::class);
 
+/** @var \Magento\Catalog\Model\CategoryFactory $categoryFactory */
+$categoryFactory = $objectManager->get(\Magento\Catalog\Model\CategoryFactory::class);
+
 /** @var \MageSuite\ContentConstructorAdmin\Test\Integration\Fixtures\HeadlineComponent $headlineComponent */
 $headlineComponent = $objectManager->create(\MageSuite\ContentConstructorAdmin\Test\Integration\Fixtures\HeadlineComponent::class);
 
@@ -40,38 +43,36 @@ $categorySecond->setId(334)
     ->setPosition(2)
     ->save();
 
-$categoryFirst = $categoryRepository->get(333);
-$categoryFirst->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
-$categoryFirst = $headlineComponent->setEntity($categoryFirst)
+$categoryFirstDefault = $categoryFactory->create()->setStoreId(0)->load(333);
+$categoryFirstDefault->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
+$categoryFirstDefault = $headlineComponent->setEntity($categoryFirstDefault)
     ->setComponentId((string)time())
     ->setHeadline('headline_first_default')
     ->setSubheadline('subheadline_first_default')
     ->addHeaderComponentToEntity();
-$categoryFirst->getResource()->saveAttribute($categoryFirst, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$categoryFirstDefault->getResource()->saveAttribute($categoryFirstDefault, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
 
-$categoryFirstStore = $categoryRepository->get(333, 1);
+$categoryFirstStore = $categoryFactory->create()->setStoreId(1)->load(333);
 $categoryFirstStore = $headlineComponent->setEntity($categoryFirstStore)
     ->setComponentId((string)time())
     ->setHeadline('headline_first_store')
     ->setSubheadline('subheadline_first_store')
     ->addHeaderComponentToEntity();
-$categoryFirstStore->setStoreId(1);
-$categoryRepository->save($categoryFirstStore);
+$categoryFirstStore->getResource()->saveAttribute($categoryFirstStore, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
 
-$categorySecond = $categoryRepository->get(334);
-$categorySecond->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
-$categorySecond = $headlineComponent->setEntity($categorySecond)
+$categorySecondDefault = $categoryFactory->create()->setStoreId(0)->load(334);
+$categorySecondDefault->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
+$categorySecondDefault = $headlineComponent->setEntity($categorySecondDefault)
     ->setComponentId((string)time())
     ->setHeadline('headline_second_default')
     ->setSubheadline('subheadline_second_default')
     ->addHeaderComponentToEntity();
-$categorySecond->getResource()->saveAttribute($categorySecond, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$categorySecondDefault->getResource()->saveAttribute($categorySecondDefault, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
 
-$categorySecondStore = $categoryRepository->get(334, 1);
+$categorySecondStore = $categoryFactory->create()->setStoreId(1)->load(334);
 $categorySecondStore = $headlineComponent->setEntity($categorySecondStore)
     ->setComponentId((string)time())
     ->setHeadline('headline_second_store')
     ->setSubheadline('subheadline_second_store')
     ->addHeaderComponentToEntity();
-$categorySecondStore->setStoreId(1);
-$categoryRepository->save($categorySecondStore);
+$categorySecondStore->getResource()->saveAttribute($categorySecondStore, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
