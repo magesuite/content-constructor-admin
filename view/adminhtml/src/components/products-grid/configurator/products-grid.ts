@@ -559,8 +559,18 @@ const productsGridConfigurator: vuejs.ComponentOption = {
 
                         cssClassFields.forEach(
                             (model: string) => {
-                                if (teaser[model] && typeof teaser[model] === 'string') {
+                                if (!teaser[model]) {
+                                    return;
+                                }
+
+                                if (typeof teaser[model] === 'string') {
                                     cssClasses.push(teaser[model]);
+                                } else if (typeof teaser[model] === 'object') {
+                                    for (const key in teaser[model]) {
+                                        if (teaser[model].hasOwnProperty(key)) {
+                                            cssClasses.push(teaser[model][key]);
+                                        }
+                                    }
                                 }
                             }
                         );
