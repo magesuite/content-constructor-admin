@@ -1,0 +1,27 @@
+<?php
+/** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\MagentoWidget */
+?>
+<template id="cc-magento-widget-template">
+    <div class="cc-magento-widget-configurator">
+        <div id="cc-magento-widget-form-container" class="cc-magento-widget-configurator__form-container"></div>
+        <div class="cc-magento-widget-configurator__section">
+            <div class="cc-input cc-input--type-inline">
+                <label class="cc-input__label" for="mw-wrap-in-container"><?=__('Wrap in container')?></label>
+                <div class="admin__actions-switch" data-role="switcher">
+                    <input type="checkbox" class="admin__actions-switch-checkbox" id="mw-wrap-in-container" v-model="configuration.wrapInContainer">
+                    <label class="admin__actions-switch-label" for="mw-wrap-in-container">
+                        <span class="admin__actions-switch-text" data-text-on="<?=__('Yes')?>" data-text-off="<?=__('No')?>"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <textarea id="cc-magento-widget-directive" class="cc-magento-widget-configurator__target"></textarea>
+    </div>
+</template>
+
+<magento-widget-configurator
+    class="cc-magento-widget-configurator <?=$block->getClasses()?>"
+    :configuration="initialComponentConfiguration"
+    widget-window-url="<?=$block->escapeHtml($block->getWidgetWindowUrl())?>"
+    :cc-config="ccConfig">
+</magento-widget-configurator>
