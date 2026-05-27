@@ -35,6 +35,7 @@ import productCarouselConfigurator from './components/product-carousel/configura
 import productFinderConfigurator from './components/product-finder/configurator/product-finder';
 import productsGridConfigurator from './components/products-grid/configurator/products-grid';
 import staticBlockConfigurator from './components/static-block/configurator/static-block';
+import magentoWidgetConfigurator from './components/magento-widget/configurator/magento-widget';
 import teaserAndTextConfigurator from './components/teaser-and-text/configurator/teaser-and-text';
 import instagramFeedConfigurator from './components/instagram-feed/configurator/instagram-feed';
 import mosaicConfigurator from './components/mosaic/configurator/mosaic';
@@ -135,6 +136,7 @@ const contentConstructor: vuejs.ComponentOption = {
         'product-finder-configurator': productFinderConfigurator,
         'products-grid-configurator': productsGridConfigurator,
         'static-block-configurator': staticBlockConfigurator,
+        'magento-widget-configurator': magentoWidgetConfigurator,
         'icon-configurator': iconConfigurator,
         'teaser-and-text-configurator': teaserAndTextConfigurator,
         'instagram-feed-configurator': instagramFeedConfigurator,

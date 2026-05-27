@@ -1,0 +1,11 @@
+.cc-magento-widget-configurator {
+    &__target {
+        display: none;
+    }
+
+    &__form-container {
+        .page-actions {
+            display: none;
+        }
+    }
+}

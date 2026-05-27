@@ -26,6 +26,7 @@ import productFinderPreview from '../product-finder/preview/product-finder';
 import productGridPreview from '../products-grid/preview/products-grid';
 import separatorPreview from '../separator/preview/separator';
 import staticBlockPreview from '../static-block/preview/static-block';
+import magentoWidgetPreview from '../magento-widget/preview/magento-widget';
 import teaserAndTextPreview from '../teaser-and-text/preview/teaser-and-text';
 import instagramFeedPreview from '../instagram-feed/preview/instagram-feed';
 import mosaicPreview from '../mosaic/preview/mosaic';
@@ -255,6 +256,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         'product-grid-preview': productGridPreview,
         'separator-preview': separatorPreview,
         'static-cms-block-preview': staticBlockPreview,
+        'magento-widget-preview': magentoWidgetPreview,
         'icon-preview': iconPreview,
         'teaser-and-text-preview': teaserAndTextPreview,
         'instagram-feed-preview': instagramFeedPreview,
