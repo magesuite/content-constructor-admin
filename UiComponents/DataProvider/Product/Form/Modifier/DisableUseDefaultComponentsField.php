@@ -50,7 +50,7 @@ class DisableUseDefaultComponentsField extends \Magento\Catalog\Ui\DataProvider\
      */
     public function modifyData(array $data): array
     {
-        $productId = $this->request->getParam('id');
+        $productId = $this->request->getParam('id', 0);
         $data[$productId]['product']['store_id'] = $this->request->getParam('store', 0);
 
         return $data;
