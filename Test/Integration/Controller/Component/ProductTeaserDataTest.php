@@ -22,7 +22,7 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
      */
-    public function testItReturnCorrectProductData()
+    public function testItReturnCorrectProductData(): void
     {
         $this->reindex();
 
@@ -43,7 +43,7 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
         $this->assertEquals('Short description', $productData['product']['shortDescription']);
     }
 
-    public function testItReturnEmptyArrayForNotExistingProduct()
+    public function testItReturnEmptyArrayForNotExistingProduct(): void
     {
         $this->dispatch('/content-constructor/component/productteaserdata?sku=not-existing-product');
 
@@ -54,11 +54,11 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
         $this->assertEmpty($productData['product']);
     }
 
-    protected function reindex()
+    protected function reindex(): void
     {
         $indexerRegistry = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
             ->create(\Magento\Framework\Indexer\IndexerRegistry::class);
-        $indexerRegistry->get(\Magento\CatalogSearch\Model\Indexer\Fulltext::INDEXER_ID)->reindexAll();
+        $indexerRegistry->get(\Magento\CatalogSearch\Model\Indexer\Fulltext::INDEXER_ID)->reindexRow(1);
         $indexerRegistry->get(\Magento\Catalog\Model\Indexer\Product\Price\Processor::INDEXER_ID)->reindexRow(1);
     }
 }
