@@ -58,7 +58,7 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
     {
         $indexerRegistry = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
             ->create(\Magento\Framework\Indexer\IndexerRegistry::class);
-        $indexerRegistry->get(\Magento\CatalogSearch\Model\Indexer\Fulltext::INDEXER_ID)->reindexRow(1);
+        $indexerRegistry->get(\Magento\CatalogSearch\Model\Indexer\Fulltext::INDEXER_ID)->reindexAll();
         $indexerRegistry->get(\Magento\Catalog\Model\Indexer\Product\Price\Processor::INDEXER_ID)->reindexRow(1);
     }
 }
