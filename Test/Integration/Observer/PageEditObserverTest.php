@@ -25,8 +25,8 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
      * @param string $components
      * @param string $identifier
      * @param string $expected
-     * @dataProvider dataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProvider')]
     public function testItReturnsCorrectData($title, $components, $identifier, $expected)
     {
         $this->getRequest()->setMethod(\Magento\Framework\App\Request\Http::METHOD_POST);
@@ -50,7 +50,7 @@ class PageEditObserverTest extends \Magento\TestFramework\TestCase\AbstractBacke
         }
     }
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             ['Page without components', null, 'page-without-components', null],

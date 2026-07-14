@@ -626,11 +626,11 @@ const teaserConfigurator: vuejs.ComponentOption = {
                                 <div class="cc-input cc-input--group">
                                     <div class="cc-input cc-teaser-configurator__form-element">
                                         <label for="cfg-mpg-teaser-{{ teaserIndex }}-size-select" class="cc-input__label">{{ 'Teaser size' | translate }}:</label>
-                                        <select 
-                                            name="cfg-mpg-teaser-{{ teaserIndex }}-size-select" 
-                                            class="cc-input__select" 
-                                            id="cfg-mpg-teaser-{{ teaserIndex }}-size-select" 
-                                            v-model="configuration.sizeSelect" 
+                                        <select
+                                            name="cfg-mpg-teaser-{{ teaserIndex }}-size-select"
+                                            class="cc-input__select"
+                                            id="cfg-mpg-teaser-{{ teaserIndex }}-size-select"
+                                            v-model="configuration.sizeSelect"
                                             @change="setTeaserSize()"
                                             v-if="productsGridTeaserAvailableSizes.length"
                                         >

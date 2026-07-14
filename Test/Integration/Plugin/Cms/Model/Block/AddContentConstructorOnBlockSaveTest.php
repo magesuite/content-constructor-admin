@@ -25,8 +25,8 @@ class AddContentConstructorOnBlockSaveTest extends \Magento\TestFramework\TestCa
      * @param string $components
      * @param string $identifier
      * @param string $expected
-     * @dataProvider dataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProvider')]
     public function testItReturnsCorrectData($title, $components, $identifier, $expected)
     {
         $this->getRequest()->setMethod(\Magento\Framework\App\Request\Http::METHOD_POST);
@@ -49,7 +49,7 @@ class AddContentConstructorOnBlockSaveTest extends \Magento\TestFramework\TestCa
         }
     }
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             ['Block without components', null, 'block-without-components', null],

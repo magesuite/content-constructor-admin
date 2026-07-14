@@ -20,8 +20,8 @@ class PagesMigrationTest extends \MageSuite\ContentConstructorAdmin\Test\Integra
      * @magentoAppIsolation enabled
      * @magentoDataFixture MageSuite_Frontend::Test/Integration/_files/pages.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
-     * @dataProvider storesAndPagesData
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('storesAndPagesData')]
     public function testPagesMigrationOnUpgrade(mixed $storeCode, int $pageId): void
     {
         $storeId = (int)$this->storeRepository->get($storeCode)->getId();
