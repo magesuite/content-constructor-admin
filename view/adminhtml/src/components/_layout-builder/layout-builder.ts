@@ -730,7 +730,7 @@ const layoutBuilder: vuejs.ComponentOption = {
                         'All components was copied to clipboard.'
                     ),
                 });
-                
+
                 return;
             }
             if (this.isAlreadyCopied(this.components[index].id)) {

@@ -14,9 +14,7 @@ class ViewTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->previewSecretProvider = $this->_objectManager->get(\MageSuite\ContentConstructorAdmin\Service\PreviewSecretProvider::class);
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProvider')]
     public function testIfPreviewActionReturnsProperContent($expectedText): void
     {
         $this->dispatchPreviewRequest($expectedText);
@@ -24,7 +22,7 @@ class ViewTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->assertStringContainsString($expectedText, $html);
     }
 
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             ['First Dummy Text'],

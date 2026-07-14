@@ -9,7 +9,7 @@ class StaticBlockDataProviderTest extends \PHPUnit\Framework\TestCase
     protected ?\Magento\TestFramework\ObjectManager $objectManager;
     protected ?\MageSuite\ContentConstructorAdmin\DataProviders\StaticBlockDataProvider $dataProvider;
 
-    public function setUp(): void 
+    public function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->dataProvider = $this->objectManager

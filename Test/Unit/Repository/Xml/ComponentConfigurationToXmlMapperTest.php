@@ -72,9 +72,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($this->getBlockByNumber(2, 'content'));
     }
 
-    /**
-     * @dataProvider typesProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('typesProvider')]
     public function testItGeneratesProperBlockClass($withExistingXml): void
     {
         $this->prepareTestData($withExistingXml);
@@ -85,9 +83,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($class, $this->getBlockByNumber($this->secondComponentPosition, 'content')['class']);
     }
 
-    /**
-     * @dataProvider typesProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('typesProvider')]
     public function testItGeneratesProperComponentsNames($withExistingXml): void
     {
         $this->prepareTestData($withExistingXml);
@@ -98,9 +94,7 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
             $this->getBlockByNumber($this->secondComponentPosition, 'content')['name']);
     }
 
-    /**
-     * @dataProvider typesProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('typesProvider')]
     public function testItGeneratesProperComponentsData($withExistingXml): void
     {
         $this->prepareTestData($withExistingXml);
@@ -115,9 +109,9 @@ class ComponentConfigurationToXmlMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider getForbiddenStrings
      * @param $forbiddenString
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getForbiddenStrings')]
     public function testXmlRootNodeDoesNotExists(string $forbiddenString): void
     {
         $assertNotContains = method_exists($this, 'assertStringNotContainsString') ? 'assertStringNotContainsString' : 'assertNotContains';

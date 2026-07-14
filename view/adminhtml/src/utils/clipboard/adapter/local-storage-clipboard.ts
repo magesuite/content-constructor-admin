@@ -39,5 +39,3 @@ export class LocalStorageClipboard implements ClipboardAdapter {
         return new TextEncoder().encode(jsonString).length <= this.maxStorageSize;
     }
 }
-
-
