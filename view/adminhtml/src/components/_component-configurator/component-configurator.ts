@@ -114,6 +114,37 @@ const componentConfigurator: vuejs.ComponentOption = {
 
             this.configuration.cc_css_classes = cssClasses.length ? cssClasses.join(' ') : '';
         },
+        _dropPinsFromTextOnlyItems(): void {
+            const teasers: any[] = this.configuration.items || [];
+
+            teasers.forEach((teaser: any): void => {
+                if (teaser.teaserType === 'text-only' && teaser.pins) {
+                    delete teaser.pins;
+                }
+            });
+        },
+        _validatePinTargets(): void {
+            const teasers: any[] = this.configuration.items || [];
+
+            teasers.forEach((teaser: any): void => {
+                const pins: any[] = (teaser.pins && teaser.pins.items) || [];
+
+                pins.forEach((pin: any): void => {
+                    const target: string = pin.use_custom_url
+                        ? pin.url
+                        : pin.sku;
+
+                    if ((target || '').trim() !== '') {
+                        return;
+                    }
+
+                    this.configuration.isError = true;
+                    this.$set('configuration.showErrorAlert', true);
+                });
+            });
+
+            this.$broadcast('pins__targets-validated');
+        },
         onChange(event?: Event): void {
             // Serialize reactive data.
             const data: any = JSON.parse(JSON.stringify(this.configuration));

@@ -7,6 +7,7 @@ import actionButton from '../../../utils/action-button/action-button';
 import componentActions from '../../../utils/component-actions/component-actions';
 
 import teaserPreview from '../preview/teaser';
+import ccTeaserPins from '../pins/pins';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 
@@ -134,6 +135,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
         'action-button': actionButton,
         'component-actions': componentActions,
         'teaser-preview': teaserPreview,
+        'cc-teaser-pins': ccTeaserPins,
         'custom-element-input': customFieldTextInput,
         'custom-element-select': customFieldSelect,
         'custom-element-multiselect': customFieldMultiselect,
@@ -149,7 +151,8 @@ const teaserConfigurator: vuejs.ComponentOption = {
         class="cc-teaser-configurator cc-teaser-configurator--{{configuratorLayout}} cc-teaser-configurator--{{teaserType}}"
         :class="{
             'cc-teaser-configurator--actions-visible': videoInputVisible,
-            'cc-teaser-configurator--error': videoTeaserPlaceholderError && !configuration.image.raw
+            'cc-teaser-configurator--error': videoTeaserPlaceholderError && !configuration.image.raw,
+            'cc-teaser-configurator--pins-active': isPinsTabActive
         }"
     >
         <p class="cc-image-teaser-configurator__section-error" v-if="videoTeaserPlaceholderError && !configuration.image.raw">
@@ -159,8 +162,9 @@ const teaserConfigurator: vuejs.ComponentOption = {
             <div class="cc-teaser-configurator__content cc-teaser-configurator__content--{{currentImageUploader}}" id="cc-teaser-{{teaserIndex}}">
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--preview" :class="{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}">
                     <div class="cc-teaser-configurator__image-wrapper">
+                        <span class="cc-teaser-configurator__pins-dropzone" v-if="isPinsTabActive">{{ 'Drop zone' | translate }}</span>
 
-                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType" :support-breakpoint-dedicated-images="supportBreakpointDedicatedImages" :device-type="currentImageUploader"></teaser-preview>
+                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType" :support-breakpoint-dedicated-images="supportBreakpointDedicatedImages" :device-type="currentImageUploader" :pins-active="isPinsTabActive" :in-configurator="true" :hovered-pin-index.sync="hoveredPinIndex"></teaser-preview>
 
                         <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--mobile" id="teaser-img-mobile-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
                         <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--tablet" id="teaser-img-tablet-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
@@ -294,29 +298,31 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     </div>
                 </div>
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--configurator">
-                    <ul class="cc-teaser-configurator__tabs">
-                        <li
-                            v-for="(index, tab) in ccConfig.teaser.tabs"
-                            v-if="tab && tab.label && tab.content"
-                            class="cc-teaser-configurator__tab"
-                            :class="{'cc-teaser-configurator__tab--current': currentTab == index}"
-                            @click="switchTab(index)"
-                        >
-                            <span class="cc-teaser-configurator__tab-label">{{tab.label}}</span>
-                        </li>
-                        <li
-                            v-if="callerComponentType === 'magento-product-grid-teasers' || callerComponentType === 'products-grid'"
-                            class="cc-teaser-configurator__tab"
-                            :class="{'cc-teaser-configurator__tab--current': currentTab == callerComponentType}"
-                            @click="switchTab(callerComponentType)"
-                        >
-                            <span class="cc-teaser-configurator__tab-label">{{ 'Position' | translate }}</span>
-                        </li>
-                    </ul>
+                    <div class="cc-teaser-configurator__tabs-scroll" v-el:tabs-scroll>
+                        <ul class="cc-teaser-configurator__tabs" v-el:tabs>
+                            <li
+                                v-for="(index, tab) in ccConfig.teaser.tabs"
+                                v-if="tab && tab.label && tab.content && (tab.content !== '#pins' || isPinsTabVisible)"
+                                class="cc-teaser-configurator__tab"
+                                :class="{'cc-teaser-configurator__tab--current': currentTab == index}"
+                                @click="switchTab(index, $event)"
+                            >
+                                <span class="cc-teaser-configurator__tab-label">{{tab.label}}</span>
+                            </li>
+                            <li
+                                v-if="callerComponentType === 'magento-product-grid-teasers' || callerComponentType === 'products-grid'"
+                                class="cc-teaser-configurator__tab"
+                                :class="{'cc-teaser-configurator__tab--current': currentTab == callerComponentType}"
+                                @click="switchTab(callerComponentType, $event)"
+                            >
+                                <span class="cc-teaser-configurator__tab-label">{{ 'Position' | translate }}</span>
+                            </li>
+                        </ul>
+                    </div>
 
                     <div
                         v-for="(index, tab) in ccConfig.teaser.tabs"
-                        v-if="tab && tab.label && tab.content"
+                        v-if="tab && tab.label && tab.content && (tab.content !== '#pins' || isPinsTabVisible)"
                         class="cc-teaser-configurator__tab-content"
                         :class="{'cc-teaser-configurator__tab-content--current': currentTab == index}"
                     >
@@ -601,7 +607,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
                             </div>
                         </template>
 
-                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#advanced'">
+                        <template v-if="tab.content === '#pins' && isPinsTabVisible">
+                            <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--pins">
+                                <cc-teaser-pins :configuration="configuration" :teaser-index="teaserIndex" :default-color="pinsDefaultColor" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl" :caller-component-type="callerComponentType" :parent-configuration="parentConfiguration" :hovered-pin-index.sync="hoveredPinIndex"></cc-teaser-pins>
+                            </div>
+                        </template>
+
+                        <template v-if="tab.content && tab.content !== '#content' && tab.content !== '#style' && tab.content !== '#advanced' && tab.content !== '#pins'">
                             <div class="cc-teaser-configurator__tab-section">
                                 <div class="cc-custom-fields cc-custom-fields--narrow">
                                     <div class="cc-custom-fields__form-group" v-for="field in tab.content.fields">
@@ -728,6 +740,18 @@ const teaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'full',
         },
+        supportsPins: {
+            type: Boolean,
+            default: false,
+        },
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
+        productChooserUrl: {
+            type: String,
+            default: '',
+        },
         productsPerPage: {
             type: String,
             default: '30',
@@ -773,6 +797,22 @@ const teaserConfigurator: vuejs.ComponentOption = {
                 return this.parentConfiguration.teasers[this.teaserIndex];
             }
             return this.parentConfiguration.items[this.teaserIndex];
+        },
+        /* Pins tab is shown only for opted-in components, and never on a text-only slide */
+        isPinsTabVisible: function(): boolean {
+            return (
+                this.supportsPins &&
+                this.configuration.teaserType !== 'text-only'
+            );
+        },
+        /* Default base pin colour, configurable via view.xml (teaser.pins.default_color) */
+        pinsDefaultColor: function(): string {
+            return (this.ccConfig.teaser.pins && this.ccConfig.teaser.pins.default_color) || '#324dcf';
+        },
+        isPinsTabActive: function(): boolean {
+            const tabs: any = this.ccConfig.teaser.tabs;
+            const current: any = tabs && tabs[this.currentTab];
+            return !!(current && current.content === '#pins');
         },
         imageActionText: function(): string {
             if (this.currentImageUploader === 'mobile') {
@@ -846,7 +886,17 @@ const teaserConfigurator: vuejs.ComponentOption = {
             currentImageUploader: 'desktop',
             videoInputVisible: false,
             videoInputValue: '',
+            hoveredPinIndex: null,
         };
+    },
+    watch: {
+        isPinsTabVisible(visible: boolean): void {
+            this.hoveredPinIndex = null;
+
+            if (!visible && this.isPinsTabActive) {
+                this.switchTab(0);
+            }
+        },
     },
     filters: {
         /**
@@ -923,9 +973,83 @@ const teaserConfigurator: vuejs.ComponentOption = {
             },
         },
     },
+    events: {
+        /* A targetless pin blocks the save no matter which tab is open. */
+        'pins__focus-tab'(): void {
+            const tabs: any = (this.ccConfig.teaser && this.ccConfig.teaser.tabs) || {};
+            const pinsTab: any = Object.keys(tabs).find(
+                (key: string): boolean => !!tabs[key] && tabs[key].content === '#pins'
+            );
+
+            if (pinsTab === undefined) {
+                return;
+            }
+
+            this.switchTab(pinsTab);
+            this.$nextTick((): void => {
+                this.scrollTabIntoView(
+                    this.$els.tabs.querySelector(
+                        '.cc-teaser-configurator__tab--current'
+                    )
+                );
+            });
+        },
+    },
     methods: {
-        switchTab(index: number): void {
+        switchTab(index: number | string, event?: any): void {
             this.currentTab = index;
+
+            if (event && event.currentTarget) {
+                this.scrollTabIntoView(event.currentTarget);
+            }
+        },
+
+        scrollTabIntoView(tabElement: any): void {
+            const scroller: any = this.$els.tabs;
+
+            if (!scroller || !tabElement) {
+                return;
+            }
+
+            const scrollerRect: any = scroller.getBoundingClientRect();
+            const tabRect: any = tabElement.getBoundingClientRect();
+            const peek: number = 32;
+            const tolerance: number = 1;
+            let target: number;
+
+            if (tabRect.right > scrollerRect.right + tolerance) {
+                target = scroller.scrollLeft + (tabRect.right - scrollerRect.right) + peek;
+            } else if (tabRect.left < scrollerRect.left - tolerance) {
+                target = scroller.scrollLeft + (tabRect.left - scrollerRect.left) - peek;
+            } else {
+                return;
+            }
+
+            const maxScroll: number = scroller.scrollWidth - scroller.clientWidth;
+
+            scroller.scrollLeft = Math.max(0, Math.min(target, maxScroll));
+            setTimeout((): void => this.updateTabScrollHints(), 350);
+        },
+
+        updateTabScrollHints(): void {
+            const scroller: any = this.$els.tabs;
+            const wrapper: any = this.$els.tabsScroll;
+
+            if (!scroller || !wrapper) {
+                return;
+            }
+
+            const maxScroll: number = scroller.scrollWidth - scroller.clientWidth;
+            const hasOverflow: boolean = maxScroll > 1;
+
+            wrapper.classList.toggle(
+                'cc-teaser-configurator__tabs-scroll--overflow-start',
+                hasOverflow && scroller.scrollLeft > 1
+            );
+            wrapper.classList.toggle(
+                'cc-teaser-configurator__tabs-scroll--overflow-end',
+                hasOverflow && scroller.scrollLeft < maxScroll - 1
+            );
         },
 
         setContentAlign(x: number, y: number): void {
@@ -1626,6 +1750,11 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
         if (this.ccConfig.teaser.allow_description_editor) {
             this.initDescriptionWysiwyg(this.teaserIndex);
+        }
+
+        if (this.$els.tabs) {
+            this.$els.tabs.addEventListener('scroll', (): void => this.updateTabScrollHints());
+            this.updateTabScrollHints();
         }
     },
 };

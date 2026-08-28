@@ -160,6 +160,18 @@ const teaserPreview: vuejs.ComponentOption = {
                     <svg class="cc-teaser-preview__image-placeholder" v-if="!configuration.image.image && !configuration.image.raw">
                         <use xlink:href="#icon_image-placeholder"></use>
                     </svg>
+                    <div class="cc-teaser-preview__pins" :class="{ 'cc-teaser-preview__pins--passive': !pinsActive }" v-if="(!inConfigurator || pinsActive) && configuration.pins && configuration.pins.items && configuration.pins.items.length">
+                        <span
+                            class="cc-teaser-preview__pin"
+                            :class="{ 'cc-teaser-preview__pin--highlighted': pinsActive && hoveredPinIndex === $index }"
+                            v-for="pin in configuration.pins.items"
+                            :style="pinStyle(pin)"
+                            :title="'Pin ' + ($index + 1)"
+                            @mousedown="pinsActive && startPinDrag($index, $event)"
+                            @mouseenter="highlightPin($index)"
+                            @mouseleave="clearPinHighlight()"
+                        ><span class="cc-teaser-preview__pin-number" v-if="pinsActive">{{ $index + 1 }}</span></span>
+                    </div>
                 </figure>
 
                 <div class="cc-teaser-preview__overlay" v-if="configuration.optimizers.scenarios.overlay.enabled" :style="{opacity: configuration.optimizers.scenarios.overlay.intensity / 100}"></div>
@@ -235,6 +247,20 @@ const teaserPreview: vuejs.ComponentOption = {
             type: String,
             default: 'desktop',
         },
+        /* Whether the Pins tab is active - pin markers only show then */
+        pinsActive: {
+            type: Boolean,
+            default: false,
+        },
+        /* True when this preview is inside the (editing) configurator. */
+        inConfigurator: {
+            type: Boolean,
+            default: false,
+        },
+        hoveredPinIndex: {
+            type: Number,
+            default: null,
+        },
     },
     computed: {
         // Every aspect ratio is taken separately because style binding does not consider params.
@@ -297,9 +323,73 @@ const teaserPreview: vuejs.ComponentOption = {
             }
             return '0';
         },
+        pinStyle(pin: any): any {
+            const self: any = this;
+            const style: any = {
+                left: `${pin.x}%`,
+                top: `${pin.y}%`,
+            };
+
+            if (!self.pinsActive) {
+                return style;
+            }
+
+            style.backgroundColor =
+                pin.override_color && pin.color
+                    ? pin.color
+                    : self.configuration.pins.base_color;
+            style.color = style.backgroundColor;
+
+            return style;
+        },
+        // The four _pinDrag* fields are deliberately not in data(): they hold a
+        // DOM node and two bound handlers, which Vue must not try to observe.
+        startPinDrag(index: number, event: MouseEvent): void {
+            event.preventDefault();
+            this._pinDragIndex = index;
+            this._pinDragFigure = this.$el.querySelector('.cc-teaser-preview__figure');
+            this._pinDragMove = this.onPinDrag.bind(this);
+            this._pinDragUp = this.endPinDrag.bind(this);
+            document.addEventListener('mousemove', this._pinDragMove);
+            document.addEventListener('mouseup', this._pinDragUp);
+        },
+        onPinDrag(event: MouseEvent): void {
+            if (!this._pinDragFigure) {
+                return;
+            }
+            const rect: ClientRect = this._pinDragFigure.getBoundingClientRect();
+            const clamp = (value: number): number => Math.max(0, Math.min(100, value));
+            const x: number = clamp(((event.clientX - rect.left) / rect.width) * 100);
+            const y: number = clamp(((event.clientY - rect.top) / rect.height) * 100);
+            const pin: any = this.configuration.pins.items[this._pinDragIndex];
+            pin.x = Math.round(x * 100) / 100;
+            pin.y = Math.round(y * 100) / 100;
+        },
+        endPinDrag(): void {
+            const self: any = this;
+            document.removeEventListener('mousemove', self._pinDragMove);
+            document.removeEventListener('mouseup', self._pinDragUp);
+            self._pinDragIndex = null;
+            self._pinDragFigure = null;
+        },
+        highlightPin(index: number): void {
+            if (this.pinsActive) {
+                this.hoveredPinIndex = index;
+            }
+        },
+        clearPinHighlight(): void {
+            if (this.pinsActive) {
+                this.hoveredPinIndex = null;
+            }
+        },
     },
     ready(): void {
         this.setEvents();
+    },
+    beforeDestroy(): void {
+        if (this._pinDragMove) {
+            this.endPinDrag();
+        }
     },
 };
 
