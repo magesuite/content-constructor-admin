@@ -52,6 +52,7 @@
         width: 100%;
         margin: 0;
         padding: 0;
+        position: relative;
     }
 
     &__image {
@@ -269,6 +270,63 @@
                 $step: 5
             );
         }
+    }
+
+    &__pins {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        pointer-events: none;
+    }
+
+    &__pin {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+        transform: translate(-50%, -50%);
+        cursor: grab;
+        pointer-events: auto;
+        transition: transform 0.12s ease-out;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    &__pin-number {
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 700;
+        line-height: 1;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+    }
+
+    &__pin--highlighted {
+        transform: translate(-50%, -50%) scale(1.4);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85),
+            0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    // Passive indicator shown in the component preview.
+    &__pins--passive {
+        z-index: 2;
+    }
+
+    &__pins--passive &__pin {
+        background-color: #0072ff;
+        color: #0072ff;
+        cursor: default;
+        pointer-events: none;
     }
 
     &--no-image {

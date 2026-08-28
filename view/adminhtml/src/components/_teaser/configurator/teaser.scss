@@ -131,16 +131,57 @@
         }
     }
 
+    &__tabs-scroll {
+        position: relative;
+
+        &:before,
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4rem;
+            z-index: 3;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease-in-out;
+        }
+
+        &:before {
+            left: 0;
+            background: linear-gradient(to left, rgba(245, 245, 245, 0), rgba(245, 245, 245, 1));
+        }
+
+        &:after {
+            right: 0;
+            background: linear-gradient(to right, rgba(245, 245, 245, 0), rgba(245, 245, 245, 1));
+        }
+
+        &--overflow-start:before,
+        &--overflow-end:after {
+            opacity: 1;
+        }
+    }
+
     &__tabs {
-        margin: 0;
-        padding: 0;
+        margin: 0 0 -0.4rem;
+        padding: 0 0 0.4rem;
         list-style: none;
         display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 
     &__tab {
         box-sizing: border-box;
-        width: 25%;
+        flex: 1 0 auto;
         padding: 1.6rem;
         background-color: #f5f5f5;
         border-left: 1px solid #e8e8e8;
@@ -537,5 +578,61 @@
 
     &__note {
         font-size: 1.2rem;
+    }
+
+    &--pins-active {
+        #{$root}__image-wrapper {
+            &:before {
+                display: none;
+            }
+
+            &:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 2;
+                border: 2px solid #0072ff;
+                box-sizing: border-box;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.15s ease-in-out;
+            }
+
+            &:hover {
+                &:after {
+                    opacity: 1;
+                }
+
+                #{$root}__actions,
+                #{$root}__device-tabs {
+                    opacity: 0;
+                    pointer-events: none;
+                }
+
+                #{$root}__pins-dropzone {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &__pins-dropzone {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 4;
+        padding: 0.5rem 0.9rem;
+        background-color: #0072ff;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        line-height: 1;
+        border-radius: 3px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease-in-out;
     }
 }

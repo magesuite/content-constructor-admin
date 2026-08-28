@@ -98,7 +98,10 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                     :image-endpoint="imageEndpoint"
                     :admin-prefix="adminPrefix"
                     :cc-config="ccConfig"
-                    :caller-component-type="hero-carousel"
+                    :caller-component-type="'hero-carousel'"
+                    :supports-pins="true"
+                    :product-data-endpoint="productDataEndpoint"
+                    :product-chooser-url="productChooserUrl"
                     :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf($index) != -1"
                 ></teaser-configurator>
 
@@ -155,6 +158,16 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'admin',
         },
+        /* Endpoint for the pins product lookup (SKU -> product data) */
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
+        /* URL of the Magento product grid chooser for the pins product picker */
+        productChooserUrl: {
+            type: String,
+            default: '',
+        },
         /* Set prop with component name in order to
          * pass it to `component-configurator` methods
         */
@@ -196,6 +209,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
         'component-configurator__save'(): void {
             this.configuration.isError = false;
             this._validateVideoPlaceholders();
+            this._validatePinTargets();
             this._collectTeasersCssClasses();
             this.onSave();
         },

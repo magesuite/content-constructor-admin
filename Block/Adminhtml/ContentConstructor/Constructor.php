@@ -189,4 +189,9 @@ class Constructor extends \Magento\Framework\View\Element\Template
     {
         return str_replace('admin/', '', $this->getBaseUrl()) . 'content-constructor/component/productteaserdata';
     }
+
+    public function getProductChooserUrl(): string
+    {
+        return $this->getUrl('contentconstructor/component/productChooser');
+    }
 }

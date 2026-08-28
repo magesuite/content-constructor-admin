@@ -202,6 +202,10 @@ const contentConstructor: vuejs.ComponentOption = {
             type: String,
             default: '',
         },
+        productChooserUrl: {
+            type: String,
+            default: '',
+        },
     },
     data(): object {
         return {
@@ -258,7 +262,7 @@ const contentConstructor: vuejs.ComponentOption = {
             } else {
                 if (data.hasOwnProperty('showErrorAlert') && data.showErrorAlert) {
                     alert({
-                        title: $t('Hey,'),
+                        title: $t('Warning'),
                         content: $.mage.__(
                             'Something is wrong with configuration of your component. Please fix all errors before saving.'
                         ),

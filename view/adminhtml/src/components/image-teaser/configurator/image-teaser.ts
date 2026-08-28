@@ -163,6 +163,9 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                         :admin-prefix="adminPrefix"
                         :cc-config="ccConfig"
                         :caller-component-type="callerComponentType"
+                        :supports-pins="true"
+                        :product-data-endpoint="productDataEndpoint"
+                        :product-chooser-url="productChooserUrl"
                         :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf($index) != -1"
                     ></teaser-configurator>
 
@@ -367,6 +370,16 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             type: String,
             default: 'admin',
         },
+        /* Endpoint for the pins product lookup (SKU -> product data) */
+        productDataEndpoint: {
+            type: String,
+            default: '',
+        },
+        /* URL of the Magento product grid chooser for the pins product picker */
+        productChooserUrl: {
+            type: String,
+            default: '',
+        },
         /* Caller component type */
         callerComponentType: {
             type: String,
@@ -402,6 +415,8 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
             this.configuration.isError = false;
             this._validateOptionsSet();
             this._validateVideoPlaceholders();
+            this._dropPinsFromTextOnlyItems();
+            this._validatePinTargets();
             this._collectTeasersCssClasses();
             this.onSave();
         },

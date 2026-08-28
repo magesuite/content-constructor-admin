@@ -15,6 +15,7 @@
     sorters='<?= str_replace("'", "&#39;", $block->getSorters()) ?>'
     filters='<?= str_replace("'", "&#39;", $block->getFilters()) ?>'
     product-data-endpoint='<?= $block->getProductDataEndpoint() ?>'
+    product-chooser-url="<?= $escaper->escapeUrl($block->getProductChooserUrl()) ?>"
 >
 </content-constructor>
 
