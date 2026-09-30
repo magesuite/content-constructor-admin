@@ -15,4 +15,18 @@
             </argument>
         </arguments>
     </virtualType>
+    <type name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductGrid">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="product_conditions_view_model" xsi:type="object">MageSuite\ContentConstructorAdmin\ViewModel\ProductConditions</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductCarousel">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="product_conditions_view_model" xsi:type="object">MageSuite\ContentConstructorAdmin\ViewModel\ProductConditions</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

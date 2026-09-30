@@ -1,2 +1,7 @@
-<?php /** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductGrid */ ?>
-<products-grid-configurator class="cc-products-grid-configurator <?=$block->getClasses()?>" :configuration="initialComponentConfiguration" :uploader-base-url="uploaderUrl" :assets-src="assetsSrc" :image-endpoint="imageEndpoint" :categories-data-url="categoryDataProviderEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :view-xml="viewXml" :product-collections-sorters="sorters" :product-collections-filters="filters"></products-grid-configurator>
+<?php
+/** @var \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductGrid $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \MageSuite\ContentConstructorAdmin\ViewModel\ProductConditions $productConditionsViewModel */
+$productConditionsViewModel = $block->getData('product_conditions_view_model');
+?>
+<products-grid-configurator class="cc-products-grid-configurator <?= $escaper->escapeHtmlAttr((string) $block->getClasses()) ?>" :configuration="initialComponentConfiguration" :uploader-base-url="uploaderUrl" :assets-src="assetsSrc" :image-endpoint="imageEndpoint" :categories-data-url="categoryDataProviderEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :view-xml="viewXml" :product-collections-sorters="sorters" :product-collections-filters="filters" product-condition-attributes="<?= $escaper->escapeHtmlAttr($productConditionsViewModel->getAttributesJson()) ?>"></products-grid-configurator>

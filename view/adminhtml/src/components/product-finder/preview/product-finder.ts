@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import $t from 'mage/translate';
 
+import sanitizeHtml from '../../../utils/html-sanitizer/html-sanitizer';
+
 /**
  * Single columns configuration interface.
  */
@@ -37,9 +39,9 @@ interface IComponentInformation {
 const productFinderPreview: vuejs.ComponentOption = {
     template: `<div class="cc-product-finder-preview">
         <div class="cc-product-finder-preview__scene" :class="[ isConfiguratorPreview ? 'cc-product-finder-preview__scene--configurator' : '' ]" v-if="configuration.steps.length">
-            <h2 class="cc-product-finder-preview__scene-title" :data-placeholder="'No title' | translate">{{{ configuration.steps[stepIndex].title }}}</h2>
+            <h2 class="cc-product-finder-preview__scene-title" :data-placeholder="'No title' | translate">{{{ configuration.steps[stepIndex].title | sanitizeHtml }}}</h2>
 
-            <div class="cc-product-finder-preview__scene-description" :data-placeholder="'No description' | translate">{{{ configuration.steps[stepIndex].description }}}</div>
+            <div class="cc-product-finder-preview__scene-description" :data-placeholder="'No description' | translate">{{{ configuration.steps[stepIndex].description | sanitizeHtml }}}</div>
 
             <ul class="cc-product-finder-preview__scene-options">
                 <template v-for="option in configuration.steps[stepIndex].options">
@@ -50,7 +52,7 @@ const productFinderPreview: vuejs.ComponentOption = {
                             </svg>
                             <img class="cc-product-finder-preview__scene-option-image" :src="option.image | decode" alt="" v-show="option.image" />
                         </figure>
-                        <span class="cc-product-finder-preview__scene-option-label" :data-placeholder="'No label' | translate">{{{ option.label }}}</span>
+                        <span class="cc-product-finder-preview__scene-option-label" :data-placeholder="'No label' | translate">{{{ option.label | sanitizeHtml }}}</span>
                     </li>
                 </template>
             </ul>
@@ -86,6 +88,7 @@ const productFinderPreview: vuejs.ComponentOption = {
         },
     },
     filters: {
+        sanitizeHtml,
         /** Decodes delivered image format to Base64, additionally removing escaped double-quotes
          * @param imageUrl {string} - image url in Magento-like format with escaped double-quotes, f.e. {{media url=\"wysiwyg/image.jpg\"}}
          * @return {string} - permanent image url that can be viewed in Magento's admin panel OR empty if something went wrong

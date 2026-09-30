@@ -1,0 +1,43 @@
+.cc-product-conditions {
+    flex: 1 1 auto;
+
+    &__options {
+        padding: 1.5rem 1.5rem 1.25rem;
+        border-radius: 2px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
+
+        &--inputs {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+    }
+
+    &__hint {
+        flex: 0 0 100%;
+        margin: 0 0 1rem;
+    }
+
+    &__row {
+        display: flex;
+        flex: 0 0 100%;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin: 0 0 0.8rem;
+    }
+
+    &__attribute,
+    &__operator {
+        flex: 0 0 auto;
+        max-width: 22rem;
+    }
+
+    &__value {
+        flex: 1 1 auto;
+        min-width: 12rem;
+    }
+
+    &__remove {
+        flex: 0 0 auto;
+    }
+}

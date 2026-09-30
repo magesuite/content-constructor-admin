@@ -1,44 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Helper;
 
 class Configuration
 {
-    const SECRET_TOKEN_ADMIN_CONTENT_CONSTRUCTOR_PREVIEW_PATH = 'magesuite/content_constructor_admin/preview_secret';
-
-    const CUSTOM_ADMIN_PATH = 'admin/url/custom_path';
-
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $scopeConfig;
-
-    /**
-     * @var \Magento\Framework\App\DeploymentConfig\Reader
-     */
-    protected $configReader;
+    public const string SECRET_TOKEN_ADMIN_CONTENT_CONSTRUCTOR_PREVIEW_PATH = 'magesuite/content_constructor_admin/preview_secret';
+    public const string CUSTOM_ADMIN_PATH = 'admin/url/custom_path';
+    public const string PRODUCTS_PER_PAGE_PATH = 'catalog/frontend/grid_per_page';
 
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeInterface,
-        \Magento\Framework\App\DeploymentConfig\Reader $configReader
+        protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        protected \Magento\Framework\App\DeploymentConfig\Reader $configReader
     ) {
-        $this->scopeConfig = $scopeInterface;
-        $this->configReader = $configReader;
     }
 
-    public function getAdminPath()
+    public function getAdminPath(): string
     {
-        $adminPath = $this->scopeConfig->getValue(self::CUSTOM_ADMIN_PATH);
-        if (!$adminPath) {
-            $config = $this->configReader->load();
-            $adminPath = $config['backend']['frontName'];
+        $adminPath = (string) $this->scopeConfig->getValue(self::CUSTOM_ADMIN_PATH);
+
+        if ($adminPath !== '') {
+            return $adminPath;
         }
 
-        return $adminPath;
+        return (string) ($this->configReader->load()['backend']['frontName'] ?? '');
     }
 
-    public function getSecretPreviewToken()
+    public function getSecretPreviewToken(): string
     {
-        return $this->scopeConfig->getValue(self::SECRET_TOKEN_ADMIN_CONTENT_CONSTRUCTOR_PREVIEW_PATH);
+        return (string) $this->scopeConfig->getValue(self::SECRET_TOKEN_ADMIN_CONTENT_CONSTRUCTOR_PREVIEW_PATH);
+    }
+
+    public function getProductsPerPage(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::PRODUCTS_PER_PAGE_PATH,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 }
