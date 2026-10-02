@@ -22,6 +22,7 @@ class ProductTeaserDataTest extends \Magento\TestFramework\TestCase\AbstractBack
 
         $this->assertSame('Simple Product', $productData['product']['name']);
         $this->assertSame('simple', $productData['product']['sku']);
+        $this->assertStringContainsString('/frontend/', $productData['product']['image']);
         $this->assertStringContainsString('Magento_Catalog/images/product/placeholder/small_image.jpg', $productData['product']['image']);
         $this->assertSame('Short description', $productData['product']['shortDescription']);
     }
