@@ -164,7 +164,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
                     <div class="cc-teaser-configurator__image-wrapper">
                         <span class="cc-teaser-configurator__pins-dropzone" v-if="isPinsTabActive">{{ 'Drop zone' | translate }}</span>
 
-                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType" :support-breakpoint-dedicated-images="supportBreakpointDedicatedImages" :device-type="currentImageUploader" :pins-active="isPinsTabActive" :in-configurator="true" :hovered-pin-index.sync="hoveredPinIndex"></teaser-preview>
+                        <teaser-preview :configuration="configuration" :parent-configuration="parentConfiguration" :teaser-type="teaserType" :support-breakpoint-dedicated-images="supportBreakpointDedicatedImages" :device-type="currentImageUploader" :pins-active="isPinsTabActive" :pins-default-outline-color="pinsDefaultOutlineColor" :in-configurator="true" :hovered-pin-index.sync="hoveredPinIndex"></teaser-preview>
 
                         <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--mobile" id="teaser-img-mobile-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
                         <input type="hidden" class="cc-teaser-configurator__image-url cc-teaser-configurator__image-url--tablet" id="teaser-img-tablet-{{teaserIndex}}" data-teaser-index="{{teaserIndex}}" v-if="supportBreakpointDedicatedImages">
@@ -609,7 +609,7 @@ const teaserConfigurator: vuejs.ComponentOption = {
 
                         <template v-if="tab.content === '#pins' && isPinsTabVisible">
                             <div class="cc-teaser-configurator__tab-section cc-teaser-configurator__tab-section--pins">
-                                <cc-teaser-pins :configuration="configuration" :teaser-index="teaserIndex" :default-color="pinsDefaultColor" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl" :caller-component-type="callerComponentType" :parent-configuration="parentConfiguration" :hovered-pin-index.sync="hoveredPinIndex"></cc-teaser-pins>
+                                <cc-teaser-pins :configuration="configuration" :teaser-index="teaserIndex" :default-color="pinsDefaultColor" :default-outline-color="pinsDefaultOutlineColor" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl" :caller-component-type="callerComponentType" :parent-configuration="parentConfiguration" :hovered-pin-index.sync="hoveredPinIndex"></cc-teaser-pins>
                             </div>
                         </template>
 
@@ -808,6 +808,9 @@ const teaserConfigurator: vuejs.ComponentOption = {
         /* Default base pin colour, configurable via view.xml (teaser.pins.default_color) */
         pinsDefaultColor: function(): string {
             return (this.ccConfig.teaser.pins && this.ccConfig.teaser.pins.default_color) || '#324dcf';
+        },
+        pinsDefaultOutlineColor: function(): string {
+            return (this.ccConfig.teaser.pins && this.ccConfig.teaser.pins.default_outline_color) || '#ffffff';
         },
         isPinsTabActive: function(): boolean {
             const tabs: any = this.ccConfig.teaser.tabs;

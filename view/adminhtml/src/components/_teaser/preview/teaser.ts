@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { VideoType } from '../configurator/_video/types';
+import { getPinFillColor, getPinOutlineColor, isPinFilled } from '../pins/pin-fill';
 
 /**
  * Breakpoint-dedicated image interface
@@ -252,6 +253,11 @@ const teaserPreview: vuejs.ComponentOption = {
             type: Boolean,
             default: false,
         },
+        /* Outline colour of pins without fill when the slide sets none */
+        pinsDefaultOutlineColor: {
+            type: String,
+            default: '#ffffff',
+        },
         /* True when this preview is inside the (editing) configurator. */
         inConfigurator: {
             type: Boolean,
@@ -334,10 +340,15 @@ const teaserPreview: vuejs.ComponentOption = {
                 return style;
             }
 
-            style.backgroundColor =
-                pin.override_color && pin.color
-                    ? pin.color
-                    : self.configuration.pins.base_color;
+            const pins: any = self.configuration.pins;
+            const baseNoFill: boolean = !!pins.base_no_fill;
+
+            style.backgroundColor = getPinFillColor(pin, pins.base_color, baseNoFill);
+
+            if (!isPinFilled(pin, baseNoFill)) {
+                style.borderColor = getPinOutlineColor(pin, pins.base_outline_color || self.pinsDefaultOutlineColor);
+            }
+
             style.color = style.backgroundColor;
 
             return style;

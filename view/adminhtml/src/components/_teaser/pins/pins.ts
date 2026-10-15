@@ -4,6 +4,7 @@ import alert from 'Magento_Ui/js/modal/alert';
 import confirm from 'Magento_Ui/js/modal/confirm';
 import modal from 'Magento_Ui/js/modal/modal';
 import ccProductPicker from '../../_product-picker/product-picker';
+import { getPinFillColor, getPinOutlineColor, isPinFilled } from './pin-fill';
 
 /**
  * Teaser Pins configurator.
@@ -38,12 +39,13 @@ const ccTeaserPins: vuejs.ComponentOption = {
         <div class="cc-input cc-input--group">
             <div class="cc-input cc-input--type-color cc-teaser-configurator__form-element cc-teaser-pins__field">
                 <label class="cc-input__label" for="cfg-teaser-{{ teaserIndex }}-pins-base-color">{{ 'Base pin colour' | translate }}:</label>
-                <div class="cc-input__wrapper cc-teaser-pins__color">
+                <div class="cc-input__wrapper cc-teaser-pins__color" :class="{ 'cc-teaser-pins__setting--disabled': basePinNoFill }">
                     <input
                         type="text"
                         class="cc-input__input cc-teaser-pins__color-text"
                         id="cfg-teaser-{{ teaserIndex }}-pins-base-color"
                         :value="basePinColor"
+                        :disabled="basePinNoFill"
                         @change="commitBaseColor($event)"
                         pattern="#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?"
                         maxlength="7"
@@ -52,10 +54,44 @@ const ccTeaserPins: vuejs.ComponentOption = {
                         type="color"
                         class="cc-input__input cc-input__input--type-color cc-teaser-pins__color-picker"
                         :value="basePinColor"
+                        :disabled="basePinNoFill"
                         @change="updateBaseColor($event)"
                     >
                 </div>
-                <p class="cc-input__hint">{{ 'Default colour for all pins on this image.' | translate }} {{ 'Hex values only, e.g. #324dcf.' | translate }}</p>
+                <p class="cc-input__hint">{{ 'Default colour for all pins on this image.' | translate }}<br>{{ 'Hex values only, e.g. #324dcf.' | translate }}</p>
+            </div>
+        </div>
+        <div class="cc-input cc-input--group">
+            <div class="cc-input cc-teaser-configurator__form-element cc-teaser-pins__field cc-teaser-pins__switch">
+                <div class="admin__actions-switch" data-role="switcher">
+                    <label for="cfg-teaser-{{ teaserIndex }}-pins-base-no-fill" class="cc-input__label">{{ 'No fill colour' | translate }}: </label>
+                    <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-teaser-{{ teaserIndex }}-pins-base-no-fill" v-model="basePinNoFill">
+                    <label for="cfg-teaser-{{ teaserIndex }}-pins-base-no-fill" class="admin__actions-switch-label"></label>
+                </div>
+                <p class="cc-input__hint">{{ 'The pin shows only its outline and the image is visible through it. How this looks depends on the pin icon of the theme.' | translate }}</p>
+            </div>
+        </div>
+        <div class="cc-input cc-input--group" v-if="basePinNoFill">
+            <div class="cc-input cc-input--type-color cc-teaser-configurator__form-element cc-teaser-pins__field">
+                <label class="cc-input__label" for="cfg-teaser-{{ teaserIndex }}-pins-base-outline-color">{{ 'Outline colour' | translate }}:</label>
+                <div class="cc-input__wrapper cc-teaser-pins__color">
+                    <input
+                        type="text"
+                        class="cc-input__input cc-teaser-pins__color-text"
+                        id="cfg-teaser-{{ teaserIndex }}-pins-base-outline-color"
+                        :value="baseOutlineColorSetting"
+                        @change="commitBaseOutlineColor($event)"
+                        pattern="#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?"
+                        maxlength="7"
+                    >
+                    <input
+                        type="color"
+                        class="cc-input__input cc-input__input--type-color cc-teaser-pins__color-picker"
+                        :value="basePinOutlineColor"
+                        @change="updateBaseOutlineColor($event)"
+                    >
+                </div>
+                <p class="cc-input__hint">{{ 'Leave empty to use the default outline colour.' | translate }}<br>{{ 'Hex values only, e.g. #324dcf.' | translate }}</p>
             </div>
         </div>
         <div class="cc-teaser-pins__manage">
@@ -82,7 +118,7 @@ const ccTeaserPins: vuejs.ComponentOption = {
                     v-for="pin in pinItems"
                     @mouseenter="highlightPin($index)"
                     @mouseleave="clearPinHighlight()">
-                    <span class="cc-teaser-pins__item-dot" :style="{ backgroundColor: pin.override_color && pin.color ? pin.color : basePinColor }"></span>
+                    <span class="cc-teaser-pins__item-dot" :class="{ 'cc-teaser-pins__item-dot--no-fill': !pinIsFilled(pin) }" :style="{ backgroundColor: pinFillColor(pin), borderColor: pinIsFilled(pin) ? '' : pinOutlineColor(pin) }"></span>
                     <span class="cc-teaser-pins__item-label">{{ 'Pin' | translate }} {{ $index + 1 }}</span>
                     <span class="cc-teaser-pins__item-warning" v-if="showTargetErrors && !pinHasTarget(pin)" title="{{ 'No product or URL set yet' | translate }}">
                         <svg class="cc-teaser-pins__item-warning-icon" aria-hidden="true">
@@ -205,11 +241,27 @@ const ccTeaserPins: vuejs.ComponentOption = {
                             </div>
                         </div>
                         <div class="cc-input cc-input--type-color" v-if="editingPin.override_color">
-                            <div class="cc-input__wrapper cc-teaser-pins__color">
-                                <input type="text" class="cc-input__input cc-teaser-pins__color-text" :value="editingPin.color" @change="commitPinColor($event)" pattern="#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?" maxlength="7">
-                                <input type="color" class="cc-input__input cc-input__input--type-color cc-teaser-pins__color-picker" :value="editingPin.color || configuration.pins.base_color" @change="updatePinColor($event)">
+                            <div class="cc-input__wrapper cc-teaser-pins__color" :class="{ 'cc-teaser-pins__setting--disabled': editingPin.no_fill }">
+                                <input type="text" class="cc-input__input cc-teaser-pins__color-text" :value="editingPin.color" :disabled="editingPin.no_fill" @change="commitPinColor($event)" pattern="#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?" maxlength="7">
+                                <input type="color" class="cc-input__input cc-input__input--type-color cc-teaser-pins__color-picker" :value="editingPin.color || configuration.pins.base_color" :disabled="editingPin.no_fill" @change="updatePinColor($event)">
                             </div>
                             <p class="cc-input__hint">{{ 'Hex values only, e.g. #324dcf.' | translate }}</p>
+                        </div>
+                        <div class="cc-input cc-teaser-pins__switch" v-if="editingPin.override_color">
+                            <div class="admin__actions-switch" data-role="switcher">
+                                <label for="cfg-teaser-{{ teaserIndex }}-pin-no-fill" class="cc-input__label">{{ 'No fill colour' | translate }}: </label>
+                                <input type="checkbox" class="admin__actions-switch-checkbox" id="cfg-teaser-{{ teaserIndex }}-pin-no-fill" v-model="editingPin.no_fill">
+                                <label for="cfg-teaser-{{ teaserIndex }}-pin-no-fill" class="admin__actions-switch-label"></label>
+                            </div>
+                            <p class="cc-input__hint">{{ 'The pin shows only its outline and the image is visible through it. How this looks depends on the pin icon of the theme.' | translate }}</p>
+                        </div>
+                        <div class="cc-input cc-input--type-color" v-if="editingPin.override_color && editingPin.no_fill">
+                            <label class="cc-input__label" for="cfg-teaser-{{ teaserIndex }}-pin-outline-color">{{ 'Outline colour' | translate }}:</label>
+                            <div class="cc-input__wrapper cc-teaser-pins__color">
+                                <input type="text" class="cc-input__input cc-teaser-pins__color-text" id="cfg-teaser-{{ teaserIndex }}-pin-outline-color" :value="editingPin.outline_color" @change="commitPinOutlineColor($event)" pattern="#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?" maxlength="7">
+                                <input type="color" class="cc-input__input cc-input__input--type-color cc-teaser-pins__color-picker" :value="editingPin.outline_color || basePinOutlineColor" @change="updatePinOutlineColor($event)">
+                            </div>
+                            <p class="cc-input__hint">{{ 'By default this pin uses the outline colour set for the image.' | translate }} {{ 'Hex values only, e.g. #324dcf.' | translate }}</p>
                         </div>
                     </div>
                 </fieldset>
@@ -231,6 +283,10 @@ const ccTeaserPins: vuejs.ComponentOption = {
         defaultColor: {
             type: String,
             default: '#324dcf',
+        },
+        defaultOutlineColor: {
+            type: String,
+            default: '#ffffff',
         },
         productDataEndpoint: {
             type: String,
@@ -265,6 +321,8 @@ const ccTeaserPins: vuejs.ComponentOption = {
             pinSaved: false,
             modalInstance: null,
             pendingBaseColor: null,
+            pendingBaseNoFill: false,
+            pendingBaseOutlineColor: null,
             showTargetErrors: false,
             letterboxPct: 0,
         };
@@ -325,6 +383,39 @@ const ccTeaserPins: vuejs.ComponentOption = {
                 this.pendingBaseColor = value;
             },
         },
+        basePinNoFill: {
+            get(): boolean {
+                if (this.configuration.pins) {
+                    return !!this.configuration.pins.base_no_fill;
+                }
+                return this.pendingBaseNoFill;
+            },
+            set(value: boolean): void {
+                if (this.configuration.pins) {
+                    this.$set('configuration.pins.base_no_fill', value);
+                    return;
+                }
+                this.pendingBaseNoFill = value;
+            },
+        },
+        baseOutlineColorSetting: {
+            get(): string {
+                if (this.configuration.pins) {
+                    return this.configuration.pins.base_outline_color || '';
+                }
+                return this.pendingBaseOutlineColor || '';
+            },
+            set(value: string): void {
+                if (this.configuration.pins) {
+                    this.$set('configuration.pins.base_outline_color', value);
+                    return;
+                }
+                this.pendingBaseOutlineColor = value || null;
+            },
+        },
+        basePinOutlineColor: function(): string {
+            return this.baseOutlineColorSetting || this.defaultOutlineColor;
+        },
         editingPin: function(): any {
             if (this.editingIndex === null || !this.configuration.pins) {
                 return null;
@@ -349,6 +440,41 @@ const ccTeaserPins: vuejs.ComponentOption = {
         },
     },
     methods: {
+        pinIsFilled(pin: any): boolean {
+            return isPinFilled(pin, this.basePinNoFill);
+        },
+        pinFillColor(pin: any): string {
+            return getPinFillColor(pin, this.basePinColor, this.basePinNoFill);
+        },
+        pinOutlineColor(pin: any): string {
+            return getPinOutlineColor(pin, this.basePinOutlineColor);
+        },
+        updateBaseOutlineColor(event: Event): void {
+            this.baseOutlineColorSetting = (event.target as HTMLInputElement).value;
+        },
+        commitBaseOutlineColor(event: Event): void {
+            const value: string | null = this.commitOptionalColor(event, this.baseOutlineColorSetting);
+
+            if (value !== null) {
+                this.baseOutlineColorSetting = value;
+            }
+        },
+        updatePinOutlineColor(event: Event): void {
+            if (this.editingPin) {
+                this.editingPin.outline_color = (event.target as HTMLInputElement).value;
+            }
+        },
+        commitPinOutlineColor(event: Event): void {
+            if (!this.editingPin) {
+                return;
+            }
+
+            const value: string | null = this.commitOptionalColor(event, this.editingPin.outline_color);
+
+            if (value !== null) {
+                this.editingPin.outline_color = value;
+            }
+        },
         updateBaseColor(event: Event): void {
             this.basePinColor = (event.target as HTMLInputElement).value;
         },
@@ -478,6 +604,8 @@ const ccTeaserPins: vuejs.ComponentOption = {
                 show_sale: true,
                 override_color: false,
                 color: '',
+                no_fill: false,
+                outline_color: '',
             };
         },
         commitColor(event: Event, current: string): string | null {
@@ -491,6 +619,13 @@ const ccTeaserPins: vuejs.ComponentOption = {
             input.value = current;
 
             return null;
+        },
+        commitOptionalColor(event: Event, current: string): string | null {
+            if ((event.target as HTMLInputElement).value.trim() === '') {
+                return '';
+            }
+
+            return this.commitColor(event, current);
         },
         commitBaseColor(event: Event): void {
             const self: any = this;
@@ -519,18 +654,25 @@ const ccTeaserPins: vuejs.ComponentOption = {
                 self.editingPin.color = value;
             }
         },
-        ensurePinsConfig(): void {
+        initPinsConfig(): void {
             if (this.configuration.pins) {
                 return;
             }
-            this.$set('configuration.pins', {
+            const pins: any = {
                 base_color: this.pendingBaseColor !== null ? this.pendingBaseColor : this.defaultColor,
+                base_no_fill: this.pendingBaseNoFill,
                 items: [],
-            });
+            };
+
+            if (this.pendingBaseOutlineColor !== null) {
+                pins.base_outline_color = this.pendingBaseOutlineColor;
+            }
+
+            this.$set('configuration.pins', pins);
         },
         addPin(): void {
             const self: any = this;
-            self.ensurePinsConfig();
+            self.initPinsConfig();
             self.configuration.pins.items.push(self.pinDefaults());
         },
         initPinModal(): void {
