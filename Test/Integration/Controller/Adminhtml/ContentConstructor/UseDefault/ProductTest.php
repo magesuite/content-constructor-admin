@@ -21,7 +21,7 @@ class ProductTest extends AbstractUseDefault
     public function testRemoveStoreData(): void
     {
         $product = $this->productRepository->get('simple', false, 1, true);
-        $contentConstructorValue = $product->getData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME) ?? '';
+        $contentConstructorValue = $product->getData(\MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE) ?? '';
 
         $this->assertTrue(str_contains($contentConstructorValue, 'headline2'), 'Fixture value not asserted');
 
@@ -29,7 +29,7 @@ class ProductTest extends AbstractUseDefault
         $this->productRepository->save($product);
 
         $product = $this->productRepository->get('simple', false, 1, true);
-        $contentConstructorValue = $product->getData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+        $contentConstructorValue = $product->getData(\MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);
 
         $this->assertFalse(str_contains($contentConstructorValue, 'headline2'), 'The old value asserted but should be removed');
         $this->assertTrue(str_contains($contentConstructorValue, 'headline'), 'The new value not asserted');

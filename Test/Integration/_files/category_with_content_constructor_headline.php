@@ -18,13 +18,13 @@ $headlineComponent = $objectManager->create(\MageSuite\ContentConstructorAdmin\T
 /** @var \Magento\Catalog\Api\Data\CategoryInterface $category */
 $category =  $categoryRepository->get(333);
 
-$category->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
+$category->setData(\MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE, '');
 $category = $headlineComponent->setEntity($category)
     ->setComponentId((string)time())
     ->setHeadline('headline')
     ->setSubheadline('subheadline')
     ->addHeaderComponentToEntity();
-$category->getResource()->saveAttribute($category, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$category->getResource()->saveAttribute($category, \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);
 
 $category = $categoryRepository->get(333, 1);
 $category = $headlineComponent->setEntity($category)

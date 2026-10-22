@@ -6,19 +6,15 @@ namespace MageSuite\ContentConstructorAdmin\Setup\Patch\Data;
 
 class SetContentConstructorAttributesAsOptional implements \Magento\Framework\Setup\Patch\DataPatchInterface
 {
-    /**
-     * @var \Magento\Eav\Setup\EavSetup
-     */
-    protected $eavSetup;
+    protected \Magento\Eav\Setup\EavSetup $eavSetup;
 
-    protected $contentConstructorAttributesEntityTypes = [
+    protected array $contentConstructorAttributesEntityTypes = [
         \Magento\Catalog\Model\Category::ENTITY,
-        \Magento\Catalog\Model\Product::ENTITY
+        \Magento\Catalog\Model\Product::ENTITY,
     ];
 
-    protected $contentConstructorAttributes = [
-        \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME,
-        \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::LAYOUT_UPDATE_XML_BACKUP_ATTRIBUTE_NAME
+    protected array $contentConstructorAttributes = [
+        \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE,
     ];
 
     public function __construct(
@@ -49,7 +45,9 @@ class SetContentConstructorAttributesAsOptional implements \Magento\Framework\Se
      */
     public static function getDependencies()
     {
-        return [];
+        return [
+            \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::class,
+        ];
     }
 
     /**
