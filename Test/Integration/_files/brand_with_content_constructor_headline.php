@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
+/** @var $objectManager \Magento\TestFramework\ObjectManager */
+$objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
+
+if ($objectManager->create(\MageSuite\ContentConstructorAdmin\Test\Integration\Fixtures\BrandManagementVersion::class)->isVersion2OrHigher()) {
+    return;
+}
+
 try {
     \Magento\TestFramework\Workaround\Override\Fixture\Resolver::getInstance()->requireDataFixture('MageSuite_BrandManagement::Test/Integration/_files/brands.php');
 } catch (\Exception $e) {} //phpcs:ignore
-
-/** @var $objectManager \Magento\TestFramework\ObjectManager */
-$objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
 /** @var \Magesuite\ContentConstructorAdmin\Test\Integration\Fixtures\HeadlineComponent $headlineComponent */
 $headlineComponent = $objectManager->create(\MageSuite\ContentConstructorAdmin\Test\Integration\Fixtures\HeadlineComponent::class);

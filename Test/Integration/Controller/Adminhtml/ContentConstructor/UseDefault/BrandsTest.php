@@ -20,9 +20,7 @@ class BrandsTest extends AbstractUseDefault
      */
     public function testRemoveStoreData(): void
     {
-        $version = \Composer\InstalledVersions::getVersion('creativestyle/magesuite-brand-management');
-
-        if (!empty($version) && version_compare($version, '2.0.0') >= 0) {
+        if ($this->objectManager->create(\MageSuite\ContentConstructorAdmin\Test\Integration\Fixtures\BrandManagementVersion::class)->isVersion2OrHigher()) {
             $this->markTestSkipped('This test is not applicable for the 2.x version of the brand management module');
         }
 
