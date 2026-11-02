@@ -58,6 +58,6 @@ class RemoveContentConstructorStoreData
             return self::LAYOUT_UPDATE_XML_ATTRIBUTE_NAME;
         }
 
-        return \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME;
+        return \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE;
     }
 }

@@ -320,6 +320,18 @@
                         <ticket_id>LOWA-821</ticket_id>
                     </entry>
                 </tag>
+                <tag version="4.19.0" date="2026-10-19">
+                    <entry>
+                        <type>REFACTOR</type>
+                        <overview>Removed unused layout_update_xml_backup product and category attributes together with the obsolete XML to JSON migration</overview>
+                        <description>Removed Test\Integration\Upgrade\AbstractMigrationTestCase used by migration tests</description>
+                    </entry>
+                    <entry>
+                        <type>REFACTOR</type>
+                        <overview>Replaced obsolete UpgradeData script with AddContentConstructorContentAttribute data patch and removed setup_version from module.xml</overview>
+                        <description>UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME constant moved to AddContentConstructorContentAttribute::ATTRIBUTE_CODE</description>
+                    </entry>
+                </tag>
         </changelog>
     </module>
 </config>

@@ -18,13 +18,13 @@ $headlineComponent = $objectManager->create(\MageSuite\ContentConstructorAdmin\T
 /** @var \Magento\Catalog\Api\Data\ProductInterface $category */
 $product =  $productRepository->get('simple');
 
-$product->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
+$product->setData(\MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE, '');
 $product = $headlineComponent->setEntity($product)
     ->setComponentId((string)time())
     ->setHeadline('headline')
     ->setSubheadline('subheadline')
     ->addHeaderComponentToEntity();
-$product->getResource()->saveAttribute($product, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$product->getResource()->saveAttribute($product, \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);
 
 $product = $productRepository->get('simple', true, 1, true);
 $product = $headlineComponent->setEntity($product)

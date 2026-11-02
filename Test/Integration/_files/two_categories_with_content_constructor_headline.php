@@ -44,13 +44,13 @@ $categorySecond->setId(334)
     ->save();
 
 $categoryFirstDefault = $categoryFactory->create()->setStoreId(0)->load(333);
-$categoryFirstDefault->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
+$categoryFirstDefault->setData(\MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE, '');
 $categoryFirstDefault = $headlineComponent->setEntity($categoryFirstDefault)
     ->setComponentId((string)time())
     ->setHeadline('headline_first_default')
     ->setSubheadline('subheadline_first_default')
     ->addHeaderComponentToEntity();
-$categoryFirstDefault->getResource()->saveAttribute($categoryFirstDefault, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$categoryFirstDefault->getResource()->saveAttribute($categoryFirstDefault, \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);
 
 $categoryFirstStore = $categoryFactory->create()->setStoreId(1)->load(333);
 $categoryFirstStore = $headlineComponent->setEntity($categoryFirstStore)
@@ -58,16 +58,16 @@ $categoryFirstStore = $headlineComponent->setEntity($categoryFirstStore)
     ->setHeadline('headline_first_store')
     ->setSubheadline('subheadline_first_store')
     ->addHeaderComponentToEntity();
-$categoryFirstStore->getResource()->saveAttribute($categoryFirstStore, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$categoryFirstStore->getResource()->saveAttribute($categoryFirstStore, \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);
 
 $categorySecondDefault = $categoryFactory->create()->setStoreId(0)->load(334);
-$categorySecondDefault->setData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME, '');
+$categorySecondDefault->setData(\MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE, '');
 $categorySecondDefault = $headlineComponent->setEntity($categorySecondDefault)
     ->setComponentId((string)time())
     ->setHeadline('headline_second_default')
     ->setSubheadline('subheadline_second_default')
     ->addHeaderComponentToEntity();
-$categorySecondDefault->getResource()->saveAttribute($categorySecondDefault, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$categorySecondDefault->getResource()->saveAttribute($categorySecondDefault, \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);
 
 $categorySecondStore = $categoryFactory->create()->setStoreId(1)->load(334);
 $categorySecondStore = $headlineComponent->setEntity($categorySecondStore)
@@ -75,4 +75,4 @@ $categorySecondStore = $headlineComponent->setEntity($categorySecondStore)
     ->setHeadline('headline_second_store')
     ->setSubheadline('subheadline_second_store')
     ->addHeaderComponentToEntity();
-$categorySecondStore->getResource()->saveAttribute($categorySecondStore, \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+$categorySecondStore->getResource()->saveAttribute($categorySecondStore, \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);

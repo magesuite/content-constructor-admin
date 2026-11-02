@@ -152,7 +152,7 @@ class HeadlineComponent
         } else {
             $attributeValue = $this->getSerializedData();
             $this->entity->setData(
-                \MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME,
+                \MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE,
                 $attributeValue
             );
         }
@@ -202,7 +202,7 @@ class HeadlineComponent
     {
         $data = $this->getData();
 
-        $attributeValue = $this->entity->getData(\MageSuite\ContentConstructorAdmin\Setup\UpgradeData::CONTENT_CONSTRUCTOR_CONTENT_ATTRIBUTE_NAME);
+        $attributeValue = $this->entity->getData(\MageSuite\ContentConstructorAdmin\Setup\Patch\Data\AddContentConstructorContentAttribute::ATTRIBUTE_CODE);
 
         if (!empty($attributeValue)) {
             $attributeData = $this->serializer->unserialize($attributeValue);
