@@ -134,6 +134,16 @@
         box-shadow: 0 0 0 1px #adadad;
     }
 
+    &__item-dot--no-fill {
+        background-image: linear-gradient(
+            to top right,
+            transparent calc(50% - 1px),
+            #c20000 calc(50% - 1px),
+            #c20000 calc(50% + 1px),
+            transparent calc(50% + 1px)
+        );
+    }
+
     &__item-label {
         line-height: 1;
     }
@@ -220,6 +230,7 @@
             flex: 1 1 auto;
             margin: 0;
             padding-right: 1.5rem;
+            text-align: left;
         }
 
         .admin__actions-switch-label {
