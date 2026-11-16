@@ -24,8 +24,8 @@ const dailyDealTeaserPreview: vuejs.ComponentOption = {
                 </div>
                 <div class="cc-daily-deal-teaser-preview__product-info">
                     <div class="cc-daily-deal-teaser-preview__product-info-container">
-                        <p class="cc-daily-deal-teaser-preview__product-data" v-if="configuration.category_id">category ID: {{{ configuration.category_id }}}</p>
-                        <p class="cc-daily-deal-teaser-preview__product-data" v-if="configuration.skus">SKU: {{{ configuration.skus }}}</p>
+                        <p class="cc-daily-deal-teaser-preview__product-data" v-if="configuration.category_id">category ID: {{ configuration.category_id }}</p>
+                        <p class="cc-daily-deal-teaser-preview__product-data" v-if="configuration.skus">SKU: {{ configuration.skus }}</p>
                     </div>
                     <div class="cc-daily-deal-teaser-preview__product-info-container">
                         <div class="cc-daily-deal-teaser-preview__countdown-mockup">

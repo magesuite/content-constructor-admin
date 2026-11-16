@@ -3,6 +3,7 @@ import $t from 'mage/translate';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
 import categoryPicker from '../../../utils/category-picker/category-picker';
+import ccProductConditions from '../../_product-conditions/product-conditions';
 
 /**
  * Product carousel configurator component.
@@ -13,6 +14,9 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
     mixins: [
         componentConfigurator,
     ],
+    components: {
+        'cc-product-conditions': ccProductConditions,
+    },
     template: `<form class="cc-product-carousel-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-product-carousel-configurator__section cc-product-carousel-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.product_carousel != null && ccConfig.product_carousel.custom_sections != null" v-for="section in ccConfig.product_carousel.custom_sections">
             <h3 class="cc-product-carousel-configurator__subtitle" v-if="section.label">{{section.label | translate}}</h3>
@@ -58,6 +62,11 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
                     <option value="{{ filter.value }}" :selected="filter.value === configuration.filter">{{ filter.label }}</option>
                 </template>
             </select>
+        </div>
+
+        <div class="cc-input cc-input--type-inline">
+            <label class="cc-input__label">${$t('Product conditions')}:</label>
+            <cc-product-conditions :configuration="configuration" :attributes="productConditionAttributes"></cc-product-conditions>
         </div>
 
         <div class="cc-input cc-input--type-inline">
@@ -114,6 +123,10 @@ const productCarouselConfigurator: vuejs.ComponentOption = {
         },
         productCollectionsFilters: {
             type: [String, Array],
+            default: '',
+        },
+        productConditionAttributes: {
+            type: String,
             default: '',
         },
         /* Set prop with component name in order to

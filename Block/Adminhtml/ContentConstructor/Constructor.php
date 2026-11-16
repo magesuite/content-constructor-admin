@@ -1,193 +1,117 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor;
 
 class Constructor extends \Magento\Framework\View\Element\Template
 {
-    protected \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration;
-    protected \Magento\Framework\Registry $registry;
-    protected \MageSuite\ContentConstructorAsset\Service\AssetLocator $assetLocator;
-    protected \Magento\Backend\Model\UrlInterface $backendUrl;
-    protected \MageSuite\ContentConstructorAdmin\Service\UiComponentRenderer $uiComponentRenderer;
-    protected \MageSuite\ContentConstructorAdmin\DataProviders\ContentConstructorConfigDataProvider $contentConstructorConfigDataProvider;
-    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
-    protected \MageSuite\ContentConstructorAdmin\Helper\ConfigurationMediaResolver $configurationMediaResolver;
-    protected \MageSuite\ContentConstructorFrontend\Model\Sort\Pool $sortersPool;
-    protected \MageSuite\ContentConstructorFrontend\Model\Filter\Pool $filtersPool;
-    protected \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider;
-    protected \Magento\Store\Model\StoreManagerInterface $storeManager;
-    protected \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper;
-    protected \Magento\Ui\Component\Form\Element\DataType\Media\OpenDialogUrl $openDialogUrl;
-    protected \Magento\Cms\Helper\Wysiwyg\Images $imagesHelper;
-
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \MageSuite\ContentConstructorAdmin\Repository\Xml\XmlToComponentConfigurationMapper $xmlToComponentConfiguration,
-        \Magento\Framework\Registry $registry,
-        \MageSuite\ContentConstructorAsset\Service\AssetLocator $assetLocator,
-        \Magento\Backend\Model\UrlInterface $backendUrl,
-        \MageSuite\ContentConstructorAdmin\DataProviders\ContentConstructorConfigDataProvider $contentConstructorConfigDataProvider,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \MageSuite\ContentConstructorAdmin\Helper\ConfigurationMediaResolver $configurationMediaResolver,
-        \MageSuite\ContentConstructorFrontend\Model\Sort\Pool $sortersPool,
-        \MageSuite\ContentConstructorFrontend\Model\Filter\Pool $filtersPool,
-        \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper,
-        \Magento\Ui\Component\Form\Element\DataType\Media\OpenDialogUrl $openDialogUrl,
-        \Magento\Cms\Helper\Wysiwyg\Images $imagesHelper,
+        protected \MageSuite\ContentConstructorAsset\Service\AssetLocator $assetLocator,
+        protected \MageSuite\ContentConstructorAdmin\DataProviders\ContentConstructorConfigDataProvider $contentConstructorConfigDataProvider,
+        protected \MageSuite\ContentConstructorAdmin\Helper\ConfigurationMediaResolver $configurationMediaResolver,
+        protected \MageSuite\ContentConstructorAdmin\Model\Editor\ProductCollectionOptions $productCollectionOptions,
+        protected \MageSuite\ContentConstructorAdmin\Model\Editor\MediaUploaderUrlProvider $mediaUploaderUrlProvider,
+        protected \MageSuite\ContentConstructorAdmin\Block\Adminhtml\ContentConstructor\ConfigurationProvider $configurationProvider,
+        protected \MageSuite\ContentConstructorAdmin\Helper\Configuration $configurationHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
 
-        $this->xmlToComponentConfiguration = $xmlToComponentConfiguration;
-        $this->registry = $registry;
-        $this->assetLocator = $assetLocator;
-        $this->backendUrl = $backendUrl;
-        $this->contentConstructorConfigDataProvider = $contentConstructorConfigDataProvider;
-        $this->scopeConfig = $scopeConfig;
-        $this->configurationMediaResolver = $configurationMediaResolver;
-        $this->sortersPool = $sortersPool;
-        $this->filtersPool = $filtersPool;
-        $this->configurationProvider = $configurationProvider;
-        $this->storeManager = $storeManager;
-        $this->configurationHelper = $configurationHelper;
-        $this->openDialogUrl = $openDialogUrl;
-        $this->imagesHelper = $imagesHelper;
-
         $this->setTemplate('MageSuite_ContentConstructorAdmin::constructor.phtml');
     }
 
-    public function getConfiguratorEndpointUrl()
+    public function getConfiguratorEndpointUrl(): string
     {
-        return $this->getUrl('contentconstructor/component/configurator') . 'type/{/component_type}';
+        return sprintf('%stype/{/component_type}', $this->getUrl('contentconstructor/component/configurator'));
     }
 
-    public function getRestTokenEndpoint()
+    public function getRestTokenEndpoint(): string
     {
         return $this->getUrl('contentconstructor/token/generator');
     }
 
-    public function getPreviewTokenUrl()
+    public function getPreviewTokenUrl(): string
     {
         return $this->getUrl('contentconstructor/token/previewsecret');
     }
 
-    public function getImageEndpoint()
+    public function getImageEndpoint(): string
     {
-        return $this->getUrl('contentconstructor/image/show') . 'image/{/encoded_image}';
+        return sprintf('%simage/{/encoded_image}', $this->getUrl('contentconstructor/image/show'));
     }
 
-    public function getCategoryDataProviderEndpoint()
+    public function getCategoryDataProviderEndpoint(): string
     {
         return $this->getUrl('contentconstructor/category/provider');
     }
 
-    public function getAsset($assetLocation)
+    public function getAsset(string $assetLocation): string
     {
-        return $this->assetLocator->getUrl($assetLocation);
+        return (string) $this->assetLocator->getUrl($assetLocation);
     }
 
-    public function getUploaderUrl()
+    public function getUploaderUrl(): string
     {
-        return $this->backendUrl->getUrl(
-            $this->openDialogUrl->get(),
-            ['current_tree_path' => $this->imagesHelper->idEncode('wysiwyg')]
-        );
+        return $this->mediaUploaderUrlProvider->getUrl();
     }
 
-    public function getContentConstructorConfig()
+    public function getContentConstructorConfig(): string
     {
-        $config = $this->contentConstructorConfigDataProvider->getConfig();
-
-        return $config;
+        return (string) $this->contentConstructorConfigDataProvider->getConfig();
     }
 
-    public function getProductsPerPage()
+    public function getProductsPerPage(): string
     {
-        return $this->scopeConfig->getValue(
-            'catalog/frontend/grid_per_page',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+        return $this->configurationHelper->getProductsPerPage();
     }
 
-    public function resolveConfigurationMedia($configuration)
+    public function resolveConfigurationMedia(mixed $configuration): string
     {
-        $configuration = json_decode($configuration, true);
+        $resolvedConfiguration = $this->configurationMediaResolver->resolveMedia(json_decode((string) $configuration, true));
 
-        $configuration = $this->configurationMediaResolver->resolveMedia($configuration);
-
-        return json_encode($configuration);
+        return (string) json_encode($resolvedConfiguration);
     }
 
-    public function getAdminPrefix()
+    public function getAdminPrefix(): string
     {
-        return $this->configurationHelper->getAdminPath();
+        return (string) $this->configurationHelper->getAdminPath();
     }
 
-    public function getSorters()
+    public function getSorters(): string
     {
-        $sorters = $this->sortersPool->getSorters();
-
-        if (empty($sorters)) {
-            return [];
-        }
-
-        $result = [];
-
-        foreach ($sorters as $sorter) {
-            $result[] = [
-                'label' => $sorter['label'],
-                'value' => $sorter['value'],
-            ];
-        }
-
-        return json_encode($result);
+        return $this->productCollectionOptions->getSortersJson();
     }
 
-    public function getFilters()
+    public function getFilters(): string
     {
-        $filters = $this->filtersPool->getFilters();
-
-        if (empty($filters)) {
-            return [];
-        }
-
-        $result = [];
-
-        foreach ($filters as $filter) {
-            $result[] = [
-                'label' => $filter['label'],
-                'value' => $filter['value'],
-            ];
-        }
-
-        return json_encode($result);
+        return $this->productCollectionOptions->getFiltersJson();
     }
 
-    public function getExistingComponentsConfiguration()
+    public function getExistingComponentsConfiguration(): mixed
     {
         return $this->configurationProvider->getExistingComponentsConfiguration();
     }
 
-    public function getPageType()
+    public function getPageType(): mixed
     {
         return $this->configurationProvider->getPageType();
     }
 
-    public function getBaseUrl()
+    public function getBaseUrl(): string
     {
-        return $this->storeManager->getStore()->getBaseUrl();
+        return (string) $this->_storeManager->getStore()->getBaseUrl();
     }
 
-    public function getSecretPreviewToken()
+    public function getSecretPreviewToken(): string
     {
-        return $this->configurationHelper->getSecretPreviewToken();
+        return (string) $this->configurationHelper->getSecretPreviewToken();
     }
 
-    public function getProductDataEndpoint()
+    public function getProductDataEndpoint(): string
     {
-        return str_replace('admin/', '', $this->getBaseUrl()) . 'content-constructor/component/productteaserdata';
+        return $this->getUrl('contentconstructor/component/productTeaserData');
     }
 
     public function getProductChooserUrl(): string

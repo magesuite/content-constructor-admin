@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import { VideoType } from '../configurator/_video/types';
 import { getPinFillColor, getPinOutlineColor, isPinFilled } from '../pins/pin-fill';
+import sanitizeHtml from '../../../utils/html-sanitizer/html-sanitizer';
 
 /**
  * Breakpoint-dedicated image interface
@@ -201,8 +202,8 @@ const teaserPreview: vuejs.ComponentOption = {
                             :class="{'cc-teaser-preview__text-content--text-shadow': configuration.optimizers.scenarios.text_shadow.enabled}"
                             :style="{fontSize: fontSize + 'px'}"
                         >
-                            <h2 v-if="configuration.slogan" class="cc-teaser-preview__slogan" @change="recalculateFontSize()">{{{configuration.slogan}}}</h2>
-                            <p v-if="configuration.description" class="cc-teaser-preview__description" @change="recalculateFontSize()">{{{configuration.description}}}</p>
+                            <h2 v-if="configuration.slogan" class="cc-teaser-preview__slogan" @change="recalculateFontSize()">{{{configuration.slogan | sanitizeHtml}}}</h2>
+                            <p v-if="configuration.description" class="cc-teaser-preview__description" @change="recalculateFontSize()">{{{configuration.description | sanitizeHtml}}}</p>
                         </div>
 
                         <div v-if="configuration.cta.label && configuration.cta.href" class="cc-teaser-preview__cta">
@@ -287,6 +288,9 @@ const teaserPreview: vuejs.ComponentOption = {
             isScaleScheduled: false,
             fontSize: this.recalculateFontSize(),
         };
+    },
+    filters: {
+        sanitizeHtml,
     },
     methods: {
         recalculateFontSize(): number {

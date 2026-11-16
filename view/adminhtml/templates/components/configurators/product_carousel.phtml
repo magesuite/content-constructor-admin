@@ -1,2 +1,7 @@
-<?php /** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductCarousel */ ?>
-<product-carousel-configurator class="cc-product-carousel-configurator <?=$block->getClasses()?>" :configuration="initialComponentConfiguration" :categories-data-url="categoryDataProviderEndpoint" :product-collections-sorters="sorters" :product-collections-filters="filters" :cc-config="ccConfig"></product-carousel-configurator>
+<?php
+/** @var \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\ProductCarousel $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \MageSuite\ContentConstructorAdmin\ViewModel\ProductConditions $productConditionsViewModel */
+$productConditionsViewModel = $block->getData('product_conditions_view_model');
+?>
+<product-carousel-configurator class="cc-product-carousel-configurator <?= $escaper->escapeHtmlAttr((string) $block->getClasses()) ?>" :configuration="initialComponentConfiguration" :categories-data-url="categoryDataProviderEndpoint" :product-collections-sorters="sorters" :product-collections-filters="filters" :cc-config="ccConfig" product-condition-attributes="<?= $escaper->escapeHtmlAttr($productConditionsViewModel->getAttributesJson()) ?>"></product-carousel-configurator>

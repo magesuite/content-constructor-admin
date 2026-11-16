@@ -6,6 +6,7 @@ import actionButton from '../../../utils/action-button/action-button';
 import componentActions from '../../../utils/component-actions/component-actions';
 
 import componentConfigurator from '../../_component-configurator/component-configurator';
+import ccProductConditions from '../../_product-conditions/product-conditions';
 
 import {
     default as teaserConfigurator,
@@ -23,6 +24,7 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         'action-button': actionButton,
         'component-actions': componentActions,
         'teaser-configurator': teaserConfigurator,
+        'cc-product-conditions': ccProductConditions,
     },
     template: `<div class="cc-products-grid-configurator {{ classes }} | {{ mix }}" {{ attributes }}>
         <section class="cc-products-grid-configurator__section cc-products-grid-configurator__section--{{section.label | sectionID}}" v-if="ccConfig.products_grid != null && ccConfig.products_grid.custom_sections != null" v-for="section in ccConfig.products_grid.custom_sections">
@@ -101,6 +103,13 @@ const productsGridConfigurator: vuejs.ComponentOption = {
                     )}
                 </div>
             </div>
+        </section>
+
+        <section class="cc-products-grid-configurator__section">
+            <h3 class="cc-products-grid-configurator__subtitle">${$t(
+                'Product conditions'
+            )}:</h3>
+            <cc-product-conditions :configuration="configuration" :attributes="productConditionAttributes"></cc-product-conditions>
         </section>
 
         <section class="cc-products-grid-configurator__section">
@@ -267,6 +276,10 @@ const productsGridConfigurator: vuejs.ComponentOption = {
         },
         productCollectionsFilters: {
             type: [String, Array],
+            default: '',
+        },
+        productConditionAttributes: {
+            type: String,
             default: '',
         },
         /* Set prop with component name in order to
