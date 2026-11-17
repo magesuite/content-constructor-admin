@@ -21,6 +21,14 @@ import customFieldPosition from '../../_custom-fields/fields/position-grid';
 import { getVideoTypeFromUrl, VideoType } from './_video/types';
 import customFieldDatetimeRange from '../../_custom-fields/fields/datetime-range';
 import { customFieldColor } from '../../_custom-fields/custom-fields';
+import {
+    IVisibleTeasersCount,
+    aboveTheFoldNoticeTypes,
+    getAboveTheFoldDevicesText,
+    getTeaserAboveTheFoldDevices,
+    getTeaserNoticeType,
+    getVisibleTeasersCount,
+} from '../../../utils/above-the-fold/above-the-fold';
 
 export const teaserPrototype: any = {
     image: {
@@ -158,6 +166,32 @@ const teaserConfigurator: vuejs.ComponentOption = {
         <p class="cc-image-teaser-configurator__section-error" v-if="videoTeaserPlaceholderError && !configuration.image.raw">
             {{ 'Please upload an image, too. It will be used as a placeholder and a fallback for your video' | translate }}
         </p>
+        <div class="cc-teaser-configurator__image-load-note cc-teaser-configurator__image-load-note--warning" v-if="isAboveTheFoldNoticeVisible">
+            <div class="cc-teaser-configurator__image-load-note-content">
+                <p class="cc-teaser-configurator__image-load-note-text">
+                    <svg class="cc-teaser-configurator__image-load-note-icon" aria-hidden="true">
+                        <use xlink:href="#icon_warning"></use>
+                    </svg>
+                    <span>{{ aboveTheFoldNoticeText }}</span>
+                </p>
+                <button type="button" class="action-default scalable cc-teaser-configurator__image-load-note-action" @click="applyAboveTheFoldImageSettings()">
+                    {{ 'Apply recommended settings' | translate }}
+                </button>
+            </div>
+        </div>
+        <div class="cc-teaser-configurator__image-load-note" v-if="isBelowTheFoldNoticeVisible">
+            <div class="cc-teaser-configurator__image-load-note-content">
+                <p class="cc-teaser-configurator__image-load-note-text">
+                    <svg class="cc-teaser-configurator__image-load-note-icon" aria-hidden="true">
+                        <use xlink:href="#icon_info"></use>
+                    </svg>
+                    <span>{{ 'This image is not at the top of the page, so "Eagerload" and "High fetch priority" are usually not needed. Ignore this if it is intentional.' | translate }}</span>
+                </p>
+                <button type="button" class="action-default scalable cc-teaser-configurator__image-load-note-action" @click="applyBelowTheFoldImageSettings()">
+                    {{ 'Use lazyload' | translate }}
+                </button>
+            </div>
+        </div>
         <section class="cc-teaser-configurator__section">
             <div class="cc-teaser-configurator__content cc-teaser-configurator__content--{{currentImageUploader}}" id="cc-teaser-{{teaserIndex}}">
                 <div class="cc-teaser-configurator__col cc-teaser-configurator__col--preview" :class="{'cc-teaser-configurator__col--image-uploaded': configuration.image.raw}">
@@ -760,6 +794,13 @@ const teaserConfigurator: vuejs.ComponentOption = {
             type: Boolean,
             default: false,
         },
+        /**
+         * Devices on which parent component is the first visual component of the page.
+         */
+        aboveTheFoldDevices: {
+            type: Object,
+            default: null,
+        },
         wysiwygConfig: {
             type: Object,
             default: {
@@ -843,6 +884,22 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
         isEagerloadAvailable: function(): boolean {
             return this.configuration.image.raw !== '' && !this.configuration.image.lazyload ? true : false;
+        },
+        visibleTeasersCount: function(): IVisibleTeasersCount {
+            return getVisibleTeasersCount(this.callerComponentType, this.parentConfiguration);
+        },
+        aboveTheFoldNoticeType: function(): string {
+            return getTeaserNoticeType(this.configuration, this.teaserIndex, this.aboveTheFoldDevices, this.visibleTeasersCount);
+        },
+        isAboveTheFoldNoticeVisible: function(): boolean {
+            return this.aboveTheFoldNoticeType === aboveTheFoldNoticeTypes.lazyLoaded;
+        },
+        isBelowTheFoldNoticeVisible: function(): boolean {
+            return this.aboveTheFoldNoticeType === aboveTheFoldNoticeTypes.eagerNotNeeded;
+        },
+        aboveTheFoldNoticeText: function(): string {
+            return $t('This image is visible at the top of the page on %1, so it affects page loading performance (LCP). Disable "Lazyload" and enable "Eagerload" and "High fetch priority" in the "Advanced" tab. If you are sure the current setting is correct, please disregard this message.')
+                .replace('%1', getAboveTheFoldDevicesText(getTeaserAboveTheFoldDevices(this.teaserIndex, this.aboveTheFoldDevices, this.visibleTeasersCount)));
         },
         ctaTargetTextOutput: function(): string {
             return this.configuration.cta.target ? 'Yes' : 'No';
@@ -999,6 +1056,16 @@ const teaserConfigurator: vuejs.ComponentOption = {
         },
     },
     methods: {
+        applyAboveTheFoldImageSettings(): void {
+            this.$set('configuration.image.lazyload', false);
+            this.$set('configuration.image.eagerload', true);
+            this.$set('configuration.image.fetch_priority', true);
+        },
+        applyBelowTheFoldImageSettings(): void {
+            this.$set('configuration.image.eagerload', false);
+            this.$set('configuration.image.lazyload', true);
+            this.$set('configuration.image.fetch_priority', false);
+        },
         switchTab(index: number | string, event?: any): void {
             this.currentTab = index;
 

@@ -1,3 +1,5 @@
+@import '../mixins/note';
+
 .cc-teaser-configurator {
     $root: &;
 
@@ -634,5 +636,27 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.15s ease-in-out;
+    }
+
+    @include teaser-note('image-load-note');
+
+    &__image-load-note-content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem 2rem;
+    }
+
+    &__image-load-note-text {
+        display: flex;
+        flex: 1 1 40rem;
+        align-items: flex-start;
+        margin: 0;
+    }
+
+    &__image-load-note-action {
+        flex: 0 0 auto;
+        white-space: nowrap;
     }
 }

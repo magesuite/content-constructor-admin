@@ -189,6 +189,49 @@
         margin: 0;
         transition: opacity 0.2s linear;
     }
+
+    &__image-load-badge {
+        position: absolute;
+        top: 1.8rem;
+        right: 1.8rem;
+        z-index: 6;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1.4rem;
+        border: 1px solid #adadad;
+        border-left: 3px solid #007bdb;
+        border-radius: 0;
+        background: #fff;
+        box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.22);
+        color: #303030;
+        font-size: 1.3rem;
+        font-weight: 600;
+        line-height: 1.5;
+        cursor: pointer;
+        transition: box-shadow 0.15s linear;
+
+        &:hover,
+        &:focus {
+            background: #fff;
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        &--lazy-loaded {
+            border-left-color: #eba300;
+        }
+    }
+
+    &__image-load-badge-icon {
+        flex: 0 0 auto;
+        width: 1.8rem;
+        height: 1.8rem;
+        margin-right: 1rem;
+        fill: #007bdb;
+
+        #{$root}__image-load-badge--lazy-loaded & {
+            fill: #eba300;
+        }
+    }
 }
 
 .choose-component-to-paste-modal {

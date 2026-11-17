@@ -154,6 +154,7 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
                     </component-adder>
 
                     <teaser-configurator
+                        :above-the-fold-devices="aboveTheFoldDevices"
                         :class="cc-teaser-configurator--image-teaser"
                         :teaser-index="$index"
                         :configuration="items[$index]"
@@ -336,6 +337,13 @@ const imageTeaserConfigurator: vuejs.ComponentOption = {
         };
     },
     props: {
+        /**
+         * Devices on which component is the first visual component of the page.
+         */
+        aboveTheFoldDevices: {
+            type: Object,
+            default: null,
+        },
         /**
          * Image teaser configuration
          */

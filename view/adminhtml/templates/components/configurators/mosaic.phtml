@@ -1,2 +1,5 @@
-<?php /** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Mosaic */ ?>
-<mosaic-configurator class="cc-mosaic-configurator <?=$block->getClasses()?>" :configuration="initialComponentConfiguration" :uploader-base-url="uploaderUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl"></mosaic-configurator>
+<?php
+/** @var $block \MageSuite\ContentConstructorAdmin\Block\Adminhtml\Component\Mosaic */
+/** @var $escaper \Magento\Framework\Escaper */
+?>
+<mosaic-configurator class="cc-mosaic-configurator <?= $escaper->escapeHtmlAttr($block->getClasses()) ?>" :configuration="initialComponentConfiguration" :above-the-fold-devices="initialAboveTheFoldDevices" :uploader-base-url="uploaderUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl"></mosaic-configurator>

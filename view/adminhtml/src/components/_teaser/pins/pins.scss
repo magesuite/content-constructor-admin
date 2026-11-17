@@ -1,3 +1,5 @@
+@import '../mixins/note';
+
 .cc-teaser-pins {
     &__color {
         display: flex;
@@ -247,35 +249,7 @@
         border-top: 1px solid #e5e5e5;
     }
 
-    &__note {
-        display: flex;
-        align-items: flex-start;
-        margin: 0 0 1.6rem;
-        padding: 1rem 1.2rem;
-        background-color: rgba(#007bdb, 0.11);
-        border: 1px solid #007bdb;
-        border-radius: 2px;
-        font-size: 1.2rem;
-        line-height: 1.45;
-    }
-
-    &__note--warning {
-        background-color: #fdf0d5;
-        border-color: #e0b573;
-        color: #6f4400;
-    }
-
-    &__note-icon {
-        flex: 0 0 auto;
-        width: 1.8rem;
-        height: 1.8rem;
-        margin: 0.1rem 0.8rem 0 0;
-        fill: #007bdb;
-    }
-
-    &__note--warning &__note-icon {
-        fill: #eba300;
-    }
+    @include teaser-note;
 }
 
 .cc-teaser-pins-modal.modal-slide {
