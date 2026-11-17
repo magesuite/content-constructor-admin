@@ -73,14 +73,21 @@ const teaserAndTextConfigurator: vuejs.ComponentOption = {
 
         <section class="cc-image-teaser-configurator__section cc-image-teaser-configurator__section--2-columns">
             <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-0">
-                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" :supports-pins="true" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl" configurator-layout="column" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(0) != -1"></teaser-configurator>
+                <teaser-configurator :above-the-fold-devices="aboveTheFoldDevices" :class="cc-teaser-configurator--image-teaser" :teaser-index="0" :configuration="items[0]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" :supports-pins="true" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl" configurator-layout="column" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(0) != -1"></teaser-configurator>
             </div>
             <div class="cc-image-teaser-configurator__item cc-image-teaser-configurator__item--column" id="cc-image-teaser-item-1">
-                <teaser-configurator :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" :supports-pins="true" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl" configurator-layout="column" :teaser-type="'text-only'" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(1) != -1"></teaser-configurator>
+                <teaser-configurator :above-the-fold-devices="aboveTheFoldDevices" :class="cc-teaser-configurator--image-teaser" :teaser-index="1" :configuration="items[1]" :parent-configuration="configuration" :uploader-base-url="uploaderBaseUrl" :image-endpoint="imageEndpoint" :admin-prefix="adminPrefix" :cc-config="ccConfig" :caller-component-type="'teaser-and-text'" :supports-pins="true" :product-data-endpoint="productDataEndpoint" :product-chooser-url="productChooserUrl" configurator-layout="column" :teaser-type="'text-only'" :video-teaser-placeholder-error="invalidVideoPlaceholderTeaserIndexes.indexOf(1) != -1"></teaser-configurator>
             </div>
         </section>
     </div>`,
     props: {
+        /**
+         * Devices on which component is the first visual component of the page.
+         */
+        aboveTheFoldDevices: {
+            type: Object,
+            default: null,
+        },
         /**
          * Image teaser configuration
          */

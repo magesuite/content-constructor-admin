@@ -39,6 +39,19 @@ import { customComponentsPreview } from '../../custom-components/custom-componen
 // Clipboard utility
 import clipboard from "../../utils/clipboard/clipboard";
 
+import {
+    IAboveTheFoldDevices,
+    IVisibleTeasersCount,
+    aboveTheFoldNoticeTypes,
+    getAboveTheFoldConfigValues,
+    getAboveTheFoldDevicesText,
+    getComponentNoticeType,
+    getLazyLoadedDevices,
+    getVisibleTeasersCount,
+    isComponentVisibleOnDevice,
+    isEmptyTeaserComponent,
+} from '../../utils/above-the-fold/above-the-fold';
+
 /**
  * Single component information interface.
  */
@@ -48,6 +61,21 @@ interface IComponentInformation {
     type: string;
     section: string;
     data?: any;
+}
+
+/**
+ * IDs of the first components rendered with visual content on each device.
+ */
+interface IFirstVisualComponentIds {
+    mobile: string;
+    desktop: string;
+}
+
+interface IAboveTheFoldNotice {
+    noticeType: string;
+    icon: string;
+    label: string;
+    tooltip: string;
 }
 
 /**
@@ -114,7 +142,7 @@ const layoutBuilder: vuejs.ComponentOption = {
         </div>
 
         <template v-for="component in components">
-            <div v-bind:class="{ 'cc-layout-builder__component': true, 'cc-layout-builder__component--special': getIsSpecialComponent( component.type ), 'cc-layout-builder__component--invisible': getIsComponentHiddenFE( component.data ), 'cc-layout-builder__component--filtered-out': !getIsComponentVisibleDashboard( component.data ) }" id="{{ component.id }}">
+            <div v-bind:class="{ 'cc-layout-builder__component': true, 'cc-layout-builder__component--special': getIsSpecialComponent( component.type ), 'cc-layout-builder__component--invisible': getIsComponentHiddenOnAllDevices( component ), 'cc-layout-builder__component--filtered-out': !getIsComponentVisibleDashboard( component.data ) }" id="{{ component.id }}">
                 <component-adder class="cc-component-adder cc-component-adder--first">
                     <button is="action-button" class="cc-action-button cc-action-button--look_important cc-action-button--type_icon-only | cc-component-adder__button" @click="createNewComponent( $index )" title="{{ getTranslatedText('Add new component') }}">
                         <svg class="cc-action-button__icon cc-action-button__icon--size_100 | cc-component-adder__button-icon">
@@ -185,6 +213,18 @@ const layoutBuilder: vuejs.ComponentOption = {
                     </component-actions>
                 </div>
                 <div class="cc-layout-builder__component-wrapper">
+                    <button
+                        type="button"
+                        class="cc-layout-builder__image-load-badge cc-layout-builder__image-load-badge--{{ aboveTheFoldNotices[component.id].noticeType }}"
+                        v-if="aboveTheFoldNotices[component.id]"
+                        title="{{ aboveTheFoldNotices[component.id].tooltip }}"
+                        @click="editComponentSettings( $index )"
+                    >
+                        <svg class="cc-layout-builder__image-load-badge-icon" aria-hidden="true">
+                            <use v-bind:xlink:href="aboveTheFoldNotices[component.id].icon"></use>
+                        </svg>
+                        {{ aboveTheFoldNotices[component.id].label }}
+                    </button>
                     <component-placeholder>
                         <h3 class="cc-component-placeholder__headline" v-text="transformComponentTypeToText( component.name || component.type )"></h3>
                         <div class="cc-component-placeholder__component">
@@ -337,7 +377,35 @@ const layoutBuilder: vuejs.ComponentOption = {
         specialComponents: function (): object {
             const data: object = this.ccConfig.special_components;
             return Object.keys(data).map(key => (data as any)[key]);
-        }
+        },
+        aboveTheFoldComponentTypes(): string[] {
+            return getAboveTheFoldConfigValues(this.ccConfig, 'component_types');
+        },
+        textOnlyComponentTypes(): string[] {
+            return getAboveTheFoldConfigValues(this.ccConfig, 'text_only_component_types');
+        },
+        pageTypesWithoutAboveTheFoldContent(): string[] {
+            return getAboveTheFoldConfigValues(this.ccConfig, 'page_types_without_above_the_fold_content');
+        },
+        /**
+         * Image loading notices of the components, keyed by component ID. Components without notice are omitted.
+         */
+        aboveTheFoldNotices(): { [componentId: string]: IAboveTheFoldNotice } {
+            const firstVisualComponentIds: IFirstVisualComponentIds = this.getFirstVisualComponentIds(this.components);
+
+            return this.components.reduce(
+                (aboveTheFoldNotices: { [componentId: string]: IAboveTheFoldNotice }, component: IComponentInformation): { [componentId: string]: IAboveTheFoldNotice } => {
+                    const aboveTheFoldNotice: IAboveTheFoldNotice = this.getAboveTheFoldNotice(component, firstVisualComponentIds);
+
+                    if (aboveTheFoldNotice) {
+                        aboveTheFoldNotices[component.id] = aboveTheFoldNotice;
+                    }
+
+                    return aboveTheFoldNotices;
+                },
+                {}
+            );
+        },
     },
     ready(): void {
         this.components = this.componentsConfiguration
@@ -436,7 +504,8 @@ const layoutBuilder: vuejs.ComponentOption = {
             const componentInfo: IComponentInformation = this.addComponent(
                 (asyncComponentInfo: IComponentInformation): void => {
                     this.addComponentInformation(index, asyncComponentInfo);
-                }
+                },
+                index
             );
             this.addComponentInformation(index, componentInfo);
         },
@@ -824,6 +893,131 @@ const layoutBuilder: vuejs.ComponentOption = {
             }
         },
         /**
+         * Tells on which devices given component is the first visual component of the page,
+         * so its first image should be eagerly loaded to improve LCP.
+         * @param {IComponentInformation} componentInfo Component information.
+         * @param {number} newComponentIndex Index on which new component will be inserted, omit for existing components.
+         * @return {IAboveTheFoldDevices|null} Null when position of the component cannot be determined.
+         */
+        getAboveTheFoldDevices(
+            componentInfo: IComponentInformation,
+            newComponentIndex?: number
+        ): IAboveTheFoldDevices {
+            if (!this.getCanBeAboveTheFold(componentInfo)) {
+                return null;
+            }
+
+            const components: IComponentInformation[] = this.components.slice();
+
+            if (newComponentIndex !== undefined) {
+                components.splice(newComponentIndex, 0, componentInfo);
+            }
+
+            return this.getComponentAboveTheFoldDevices(componentInfo, this.getFirstVisualComponentIds(components, componentInfo.id));
+        },
+        getCanBeAboveTheFold(componentInfo: IComponentInformation): boolean {
+            return this.aboveTheFoldComponentTypes.indexOf(componentInfo.type) !== -1 && this.pageTypesWithoutAboveTheFoldContent.indexOf(this.pageType) === -1;
+        },
+        getComponentAboveTheFoldDevices(componentInfo: IComponentInformation, firstVisualComponentIds: IFirstVisualComponentIds): IAboveTheFoldDevices {
+            return {
+                mobile: firstVisualComponentIds.mobile === componentInfo.id,
+                desktop: firstVisualComponentIds.desktop === componentInfo.id,
+            };
+        },
+        getFirstVisualComponentIds(components: IComponentInformation[], editedComponentId?: string): IFirstVisualComponentIds {
+            return {
+                mobile: this.getFirstVisualComponentId(components, 'mobile', editedComponentId),
+                desktop: this.getFirstVisualComponentId(components, 'desktop', editedComponentId),
+            };
+        },
+        /**
+         * @return {IAboveTheFoldNotice|null} Null when no notice should be displayed for the component.
+         */
+        getAboveTheFoldNotice(component: IComponentInformation, firstVisualComponentIds: IFirstVisualComponentIds): IAboveTheFoldNotice {
+            if (!component.data || !this.getCanBeAboveTheFold(component) || this.getIsComponentHiddenOnAllDevices(component)) {
+                return null;
+            }
+
+            const aboveTheFoldDevices: IAboveTheFoldDevices = this.getComponentAboveTheFoldDevices(component, firstVisualComponentIds);
+            const visibleTeasersCount: IVisibleTeasersCount = getVisibleTeasersCount(component.type, component.data);
+            const noticeType: string = getComponentNoticeType(component.data.items, aboveTheFoldDevices, visibleTeasersCount);
+
+            if (!noticeType) {
+                return null;
+            }
+
+            if (noticeType !== aboveTheFoldNoticeTypes.lazyLoaded) {
+                return {
+                    noticeType,
+                    icon: '#icon_info',
+                    label: $t('Eagerload may not be needed'),
+                    tooltip: $t('This image is not at the top of the page, so "Eagerload" and "High fetch priority" are usually not needed. Ignore this if it is intentional. Click to edit.'),
+                };
+            }
+
+            const lazyLoadedDevices: IAboveTheFoldDevices = getLazyLoadedDevices(component.data.items, aboveTheFoldDevices, visibleTeasersCount);
+
+            return {
+                noticeType,
+                icon: '#icon_warning',
+                label: this.getLazyLoadedBadgeLabel(lazyLoadedDevices),
+                tooltip: $t('Images at the top of the page on %1 are lazy-loaded. Enabling "Eagerload" and "High fetch priority" improves loading performance. Click to edit.')
+                    .replace('%1', getAboveTheFoldDevicesText(lazyLoadedDevices)),
+            };
+        },
+        getLazyLoadedBadgeLabel(lazyLoadedDevices: IAboveTheFoldDevices): string {
+            if (lazyLoadedDevices.mobile && lazyLoadedDevices.desktop) {
+                return $t('Top image is lazy-loaded');
+            }
+
+            return `${$t('Top image is lazy-loaded')} · ${getAboveTheFoldDevicesText(lazyLoadedDevices)}`;
+        },
+        /**
+         * Returns ID of the first component rendered with visual content on given device.
+         * Text-only and empty teaser components are skipped, components below special component (f.e. category grid) are ignored.
+         * Edited component is never skipped as empty, because its content is about to be added in the configurator.
+         * @param {IComponentInformation[]} components Components in layout order.
+         * @param {string} device Device type: mobile or desktop.
+         * @param {string} editedComponentId ID of the component opened in the configurator, if any.
+         * @return {string} Component ID or empty string if there is no such component.
+         */
+        getFirstVisualComponentId(
+            components: IComponentInformation[],
+            device: string,
+            editedComponentId?: string
+        ): string {
+            for (const component of components) {
+                if (this.getIsSpecialComponent(component.type)) {
+                    return '';
+                }
+
+                if (
+                    this.textOnlyComponentTypes.indexOf(component.type) === -1 &&
+                    (component.id === editedComponentId || !isEmptyTeaserComponent(component.type, component.data, this.aboveTheFoldComponentTypes)) &&
+                    this.getIsComponentVisibleOnDevice(component, device)
+                ) {
+                    return component.id;
+                }
+            }
+
+            return '';
+        },
+        /**
+         * Tells if component is rendered on given device.
+         * @param {IComponentInformation} component Component information.
+         * @param {string} device Device type: mobile or desktop.
+         * @return {boolean}
+         */
+        getIsComponentVisibleOnDevice(
+            component: IComponentInformation,
+            device: string
+        ): boolean {
+            return isComponentVisibleOnDevice(component.data, device);
+        },
+        getIsComponentHiddenOnAllDevices(component: IComponentInformation): boolean {
+            return !this.getIsComponentVisibleOnDevice(component, 'mobile') && !this.getIsComponentVisibleOnDevice(component, 'desktop');
+        },
+        /**
          * Tells if component with given index is the first component.
          * @param  {number}  index Index of the component.
          * @return {boolean}       If component is first in array.
@@ -932,25 +1126,6 @@ const layoutBuilder: vuejs.ComponentOption = {
                        componentType === 'mosaic' &&
                        this.ccConfig.mosaic.support_breakpoint_dedicated_images
                    );
-        },
-
-        /**
-         * Tells to builder if component is set to be hidden on both: mobile & desktop
-         * It's needed to grey-out this component on the dashboard
-         * @param {Object} Component's data information.
-         * @return {boolean}
-         */
-        getIsComponentHiddenFE(componentData: any): boolean {
-            if (componentData.hasOwnProperty('componentVisibility')) {
-                return (
-                    (!componentData.componentVisibility.mobile ||
-                        componentData.componentVisibility.mobile === '') &&
-                    (!componentData.componentVisibility.desktop ||
-                        componentData.componentVisibility.desktop === '')
-                );
-            }
-
-            return false;
         },
 
         /**

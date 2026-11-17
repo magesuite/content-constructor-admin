@@ -18,6 +18,7 @@ import {
     IComponentInformation,
     layoutBuilder,
 } from './components/_layout-builder/layout-builder';
+import { IAboveTheFoldDevices } from './utils/above-the-fold/above-the-fold';
 
 // CC components
 import buttonConfigurator from './components/button/configurator/button';
@@ -212,6 +213,7 @@ const contentConstructor: vuejs.ComponentOption = {
             ccConfig: this.getCCconfig(),
             viewXml: JSON.parse(this.ccProjectConfig),
             initialComponentConfiguration: undefined,
+            initialAboveTheFoldDevices: undefined,
             restToken: undefined,
         };
     },
@@ -288,17 +290,20 @@ const contentConstructor: vuejs.ComponentOption = {
          * Callback that will be invoked when user clicks plus button.
          * This method should open magento modal with component picker.
          * @param  {IComponentInformation} addComponentInformation Callback that let's us add component asynchronously.
+         * @param  {number} newComponentIndex Index on which new component will be inserted.
          */
         getComponentPicker(
             addComponentInformation: (
                 componentInfo: IComponentInformation
-            ) => void
+            ) => void,
+            newComponentIndex: number
         ): void {
             const component: any = this;
             const modalId: string = `content-constructor-picker-${this.pageType}`;
 
             // Save adding callback for async use.
             this._addComponentInformation = addComponentInformation;
+            this._newComponentIndex = newComponentIndex;
 
             pickerModalOptions.opened = function(): void {
                 if (!component._isPickerLoaded) {
@@ -373,6 +378,10 @@ const contentConstructor: vuejs.ComponentOption = {
                     },
                 });
             } else {
+                this.initialAboveTheFoldDevices = this.getNewComponentAboveTheFoldDevices(
+                    componentType,
+                    newComponentId
+                );
                 this.initConfiguratorModal({
                     type: componentType,
                     name: componentName,
@@ -403,7 +412,32 @@ const contentConstructor: vuejs.ComponentOption = {
                 });
             };
 
+            this.initialAboveTheFoldDevices = this.$refs.layoutBuilder.getAboveTheFoldDevices(
+                prevComponentData
+            );
             this.initConfiguratorModal(prevComponentData);
+        },
+
+        getNewComponentAboveTheFoldDevices(
+            componentType: string,
+            componentId: string
+        ): IAboveTheFoldDevices {
+            const layoutBuilderComponent: any = this.$refs.layoutBuilder;
+
+            return layoutBuilderComponent.getAboveTheFoldDevices(
+                {
+                    type: componentType,
+                    id: componentId,
+                    section: '',
+                    data: {
+                        componentVisibility: {
+                            mobile: layoutBuilderComponent.isMobileVisibilityToggleable(componentType),
+                            desktop: true,
+                        },
+                    },
+                },
+                this._newComponentIndex
+            );
         },
 
         initConfiguratorModal(
@@ -458,6 +492,7 @@ const contentConstructor: vuejs.ComponentOption = {
                     $configuratorModal.modal[0]
                 );
                 component.initialComponentConfiguration = undefined;
+                component.initialAboveTheFoldDevices = undefined;
             };
             // Create & Show $configuratorModal
             $configuratorModal = modal(

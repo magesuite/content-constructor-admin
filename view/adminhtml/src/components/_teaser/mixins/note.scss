@@ -1,0 +1,31 @@
+@mixin teaser-note($element: 'note') {
+    &__#{$element} {
+        display: flex;
+        align-items: flex-start;
+        margin: 0 0 1.6rem;
+        padding: 1rem 1.2rem;
+        background-color: rgba(#007bdb, 0.11);
+        border: 1px solid #007bdb;
+        border-radius: 2px;
+        font-size: 1.2rem;
+        line-height: 1.45;
+    }
+
+    &__#{$element}--warning {
+        background-color: #fdf0d5;
+        border-color: #e0b573;
+        color: #6f4400;
+    }
+
+    &__#{$element}-icon {
+        flex: 0 0 auto;
+        width: 1.8rem;
+        height: 1.8rem;
+        margin: 0.1rem 0.8rem 0 0;
+        fill: #007bdb;
+    }
+
+    &__#{$element}--warning &__#{$element}-icon {
+        fill: #eba300;
+    }
+}

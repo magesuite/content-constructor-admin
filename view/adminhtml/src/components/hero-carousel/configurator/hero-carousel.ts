@@ -90,6 +90,7 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
                 </component-adder>
 
                 <teaser-configurator
+                    :above-the-fold-devices="aboveTheFoldDevices"
                     :class="cc-teaser-configurator--image-teaser"
                     :teaser-index="$index"
                     :configuration="items[$index]"
@@ -118,6 +119,13 @@ const heroCarouselConfigurator: vuejs.ComponentOption = {
         <div class="cc-hero-carousel-configurator__modal" v-el:error-modal></div>
     </div>`,
     props: {
+        /**
+         * Devices on which component is the first visual component of the page.
+         */
+        aboveTheFoldDevices: {
+            type: Object,
+            default: null,
+        },
         /*
          * Single's component configuration
          */
